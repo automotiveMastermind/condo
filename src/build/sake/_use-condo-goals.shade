@@ -19,6 +19,7 @@ default version       = '1.0.0'
 
 global type="bool" Quiet="${ false }"
 global type="bool" Verbose="${ false }"
+global type="string" Utc="${ Build.Utc.ToString("o") }"
 
 @{
     if (string.IsNullOrEmpty(configuration))
@@ -53,6 +54,7 @@ global type="bool" Verbose="${ false }"
     log verbose='-------------------------------------------------------------'
     log verbose='Configuration         : ${ configuration }'
     log verbose='Version               : ${ version }'
+    log verbose='Date Time (UTC)       : ${ Utc }'
     log verbose='-------------------------------------------------------------'
 
 #clean-bin description='Cleans the bin directory.'
