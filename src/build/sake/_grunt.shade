@@ -1,0 +1,51 @@
+@{/*
+
+grunt
+    Executes a grunt task runner command.
+
+grunt_args=''
+    Required. The arguments to pass to the grunt command line tool.
+
+grunt_options='' (Environment Variable: grunt_options)
+    Additional options to pass to the grunt command.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to find nodejs.
+
+node_install_path='$(base_path/bin/nodejs)'
+    The path in which to find nodejs.
+
+grunt_path='$(base_path)'
+    The path in which to execute grunt.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default grunt_args          = ''
+default grunt_options       = '${ Build.Variable("grunt_options") }'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default working_path        = '${ base_path }'
+default grunt_path          = '${ working_path }'
+default npm_install_options = '${ Build.Variable("npm_install_options") }'
+
+log verbose='-grunt'
+log verbose='--arguments   : ${ grunt_args }'
+log verbose='--path        : ${ grunt_path }'
+
+var grunt_cmd                   = '${ Path.Combine(node_install_path, "node_modules", "grunt-cli", "bin", "grunt") }'
+
+var grunt_locally_installed     = '${ File.Exists(grunt_cmd) }'
+var grunt_globally_installed    = '${ !grunt_locally_installed && Build.TryExecute("grunt", "--version") }'
+var grunt_installed             = '${ grunt_locally_installed || grunt_globally_installed }'
+
+- grunt_cmd = grunt_globally_installed ? "grunt" : grunt_cmd;
+
+npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" grunt-cli' if='!grunt_installed'
+
+exec exec_cmd='${ grunt_cmd }' exec_args='${ grunt_args } ${ grunt_options }' exec_path='${ grunt_path }' if='grunt_globally_installed'
+
+node node_args='"${ grunt_cmd }" ${ grunt_args } ${ grunt_options }' node_path='${ grunt_path }' if='!grunt_globally_installed'

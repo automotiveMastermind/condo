@@ -1,0 +1,60 @@
+@{/*
+
+bower
+    Executes a bower package manager command.
+
+bower_args=''
+    Required. The arguments to pass to the bower command line tool.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to find nodejs.
+
+bower_path='$(base_path)'
+    The path in which to execute bower.
+
+node_install_path='$(base_path/bin/nodejs)'
+    The path in which to find nodejs.
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default bower_args          = ''
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default bower_path          = '${ working_path }'
+default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default npm_install_options = '${ Build.Variable("npm_install_options") }'
+
+var bower_cmd               = '${ Path.Combine(node_install_path, "node_modules", "bower", "bin", "bower") }'
+
+var bower_locally_installed     = '${ File.Exists(bower_cmd) }'
+var bower_globally_installed    = '${ !bower_locally_installed && Build.TryExecute("bower", "--version --config.interactive=false") }'
+var bower_installed             = '${ bower_locally_installed || bower_globally_installed }'
+
+@{
+    if (bower_globally_installed)
+    {
+        bower_cmd = "bower";
+    }
+}
+
+log verbose='-bower'
+log verbose='--arguments   : ${ bower_args }'
+log verbose='--path        : ${ bower_path }'
+
+@{
+    if (string.IsNullOrEmpty(bower_args))
+    {
+        throw new ArgumentException("bower: cannot execute without arguments.", "bower_args");
+    }
+}
+
+- bower_args += " --config.interactive=false";
+
+npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" bower' if='!bower_installed'
+
+exec exec_cmd='${ bower_cmd }' exec_args='${ bower_args }' exec_path='${ bower_path }' if='bower_globally_installed'
+
+node node_args='"${ bower_cmd }" ${ bower_args }' node_path='${ bower_path }' if='!bower_globally_installed'

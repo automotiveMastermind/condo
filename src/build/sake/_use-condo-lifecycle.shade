@@ -1,0 +1,61 @@
+
+#default description='The default target, which is called if no other targets are indicated. By default, this will call the clean, test, and package targets.' @{
+    CallTarget("print-properties");
+    CallTarget("clean");
+    CallTarget("test");
+    CallTarget("package");
+}
+
+#pre-clean description='A target called prior to calling the default clean target.'
+#clean .pre-clean description='The default clean target.' -CallTarget('post-clean');
+#post-clean description='A target called immediately after all clean targets have been called.'
+
+#validate description='Validates the assets to ensure that the build is ready to execute.'
+
+#restore description='A target used to restore package management artifacts.'
+
+#initialize .clean .validate .restore description='Initializes the project, ensuring that the project is clean, validated, and all assets have been restored.'
+
+#compile .initialize description='Compiles the project.'
+
+#test-compile .compile description='Compiles the project in preparation for executing tests.'
+#test .test-compile description='The default test target.'
+
+#pre-package description='A target called immediately before the package target, which can be used to prepare artifacts for packaging.'
+#package .compile .pre-package description='A target used to pack package management specifications.' -CallTarget('post-package');
+#post-package description='A target called immediately after the package target.'
+
+#pre-integration-test description='A target called immediately before the integration test target, which can be used for preparation.'
+#integration-test .package .pre-integration-test description='The default target used to execute integration tests.' -CallTarget("post-integration-test");
+
+#post-integration-test description='A target called immediately after integration tests have been executed.'
+
+#pre-doc .compile description='The target called immediately before generating documentation.'
+#doc .pre-doc description='The default target used for generating documentation.' -CallTarget('post-doc');
+#post-doc description='The target called immediately after generating documentation.'
+
+#verify .compile .test .package .integration-test description='Verifies a build by compiling the project, packaging any NuGet specifications, and executing unit and integration tests.'
+
+#push .verify description='A target used to push package artifacts to package management sources.'
+
+#publish .verify .doc description='A target used to publish the project artifacts.'
+#install .verify .doc description='A target used to install the project artifacts.'
+
+functions @{ 
+    void ListTargets(string name) 
+    {
+        if (Once(name))
+        {
+            var target = Targets[name];
+
+            foreach(var dependency in target.Dependencies)
+            {
+                ListTargets(dependency);
+            }
+
+            Log.Info(string.Format("\x1b-\x03{0}\x1b-\x07 {1}", target.Name, target.Description));
+        }
+    } 
+}
+
+#targets for each='var target in Targets.Keys' -ListTargets(target);

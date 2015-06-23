@@ -1,0 +1,83 @@
+# user files
+*.user
+*.suo
+
+# build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Tt]arget/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+
+# visual studio 2015 cache/options
+.vs/
+
+# ria/silverlight projects
+Generated_Code/
+
+# sql server files
+*.mdf
+*.ndf
+*.ldf
+
+# jetbrains
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+_TeamCity*
+*.dotCover
+
+# include solution based resharper settings
+!*.[Dd]ot[Ss]ettings
+
+# stylecop
+[Ss]tyle[Cc]op.[Cc]ache
+
+# mstest results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+[Bb]uild.[Ll]og
+
+# business intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+
+# microsoft fakes
+FakesAssemblies/
+
+# azure build output
+csx/
+*.build.csdef
+
+# windows store app package directory
+AppPackages/
+
+# nuget exe
+nuget.exe
+
+# nuget packages
+*.nupkg
+**/packages/*
+
+# include msbuild targets in nuget
+!**/packages/build
+
+# include repositories.config for nuget
+!**/packages/repositories.config
+
+# include config file for nuget
+!**/.nuget/nuget.config
+
+# include self (tfignore)
+!.tfignore
+!.gitignore
+!.gitattributes
+
+# mac files
+**/.DS_Store

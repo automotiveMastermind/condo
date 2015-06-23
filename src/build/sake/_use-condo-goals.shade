@@ -1,0 +1,109 @@
+use namespace = "System"
+use namespace = "System.IO"
+
+use import = "Condo.Build"
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default target_path         = '${ Path.Combine(base_path, "artifacts") }'
+default bin_path            = '${ Path.Combine(base_path, "bin") }'
+default src_path            = '${ Path.Combine(base_path, "src") }'
+default test_path           = '${ Path.Combine(base_path, "test") }'
+default working_path        = '${ base_path }'
+
+default target_build_path   = '${ Path.Combine(target_path, "build") }'
+default target_test_path    = '${ Path.Combine(target_path, "test") }'
+
+default configuration = '${ Build.Variable("Configuration") }'
+
+default version       = '1.0.0'
+
+global type="bool" Quiet="${ false }"
+global type="bool" Verbose="${ false }"
+
+@{
+    if (string.IsNullOrEmpty(configuration))
+    {
+        configuration = "Debug";
+        Build.Variable("Configuration", configuration);
+    }
+}
+
+#--quiet @{
+    Quiet = true;
+
+    Build.Variable("npm_install_options", "--quiet", append: true);
+}
+
+#-q .--quiet
+
+#print-properties
+    log verbose='Paths'
+    log verbose='-------------------------------------------------------------'
+    log verbose='Base Path             : ${ base_path }'
+    log verbose='Source Path           : ${ src_path }'
+    log verbose='Test Path             : ${ test_path }'
+    log verbose='Working Path          : ${ working_path }'
+    log verbose='Bin Path              : ${ bin_path }'
+    log verbose='Target Path           : ${ target_path }'
+    log verbose='Build Results Path    : ${ target_build_path }'
+    log verbose='Target Results Path   : ${ target_test_path }'
+    log verbose='-------------------------------------------------------------'
+    
+    log verbose='Options'
+    log verbose='-------------------------------------------------------------'
+    log verbose='Configuration         : ${ configuration }'
+    log verbose='Version               : ${ version }'
+    log verbose='-------------------------------------------------------------'
+
+#clean-bin description='Cleans the bin directory.'
+    rimraf rimraf_path='${ bin_path }' if='Directory.Exists(bin_path)'
+    
+#clean-npm-modules description='Cleans any installed NPM modules.'
+    var paths = '${ Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "node_modules")).Where(p => Directory.Exists(p)) }'
+    rimraf each='var rimraf_path in paths'
+
+#clean-bower-components description='Cleans any installed bower components.'
+    var paths = '${ Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "bower_components")).Where(p => Directory.Exists(p)) }'
+    rimraf each='var rimraf_path in paths'
+
+#clean-artifacts target='clean' if='Directory.Exists(target_path)' description='Cleans the artifacts directory from the working directory.' @{
+    var path = new DirectoryInfo(target_path);
+    path.Attributes &= ~FileAttributes.ReadOnly;
+
+    foreach (var info in path.GetFileSystemInfos("*", SearchOption.AllDirectories))
+    {
+        info.Attributes &= ~FileAttributes.ReadOnly;
+    }
+
+    path.Delete(true);
+}
+
+#clean-build target='clean' if='Directory.Exists(src_path)' description='Clean the build artifactes from each project within the working directory.'
+    clean each='var project in Directory.EnumerateFiles(src_path, "project.json", SearchOption.AllDirectories)'
+
+#clean-all .clean-bower-components .clean-npm-modules .clean-bin .clean description='Clean everything in preparation for `git clean`.'
+
+#restore-npm-modules description='Restores all NPM modules. This will install NodeJS and NPM if not already found on the system.'
+    var paths = '${ Build.GetPathsContaining(base_path, "package.json") }'
+    npm npm_args='install ${ Build.Variable("npm_install_options") }' each='var npm_path in paths'
+
+#restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
+    var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
+    bower bower_args='install ${ Build.Variable("bower_install_options") }' each='var path in paths'
+
+#restore-nuget-packages description='Restores all NuGet packages.'
+    dnu
+
+#restore-packages .restore-nuget-packages .restore-npm-modules .restore-bower-components target='restore' description='Restores all NuGet packages, Bower components, and NPM modules.'
+
+#initialize-grunt description='Initializes the project by executing the default grunt task. This will install the grunt node module if not already found on the system.'
+    var paths = '${ Build.GetPathsContaining(base_path, "gruntfile.js") }'
+    grunt each='var grunt_path in paths'
+
+#initialize-gulp description='Initializes the project by executing the default gulp task. This will install the gulp node module if not already found on the system.'
+    var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js") }'
+    gulp each='var gulp_path in paths'
+
+#initialize-all .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
+
+#push-nuget-packages target='push' description='Pushes NuGet packages to the default NuGet feed.'

@@ -1,0 +1,40 @@
+@{/*
+
+rimraf
+    Executes rimraf against the specified path.
+
+rimraf_path
+    Required. The path that should be recursively removed.
+
+*/}
+
+default rimraf_path         = ''
+
+default base_path 		    = '${ Directory.GetCurrentDirectory() }'
+default working_path 	    = '${ base_path }'
+default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default npm_install_options = '${ Build.Variable("npm_install_options") }'
+
+var rimraf_cmd		        = '${ Path.Combine(node_install_path, "node_modules", "rimraf", "bin.js") }'
+
+@{
+    if (string.IsNullOrEmpty(rimraf_path))
+    {
+        throw new ArgumentException("A path must be specified in order to use the rimraf tool.", "rimraf_path");
+    }
+}
+
+log verbose='-rimraf'
+log verbose='--path : ${ rimraf_path }'
+
+var rimraf_locally_installed    = '${ File.Exists(rimraf_cmd) }'
+var rimraf_globally_installed   = '${ !rimraf_locally_installed && Build.TryExecute("rimraf", "::") }'
+var rimraf_installed            = '${ rimraf_locally_installed || rimraf_globally_installed }'
+
+- rimraf_cmd = rimraf_globally_installed ? "rimraf" : rimraf_cmd;
+
+npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" rimraf' once='rimraf-install' if='!rimraf_installed'
+
+exec exec_cmd='${ rimraf_cmd }' exec_args='"${ rimraf_path }"' if='rimraf_globally_installed'
+
+node node_args='"${ rimraf_cmd }" "${ rimraf_path }"' node_path='${ working_path }' if='!rimraf_globally_installed'

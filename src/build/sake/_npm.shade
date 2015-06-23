@@ -1,0 +1,26 @@
+use namespace = "System"
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+
+default npm_args        = ''
+default npm_path        = '${ base_path }'
+
+log verbose='-npm'
+log verbose='--arguments: ${ npm_args }'
+log verbose='--path: ${ npm_path }'
+
+@{
+    if (string.IsNullOrEmpty(npm_args))
+    {
+        throw new ArgumentException("npm: cannot be executed without arguments.", "npm_args");
+    }
+}
+
+node-install once='node-install'
+
+var npm_cmd = '${ Path.Combine(node_install_path, "npm.cmd") }'
+- npm_cmd = File.Exists(npm_cmd) ? ("\"" + npm_cmd + "\"") : "npm";
+
+exec exec_cmd='${ npm_cmd }' exec_args='${ npm_args }' exec_path='${ npm_path }'

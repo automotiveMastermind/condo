@@ -1,0 +1,39 @@
+@{/*
+
+dnu
+    Executes a dnu package manager command.
+
+dnu_args='restore'
+    The arguments to pass to the dnu command line tool.
+
+dnu_options='' (Environment Variable: dnu_options)
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute dnu.
+
+working_path='$(base_path)'
+    The path in which to execute dnu.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+
+default dnu_args = 'restore'
+default dnu_options = '${ Build.Variable("dnu_options") }'
+
+@{
+    if (Quiet)
+    {
+        dnu_args += " --quiet";
+    }
+}
+
+log verbose='-dnu'
+log verbose='--arguments   : ${ dnu_args }'
+log verbose='--options     : ${ dnu_options }' if='!string.IsNullOrEmpty(dnu_options)'
+
+exec exec_cmd='dnu' exec_args='${ dnu_options } ${ dnu_args }' exec_path='${ working_path }'

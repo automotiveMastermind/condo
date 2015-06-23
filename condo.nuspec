@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PulseBridge.Condo</id>
+    <title>Condo - Cross Platform Build Tools</title>
+    <version>0.0</version>
+    <authors>PulseBridge, Inc.</authors>
+    <owners>PulseBridge, Inc.</owners>
+    <description>Tooling support for cross-platform build automation.</description>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="build\*.*" target="build" /> 
+  </files>
+</package>

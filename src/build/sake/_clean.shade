@@ -1,0 +1,30 @@
+@{/*
+    
+clean
+    Cleans a project.
+
+project=''
+    Required. Path to the project.json file to clean.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default project = ''
+
+var clean_path = '${ Path.GetDirectoryName(project) }'
+
+log verbose='-clean'
+log verbose='--project : ${ project }'
+log verbose='--path    : ${ clean_path }'
+
+@{
+    if (string.IsNullOrEmpty(project))
+    {
+        throw new ArgumentException("clean: no project was specified.", "project");
+    }
+}
+
+directory delete='${ Path.Combine(clean_path, "bin") }'
+directory delete='${ Path.Combine(clean_path, "obj") }'

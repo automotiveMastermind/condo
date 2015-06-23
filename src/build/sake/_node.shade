@@ -1,0 +1,44 @@
+@{/*
+
+node
+    Executes a node package manager command.
+
+node_args=''
+    Required. The arguments to pass to the node command line tool.
+
+node_path='$(base_path)'
+    The path in which to execute node.
+
+base_path='$(CurrentDirectory)'
+    The base path of the project.
+
+node_install_path='$(base_path)/bin/nodejs'
+    The path in which to install nodejs if not already installed.
+
+*/}
+
+use namespace="System"
+use namespace="System.IO"
+
+default node_args           = ''
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default node_path           = '${ base_path }'
+default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+
+@{
+    if (string.IsNullOrEmpty(node_args))
+    {
+        throw new ArgumentException("Node cannot be executed without arguments.", "node_args");
+    }
+}
+
+node-install once='node-install'
+
+log verbose='-nodejs'
+log verbose='--arguments   : ${ node_args }'
+log verbose='--path        : ${ node_path }'
+
+var node_cmd    = '${ Path.Combine(node_path, "node.exe") }'
+- node_cmd      = File.Exists(node_cmd) ? node_cmd : "node";
+
+exec exec_cmd='${ node_cmd }' exec_args='${ node_args }' exec_path='${ node_path }'

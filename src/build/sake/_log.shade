@@ -1,0 +1,22 @@
+use namespace = 'System'
+
+default verbose = ''
+default info = ''
+default warn = ''
+
+@{
+    if (!string.IsNullOrEmpty(info))
+    {
+        Log.Info(info);
+    }
+
+    if (!string.IsNullOrEmpty(warn))
+    {
+        Log.Warn(warn);
+    }
+
+    if (!string.IsNullOrEmpty(verbose))
+    {
+        Log.Verbose(verbose);
+    }
+}

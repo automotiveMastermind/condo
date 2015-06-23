@@ -1,0 +1,39 @@
+@{/*
+
+exec
+    Executes a command at the command line.
+
+cmd=''
+    Required. The command line tool to execute.
+
+exec_args=''
+    Additional arguments to send to the command line tool.
+
+exec_path=''
+    The working directory of the command line tool.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default exec_cmd    = ''
+default exec_args   = ''
+default exec_path   = '${ Directory.GetCurrentDirectory() }'
+
+@{
+    if (string.IsNullOrEmpty(exec_cmd))
+    {
+        throw new ArgumentException("A command must be specified in order for the command to execute.", "exec_cmd");
+    }
+
+    // define a variable to retain the exit code
+    int code;
+
+    // attempt to execute the command
+    if(!Build.TryExecute(exec_cmd, out code, exec_args, exec_path))
+    {
+        // throw a new exception
+        throw new Exception(string.Format("The command {0} failed with exit code {1}", exec_cmd, code));
+    }
+}

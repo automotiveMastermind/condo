@@ -1,0 +1,93 @@
+# normalize line endings
+*               text=auto
+
+# use c# diff for .cs files
+*.cs            text                diff=csharp
+
+# force conflict resolution of project files
+*.sln           text    eol=crlf    merge=union 
+*.csproj        text                merge=union
+*.vbproj        text                merge=union
+*.vcxproj       text                merge=union
+*.vcproj        text                merge=union
+*.dbproj        text                merge=union
+*.fsproj        text                merge=union
+*.lsproj        text                merge=union
+*.wixproj       text                merge=union
+*.modelproj     text                merge=union
+*.sqlproj       text                merge=union
+*.wwaproj       text                merge=union
+
+# xcode project files are unioned as binary files
+*.pbxproj       binary              merge=union
+
+# known binary files are treated as binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.mov           binary
+*.mp4           binary
+*.mp3           binary
+*.flv           binary
+*.fla           binary
+*.swf           binary
+*.gz            binary
+*.zip           binary
+*.7z            binary
+*.ttf           binary
+*.pyc           binary
+*.pdf           binary
+
+# documentation
+*.md            text
+LICENSE         text
+AUTHORS         text
+
+# known plain text files are treated as plain text
+*.doc           text                diff=astextplain
+*.DOC           text                diff=astextplain
+*.docx          text                diff=astextplain
+*.DOCX          text                diff=astextplain
+*.dot           text                diff=astextplain
+*.DOT           text                diff=astextplain
+*.pdf           text                diff=astextplain
+*.PDF           text                diff=astextplain
+*.rtf           text                diff=astextplain
+*.RTF           text                diff=astextplain
+
+# git/tfvc config
+.gitattributes  text
+.gitignore      text
+.tfignore       text
+
+# web source file types
+*.php           text
+*.css           text
+*.sass          text
+*.scss          text
+*.less          text
+*.styl          text
+*.js            text
+*.coffee        text
+*.json          text
+*.htm           text
+*.html          text
+*.xml           text
+*.txt           text
+*.ini           text
+*.inc           text
+*.pl            text
+*.rb            text
+*.py            text
+*.scm           text
+*.sql           text
+*.sh            text
+*.bat           text
+
+# nuget files
+.nuspec         text
+
+# config files
+.config         text

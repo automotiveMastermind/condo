@@ -1,0 +1,180 @@
+use namespace = "System"
+use namespace = "System.Collections.Generic"
+use namespace = "System.IO"
+use namespace = "System.Linq"
+
+functions @{
+    /// <summary>
+    /// Represents a static helper class used to store and retrieve build environment configuration.
+    /// </summary>
+    public static class Build
+    {
+        private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
+
+        /// <summary>
+        /// Gets a value indicating whether or not the build environment is running on a Unix-based 
+        /// host.
+        /// </summary>
+        public static bool Unix
+        {
+            get
+            {
+                // get the platform identifier as an integer
+                // tricky: this is necessary as the 1.x mono runtime used a value of 128 for 
+                // unix environments, which doesn't exist on the PlatformID enumeration in 
+                // .NET or in 2.x mono runtime
+                var id = (int)Environment.OSVersion.Platform;
+
+                // tricky:
+                //  - 4 = Mac OS X (DNX / Mono 2.x)
+                //  - 6 = Unix (DNX / Mono 2.x)
+                //  - 128 = Unix (Mono 1.x)
+                return id == 4 || id == 6 || id == 128;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the build environment is executing within the 
+        /// mono runtime.
+        /// </summary>
+        public static bool Mono
+        {
+            get
+            {
+                return Type.GetType("Mono.Runtime") != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of the environment variable with the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        /// The name of the environment variable for which to retrieve a value.
+        /// </param>
+        /// <returns>
+        /// The value of the environment variable with the specified <paramref name="key"/>; otherwise 
+        /// <see langword="null"/>.
+        /// </returns>
+        public static string Variable(string key)
+        {
+            // get the environment variable
+            return Environment.GetEnvironmentVariable(key) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Sets the environment variable with the specified <paramref name="key"/> to the specified 
+        /// <paramref name="value"/>.
+        /// </summary>
+        /// <param name="key">
+        /// The name of the environment variable to set to the specified <paramref name="value"/>.
+        /// </param>
+        /// <param name="value">
+        /// The value to which to set the environment variable with the specified <paramref name="key"/>.
+        /// </param>
+        /// <param name="replace">
+        /// A value indicating whether or not to append the value to any existing value.
+        /// </param>
+        public static void Variable(string key, string value, bool append = false)
+        {
+            // determine if the value is being appended
+            if (append)
+            {
+                // get the current value and append the new value; finally trim any whitespace
+                value = string.Concat(Build.Variable(key), " ", value).Trim();
+            }
+            
+            // set the environment variable
+            Environment.SetEnvironmentVariable(key, value);
+        }
+
+        public static bool TryExecute(string command, out int exitCode, string args = "", string workingPath = "")
+        {
+            try
+            {
+                // attempt to execute the command
+                exitCode = Build.Execute(command, args, workingPath);
+            }
+            catch
+            {
+                // set the exit code to -1 as a default error
+                exitCode = -1;
+            }
+
+            // return true if the exit code is 0
+            return exitCode == 0;
+        }
+        
+        public static bool TryExecute(string command, string args = "", string workingPath = "")
+        {
+            int exitCode;
+
+            return Build.TryExecute(command, out exitCode, args, workingPath);
+        }
+
+        /// <summary>
+        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
+        /// whether or not it succeeds at the command line.
+        /// </summary>
+        /// <param name="command">
+        /// The command to execute at the command line.
+        /// </param>
+        /// <param name="arguments">
+        /// The arguments to execute at the command line.
+        /// </param>
+        /// <param name="workingPath">
+        /// The path in which to execute the specified <paramref name="command"/>.
+        /// </param>
+        public static int Execute(string command, string args = "", string workingPath = "")
+        {
+            // determine if the working path is specified
+            if (string.IsNullOrEmpty(workingPath))
+            {
+                // set the working path to the current directory
+                workingPath = Directory.GetCurrentDirectory();
+            }
+
+            // determine process start information based on whether or not the CLI is executing on unix/linux or windows
+            var info = Build.Unix
+                ? new ProcessStartInfo { FileName = command, Arguments = args }
+                : new ProcessStartInfo { FileName = "cmd", Arguments = "/C " + command + " " + args };
+
+            info.WorkingDirectory = workingPath;
+            info.UseShellExecute = false;
+
+            // start the process
+            var process = Process.Start(info);
+
+            // wait for the process to exit
+            process.WaitForExit();
+
+            // get the exit code
+            return process.ExitCode;
+        }
+
+        public static IEnumerable<string> GetPathsContaining(string path, string filter, params string[] excludes)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = Directory.GetCurrentDirectory();
+            }
+
+            if (!Directory.Exists(path))
+            {
+                throw new Exception(string.Format("The specified path {0} does not exist.", path));
+            }
+
+            excludes = DefaultExcludes.Union(excludes).ToArray(); 
+            
+            var files = Directory.GetFiles(path, filter, SearchOption.AllDirectories).AsEnumerable();
+
+            var separator = Path.DirectorySeparatorChar;
+
+            foreach (var exclude in excludes)
+            {
+                files = files.Where(f => f.IndexOf(separator + exclude.Trim(separator) + separator) < 0);
+            }
+
+            return files.Select(f => Path.GetDirectoryName(f)).Distinct();
+        }
+    }
+}
