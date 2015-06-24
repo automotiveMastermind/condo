@@ -1,0 +1,9 @@
+default info_file = ''
+default info_date = '${ Utc }'
+
+@{
+    if (string.IsNullOrEmpty(info_file))
+    {
+        throw new ArgumentException("info: an assembly info file must be specified.", "info_file");
+    }
+}

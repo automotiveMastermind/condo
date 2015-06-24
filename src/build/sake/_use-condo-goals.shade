@@ -19,7 +19,7 @@ default version       = '1.0.0'
 
 global type="bool" Quiet="${ false }"
 global type="bool" Verbose="${ false }"
-global type="string" Utc="${ Build.Utc.ToString("o") }"
+global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK") }"
 
 @{
     if (string.IsNullOrEmpty(configuration))
