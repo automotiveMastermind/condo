@@ -49,6 +49,12 @@ if ! type dnvm > /dev/null 2>&1; then
         # copy the dnvm script to the dnxpath
         cp "$build/dnvm.sh" "$dnvmpath"
 
+        # source dnvm directly
+        source "$dnvmpath/dnvm.sh"
+
+        # update the dnvm script
+        dnvm update-self
+
         # ask to source the script from the bash profile
         if confirm "Would you like to source dnvm from your profile?" Y; then
             # determine if the bash profile does not exist
@@ -57,16 +63,16 @@ if ! type dnvm > /dev/null 2>&1; then
                 touch ~/.bash_profile
             fi
 
+            # emite the profile path to the bash profile
+            echo -e "PATH=\$PATH:$dnvmpath" >> ~/.bash_profile
+
             # emmit source dnvm in bash profile
-            echo ". $dnvmpath/dnvm.sh" >> ~/.bash_profile
+            echo "source dnvm.sh" >> ~/.bash_profile
         fi
     fi
 
     # source dnvm directly
     source "$dnvmpath/dnvm.sh"
-
-    # update the dnvm script
-    dnvm update-self
 fi
 
 # set the URL to nuget
