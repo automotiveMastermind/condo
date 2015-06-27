@@ -10,13 +10,16 @@ grunt_options='' (Environment Variable: grunt_options)
     Additional options to pass to the grunt command.
 
 base_path='$(CurrentDirectory)'
-    The base path in which to find nodejs.
+    The base path in which to execute grunt.
 
-node_install_path='$(base_path/bin/nodejs)'
-    The path in which to find nodejs.
+working_path='$(base_path)'
+    The working path in which to execute grunt.
 
 grunt_path='$(base_path)'
     The path in which to execute grunt.
+
+node_install_path='$(base_path/bin/nodejs)'
+    The path in which to find nodejs.
 
 */}
 

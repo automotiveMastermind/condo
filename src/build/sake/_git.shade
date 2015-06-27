@@ -6,19 +6,28 @@ git
 git_args='status'
     The arguments for the git command.
 
+base_path='$(CurrentDirectory)'
+    The base path in which to execute git.
+
+working_path='$(base_path)'
+    The working path in which to execute git.
+
 git_path='$(CurrentDirectory)'
-    The path in which to execute the command.
+    The path in which to execute git.
 
 git_options='' (Environment Variable: git_options)
     Additional options to use when executing the git command.
+
 */}
 
 use namespace = 'System'
 use namespace = 'System.IO'
 
-default git_args = 'status'
-default git_path = '${ Directory.GetCurrentDirectory() }'
-default git_options = '${ Build.Variable("git_options") }'
+default git_args        = 'status'
+default base_path       = '${ Directory.GetCurrentDirectory() }'
+default working_path    = '${ base_path }'
+default git_path        = '${ working_path }'
+default git_options     = '${ Build.Variable("git_options") }'
 
 log verbose='-git'
 log verbose='--arguments   : ${ git_args }'

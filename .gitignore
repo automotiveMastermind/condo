@@ -14,8 +14,14 @@ x86/
 [Oo]bj/
 [Aa]rtifacts/
 
+# package manager artifacts
+[Pp]ackages/
+[Nn]ode_[Mm]odules/
+[Bb]ower_[Cc]omponents/
+
 # visual studio 2015 cache/options
 .vs/
+[Pp]roject.lock.json
 
 # ria/silverlight projects
 Generated_Code/
@@ -63,10 +69,9 @@ nuget.exe
 
 # nuget packages
 *.nupkg
-**/packages/*
 
 # include msbuild targets in nuget
-!**/packages/build
+!**/packages/**/build/
 
 # include repositories.config for nuget
 !**/packages/repositories.config
@@ -80,4 +85,4 @@ nuget.exe
 !.gitattributes
 
 # mac files
-**/.DS_Store
+.DS_Store

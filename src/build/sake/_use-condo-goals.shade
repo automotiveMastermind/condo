@@ -81,7 +81,8 @@ global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.
 }
 
 #clean-build target='clean' if='Directory.Exists(src_path)' description='Clean the build artifactes from each project within the working directory.'
-    clean each='var project in Directory.EnumerateFiles(src_path, "project.json", SearchOption.AllDirectories)'
+    var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
+    clean each='var clean_path in paths'
 
 #clean-all .clean-bower-components .clean-npm-modules .clean-bin .clean description='Clean everything in preparation for `git clean`.'
 
@@ -91,7 +92,7 @@ global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.
 
 #restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
-    bower bower_args='install ${ Build.Variable("bower_install_options") }' each='var path in paths'
+    bower bower_args='install ${ Build.Variable("bower_install_options") }' each='var bower_path in paths'
 
 #restore-nuget-packages description='Restores all NuGet packages.'
     dnu
@@ -106,6 +107,10 @@ global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.
     var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js") }'
     gulp each='var gulp_path in paths'
 
-#initialize-all .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
+#initialize-info
+    var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
+    info each='var info_path in paths'
+
+#initialize-all .initialize-grunt .initialize-gulp .initialize-info target='initialize' description='Initializes all initialization targets.'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to the default NuGet feed.'

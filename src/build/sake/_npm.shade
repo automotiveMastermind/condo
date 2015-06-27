@@ -4,8 +4,8 @@ default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 
-default npm_args        = ''
-default npm_path        = '${ base_path }'
+default npm_args            = ''
+default npm_path            = '${ working_path }'
 
 log verbose='-npm'
 log verbose='--arguments: ${ npm_args }'

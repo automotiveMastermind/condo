@@ -7,13 +7,16 @@ gulp_args=''
     Required. The arguments to pass to the gulp command line tool.
 
 base_path='$(CurrentDirectory)'
-    The base path in which to find nodejs.
+    The base path in which to execute gulp.
 
-node_install_path='$(base_path/bin/nodejs)'
-    The path in which to find nodejs.
+working_path='$(base_path)'
+    The working path in which to execute gulp.
 
 gulp_path='$(base_path)'
     The path in which to execute gulp.
+
+node_install_path='$(base_path/bin/nodejs)'
+    The path in which to find nodejs.
 
 */}
 

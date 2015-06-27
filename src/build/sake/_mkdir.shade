@@ -1,0 +1,21 @@
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path = '${ Directory.GetCurrentDirectory() }'
+
+default mkdir_name = ''
+default mkdir_path = ''
+
+@{
+    if (string.IsNullOrEmpty(mkdir_path))
+    {
+        if (string.IsNullOrEmpty(mkdir_name))
+        {
+            throw new ArgumentException("Either a directory name or path must be specified.", "mkdir_path");
+        }
+
+        mkdir_path = Path.Combine(base_path, mkdir_name);
+    }
+
+    Build.MakeDirectory(mkdir_path);
+}

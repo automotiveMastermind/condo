@@ -3,28 +3,31 @@
 clean
     Cleans a project.
 
-project=''
-    Required. Path to the project.json file to clean.
+default clean_project=''
+    Path to the project.json file to clean.
+
+default clean_path=''
+    Path to the folder containing the project to clean.
 
 */}
 
 use namespace = 'System'
 use namespace = 'System.IO'
 
-default project = ''
+default clean_project = ''
+default clean_path = ''
 
-var clean_path = '${ Path.GetDirectoryName(project) }'
+var final_clean_path = '${ !string.IsNullOrEmpty(clean_project) ? Path.GetDirectoryName(clean_project) : clean_path }'
 
 log verbose='-clean'
-log verbose='--project : ${ project }'
-log verbose='--path    : ${ clean_path }'
+log verbose='--path : ${ final_clean_path }'
 
 @{
-    if (string.IsNullOrEmpty(project))
+    if (string.IsNullOrEmpty(final_clean_path))
     {
-        throw new ArgumentException("clean: no project was specified.", "project");
+        throw new ArgumentException("clean: no project or path was specified.", "clean_path");
     }
 }
 
-directory delete='${ Path.Combine(clean_path, "bin") }'
-directory delete='${ Path.Combine(clean_path, "obj") }'
+directory delete='${ Path.Combine(final_clean_path, "bin") }'
+directory delete='${ Path.Combine(final_clean_path, "obj") }'

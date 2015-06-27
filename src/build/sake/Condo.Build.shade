@@ -255,6 +255,17 @@ functions @{
         }
 
         /// <summary>
+        /// Creates the directory (recursively) at the specified <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">
+        /// The fully-qualified path of the directory to create.
+        /// </param>
+        public static string MakeDirectory(string path)
+        {
+            return Directory.CreateDirectory(path).FullName;
+        }
+
+        /// <summary>
         /// Gets or sets the log used to emmit log entries.
         /// </summary>
         public static ILog Log { get; set; }

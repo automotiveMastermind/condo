@@ -1,0 +1,10 @@
+{
+    "private": true,
+    "description": "A test project used to prove that condo is working as expected.",
+
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "gulp": "^3.9.0",
+        "bower": "^1.4.1"
+    }
+}

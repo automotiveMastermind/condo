@@ -7,19 +7,23 @@ bower_args=''
     Required. The arguments to pass to the bower command line tool.
 
 base_path='$(CurrentDirectory)'
-    The base path in which to find nodejs.
+    The base path in which to execute bower.
+
+working_path='$(base_path)'
+    The working path in which to execute bower.
 
 bower_path='$(base_path)'
     The path in which to execute bower.
 
 node_install_path='$(base_path/bin/nodejs)'
     The path in which to find nodejs.
+
 */}
 
 use namespace = 'System'
 use namespace = 'System.IO'
 
-default bower_args          = ''
+default bower_args          = ""
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
@@ -33,12 +37,7 @@ var bower_locally_installed     = '${ File.Exists(bower_cmd) }'
 var bower_globally_installed    = '${ !bower_locally_installed && Build.TryExecute("bower", "--version --config.interactive=false") }'
 var bower_installed             = '${ bower_locally_installed || bower_globally_installed }'
 
-@{
-    if (bower_globally_installed)
-    {
-        bower_cmd = "bower";
-    }
-}
+- bower_cmd = bower_globally_installed ? "bower" : bower_cmd;
 
 log verbose='-bower'
 log verbose='--arguments   : ${ bower_args }'

@@ -6,6 +6,8 @@
     CallTarget("package");
 }
 
+#print-properties='A target used to print build settings, environment variables, and options. Called by the default target at the beginning of the build.'
+
 #pre-clean description='A target called prior to calling the default clean target.'
 #clean .pre-clean description='The default clean target.' -CallTarget('post-clean');
 #post-clean description='A target called immediately after all clean targets have been called.'
