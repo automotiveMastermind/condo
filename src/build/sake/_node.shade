@@ -34,7 +34,7 @@ default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 
 node-install once='node-install'
 
-log verbose='-nodejs'
+log verbose='-node'
 log verbose='--arguments   : ${ node_args }'
 log verbose='--path        : ${ node_path }'
 

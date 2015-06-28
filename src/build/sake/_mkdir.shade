@@ -1,3 +1,19 @@
+@{/*
+
+mkdir
+    Creates a directory and all child directories if it doesn't already exist.
+
+mkdir_name=''
+    The name of the directory to create (the directory will be created within the current base_path)
+
+mkdir_path=''
+    The fully-qualified path of the directory to create.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to create the directory (if the mkdir_name parameter is set).
+
+*/}
+
 use namespace = 'System'
 use namespace = 'System.IO'
 

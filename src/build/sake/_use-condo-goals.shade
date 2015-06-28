@@ -15,13 +15,21 @@ default target_test_path    = '${ Path.Combine(target_path, "test") }'
 
 default configuration = '${ Build.Variable("Configuration") }'
 
-default version       = '1.0.0'
+default version       = '${ Build.Variable("Version") }'
 
 global type="bool" Quiet="${ false }"
 global type="bool" Verbose="${ false }"
-global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK") }"
 
 @{
+    if (string.IsNullOrEmpty(version))
+    {
+        version = '1.0.0';
+    }
+
+    // set the log instance on the helper class
+    Build.Log = this.Log;
+    AssemblyInfo.Version = version;
+
     if (string.IsNullOrEmpty(configuration))
     {
         configuration = "Debug";
@@ -49,12 +57,12 @@ global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.
     log verbose='Build Results Path    : ${ target_build_path }'
     log verbose='Target Results Path   : ${ target_test_path }'
     log verbose='-------------------------------------------------------------'
-    
+
     log verbose='Options'
     log verbose='-------------------------------------------------------------'
     log verbose='Configuration         : ${ configuration }'
-    log verbose='Version               : ${ version }'
-    log verbose='Date Time (UTC)       : ${ Utc }'
+    log verbose='Version               : ${ AssemblyInfo.Version }'
+    log verbose='Date Time (UTC)       : ${ AssemblyInfo.BuildDateUtc }'
     log verbose='-------------------------------------------------------------'
 
 #clean-bin description='Cleans the bin directory.'
@@ -111,6 +119,6 @@ global type="string" Utc="${ Build.Utc.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
     info each='var info_path in paths'
 
-#initialize-all .initialize-grunt .initialize-gulp .initialize-info target='initialize' description='Initializes all initialization targets.'
+#initialize-all .initialize-info .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to the default NuGet feed.'

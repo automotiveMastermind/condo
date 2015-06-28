@@ -6,6 +6,9 @@ gulp
 gulp_args=''
     Required. The arguments to pass to the gulp command line tool.
 
+gulp_options='' (Environment Variable: gulp_options)
+    Additional options to pass to the grunt command.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute gulp.
 
@@ -24,6 +27,7 @@ use namespace = 'System'
 use namespace = 'System.IO'
 
 default gulp_args          = ''
+default gulp_options       = '${ Build.Variable("gulp_options") }'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
@@ -45,6 +49,6 @@ var gulp_installed             = '${ gulp_locally_installed || gulp_globally_ins
 
 npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" gulp' if='!gulp_installed'
 
-exec exec_cmd='${ gulp_cmd }' exec_args='${ gulp_args }' exec_path='${ gulp_path }' if='gulp_globally_installed'
+exec exec_cmd='${ gulp_cmd }' exec_args='${ gulp_args } ${ gulp_options }' exec_path='${ gulp_path }' if='gulp_globally_installed'
 
-node node_args='"${ gulp_cmd }" ${ gulp_args }' node_path='${ gulp_path }' if='!gulp_globally_installed'
+node node_args='"${ gulp_cmd }" ${ gulp_args } ${ gulp_options }' node_path='${ gulp_path }' if='!gulp_globally_installed'

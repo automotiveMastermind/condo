@@ -1,3 +1,22 @@
+@{/*
+
+npm
+    Executes a node package manager (npm) command.
+
+npm_args=''
+    Required. The arguments to pass to the npm command.
+
+npm_path='$(working_path)'
+    The path in which to execute the npm command.
+
+working_path='$(base_path)'
+    The working path in which to execute the npm command.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the npm command.
+
+*/}
+
 use namespace = "System"
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'

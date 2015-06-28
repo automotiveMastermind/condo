@@ -3,11 +3,12 @@
 node-install
     Installs node if it is not already installed either locally or globally.
 
+node_install_path='$(base_path)/bin/nodejs'
+    The path in which to install node.
+    
 base_path='$(CurrentDirectory)'
     The base path in which to install node.
 
-node_install_path='$(base_path)/bin/nodejs'
-    The path in which to install node.
 */}
 
 use assembly="System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"

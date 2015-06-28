@@ -1,3 +1,19 @@
+@{/*
+
+log
+    Logs a message to the console or pipeline.
+
+info=''
+    The informational message to log.
+
+warn=''
+    The warning message to log.
+
+verbose=''
+    The verbose message to log.
+
+*/}
+
 use namespace = 'System'
 
 default verbose = ''

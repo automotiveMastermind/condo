@@ -6,17 +6,17 @@ git
 git_args='status'
     The arguments for the git command.
 
+git_options='' (Environment Variable: git_options)
+    Additional options to use when executing the git command.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute git.
 
 working_path='$(base_path)'
     The working path in which to execute git.
 
-git_path='$(CurrentDirectory)'
+git_path='$(working_path)'
     The path in which to execute git.
-
-git_options='' (Environment Variable: git_options)
-    Additional options to use when executing the git command.
 
 */}
 

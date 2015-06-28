@@ -4,6 +4,8 @@ use namespace = "System.IO"
 use namespace = "System.Linq"
 use namespace = "System.Net"
 use namespace = "System.Net.Sockets"
+use namespace = "System.Text"
+use namespace = "System.Text.RegularExpressions"
 
 use namespace = "Sake.Engine.Logging"
 
@@ -12,70 +14,13 @@ use namespace = "Sake.Engine.Logging"
     Build.Log = this.Log;
 }
 
-functions @{    
+functions @{
     /// <summary>
     /// Represents a helper class used to store and retrieve build environment configuration.
     /// </summary>
     public static class Build
     {
         private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
-
-        private static readonly Lazy<DateTime> UtcFactory = new Lazy<DateTime>(() =>
-            {
-                // define the server and port used to connect to the time server
-                var server = "time.nist.gov";
-                var port = 123;
-
-                try
-                {
-                    // get the current address of the time server from DNS
-                    var addresses = Dns.GetHostEntry(server).AddressList;
-
-                    // create the endpoint using the first address in the response
-                    var endpoint = new IPEndPoint(addresses[0], port);
-
-                    // create a byte array to retain the request/response from the socket
-                    var data = new byte[48];
-                    data[0] = 0x1B;
-
-                    // create a new socket to connect to the time server
-                    using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
-                    {
-                        // connect to the endpoint
-                        socket.Connect(endpoint);
-
-                        // wait no more than 3 seconds for the time to be received
-                        socket.ReceiveTimeout = 3000;
-
-                        // send the request
-                        socket.Send(data);
-
-                        // get the response
-                        socket.Receive(data);
-                    }
-
-                    // create the seconds and second fraction bits from the time server
-                    ulong seconds = (ulong)data[40] << 24 | (ulong)data[41] << 16 | (ulong)data[42] << 8 | (ulong)data[43];
-                    ulong fraction = (ulong)data[44] << 24 | (ulong)data[45] << 16 | (ulong)data[46] << 8 | (ulong)data[47];
-
-                    // calculate the total millisconds since 1900
-                    var ms = (seconds * 1000) + ((fraction * 1000) / 0x100000000L);
-
-                    // generate the utc time stamp from the response received via NTP
-                    var time = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
-
-                    // return the server time
-                    return time;
-                }
-                catch (Exception)
-                {
-                    // log a warning
-                    Log.Warn(string.Format("Unable to retrieve time from the time server ({0}) on port {1}, reverting to local time.", server, port));
-
-                    // use local time
-                    return DateTime.UtcNow;
-                }
-            });
 
         /// <summary>
         /// Gets a value indicating whether or not the build environment is running on a Unix-based 
@@ -206,6 +151,9 @@ functions @{
 
             info.WorkingDirectory = workingPath;
             info.UseShellExecute = false;
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
 
             // start the process
             var process = Process.Start(info);
@@ -242,17 +190,6 @@ functions @{
 
             return files.Select(f => Path.GetDirectoryName(f)).Distinct();
         }
-        
-        /// <summary>
-        /// Gets the current date and time as UTC from a time server.
-        /// </summary>
-        public static DateTime Utc
-        {
-            get
-            {
-                return UtcFactory.Value;
-            }
-        }
 
         /// <summary>
         /// Creates the directory (recursively) at the specified <paramref name="path"/>.
@@ -269,5 +206,330 @@ functions @{
         /// Gets or sets the log used to emmit log entries.
         /// </summary>
         public static ILog Log { get; set; }
+    }
+    
+    public static class AssemblyInfo
+    {
+        private const string VersionExpression = @"(\[assembly[\s:]+{0}\(\"")(.*)(\""\)\])";
+        private const string MetadataExpression = @"(\[assembly[\s:]+AssemblyMetadata\([@\""]+{0}\""[\,\s]+[@\""]+)(.*)(\""\)\])";
+        private const string ValueFormat = @"${{1}}{0}${{3}}";
+        private const string BuildDateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK";
+
+        private static readonly Lazy<string> UtcFactory = new Lazy<string>(() =>
+            {
+                // define the server and port used to connect to the time server
+                var server = "time.nist.gov";
+                var port = 123;
+
+                try
+                {
+                    // get the current address of the time server from DNS
+                    var addresses = Dns.GetHostEntry(server).AddressList;
+
+                    // create the endpoint using the first address in the response
+                    var endpoint = new IPEndPoint(addresses[0], port);
+
+                    // create a byte array to retain the request/response from the socket
+                    var data = new byte[48];
+                    data[0] = 0x1B;
+
+                    // create a new socket to connect to the time server
+                    using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                    {
+                        // connect to the endpoint
+                        socket.Connect(endpoint);
+
+                        // wait no more than 3 seconds for the time to be received
+                        socket.ReceiveTimeout = 3000;
+
+                        // send the request
+                        socket.Send(data);
+
+                        // get the response
+                        socket.Receive(data);
+                    }
+
+                    // create the seconds and second fraction bits from the time server
+                    ulong seconds = (ulong)data[40] << 24 | (ulong)data[41] << 16 | (ulong)data[42] << 8 | (ulong)data[43];
+                    ulong fraction = (ulong)data[44] << 24 | (ulong)data[45] << 16 | (ulong)data[46] << 8 | (ulong)data[47];
+
+                    // calculate the total millisconds since 1900
+                    var ms = (seconds * 1000) + ((fraction * 1000) / 0x100000000L);
+
+                    // generate the utc time stamp from the response received via NTP
+                    var time = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
+
+                    // return the server time
+                    return time.ToString(BuildDateFormat);
+                }
+                catch (Exception)
+                {
+                    // log a warning
+                    Build.Log.Warn(string.Format("Unable to retrieve time from the time server ({0}) on port {1}, reverting to local time.", server, port));
+
+                    // use local time
+                    return DateTime.UtcNow.ToString(BuildDateFormat);
+                }
+            });
+
+        public static string Version { get; set; }
+
+        public static string InformationalVersion { get; set; }
+
+        public static string Branch { get; set; }
+
+        public static string BuildId { get; set; }
+
+        public static string CommitId { get; set; }
+
+        /// <summary>
+        /// Gets the current date and time as UTC from a time server.
+        /// </summary>
+        public static string BuildDateUtc
+        {
+            get
+            {
+                return UtcFactory.Value;
+            }
+        }
+
+        public static string BuiltBy { get; set; }
+
+        public static string BuiltOn { get; set; }
+
+        public static string TeamUri { get; set; }
+
+        public static string RepositoryUri { get; set; }
+
+        public static string BuildUri { get; set; }
+
+        public static void SaveInfo(string path)
+        {
+            // determine if the path exists
+            if (string.IsNullOrEmpty(path))
+            {
+                // throw an exception, since we need a path to be able to save the info
+                throw new ArgumentNullException("A path must be specified in order to save version info..", path);
+            }
+
+            // parse the version
+            var version = System.Version.Parse(AssemblyInfo.Version);
+
+            // determine if the informational version is not specified
+            if (string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
+            {
+                // create an informational version which includes the revision number as a tag
+                AssemblyInfo.InformationalVersion = string.Format
+                    (@"{0}.{1}.{2}-{3}", version.Major, version.Minor, version.Build, version.Revision);
+            }
+
+            if (!File.Exists(path))
+            {
+                Build.MakeDirectory(Path.GetDirectoryName(path));
+
+                // create a string builder used to create the content
+                var builder = new StringBuilder();
+
+                // append the auto generated documentation header
+                builder.AppendLine("//------------------------------------------------------------------------------");
+                builder.AppendLine("// <auto-generated>");
+                builder.AppendLine("// This code was generated by a tool.");
+                builder.AppendLine("// </auto-generated>");
+                builder.AppendLine("//------------------------------------------------------------------------------");
+                builder.AppendLine();
+
+                // add the reflection namespace
+                builder.AppendLine("using System.Reflection;");
+                builder.AppendLine();
+
+                // determine if the version is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.Version))
+                {
+                    // append the assembly version
+                    builder.AppendFormat(@"[assembly: AssemblyVersion(""{0}.{1}.0.0"")]", version.Major, version.Minor);
+                    builder.AppendLine();
+
+                    // append the assembly file version
+                    builder.AppendFormat(@"[assembly: AssemblyFileVersion(""{0}"")]", AssemblyInfo.Version);
+                    builder.AppendLine();
+                }
+
+                // append the informational version
+                builder.AppendFormat(@"[assembly: AssemblyInformationalVersion(""{0}"")]", AssemblyInfo.InformationalVersion);
+                builder.AppendLine();
+
+                // add the portable pre-processor directive
+                builder.AppendLine("#if !PORTABLE");
+
+                // determine if the branch is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    // append the branch metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "Branch", AssemblyInfo.Branch);
+                    builder.AppendLine();
+                }
+
+                // determine if the build id is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuildId))
+                {
+                    // append the build id metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuildId", AssemblyInfo.BuildId);
+                    builder.AppendLine();
+                }
+
+                // determine if the commit id is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    // append the commit id metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "CommitId", AssemblyInfo.CommitId);
+                    builder.AppendLine();
+                }
+
+                // append the build date metadata
+                builder.AppendFormat(
+                    @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                    "BuildDateUtc",
+                    AssemblyInfo.BuildDateUtc);
+                builder.AppendLine();
+
+                // determine if the built by is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
+                {
+                    // append the built by metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltBy", AssemblyInfo.BuiltBy);
+                    builder.AppendLine();
+                }
+
+                // determine if the built on is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
+                {
+                    // append the built on metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltOn", AssemblyInfo.BuiltOn);
+                    builder.AppendLine();
+                }
+
+                // determine if the repository URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "RepositoryUri",
+                        AssemblyInfo.RepositoryUri);
+                    builder.AppendLine();
+                }
+
+                // determine if the team URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.TeamUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "TeamUri",
+                        AssemblyInfo.TeamUri);
+                    builder.AppendLine();
+                }
+
+                // determine if the build URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuildUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "BuildUri",
+                        AssemblyInfo.BuildUri);
+                    builder.AppendLine();
+                }
+
+                // end the portable pre-processor directive
+                builder.AppendLine("#endif");
+
+                File.WriteAllText(path, builder.ToString());
+
+                return;
+            }
+
+            // read the contents of the file
+            var contents = File.ReadAllText(path);
+
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyFileVersion", AssemblyInfo.Version);
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyVersion", AssemblyInfo.Version);
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyInformationalVersion", AssemblyInfo.InformationalVersion);
+
+            contents = AssemblyInfo.MetadataReplace(contents, "BuildDateUtc", AssemblyInfo.BuildDateUtc);
+
+            if (!string.IsNullOrEmpty(Branch))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "Branch", AssemblyInfo.Branch);
+            }
+
+            if (!string.IsNullOrEmpty(BuildId))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuildId", AssemblyInfo.BuildId);
+            }
+
+            if (!string.IsNullOrEmpty(CommitId))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "CommitId", AssemblyInfo.CommitId);
+            }
+
+            if (!string.IsNullOrEmpty(BuiltBy))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuiltBy", AssemblyInfo.BuiltBy);
+            }
+
+            if (!string.IsNullOrEmpty(BuiltOn))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuiltOn", AssemblyInfo.BuiltOn);
+            }
+
+            if (!string.IsNullOrEmpty(TeamUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "TeamUri", AssemblyInfo.TeamUri);
+            }
+
+            if (!string.IsNullOrEmpty(RepositoryUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "RepositoryUri", AssemblyInfo.RepositoryUri);
+            }
+
+            if (!string.IsNullOrEmpty(BuildUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuildUri", AssemblyInfo.BuildUri);
+            }
+        }
+
+        private static string VersionReplace(string contents, string name, string version)
+        {
+            var expression = string.Format(VersionExpression, name);
+
+            var format = string.Format(ValueFormat, version);
+
+            var regex = new Regex(expression);
+
+            if (!regex.IsMatch(contents))
+            {
+                contents = string.Concat(contents, "{0}[assembly: ", name, "(\"", version, "\")]");
+                return contents;
+            }
+
+            return regex.Replace(contents, format, 1);
+        }
+
+        private static string MetadataReplace(string contents, string name, string value)
+        {
+            var expression = string.Format(MetadataExpression, name);
+            var format = string.Format(ValueFormat, value);
+            
+            var regex = new Regex(expression);
+
+            if (!regex.IsMatch(contents))
+            {
+                contents = string.Concat(contents, Environment.NewLine, "[assembly: AssemblyMetadata(\"", name, "\", @\"", value, "\")]");
+                return contents;
+            }
+
+            return regex.Replace(contents, format, 1);
+        }
     }
 }

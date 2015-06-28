@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.0-*",
     "description": "A test project used to prove that condo is working as expected.",
 
     "webroot": "wwwroot",
