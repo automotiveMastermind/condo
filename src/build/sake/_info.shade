@@ -1,9 +1,12 @@
+use namespace = 'System'
+
 default info_path    = ''
 
 var info_asm_path    = '${ info_path }'
 
+info-collect once='info-collect'
+
 @{
-    
     if (!string.IsNullOrEmpty(info_asm_path) && !info_asm_path.EndsWith("AssemblyInfo.cs"))
     {
         info_asm_path = Path.Combine(info_asm_path, "Properties", "AssemblyInfo.cs");

@@ -201,13 +201,48 @@ functions @{
         {
             return Directory.CreateDirectory(path).FullName;
         }
+        
+        public static bool TryGetRepositoryRoot(ref string root)
+        {
+            try
+            {
+                if (!Directory.Exists(root))
+                {
+                    return false;
+                }
+ 
+                var current = new DirectoryInfo(root);
+ 
+                string path;
+
+                do
+                {
+                    path = Path.Combine(current.FullName, ".git");
+ 
+                    if (Directory.Exists(path))
+                    {
+                        root = current.FullName;
+ 
+                        return true;
+                    }
+                }   while((current = current.Parent) != null);
+            }
+            catch (Exception netEx)
+            {
+                Log.Verbose(netEx.Message);
+ 
+                return false;
+            }
+            
+            return false;
+        }
 
         /// <summary>
         /// Gets or sets the log used to emmit log entries.
         /// </summary>
         public static ILog Log { get; set; }
     }
-    
+
     public static class AssemblyInfo
     {
         private const string VersionExpression = @"(\[assembly[\s:]+{0}\(\"")(.*)(\""\)\])";
@@ -215,7 +250,7 @@ functions @{
         private const string ValueFormat = @"${{1}}{0}${{3}}";
         private const string BuildDateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK";
 
-        private static readonly Lazy<string> UtcFactory = new Lazy<string>(() =>
+        private static readonly Lazy<DateTime> UtcFactory = new Lazy<DateTime>(() =>
             {
                 // define the server and port used to connect to the time server
                 var server = "time.nist.gov";
@@ -260,7 +295,7 @@ functions @{
                     var time = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
 
                     // return the server time
-                    return time.ToString(BuildDateFormat);
+                    return time;
                 }
                 catch (Exception)
                 {
@@ -268,11 +303,13 @@ functions @{
                     Build.Log.Warn(string.Format("Unable to retrieve time from the time server ({0}) on port {1}, reverting to local time.", server, port));
 
                     // use local time
-                    return DateTime.UtcNow.ToString(BuildDateFormat);
+                    return DateTime.UtcNow;
                 }
             });
 
         public static string Version { get; set; }
+
+        public static string FileVersion { get; set; }
 
         public static string InformationalVersion { get; set; }
 
@@ -281,6 +318,14 @@ functions @{
         public static string BuildId { get; set; }
 
         public static string CommitId { get; set; }
+        
+        public static DateTime DateTimeUtc
+        {
+            get
+            {
+                return UtcFactory.Value;
+            }
+        }
 
         /// <summary>
         /// Gets the current date and time as UTC from a time server.
@@ -289,7 +334,7 @@ functions @{
         {
             get
             {
-                return UtcFactory.Value;
+                return DateTimeUtc.ToString(BuildDateFormat);
             }
         }
 
@@ -303,6 +348,87 @@ functions @{
 
         public static string BuildUri { get; set; }
 
+        public static void LoadGitMetadata(string path)
+        {
+            if (!Build.TryGetRepositoryRoot(ref path))
+            {
+                return;
+            }
+
+            var node = Path.Combine(path, @".git", "HEAD");
+
+            if (!File.Exists(node))
+            {
+                return;
+            }
+
+            var head = File.ReadAllText(node);
+
+            var match = Regex.Match(head, "^ref: (?<branch>refs/heads/.*)$");
+
+            if (match.Success)
+            {
+                if (string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    AssemblyInfo.Branch = match.Groups["branch"].Value.Trim();
+                }
+
+                if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    node = Path.Combine(path, @".git", AssemblyInfo.Branch.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                    if (File.Exists(node))
+                    {
+                        AssemblyInfo.CommitId = File.ReadAllText(node).Trim();
+                    }
+                }
+            }
+            else
+            {
+                Build.Log.Verbose("Match was not successful");
+                if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    AssemblyInfo.CommitId = head.Trim();
+                }
+
+                if (string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    node = Path.Combine(path, @".git\refs\remotes\origin");
+
+                    AssemblyInfo.Branch = AssemblyInfo.FindBranch(node) ?? "<unknown>";
+                }
+            }
+
+            node = Path.Combine(path, @".git\config");
+
+            if (!File.Exists(node) || !string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
+            {
+                return;
+            }
+
+            using (var stream = new StreamReader(path))
+            {
+                string line;
+
+                while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
+
+                if (!string.IsNullOrEmpty(line) && string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase))
+                {
+                    match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
+
+                    if (match.Success)
+                    {
+                        AssemblyInfo.RepositoryUri = match.Groups["url"].Value;
+
+                        if (AssemblyInfo.RepositoryUri.EndsWith(".git"))
+                        {
+                            AssemblyInfo.RepositoryUri.Substring(0, AssemblyInfo.RepositoryUri.Length - 4);
+                        }
+                    }
+                }
+            }
+        }
+
         public static void SaveInfo(string path)
         {
             // determine if the path exists
@@ -313,7 +439,7 @@ functions @{
             }
 
             // parse the version
-            var version = System.Version.Parse(AssemblyInfo.Version);
+            var version = System.Version.Parse(AssemblyInfo.FileVersion);
 
             // determine if the informational version is not specified
             if (string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
@@ -346,11 +472,11 @@ functions @{
                 if (!string.IsNullOrEmpty(AssemblyInfo.Version))
                 {
                     // append the assembly version
-                    builder.AppendFormat(@"[assembly: AssemblyVersion(""{0}.{1}.0.0"")]", version.Major, version.Minor);
+                    builder.AppendFormat(@"[assembly: AssemblyVersion(""{0}.0"")]", AssemblyInfo.Version);
                     builder.AppendLine();
 
                     // append the assembly file version
-                    builder.AppendFormat(@"[assembly: AssemblyFileVersion(""{0}"")]", AssemblyInfo.Version);
+                    builder.AppendFormat(@"[assembly: AssemblyFileVersion(""{0}"")]", AssemblyInfo.FileVersion);
                     builder.AppendLine();
                 }
 
@@ -452,8 +578,8 @@ functions @{
             // read the contents of the file
             var contents = File.ReadAllText(path);
 
-            contents = AssemblyInfo.VersionReplace(contents, "AssemblyFileVersion", AssemblyInfo.Version);
-            contents = AssemblyInfo.VersionReplace(contents, "AssemblyVersion", AssemblyInfo.Version);
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyVersion", AssemblyInfo.Version + ".0");
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyFileVersion", AssemblyInfo.FileVersion);
             contents = AssemblyInfo.VersionReplace(contents, "AssemblyInformationalVersion", AssemblyInfo.InformationalVersion);
 
             contents = AssemblyInfo.MetadataReplace(contents, "BuildDateUtc", AssemblyInfo.BuildDateUtc);
@@ -497,6 +623,8 @@ functions @{
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "BuildUri", AssemblyInfo.BuildUri);
             }
+
+            File.WriteAllText(path, contents);
         }
 
         private static string VersionReplace(string contents, string name, string version)
@@ -530,6 +658,36 @@ functions @{
             }
 
             return regex.Replace(contents, format, 1);
+        }
+        
+        private static string FindBranch(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return null;
+            }
+            
+            foreach (var branch in Directory.GetFiles(path))
+            {
+                var head = File.ReadAllText(branch).Trim();
+
+                if (string.Equals(AssemblyInfo.CommitId, head))
+                {
+                    return Path.GetFileName(branch).Trim();
+                }
+
+                foreach(var part in Directory.GetDirectories(path))
+                {
+                    var current = AssemblyInfo.FindBranch(part);
+                    
+                    if (current != null)
+                    {
+                        return Path.GetFileName(part) + '/' + current;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
