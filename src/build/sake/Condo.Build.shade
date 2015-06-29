@@ -210,19 +210,19 @@ functions @{
                 {
                     return false;
                 }
- 
+
                 var current = new DirectoryInfo(root);
- 
+
                 string path;
 
                 do
                 {
                     path = Path.Combine(current.FullName, ".git");
- 
+
                     if (Directory.Exists(path))
                     {
                         root = current.FullName;
- 
+
                         return true;
                     }
                 }   while((current = current.Parent) != null);
@@ -230,7 +230,7 @@ functions @{
             catch (Exception netEx)
             {
                 Log.Verbose(netEx.Message);
- 
+
                 return false;
             }
             
@@ -399,20 +399,20 @@ functions @{
                 }
             }
 
-            node = Path.Combine(path, @".git\config");
+            node = Path.Combine(path, ".git", "config");
 
-            if (!File.Exists(node) || !string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
+            if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri) || !File.Exists(node))
             {
                 return;
             }
 
-            using (var stream = new StreamReader(path))
+            using (var stream = new StreamReader(node))
             {
                 string line;
 
                 while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
 
-                if (!string.IsNullOrEmpty(line) && string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(line))
                 {
                     match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
 
