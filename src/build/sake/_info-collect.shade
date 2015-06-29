@@ -65,4 +65,9 @@ default working_path        = '${ base_path }'
     {
         AssemblyInfo.InformationalVersion += "-" + build.PadLeft(6, "0"[0]) + "-" + commit.PadLeft(4, "0"[0]);
     }
+    
+    if (string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
+    {
+        AssemblyInfo.BuiltOn = Environment.MachineName;
+    }
 }
