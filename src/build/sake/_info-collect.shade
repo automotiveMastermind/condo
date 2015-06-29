@@ -1,0 +1,68 @@
+use namespace = 'System'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+
+- AssemblyInfo.Version       = Build.Variable("BUILD_VERSION");
+- AssemblyInfo.Branch        = Build.Variable("BUILD_SOURCEBRANCH");
+- AssemblyInfo.CommitId      = Build.Variable("BUILD_SOURCEVERSION");
+- AssemblyInfo.RepositoryUri = Build.Variable("BUILD_REPOSITORY_URI");
+- AssemblyInfo.BuildUri      = Build.Variable("BUILD_BUILDURI");
+- AssemblyInfo.TeamUri       = Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+- AssemblyInfo.BuiltBy       = Build.Variable("BUILD_REQUESTEDFOR");
+- AssemblyInfo.BuiltOn       = Build.Variable("AGENT_NAME");
+- AssemblyInfo.BuildId       = Build.Variable("BUILD_BUILDID");
+
+- AssemblyInfo.LoadGitMetadata(working_path);
+
+@{
+    var commit = AssemblyInfo.DateTimeUtc.ToString("HHmm");
+    var build = AssemblyInfo.DateTimeUtc.ToString("MMddyy");
+
+    if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
+    {
+        AssemblyInfo.CommitId = commit;
+    }
+
+    if (string.IsNullOrEmpty(AssemblyInfo.BuildId))
+    {
+        AssemblyInfo.BuildId = build;
+    }
+    
+    AssemblyInfo.FileVersion = AssemblyInfo.Version + '.' + AssemblyInfo.BuildId.TrimStart("0"[0]);
+
+    if (string.IsNullOrEmpty(AssemblyInfo.Branch))
+    {
+        AssemblyInfo.Branch = "<unknown>";
+    }
+
+    if (string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
+    {
+        AssemblyInfo.InformationalVersion = AssemblyInfo.Version;
+
+        var prerelease = "alpha";
+
+        if (AssemblyInfo.Branch.Contains(@"/dev"))
+        {
+            prerelease = "dev";
+        }
+        else if (AssemblyInfo.Branch.Contains(@"/master") || AssemblyInfo.Branch.Contains(@"/main"))
+        {
+            prerelease = "rc";
+        }
+        else if (AssemblyInfo.Branch.Contains(@"/release"))
+        {
+            prerelease = null;
+        }
+        
+        if (!string.IsNullOrEmpty(prerelease))
+        {
+            AssemblyInfo.InformationalVersion += "-" + prerelease;
+        }
+    }
+
+    if (string.IsNullOrEmpty(Build.Variable("BUILD_BUILDNUMBER")))
+    {
+        AssemblyInfo.InformationalVersion += "-" + build.PadLeft(6, "0"[0]) + "-" + commit.PadLeft(4, "0"[0]);
+    }
+}

@@ -13,22 +13,26 @@ default working_path        = '${ base_path }'
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
 
-default configuration = '${ Build.Variable("Configuration") }'
+default configuration   = '${ Build.Variable("Configuration") }'
 
-default version       = '${ Build.Variable("Version") }'
+default version         = '${ Build.Variable("BUILD_VERSION") }'
 
 global type="bool" Quiet="${ false }"
 global type="bool" Verbose="${ false }"
 
 @{
+    // determine if the version was specified
     if (string.IsNullOrEmpty(version))
     {
-        version = '1.0.0';
+        // set the version
+        version = "1.0.0";
     }
+
+    // ensure that the build version variable is always set
+    Build.Variable("BUILD_VERSION", version);
 
     // set the log instance on the helper class
     Build.Log = this.Log;
-    AssemblyInfo.Version = version;
 
     if (string.IsNullOrEmpty(configuration))
     {
@@ -61,7 +65,7 @@ global type="bool" Verbose="${ false }"
     log verbose='Options'
     log verbose='-------------------------------------------------------------'
     log verbose='Configuration         : ${ configuration }'
-    log verbose='Version               : ${ AssemblyInfo.Version }'
+    log verbose='Version               : ${ version }'
     log verbose='Date Time (UTC)       : ${ AssemblyInfo.BuildDateUtc }'
     log verbose='-------------------------------------------------------------'
 
