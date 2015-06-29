@@ -100,10 +100,31 @@ functions @{
 
         public static bool TryExecute(string command, out int exitCode, string args = "", string workingPath = "")
         {
+            string result;
+            
             try
             {
                 // attempt to execute the command
-                exitCode = Build.Execute(command, args, workingPath);
+                exitCode = Build.Execute(command, out result, args, workingPath);
+            }
+            catch
+            {
+                // set the exit code to -1 as a default error
+                exitCode = -1;
+            }
+
+            // return true if the exit code is 0
+            return exitCode == 0;
+        }
+        
+        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "")
+        {
+            result = null;
+            
+            try
+            {
+                // attempt to execute the command
+                exitCode = Build.Execute(command, out result, args, workingPath);
             }
             catch
             {
@@ -117,9 +138,19 @@ functions @{
 
         public static bool TryExecute(string command, string args = "", string workingPath = "")
         {
+            string result;
             int exitCode;
 
-            return Build.TryExecute(command, out exitCode, args, workingPath);
+            return Build.TryExecute(command, out exitCode, out result, args, workingPath);
+        }
+        
+        public static bool TryExecute(string command, out string result, string args = "", string workingPath = "")
+        {
+            result = null;
+
+            int exitCode;
+
+            return Build.TryExecute(command, out exitCode, out result, args, workingPath);
         }
 
         /// <summary>
@@ -137,6 +168,28 @@ functions @{
         /// </param>
         public static int Execute(string command, string args = "", string workingPath = "")
         {
+            string result;
+            
+            return Build.Execute(command, out result, args, workingPath);
+        }
+        
+        /// <summary>
+        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
+        /// whether or not it succeeds at the command line.
+        /// </summary>
+        /// <param name="command">
+        /// The command to execute at the command line.
+        /// </param>
+        /// <param name="arguments">
+        /// The arguments to execute at the command line.
+        /// </param>
+        /// <param name="workingPath">
+        /// The path in which to execute the specified <paramref name="command"/>.
+        /// </param>
+        public static int Execute(string command, out string result, string args = "", string workingPath = "")
+        {
+            result = null;
+            
             // determine if the working path is specified
             if (string.IsNullOrEmpty(workingPath))
             {
@@ -160,6 +213,9 @@ functions @{
 
             // wait for the process to exit
             process.WaitForExit();
+            
+            // read out the results
+            result = process.StandardOutput.ReadToEnd().Trim();
 
             // get the exit code
             return process.ExitCode;

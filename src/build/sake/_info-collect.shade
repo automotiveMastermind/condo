@@ -70,4 +70,22 @@ default working_path        = '${ base_path }'
     {
         AssemblyInfo.BuiltOn = Environment.MachineName;
     }
+
+    if (string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
+    {
+        string user;
+        
+        if (Build.TryExecute("git", out user, "config user.email"))
+        {
+            AssemblyInfo.BuiltBy = user;
+        }
+        else if (Build.TryExecute("git", out user, "config user.name"))
+        {
+            AssemblyInfo.BuiltBy = user;
+        }
+        else
+        {
+            AssemblyInfo.BuiltBy = Environment.UserName;
+        }
+    }
 }

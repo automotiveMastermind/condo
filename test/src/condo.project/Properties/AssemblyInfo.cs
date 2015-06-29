@@ -8,13 +8,14 @@ using System.Reflection;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.62915")]
-[assembly: AssemblyInformationalVersion("1.0.0-alpha-062915-0129")]
+[assembly: AssemblyInformationalVersion("1.0.0-alpha-062915-0153")]
 
 #if !PORTABLE
-[assembly: AssemblyMetadata("BuildDateUtc", @"2015-06-29T01:29:15.580Z")]
+[assembly: AssemblyMetadata("BuildDateUtc", @"2015-06-29T01:53:04.775Z")]
 [assembly: AssemblyMetadata("Branch", @"refs/heads/feature/6-machinename")]
-[assembly: AssemblyMetadata("CommitId", @"985a0533f3437a986f7cbfeaccdc8b3b74928ba4")]
+[assembly: AssemblyMetadata("CommitId", @"fd0170ec2e426a893810ce10d706e739fbdca7d4")]
 [assembly: AssemblyMetadata("BuildId", @"062915")]
 [assembly: AssemblyMetadata("RepositoryUri", @"https://dmccaffery-pb.visualstudio.com/defaultcollection/open/_git/condo")]
 [assembly: AssemblyMetadata("BuiltOn", @"gio-ws-01.local")]
+[assembly: AssemblyMetadata("BuiltBy", @"dmccaffery@pulsebridge.com")]
 #endif
