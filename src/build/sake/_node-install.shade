@@ -44,7 +44,6 @@ var node_installed          = '${ node_globally_installed || node_locally_instal
 log verbose="-nodejs install"
 
 @{
-   
     if (!node_installed)
     {
         if (Build.Unix)
