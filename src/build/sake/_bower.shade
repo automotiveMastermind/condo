@@ -6,14 +6,14 @@ bower
 bower_args=''
     Required. The arguments to pass to the bower command line tool.
 
+bower_path='$(base_path)'
+    The path in which to execute bower.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute bower.
 
 working_path='$(base_path)'
     The working path in which to execute bower.
-
-bower_path='$(base_path)'
-    The path in which to execute bower.
 
 node_install_path='$(base_path/bin/nodejs)'
     The path in which to find nodejs.

@@ -21,6 +21,11 @@ default exec_cmd    = ''
 default exec_args   = ''
 default exec_path   = '${ Directory.GetCurrentDirectory() }'
 
+log verbose='-exec'
+log verbose='--command      : ${ exec_cmd }'
+log verbose='--arguments    : ${ exec_args }'
+log verbose='--path         : ${ exec_path }'
+
 @{
     if (string.IsNullOrEmpty(exec_cmd))
     {

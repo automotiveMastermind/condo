@@ -1,13 +1,14 @@
-use namespace = "System"
-use namespace = "System.Collections.Generic"
-use namespace = "System.IO"
-use namespace = "System.Linq"
-use namespace = "System.Net"
-use namespace = "System.Net.Sockets"
-use namespace = "System.Text"
-use namespace = "System.Text.RegularExpressions"
+use namespace = 'System'
+use namespace = 'System.Collections.Generic'
+use namespace = 'System.Diagnostics'
+use namespace = 'System.IO'
+use namespace = 'System.Linq'
+use namespace = 'System.Net'
+use namespace = 'System.Net.Sockets'
+use namespace = 'System.Text'
+use namespace = 'System.Text.RegularExpressions'
 
-use namespace = "Sake.Engine.Logging"
+use namespace = 'Sake.Engine.Logging'
 
 @{
     // set the log instance on the helper class
@@ -126,10 +127,13 @@ functions @{
                 // attempt to execute the command
                 exitCode = Build.Execute(command, out result, args, workingPath);
             }
-            catch
+            catch (Exception netEx)
             {
                 // set the exit code to -1 as a default error
                 exitCode = -1;
+                
+                // set the result to the message
+                result = netEx.Message;
             }
 
             // return true if the exit code is 0
@@ -213,9 +217,9 @@ functions @{
 
             // wait for the process to exit
             process.WaitForExit();
-            
+
             // read out the results
-            result = process.StandardOutput.ReadToEnd().Trim();
+            result = process.ExitCode == 0 ? process.StandardOutput.ReadToEnd().Trim() : process.StandardError.ReadToEnd().Trim();
 
             // get the exit code
             return process.ExitCode;
@@ -245,6 +249,23 @@ functions @{
             }
 
             return files.Select(f => Path.GetDirectoryName(f)).Distinct();
+        }
+        
+        public static IEnumerable<string> GetPaths(string path, string filter)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = Directory.GetCurrentDirectory();
+            }
+
+            if (!Directory.Exists(path))
+            {
+                return new List<string>();
+            }
+
+            return Directory
+                .EnumerateFiles(path, filter, SearchOption.AllDirectories)
+                .Distinct();
         }
 
         /// <summary>
@@ -362,8 +383,23 @@ functions @{
                     return DateTime.UtcNow;
                 }
             });
+            
+        private static string version;
 
-        public static string Version { get; set; }
+        public static string Version
+        {
+            get
+            {
+                return version;
+            }
+
+            set
+            {
+                version = value;
+
+                Build.Variable("BUILD_VERSION", version);
+            }
+        }
 
         public static string FileVersion { get; set; }
 

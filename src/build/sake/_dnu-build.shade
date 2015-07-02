@@ -1,0 +1,37 @@
+@{/*
+
+dnu-build
+    Executes a dnu package manager command to build all available projects.
+
+dnu_build_args=''
+    The arguments to pass to the dnu command line tool (in addition to build)
+
+dnu_build_options='' (Environment Variable: dnu_build_options)
+    Additional options to include when executing the dnu command line tool for build operations.
+
+dnu_build_path='$(working_path)'
+    The path in which to execute the dnu command line tool.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the dnu command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the dnu command line tool.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default dnu_build_path      = '${ working_path }'
+
+default dnu_build_args      = ''
+default dnu_build_options   = '${ Build.Variable("dnu_build_options") }'
+
+log verbose='-dnu-build'
+log verbose='--arguments   : ${ dnu_build_args }' if='!string.IsNullOrEmpty(dnu_build_args)'
+log verbose='--options     : ${ dnu_build_options }' if='!string.IsNullOrEmpty(dnu_build_options)'
+
+dnu dnu_args='build ${ dnu_build_args }' dnu_options='${ dnu_build_options }' dnu_path='${ dnu_build_path }'

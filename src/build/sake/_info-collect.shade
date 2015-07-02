@@ -2,6 +2,7 @@ use namespace = 'System'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
+default version             = '${ Build.Variable("BUILD_VERSION") }'
 
 - AssemblyInfo.Version       = Build.Variable("BUILD_VERSION");
 - AssemblyInfo.Branch        = Build.Variable("BUILD_SOURCEBRANCH");
@@ -27,6 +28,11 @@ default working_path        = '${ base_path }'
     if (string.IsNullOrEmpty(AssemblyInfo.BuildId))
     {
         AssemblyInfo.BuildId = build;
+    }
+    
+    if (string.IsNullOrEmpty(AssemblyInfo.Version))
+    {
+        AssemblyInfo.Version = string.IsNullOrEmpty(version) ? "0.0.0" : version;
     }
     
     AssemblyInfo.FileVersion = AssemblyInfo.Version + '.' + AssemblyInfo.BuildId.TrimStart("0"[0]);

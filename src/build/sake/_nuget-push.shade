@@ -1,0 +1,82 @@
+
+@{/*
+
+nuget-push
+    Executes a nuget pushage manager command to push all available pushages.
+
+nuget_push_pkg=''
+    Required. The path to the nuget package that should be pushed to the feed.
+
+nuget_push_feed=''
+    The feed to which nuget should push packages.
+    
+    NOTE: This can be a list of feeds that are separated by a semi-colon (;).
+
+nuget_push_apikey=''
+    The API key to use when pushing packages to the nuget feed.
+
+nuget_push_options='' (Environment Variable: nuget_nuget_push_options)
+    Additional options to include when executing the nuget command line tool for the push operation.
+
+nuget_config_path='$(nuget_install_path)/nuget.config'
+    The path to the nuget configuration file to use when executing nuget commands.
+
+nuget_push_path='$(working_path)'
+    The path in which to execute the nuget command line tool.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the nuget command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the nuget command line tool.
+
+nuget_install_path='$(base_path)/.nuget'
+    The path in which to install nuget.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default nuget_push_path     = '${ working_path }'
+default nuget_push_feed     = ''
+default nuget_push_apikey   = ''
+
+default nuget_push_args     = ''
+default nuget_push_options  = '${ Build.Variable("nuget_push_options") }'
+
+var type="IEnumerable<string>" nuget_push_feeds
+
+log verbose='-nuget-push'
+log verbose='--api key      : ${ nuget_push_apikey }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
+log verbose='--push feed    : ${ nuget_push_feed }' if='!string.IsNullOrEmpty(nuget_push_feed)'
+log verbose='--arguments    : ${ nuget_push_args }' if='!string.IsNullOrEmpty(nuget_push_args)'
+log verbose='--options      : ${ nuget_push_options }' if='!string.IsNullOrEmpty(nuget_push_options)'
+
+@{
+    if (!string.IsNullOrEmpty(nuget_push_apikey))
+    {
+        nuget_push_options += ' -ApiKey ' + nuget_push_apikey;
+    }
+
+    if (!string.IsNullOrEmpty(nuget_push_feed))
+    {
+        nuget_push_feeds = string.Split(';');
+
+        foreach (var feed in nuget_push_feeds)
+        {
+            if (!feed.StartsWith("http"))
+            {
+                Directory.CreateDirectory(feed);
+            }
+        }
+
+        nuget_push_options += ' -Source \"' + nuget_push_feed + "\"";
+    }
+}
+
+macro 
+
+nuget nuget_args='push ${ nuget_push_args }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'

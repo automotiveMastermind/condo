@@ -1,0 +1,68 @@
+@{/*
+
+nuget-install
+    Installs nuget if it is not already installed either locally or globally.
+
+nuget_install_path='$(base_path)/.nuget'
+    The path in which to install nuget.
+
+nuget_version='2.8.0'
+    The minimum version of nuget that must be installed.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to install nuget.
+
+*/}
+
+use namespace='System'
+use namespace='System.IO'
+use namespace='System.Net'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default nuget_install_path  = '${ Path.Combine(base_path, ".nuget") }'
+
+default nuget_version       = '2.8.0'
+
+var nuget_exe       = 'nuget.exe'
+var nuget_dist      = 'https://www.nuget.org'
+var nuget_url       = '${ nuget_dist }/${ nuget_exe }'
+var nuget_install   = '${ Path.Combine(nuget_install_path, nuget_exe) }'
+
+log verbose='-nuget-install'
+log verbose='--path        : ${ nuget_install }'
+log verbose='--version     : ${ nuget_version }'
+
+@{
+    Version minimum;
+
+    if (!Version.TryParse(nuget_version, out minimum))
+    {
+        throw new ArgumentException("nuget-install: the specified minimum version is missing or invalid.", nuget_version);
+    }
+
+    if (File.Exists(nuget_install))
+    {
+        var version = FileVersionInfo.GetVersionInfo(nuget_install);
+
+        Version current;
+
+        if (version == null || version.ProductVersion == null || !Version.TryParse(version.ProductVersion, out current))
+        {
+            current = new Version(0, 0);
+        }
+
+        if (current < minimum)
+        {
+            File.Delete(nuget_install);
+        }
+    }
+
+    if (!File.Exists(nuget_install))
+    {
+        Log.Verbose("nuget-install: downloading the latest version of nuget.exe");
+
+        var client = new WebClient();
+
+        client.DownloadFile(nuget_url, nuget_install);
+    }
+}

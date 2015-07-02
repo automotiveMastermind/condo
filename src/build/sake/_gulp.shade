@@ -9,14 +9,14 @@ gulp_args=''
 gulp_options='' (Environment Variable: gulp_options)
     Additional options to pass to the grunt command.
 
+gulp_path='$(base_path)'
+    The path in which to execute gulp.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute gulp.
 
 working_path='$(base_path)'
     The working path in which to execute gulp.
-
-gulp_path='$(base_path)'
-    The path in which to execute gulp.
 
 node_install_path='$(base_path/bin/nodejs)'
     The path in which to find nodejs.

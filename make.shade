@@ -1,34 +1,18 @@
 var PROJECT='PulseBridge.Condo'
-var VERSION='0.1'
+var VERSION='0.1.0'
 var FULL_VERSION='${VERSION}'
 var AUTHORS='PulseBridge, Inc.'
 
+default version = '${ Build.Variable("BUILD_VERSION") }'
+
+@{
+    if (string.IsNullOrEmpty(version))
+    {
+        version = "0.0.0";
+    }
+}
+
 use-condo-lifecycle
-use-condo-goals
 
-#test-git
-    git
-
-#test-node
-    node node_args='--version'
-
-#test-npm
-    npm npm_args='--version'
-
-#test-dnu
-    dnu
-
-#test-rimraf
-    rimraf rimraf_path='::'
-
-#test-bower
-    bower bower_args='--version --config.interactive=false'
-
-#test-grunt
-    grunt grunt_args='--version'
-
-#test-gulp
-    gulp gulp_args='--version'
-
-#test-all .test-git .test-node .test-npm .test-dnu .test-rimraf .test-bower .test-grunt .test-gulp
-    - CallTarget("clean-all");
+#pack-nuget-packages target='package' description='Packages NuGet packages in preparation for deployment to a NuGet feed.'
+    nuget-pack

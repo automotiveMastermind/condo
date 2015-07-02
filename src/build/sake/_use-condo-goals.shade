@@ -1,7 +1,5 @@
-use namespace = "System"
-use namespace = "System.IO"
-
-use import = "Condo.Build"
+use namespace = 'System'
+use namespace = 'System.IO'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default target_path         = '${ Path.Combine(base_path, "artifacts") }'
@@ -9,27 +7,25 @@ default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
+default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
+default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
 default configuration   = '${ Build.Variable("Configuration") }'
-
 default version         = '${ Build.Variable("BUILD_VERSION") }'
 
-global type="bool" Quiet="${ false }"
-global type="bool" Verbose="${ false }"
+default Quiet='${ false }'
+default Verbose='${ false }'
 
 @{
     // determine if the version was specified
     if (string.IsNullOrEmpty(version))
     {
         // set the version
-        version = "1.0.0";
+        version = "0.0.0";
     }
-
-    // ensure that the build version variable is always set
-    Build.Variable("BUILD_VERSION", version);
 
     // set the log instance on the helper class
     Build.Log = this.Log;
@@ -59,7 +55,8 @@ global type="bool" Verbose="${ false }"
     log verbose='Bin Path              : ${ bin_path }'
     log verbose='Target Path           : ${ target_path }'
     log verbose='Build Results Path    : ${ target_build_path }'
-    log verbose='Target Results Path   : ${ target_test_path }'
+    log verbose='Test Results Path     : ${ target_test_path }'
+    log verbose='NuGet Packages Path   : ${ target_package_path }'
     log verbose='-------------------------------------------------------------'
 
     log verbose='Options'
@@ -71,7 +68,7 @@ global type="bool" Verbose="${ false }"
 
 #clean-bin description='Cleans the bin directory.'
     rimraf rimraf_path='${ bin_path }' if='Directory.Exists(bin_path)'
-    
+
 #clean-npm-modules description='Cleans any installed NPM modules.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "node_modules")).Where(p => Directory.Exists(p)) }'
     rimraf each='var rimraf_path in paths'
@@ -106,10 +103,15 @@ global type="bool" Verbose="${ false }"
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
     bower bower_args='install ${ Build.Variable("bower_install_options") }' each='var bower_path in paths'
 
-#restore-nuget-packages description='Restores all NuGet packages.'
-    dnu
+#restore-project-packages description='Restores all NuGet packages (project.json).'
+    var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
+    dnu-restore each='var dnu_restore_path in paths'
 
-#restore-packages .restore-nuget-packages .restore-npm-modules .restore-bower-components target='restore' description='Restores all NuGet packages, Bower components, and NPM modules.'
+#restore-nuget-packages description='Restores all NuGet packages (packages.config).'
+    var paths = '${ Build.GetPathsContaining(base_path, "packages.config") }'
+    nuget-restore each='var nuget_restore_path in paths'
+
+#restore-packages .restore-project-packages .restore-nuget-packages .restore-npm-modules .restore-bower-components target='restore' description='Restores all NuGet packages, Bower components, and NPM modules.'
 
 #initialize-grunt description='Initializes the project by executing the default grunt task. This will install the grunt node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "gruntfile.js") }'
@@ -125,4 +127,19 @@ global type="bool" Verbose="${ false }"
 
 #initialize-all .initialize-info .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
 
-#push-nuget-packages target='push' description='Pushes NuGet packages to the default NuGet feed.'
+#compile-dnx target='compile' description='Compiles and packages all projects found within the source directory.'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
+    dnu-pack dnu_pack_output_path='${ target_build_path }' each='var dnu_pack_path in paths'
+
+#pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
+    var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
+    nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_spec in specs'
+
+#push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes."
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
+    var out  = '${ Path.Combine(appdata_path, ".nuget") }'
+    nuget-push nuget_push_feed='${ out }' each='var nuget_push_pkg in pkgs'
+
+#push-nuget-packages target='push' description='Pushes NuGet packages to the a NuGet feed.'
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
+    nuget-push each='var nuget_push_pkg in pkgs'

@@ -1,0 +1,77 @@
+@{/*
+
+nuget
+    Executes the nuget package manager command.
+
+nuget_args=''
+    Required. The arguments to pass to the nuget package manager command line tool.
+
+nuget_options='' (Environment Variable: nuget_options)
+    Additional options to include when executuing the nuget package manager command line tool.
+
+nuget_path='$(working_path)'
+    The path in which to execute the nuget package manager command line tool.
+
+nuget_config_path='$(nuget_install_path)/nuget.config'
+    The path to the nuget configuration file to use when executing nuget commands.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the nuget package manager command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the nuget package manager command line tool.
+
+nuget_install_path='$(base_path)/.nuget'
+    The path in which to install the nuget executable if it is not already available.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default nuget_path          = '${ working_path }'
+default nuget_install_path  = '${ Path.Combine(base_path, ".nuget") }' 
+default nuget_config_path   = '${ Path.Combine(nuget_install_path, "nuget.config") }'
+
+default nuget_args          = 'restore'
+default nuget_options       = '${ Build.Variable("nuget_options") }'
+
+var nuget_cmd               = '${ Path.Combine(nuget_install_path, "nuget.exe") }'
+
+default Quiet='${ false }'
+
+nuget-install once='nuget-install'
+
+@{
+    if (string.IsNullOrEmpty(nuget_args))
+    {
+        throw new ArgumentException("nuget: arguments must be specified when executing the nuget command line tool.", "nuget_args");
+    }
+
+    if (Quiet)
+    {
+        nuget_options += " -Verbosity quiet";
+    }
+}
+
+log verbose='-nuget'
+log verbose='--path         : ${ nuget_path }'
+log verbose='--arguments    : ${ nuget_args }'
+log verbose='--options      : ${ nuget_options }' if='!string.IsNullOrEmpty(nuget_options)'
+
+@{
+    if (File.Exists(nuget_config_path))
+    {
+        nuget_options += " -ConfigFile " + nuget_config_path;
+    }
+    else
+    {
+        nuget_config_path = "";
+    }
+}
+
+log verbose='--config path  : ${ nuget_config_path }' if='!string.IsNullOrEmpty(nuget_config_path)'
+
+exec exec_cmd='dnx' exec_args='"${ nuget_cmd }" ${ nuget_args } ${ nuget_options }' exec_path='${ nuget_path }'
