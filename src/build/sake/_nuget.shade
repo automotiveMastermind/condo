@@ -74,4 +74,4 @@ log verbose='--options      : ${ nuget_options }' if='!string.IsNullOrEmpty(nuge
 
 log verbose='--config path  : ${ nuget_config_path }' if='!string.IsNullOrEmpty(nuget_config_path)'
 
-exec exec_cmd='dnx "${ nuget_cmd }"' exec_args='${ nuget_args } ${ nuget_options }' exec_path='${ nuget_path }'
+exec exec_cmd='dnx' exec_args='"${ nuget_cmd }" ${ nuget_args } ${ nuget_options }' exec_path='${ nuget_path }'

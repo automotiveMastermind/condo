@@ -127,10 +127,13 @@ functions @{
                 // attempt to execute the command
                 exitCode = Build.Execute(command, out result, args, workingPath);
             }
-            catch
+            catch (Exception netEx)
             {
                 // set the exit code to -1 as a default error
                 exitCode = -1;
+                
+                // set the result to the message
+                result = netEx.Message;
             }
 
             // return true if the exit code is 0
@@ -214,9 +217,9 @@ functions @{
 
             // wait for the process to exit
             process.WaitForExit();
-            
+
             // read out the results
-            result = process.StandardOutput.ReadToEnd().Trim();
+            result = process.ExitCode == 0 ? process.StandardOutput.ReadToEnd().Trim() : process.StandardError.ReadToEnd().Trim();
 
             // get the exit code
             return process.ExitCode;

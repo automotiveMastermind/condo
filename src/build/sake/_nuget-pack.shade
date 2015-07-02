@@ -63,7 +63,17 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
             .Union(Directory.EnumerateFiles(nuget_pack_path, "*.??proj"))
             .Distinct();
 
-        Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, nuget_pack_path));
+        try
+        {
+            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, nuget_pack_path));
+        }
+        catch (AggregateException agEx)
+        {
+            foreach(var ex in agEx.InnerExceptions)
+            {
+                Log.Warn("nuget-pack: " + ex.Message);
+            }
+        }
     }
     else
     {
