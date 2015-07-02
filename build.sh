@@ -34,11 +34,13 @@ if ! type dnvm > /dev/null 2>&1; then
 fi
 
 # set the URL to nuget
-url=http://www.nuget.org/nuget.exe
+nugeturi=http://www.nuget.org/nuget.exe
+appdata=~/.config
+nugetcmd=$appdata/NuGet/nuget.exe
 
 # download nuget if it doesn't already exist
-if ! test -f "$dnxpath/nuget.exe"; then
-    wget -O "$dnxpath/nuget.exe" "$url" 1>&- 2>&- || curl -o "$dnxpath/nuget.exe" --location "$url" 1>&- 2>&-
+if ! test -f "$nugetcmd"; then
+    wget -O "$nugetcmd" "$nugeturi" 1>&- 2>&- || curl -o "$nugetcmd" --location "$nugeturi" 1>&- 2>&-
 fi
 
 # define the path for nuget
@@ -50,7 +52,7 @@ if ! test -f "$nuget"; then
     mkdir `dirname "$nuget"`
 
     # copy nuget.exe from the cache
-    cp "$dnxpath/nuget.exe" "$nuget"
+    cp "$nugetcmd" "$nuget"
 fi
 
 # determine if dnx is available
