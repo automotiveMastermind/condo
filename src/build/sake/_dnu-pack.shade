@@ -1,0 +1,53 @@
+@{/*
+
+dnu-pack
+    Executes a dnu package manager command to pack all available projects.
+
+dnu_pack_args=''
+    The arguments to pass to the dnu command line tool (in addition to pack)
+
+dnu_pack_options='' (Environment Variable: dnu_pack_options)
+    Additional options to include when executing the dnu command line tool for pack operations.
+
+dnu_pack_path='$(working_path)'
+    The path in which to execute the dnu command line tool.
+
+dnu_pack_output_path='$(target_path)/build'
+    The path in which to store the resulting packages.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the dnu command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the dnu command line tool.
+
+target_path='$(working_path)/artifacts'
+    The target path four build artifacts.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+default target_path             = '${ Path.Combine(base_path, "artifacts") }'
+default dnu_pack_path           = '${ working_path }'
+default dnu_pack_output_path    = '${ Path.Combine(target_path, "build") }'
+
+default dnu_pack_args           = ''
+default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
+
+log verbose='-dnu-pack'
+log verbose='--arguments   : ${ dnu_pack_args }'
+log verbose='--output path : ${ dnu_pack_output_path }' if='!string.IsNullOrEmpty(dnu_pack_output_path)'
+log verbose='--options     : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
+
+@{
+    if (!string.IsNullOrEmpty(dnu_pack_output_path))
+    {
+        dnu_pack_options += string.Format(@" --out ""{0}""", dnu_pack_output_path);
+    }
+}
+
+dnu dnu_args='pack ${ dnu_pack_args }' dnu_options='${ dnu_pack_options }' dnu_path='${ dnu_pack_path }'

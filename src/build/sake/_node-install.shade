@@ -11,14 +11,14 @@ base_path='$(CurrentDirectory)'
 
 */}
 
-use assembly="System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+use assembly='System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
 
-use namespace="System"
-use namespace="System.IO"
-use namespace="System.IO.Compression"
-use namespace="System.Net"
+use namespace='System'
+use namespace='System.IO'
+use namespace='System.IO.Compression'
+use namespace='System.Net'
 
-default base_path   = '${ Directory.GetCurrentDirectory() }'
+default base_path           = '${ Directory.GetCurrentDirectory() }'
 default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 
 default node_version    = '0.10.28'
@@ -41,7 +41,7 @@ var node_installed = '${ node_globally_installed || node_locally_installed }'
 
 - node_install = node_globally_installed ? "node" : node_install;
 
-log verbose="-nodejs install"
+log verbose='-nodejs install'
 
 @{
     if (!node_installed)
@@ -75,8 +75,8 @@ log verbose="-nodejs install"
     }
 }
 
-log verbose="--path        : ${ node_install }"
-log verbose="--version     : ${ node_version }"
-log verbose="--npm version : ${ npm_version }"
+log verbose='--path        : ${ node_install }'
+log verbose='--version     : ${ node_version }'
+log verbose='--npm version : ${ npm_version }'
 
 verify-hash assembly='${ node_install }' hash='${ node_hash }' if='!node_installed'

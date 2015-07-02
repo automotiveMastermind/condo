@@ -1,13 +1,14 @@
-use namespace = "System"
-use namespace = "System.Collections.Generic"
-use namespace = "System.IO"
-use namespace = "System.Linq"
-use namespace = "System.Net"
-use namespace = "System.Net.Sockets"
-use namespace = "System.Text"
-use namespace = "System.Text.RegularExpressions"
+use namespace = 'System'
+use namespace = 'System.Collections.Generic'
+use namespace = 'System.Diagnostics'
+use namespace = 'System.IO'
+use namespace = 'System.Linq'
+use namespace = 'System.Net'
+use namespace = 'System.Net.Sockets'
+use namespace = 'System.Text'
+use namespace = 'System.Text.RegularExpressions'
 
-use namespace = "Sake.Engine.Logging"
+use namespace = 'Sake.Engine.Logging'
 
 @{
     // set the log instance on the helper class
@@ -246,6 +247,23 @@ functions @{
 
             return files.Select(f => Path.GetDirectoryName(f)).Distinct();
         }
+        
+        public static IEnumerable<string> GetPaths(string path, string filter)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = Directory.GetCurrentDirectory();
+            }
+
+            if (!Directory.Exists(path))
+            {
+                return new List<string>();
+            }
+
+            return Directory
+                .EnumerateFiles(path, filter, SearchOption.AllDirectories)
+                .Distinct();
+        }
 
         /// <summary>
         /// Creates the directory (recursively) at the specified <paramref name="path"/>.
@@ -362,8 +380,23 @@ functions @{
                     return DateTime.UtcNow;
                 }
             });
+            
+        private static string version;
 
-        public static string Version { get; set; }
+        public static string Version
+        {
+            get
+            {
+                return version;
+            }
+
+            set
+            {
+                version = value;
+
+                Build.Variable("BUILD_VERSION", version);
+            }
+        }
 
         public static string FileVersion { get; set; }
 

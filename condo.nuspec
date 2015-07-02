@@ -10,6 +10,6 @@
     <language>en-US</language>
   </metadata>
   <files>
-    <file src="build\*.*" target="build" /> 
+    <file src="src/build/**" target="build" /> 
   </files>
 </package>

@@ -61,20 +61,13 @@ fi
 
 # set sake and make file paths
 sake=$root/packages/Sake/tools/Sake.exe
-condo=$root/packages/Condo
-includes=$condo/build
+includes=$root/src/build/sake
 make=make.shade
 
 # determine if sake is installed
 if ! test -f "$sake"; then
     # install sake using nuget (so we have additional options not supported by DNU)
     dnx "$nuget" install Sake -pre -o packages -ExcludeVersion
-fi
-
-# determine if condo is insatlled
-if ! test -d "$includes"; then
-    # install condo using nuget (so we have additional options not supported by DNU)
-    dnx "$nuget" install Condo -pre -o packages -ExcludeVersion
 fi
 
 # execute the build with sake

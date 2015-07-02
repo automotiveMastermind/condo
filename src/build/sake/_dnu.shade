@@ -3,20 +3,20 @@
 dnu
     Executes a dnu package manager command.
 
-dnu_args='restore'
-    The arguments to pass to the dnu command line tool.
+dnu_args=''
+    Required. The arguments to pass to the dnu command line tool.
 
 dnu_options='' (Environment Variable: dnu_options)
     Additional options to include when executuing the dnu command line tool.
+
+dnu_path='$(working_path)'
+    The path in which to execute the dnu command line tool.
 
 base_path='$(CurrentDirectory)'
     The base path in which to execute the dnu command line tool.
 
 working_path='$(base_path)'
     The working path in which to execute the dnu command line tool.
-
-dnu_path='$(working_path)'
-    The path in which to execute the dnu command line tool.
 
 */}
 
@@ -27,10 +27,17 @@ default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default dnu_path            = '${ working_path }'
 
-default dnu_args            = 'restore'
+default dnu_args            = ''
 default dnu_options         = '${ Build.Variable("dnu_options") }'
 
+default Quiet='${ false }'
+
 @{
+    if (string.IsNullOrEmpty(dnu_args))
+    {
+        throw new ArgumentException("dnu: arguments must be specified when executing the dnu command line tool.", "dnu_args");
+    }
+
     if (Quiet)
     {
         dnu_args += " --quiet";

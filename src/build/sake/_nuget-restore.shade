@@ -1,0 +1,43 @@
+@{/*
+
+nuget-restore
+    Executes a nuget package manager command to restore all available packages.
+
+nuget_restore_args=''
+    The arguments to pass to the nuget command line tool (in addition to restore)
+
+nuget_restore_options='' (Environment Variable: nuget_nuget_restore_options)
+    Additional options to include when executing the nuget command line tool for the restore operation.
+
+nuget_restore_path='$(working_path)'
+    The path in which to execute the nuget command line tool.
+
+nuget_config_path='$(nuget_install_path)/nuget.config'
+    The path to the nuget configuration file to use when executing nuget commands.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the nuget command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the nuget command line tool.
+
+nuget_install_path='$(base_path)/.nuget'
+    The path in which to install nuget.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+default nuget_restore_path      = '${ working_path }'
+
+default nuget_restore_args      = ''
+default nuget_restore_options   = '${ Build.Variable("nuget_restore_options") }'
+
+log verbose='-nuget-restore'
+log verbose='--arguments   : ${ nuget_restore_args }' if='!string.IsNullOrEmpty(nuget_restore_args)'
+log verbose='--options     : ${ nuget_restore_options }' if='!string.IsNullOrEmpty(nuget_restore_options)'
+
+nuget nuget_args='restore ${ nuget_restore_args }' nuget_options='${ nuget_restore_options }' nuget_path='${ nuget_restore_path }'
