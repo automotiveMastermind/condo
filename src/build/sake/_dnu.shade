@@ -48,4 +48,4 @@ log verbose='-dnu'
 log verbose='--arguments   : ${ dnu_args }'
 log verbose='--options     : ${ dnu_options }' if='!string.IsNullOrEmpty(dnu_options)'
 
-exec exec_cmd='dnu' exec_args='${ dnu_options } ${ dnu_args }' exec_path='${ dnu_path }'
+exec exec_cmd='dnu' exec_args='${ dnu_args } ${ dnu_options }' exec_path='${ dnu_path }'

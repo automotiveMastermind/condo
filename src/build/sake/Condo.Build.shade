@@ -219,7 +219,7 @@ functions @{
             process.WaitForExit();
 
             // read out the results
-            result = process.ExitCode == 0 ? process.StandardOutput.ReadToEnd().Trim() : process.StandardError.ReadToEnd().Trim();
+            result = (process.StandardOutput.ReadToEnd() + " " + process.StandardError.ReadToEnd()).Trim();
 
             // get the exit code
             return process.ExitCode;

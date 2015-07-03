@@ -4,7 +4,7 @@
 nuget-push
     Executes a nuget pushage manager command to push all available pushages.
 
-nuget_push_pkg=''
+nuget_push_args=''
     Required. The path to the nuget package that should be pushed to the feed.
 
 nuget_push_feed=''
@@ -47,8 +47,6 @@ default nuget_push_apikey   = ''
 default nuget_push_args     = ''
 default nuget_push_options  = '${ Build.Variable("nuget_push_options") }'
 
-var type="IEnumerable<string>" nuget_push_feeds
-
 log verbose='-nuget-push'
 log verbose='--api key      : ${ nuget_push_apikey }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
 log verbose='--push feed    : ${ nuget_push_feed }' if='!string.IsNullOrEmpty(nuget_push_feed)'
@@ -56,6 +54,11 @@ log verbose='--arguments    : ${ nuget_push_args }' if='!string.IsNullOrEmpty(nu
 log verbose='--options      : ${ nuget_push_options }' if='!string.IsNullOrEmpty(nuget_push_options)'
 
 @{
+    if (string.IsNullOrEmpty(nuget_push_args))
+    {
+        throw new ArgumentException("nuget-push: arguments must be specified.", "nuget_push_args");
+    }
+
     if (!string.IsNullOrEmpty(nuget_push_apikey))
     {
         nuget_push_options += ' -ApiKey ' + nuget_push_apikey;
@@ -63,7 +66,7 @@ log verbose='--options      : ${ nuget_push_options }' if='!string.IsNullOrEmpty
 
     if (!string.IsNullOrEmpty(nuget_push_feed))
     {
-        nuget_push_feeds = string.Split(';');
+        var nuget_push_feeds = nuget_push_feed.Split(";"[0]);
 
         foreach (var feed in nuget_push_feeds)
         {
@@ -77,6 +80,4 @@ log verbose='--options      : ${ nuget_push_options }' if='!string.IsNullOrEmpty
     }
 }
 
-macro 
-
-nuget nuget_args='push ${ nuget_push_args }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
+nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'

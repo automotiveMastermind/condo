@@ -3,16 +3,5 @@ var VERSION='0.1.0'
 var FULL_VERSION='${VERSION}'
 var AUTHORS='PulseBridge, Inc.'
 
-default version = '${ Build.Variable("BUILD_VERSION") }'
-
-@{
-    if (string.IsNullOrEmpty(version))
-    {
-        version = "0.0.0";
-    }
-}
-
 use-condo-lifecycle
-
-#pack-nuget-packages target='package' description='Packages NuGet packages in preparation for deployment to a NuGet feed.'
-    nuget-pack
+use-condo-goals

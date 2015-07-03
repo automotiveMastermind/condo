@@ -65,7 +65,7 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
 
         try
         {
-            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, nuget_pack_path));
+            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(path)));
         }
         catch (AggregateException agEx)
         {
@@ -73,6 +73,8 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
             {
                 Log.Warn("nuget-pack: " + ex.Message);
             }
+
+            throw;
         }
     }
     else
@@ -82,10 +84,11 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
             throw new ArgumentException("nuget-pack: the specified path for the specification or project was not found.", "nuget_pack_path");
         }
 
-        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, nuget_pack_path);
+        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path));
     }
 }
 
 macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string'
-    - nuget_options = nuget_options.EndsWith("proj") ? nuget_options + " -Symbols" : nuget_options;
+    - nuget_options = nuget_args.EndsWith("proj") ? nuget_options + " -Symbols" : nuget_options;
+    - nuget_options += " -BasePath \"" + nuget_path + "\"";
     nuget

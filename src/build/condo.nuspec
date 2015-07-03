@@ -10,6 +10,6 @@
     <language>en-US</language>
   </metadata>
   <files>
-    <file src="src/build/**" target="build" /> 
+    <file src="sake/**" target="build" /> 
   </files>
 </package>

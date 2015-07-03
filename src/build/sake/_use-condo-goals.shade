@@ -7,7 +7,7 @@ default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
-default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) }'
+default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
@@ -133,13 +133,11 @@ default Verbose='${ false }'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
     var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
-    nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_spec in specs'
+    nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
 
-#push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes."
-    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
-    var out  = '${ Path.Combine(appdata_path, ".nuget") }'
-    nuget-push nuget_push_feed='${ out }' each='var nuget_push_pkg in pkgs'
+#push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.'
+    copy copy_src_path='${ target_package_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_overwrite='${ true }'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to the a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
-    nuget-push each='var nuget_push_pkg in pkgs'
+    nuget-push each='var nuget_push_args in pkgs'

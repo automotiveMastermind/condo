@@ -42,16 +42,16 @@ log verbose='--version     : ${ nuget_version }'
 
     if (File.Exists(nuget_install))
     {
-        var version = FileVersionInfo.GetVersionInfo(nuget_install);
+        var nuget_install_version = FileVersionInfo.GetVersionInfo(nuget_install);
 
-        Version current;
+        Version nuget_install_current;
 
-        if (version == null || version.ProductVersion == null || !Version.TryParse(version.ProductVersion, out current))
+        if (nuget_install_version == null || nuget_install_version.ProductVersion == null || !Version.TryParse(nuget_install_version.ProductVersion, out nuget_install_current))
         {
-            current = new Version(0, 0);
+            nuget_install_current = new Version(0, 0);
         }
 
-        if (current < minimum)
+        if (nuget_install_current < minimum)
         {
             File.Delete(nuget_install);
         }
