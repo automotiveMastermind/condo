@@ -2,7 +2,7 @@
 *               text=auto
 
 # use c# diff for .cs files
-*.cs            text    eol=crlf    diff=csharp
+*.cs            text                diff=csharp
 
 # force conflict resolution of project files
 *.sln           text    eol=crlf    merge=union
@@ -81,7 +81,6 @@ AUTHORS         text
 *.py            text
 *.scm           text
 *.sql           text
-*.sh            text
 
 # nuget files
 .nuspec         text
@@ -90,7 +89,10 @@ AUTHORS         text
 .config         text
 
 # windows files
-*.cmd           text    eol=crlf    merge=union
-*.bat           text    eol=crlf    merge=union
-*.txt           text    eol=crlf    merge=union
-*.ini           text    eol=crlf    merge=union
+*.cmd           text    eol=crlf
+*.bat           text    eol=crlf
+*.txt           text    eol=crlf
+*.ini           text    eol=crlf
+
+# unix files
+*.sh            text	eol=lf
