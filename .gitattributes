@@ -2,10 +2,10 @@
 *               text=auto
 
 # use c# diff for .cs files
-*.cs            text                diff=csharp
+*.cs            text    eol=crlf    diff=csharp
 
 # force conflict resolution of project files
-*.sln           text    eol=crlf    merge=union 
+*.sln           text    eol=crlf    merge=union
 *.csproj        text                merge=union
 *.vbproj        text                merge=union
 *.vcxproj       text                merge=union
@@ -75,8 +75,6 @@ AUTHORS         text
 *.htm           text
 *.html          text
 *.xml           text
-*.txt           text
-*.ini           text
 *.inc           text
 *.pl            text
 *.rb            text
@@ -84,10 +82,15 @@ AUTHORS         text
 *.scm           text
 *.sql           text
 *.sh            text
-*.bat           text
 
 # nuget files
 .nuspec         text
 
 # config files
 .config         text
+
+# windows files
+*.cmd           text    eol=crlf    merge=union
+*.bat           text    eol=crlf    merge=union
+*.txt           text    eol=crlf    merge=union
+*.ini           text    eol=crlf    merge=union
