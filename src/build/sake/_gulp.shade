@@ -18,9 +18,6 @@ base_path='$(CurrentDirectory)'
 working_path='$(base_path)'
     The working path in which to execute gulp.
 
-node_install_path='$(base_path/bin/nodejs)'
-    The path in which to find nodejs.
-
 */}
 
 use namespace = 'System'
@@ -30,7 +27,6 @@ default gulp_args          = ''
 default gulp_options       = '${ Build.Variable("gulp_options") }'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
-default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 default working_path        = '${ base_path }'
 default gulp_path           = '${ working_path }'
 default npm_install_options = '${ Build.Variable("npm_install_options") }'
@@ -39,15 +35,15 @@ log verbose='-gulp'
 log verbose='--arguments   : ${ gulp_args }'
 log verbose='--path        : ${ gulp_path }'
 
-var gulp_cmd                   = '${ Path.Combine(node_install_path, "node_modules", "gulp", "bin", "gulp.js") }'
+var gulp_cmd                   = '${ Path.Combine(gulp_path, "node_modules", "gulp", "bin", "gulp.js") }'
 
 var gulp_locally_installed     = '${ File.Exists(gulp_cmd) }'
-var gulp_globally_installed    = '${ !gulp_locally_installed && Build.TryExecute("gulp", "--version") }'
+var gulp_globally_installed    = '${ !gulp_locally_installed && Build.TryExecute("gulp", "--version", quiet:true) }'
 var gulp_installed             = '${ gulp_locally_installed || gulp_globally_installed }'
 
 - gulp_cmd = gulp_globally_installed ? "gulp" : gulp_cmd;
 
-npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" gulp' if='!gulp_installed'
+npm npm_args='install ${ npm_install_options } --prefix "${ gulp_path }" gulp' if='!gulp_installed' once='gulp-install'
 
 exec exec_cmd='${ gulp_cmd }' exec_args='${ gulp_args } ${ gulp_options }' exec_path='${ gulp_path }' if='gulp_globally_installed'
 

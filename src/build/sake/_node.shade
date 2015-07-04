@@ -39,6 +39,6 @@ log verbose='--arguments   : ${ node_args }'
 log verbose='--path        : ${ node_path }'
 
 var node_cmd    = '${ Path.Combine(node_install_path, "node.exe") }'
-- node_cmd      = File.Exists(node_cmd) ? node_cmd : "node";
+- node_cmd      = !Build.Unix && File.Exists(node_cmd) ? node_cmd : "node";
 
 exec exec_cmd='${ node_cmd }' exec_args='${ node_args }' exec_path='${ node_path }'

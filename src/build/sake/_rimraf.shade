@@ -6,6 +6,15 @@ rimraf
 rimraf_path
     Required. The path that should be recursively removed.
 
+base_path='$(CurrentDirectory)'
+    The base path in which to execute rimraf.
+
+working_path='$(base_path)'
+    The working path in which to execute rimraf.
+
+node_install_path='$(base_path/bin/nodejs)'
+    The path in which to find nodejs.
+
 */}
 
 default rimraf_path         = ''
@@ -28,12 +37,12 @@ log verbose='-rimraf'
 log verbose='--path : ${ rimraf_path }'
 
 var rimraf_locally_installed    = '${ File.Exists(rimraf_cmd) }'
-var rimraf_globally_installed   = '${ !rimraf_locally_installed && Build.TryExecute("rimraf", "::") }'
+var rimraf_globally_installed   = '${ !rimraf_locally_installed && Build.TryExecute("rimraf", "::", quiet:true) }'
 var rimraf_installed            = '${ rimraf_locally_installed || rimraf_globally_installed }'
 
 - rimraf_cmd = rimraf_globally_installed ? "rimraf" : rimraf_cmd;
 
-npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" rimraf' once='rimraf-install' if='!rimraf_installed'
+npm npm_args='install ${ npm_install_options } --prefix "${ node_install_path }" rimraf' if='!rimraf_installed' once='rimraf-install'
 
 exec exec_cmd='${ rimraf_cmd }' exec_args='"${ rimraf_path }"' if='rimraf_globally_installed'
 

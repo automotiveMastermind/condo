@@ -1,24 +1,30 @@
 use namespace = 'System'
 
-default base_path           = '${ Directory.GetCurrentDirectory() }'
-default working_path        = '${ base_path }'
-default version             = '${ Build.Variable("BUILD_VERSION") }'
+use import = 'Condo.AssemblyInfo'
 
-- AssemblyInfo.Version       = Build.Variable("BUILD_VERSION");
-- AssemblyInfo.Branch        = Build.Variable("BUILD_SOURCEBRANCH");
-- AssemblyInfo.CommitId      = Build.Variable("BUILD_SOURCEVERSION");
-- AssemblyInfo.RepositoryUri = Build.Variable("BUILD_REPOSITORY_URI");
-- AssemblyInfo.BuildUri      = Build.Variable("BUILD_BUILDURI");
-- AssemblyInfo.TeamUri       = Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
-- AssemblyInfo.BuiltBy       = Build.Variable("BUILD_REQUESTEDFOR");
-- AssemblyInfo.BuiltOn       = Build.Variable("AGENT_NAME");
-- AssemblyInfo.BuildId       = Build.Variable("BUILD_BUILDID");
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+
+- AssemblyInfo.AssemblyVersion  = Build.Variable("BUILD_VERSION");
+- AssemblyInfo.Branch           = Build.Variable("BUILD_SOURCEBRANCH");
+- AssemblyInfo.CommitId         = Build.Variable("BUILD_SOURCEVERSION");
+- AssemblyInfo.RepositoryUri    = Build.Variable("BUILD_REPOSITORY_URI");
+- AssemblyInfo.BuildUri         = Build.Variable("BUILD_BUILDURI");
+- AssemblyInfo.TeamUri          = Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+- AssemblyInfo.BuiltBy          = Build.Variable("BUILD_REQUESTEDFOR");
+- AssemblyInfo.BuiltOn          = Build.Variable("AGENT_NAME");
+- AssemblyInfo.BuildId          = Build.Variable("BUILD_BUILDID");
 
 - AssemblyInfo.LoadGitMetadata(working_path);
 
 @{
     var commit = AssemblyInfo.DateTimeUtc.ToString("HHmm");
     var build = AssemblyInfo.DateTimeUtc.ToString("MMddyy");
+
+    if (string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion))
+    {
+        AssemblyInfo.AssemblyVersion = string.IsNullOrEmpty(version) ? "1.0.0" : version;
+    }
 
     if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
     {
@@ -29,13 +35,8 @@ default version             = '${ Build.Variable("BUILD_VERSION") }'
     {
         AssemblyInfo.BuildId = build;
     }
-    
-    if (string.IsNullOrEmpty(AssemblyInfo.Version))
-    {
-        AssemblyInfo.Version = string.IsNullOrEmpty(version) ? "0.0.0" : version;
-    }
-    
-    AssemblyInfo.FileVersion = AssemblyInfo.Version + '.' + AssemblyInfo.BuildId.TrimStart("0"[0]);
+
+    AssemblyInfo.FileVersion = AssemblyInfo.AssemblyVersion + '.' + AssemblyInfo.BuildId;
 
     if (string.IsNullOrEmpty(AssemblyInfo.Branch))
     {
@@ -44,13 +45,16 @@ default version             = '${ Build.Variable("BUILD_VERSION") }'
 
     if (string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
     {
-        AssemblyInfo.InformationalVersion = AssemblyInfo.Version;
-
+        AssemblyInfo.InformationalVersion = AssemblyInfo.AssemblyVersion;
+    }
+    
+    if (string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag))
+    {
         var prerelease = "alpha";
 
         if (AssemblyInfo.Branch.Contains(@"/dev"))
         {
-            prerelease = "dev";
+            prerelease = "beta";
         }
         else if (AssemblyInfo.Branch.Contains(@"/master") || AssemblyInfo.Branch.Contains(@"/main"))
         {
@@ -60,18 +64,15 @@ default version             = '${ Build.Variable("BUILD_VERSION") }'
         {
             prerelease = null;
         }
-        
-        if (!string.IsNullOrEmpty(prerelease))
-        {
-            AssemblyInfo.InformationalVersion += "-" + prerelease;
-        }
+
+        AssemblyInfo.PrereleaseTag = prerelease;
     }
 
-    if (string.IsNullOrEmpty(Build.Variable("BUILD_BUILDNUMBER")))
+    if (string.IsNullOrEmpty(Build.Variable("BUILD_BUILDNUMBER")) && string.IsNullOrEmpty(Build.Variable("BUILD_SERVER")))
     {
-        AssemblyInfo.InformationalVersion += "-" + build.PadLeft(6, "0"[0]) + "-" + commit.PadLeft(4, "0"[0]);
+        AssemblyInfo.PrereleaseTag += "-" + build + "-" + commit;
     }
-    
+
     if (string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
     {
         AssemblyInfo.BuiltOn = Environment.MachineName;
@@ -80,7 +81,7 @@ default version             = '${ Build.Variable("BUILD_VERSION") }'
     if (string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
     {
         string user;
-        
+
         if (Build.TryExecute("git", out user, "config user.email"))
         {
             AssemblyInfo.BuiltBy = user;

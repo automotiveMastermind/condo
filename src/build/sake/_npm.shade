@@ -26,6 +26,15 @@ default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 default npm_args            = ''
 default npm_path            = '${ working_path }'
 
+default Quiet               = '${ false }'
+
+@{
+    if (Quiet)
+    {
+        npm_args += " --quiet";
+    }
+}
+
 log verbose='-npm'
 log verbose='--arguments: ${ npm_args }'
 log verbose='--path: ${ npm_path }'
@@ -40,6 +49,6 @@ log verbose='--path: ${ npm_path }'
 node-install once='node-install'
 
 var npm_cmd = '${ Path.Combine(node_install_path, "npm.cmd") }'
-- npm_cmd = File.Exists(npm_cmd) ? ("\"" + npm_cmd + "\"") : "npm";
+- npm_cmd = !Build.Unix && File.Exists(npm_cmd) ? ("\"" + npm_cmd + "\"") : "npm";
 
-exec exec_cmd='${ npm_cmd }' exec_args='${ npm_args }' exec_path='${ npm_path }'
+exec exec_cmd='${ npm_cmd }' exec_args='${ npm_args }' exec_path='${ npm_path }' exec_quiet='${ false }'

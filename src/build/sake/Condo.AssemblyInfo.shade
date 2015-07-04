@@ -1,0 +1,812 @@
+use namespace = 'System'
+use namespace = 'System.Collections.Generic'
+use namespace = 'System.Diagnostics'
+use namespace = 'System.IO'
+use namespace = 'System.Linq'
+use namespace = 'System.Net'
+use namespace = 'System.Net.Sockets'
+use namespace = 'System.Text'
+use namespace = 'System.Text.RegularExpressions'
+
+use import = 'Condo.Build'
+
+functions @{
+    public static class AssemblyInfo
+    {
+        private const string VersionExpression = @"(\[assembly[\s:]+{0}\(\"")(.*)(\""\)\])";
+        private const string MetadataExpression = @"(\[assembly[\s:]+AssemblyMetadata\([@\""]+{0}\""[\,\s]+[@\""]+)(.*)(\""\)\])";
+        private const string ValueFormat = @"${{1}}{0}${{3}}";
+        private const string BuildDateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK";
+
+        private static readonly Lazy<DateTime> UtcFactory = new Lazy<DateTime>(() =>
+            {
+                // define the server and port used to connect to the time server
+                var server = "time.nist.gov";
+                var port = 123;
+
+                try
+                {
+                    // get the current address of the time server from DNS
+                    var addresses = Dns.GetHostEntry(server).AddressList;
+
+                    // create the endpoint using the first address in the response
+                    var endpoint = new IPEndPoint(addresses[0], port);
+
+                    // create a byte array to retain the request/response from the socket
+                    var data = new byte[48];
+                    data[0] = 0x1B;
+
+                    // create a new socket to connect to the time server
+                    using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                    {
+                        // connect to the endpoint
+                        socket.Connect(endpoint);
+
+                        // wait no more than 3 seconds for the time to be received
+                        socket.ReceiveTimeout = 3000;
+
+                        // send the request
+                        socket.Send(data);
+
+                        // get the response
+                        socket.Receive(data);
+                    }
+
+                    // create the seconds and second fraction bits from the time server
+                    ulong seconds = (ulong)data[40] << 24 | (ulong)data[41] << 16 | (ulong)data[42] << 8 | (ulong)data[43];
+                    ulong fraction = (ulong)data[44] << 24 | (ulong)data[45] << 16 | (ulong)data[46] << 8 | (ulong)data[47];
+
+                    // calculate the total millisconds since 1900
+                    var ms = (seconds * 1000) + ((fraction * 1000) / 0x100000000L);
+
+                    // generate the utc time stamp from the response received via NTP
+                    var time = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
+
+                    // return the server time
+                    return time;
+                }
+                catch (Exception)
+                {
+                    // log a warning
+                    Build.Log.Warn(string.Format("Unable to retrieve time from the time server ({0}) on port {1}, reverting to local time.", server, port));
+
+                    // use local time
+                    return DateTime.UtcNow;
+                }
+            });
+
+        /// <summary>
+        /// The version of the application.
+        /// </summary>
+        private static Version assemblyVersion = null;
+
+        /// <summary>
+        /// Gets or sets the version of the application.
+        /// </summary>
+        public static string AssemblyVersion
+        {
+            get
+            {
+                return assemblyVersion == null ? null : assemblyVersion.ToString();
+            }
+
+            set
+            {
+                // determine if the value is empty
+                if (string.IsNullOrEmpty(value))
+                {
+                    // clear the version
+                    assemblyVersion = null;
+
+                    // clear the build variable
+                    Build.Variable("BUILD_VERSION", null);
+
+                    // move on immediately
+                    return;
+                }
+
+                // define a variable to retain the parsed value
+                Version current;
+
+                // attempt to parse the value
+                if (!Version.TryParse(value, out current))
+                {
+                    // throw a new exception if the value could not be parsed
+                    throw new ArgumentException("The specified version is not properly formatted.", "value");
+                }
+
+                // set the version to the parsed value (forcing the revision to be zero)
+                assemblyVersion = new Version(current.Major, current.Minor, current.Build);
+
+                // update the build version environment variable
+                Build.Variable("BUILD_VERSION", assemblyVersion.ToString());
+            }
+        }
+
+        /// <summary>
+        /// The file version of the application.
+        /// </summary>
+        private static Version fileVersion = null;
+
+        /// <summary>
+        /// Gets or sets the file version of the application.
+        /// </summary>
+        public static string FileVersion
+        {
+            get
+            {
+                return fileVersion == null ? null : fileVersion.ToString();
+            }
+
+            set
+            {
+                // determine if the value is empty
+                if (string.IsNullOrEmpty(value))
+                {
+                    // clear the version
+                    fileVersion = null;
+
+                    // move on immediately
+                    return;
+                }
+                
+                // define a variable to retain the parsed value
+                Version current;
+
+                // attempt to parse the value
+                if (!Version.TryParse(value, out current))
+                {
+                    // throw a new exception if the value could not be parsed
+                    throw new ArgumentException("The specified version is not properly formatted.", "value");
+                }
+
+                // set the version to the parsed value
+                fileVersion = current;
+            }
+        }
+
+        /// <summary>
+        /// The prerelease tag of the assembly informational version.
+        /// </summary>
+        private static string prereleaseTag = null;
+
+        public static string PrereleaseTag
+        {
+            get
+            {
+                // return the value
+                return prereleaseTag;
+            }
+
+            set
+            {
+                // set the value
+                prereleaseTag = value;
+
+                // update the environment variables
+                Build.Variable("DNX_BUILD_VERSION", value);
+            }
+        }
+
+        /// <summary>
+        /// The informational (semantic) version of the application.
+        /// </summary>
+        private static string informationalVersion = null;
+
+        /// <summary>
+        /// Gets or sets the informational (semantic) version of the application.
+        /// </summary>
+        public static string InformationalVersion
+        {
+            get
+            {
+                if (informationalVersion == null)
+                {
+                    return null;
+                }
+
+                return string.IsNullOrEmpty(PrereleaseTag) ? informationalVersion : informationalVersion + '-' + PrereleaseTag;
+            }
+
+            set
+            {
+                // set the value
+                informationalVersion = value;
+            }
+        }
+
+        /// <summary>
+        /// The branch from which the application is being built.
+        /// </summary>
+        private static string branch = null;
+
+        /// <summary>
+        /// Gets or sets the branch of the application.
+        /// </summary>
+        public static string Branch
+        {
+            get
+            {
+                return branch;
+            }
+
+            set
+            {
+                // set the value
+                branch = value;
+
+                // update the environment variables
+                Build.Variable("BUILD_SOURCEBRANCH", value);
+            }
+        }
+
+        /// <summary>
+        /// The build identifier of the application.
+        /// </summary>
+        private static string buildId = null;
+
+        /// <summary>
+        /// Gets or sets the build identifier of the application.
+        /// </summary>
+        public static string BuildId
+        {
+            get
+            {
+                return buildId;
+            }
+
+            set
+            {
+                // determine if the value is empty
+                if (string.IsNullOrEmpty(value))
+                {
+                    // clear the build id
+                    buildId = null;
+
+                    // update the build environment variable
+                    Build.Variable("BUILD_BUILDID", null);
+                    Build.Variable("DNX_ASSEMBLY_FILE_VERSION", null);
+
+                    // move on immediately
+                    return;
+                }
+
+                // define a variable to retain the parsed value
+                int id;
+
+                // attempt to parse the value
+                if (!int.TryParse(value, out id) || id < 0)
+                {
+                    // throw a new argument exception if the value is not properly formatted
+                    throw new ArgumentException("The build ID must be a positive integral value.", "value");
+                }
+
+                // set the build id
+                buildId = value;
+                
+                // update the build environment variable
+                Build.Variable("BUILD_BUILDID", value);
+                Build.Variable("DNX_ASSEMBLY_FILE_VERSION", value);
+            }
+        }
+
+        /// <summary>
+        /// The commit identifier of the application.
+        /// </summary>
+        private static string commitId = null;
+
+        /// <summary>
+        /// Gets or sets the commit identifier of the application.
+        /// </summary>
+        public static string CommitId
+        {
+            get
+            {
+                return commitId;
+            }
+
+            set
+            {
+                // set the value
+                commitId = value;
+
+                // update the build variables
+                Build.Variable("BUILD_SOURCEVERSION", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the current date and time as UTC from a time server or local clock if the time server is unavailable.
+        /// </summary>
+        public static DateTime DateTimeUtc
+        {
+            get
+            {
+                return UtcFactory.Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current date and time as UTC from a time server or local clock if the time server is unavailable.
+        /// </summary>
+        public static string BuildDateUtc
+        {
+            get
+            {
+                return DateTimeUtc.ToString(BuildDateFormat);
+            }
+        }
+
+        /// <summary>
+        /// The email address or name of the user that requested the build.
+        /// </summary>
+        private static string builtBy = null;
+        
+        /// <summary>
+        /// Gets the email address or name of the user that requested the build.
+        /// </summary>
+        public static string BuiltBy
+        {
+            get
+            {
+                // return the value
+                return builtBy;
+            }
+
+            set
+            {
+                // set the value
+                builtBy = value;
+
+                // update the environment variables
+                Build.Variable("BUILD_REQUESTEDFOR", value);
+            }
+        }
+        
+        /// <summary>
+        /// The name of the machine on which the application is being built.
+        /// </summary>
+        private static string builtOn = null;
+
+        /// <summary>
+        /// Gets or sets the name of the machine on which the application is being built.
+        /// </summary>
+        public static string BuiltOn
+        {
+            get
+            {
+                // return the value
+                return builtOn;
+            }
+
+            set
+            {
+                // set the value
+                builtOn = value;
+
+                // update the environment variables
+                Build.Variable("AGENT_NAME", value);
+            }
+        }
+
+        /// <summary>
+        /// The URI for the team that is responsible for the build.
+        /// </summary>
+        private static string teamUri = null;
+
+        /// <summary>
+        /// Gets or sets the URI for the team that is responsible for the build.
+        /// </summary>
+        public static string TeamUri
+        {
+            get
+            {
+                // return the value
+                return teamUri;
+            }
+
+            set
+            {
+                // set the value
+                teamUri = value;
+
+                // update the environment variables
+                Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", value);
+            }
+        }
+
+        /// <summary>
+        /// The URI of the repository from which the code is derived.
+        /// </summary>
+        private static string repositoryUri = null;
+
+        /// <summary>
+        /// Gets or sets the URI of the repository from which the code is derived.
+        /// </summary>
+        public static string RepositoryUri
+        {
+            get
+            {
+                // return the value
+                return repositoryUri;
+            }
+
+            set
+            {
+                // set the value
+                repositoryUri = value;
+
+                // update the environment variables
+                Build.Variable("BUILD_REPOSITORY_URI", value);
+            }
+        }
+
+        /// <summary>
+        /// The URI of the build results.
+        /// </summary>
+        private static string buildUri;
+
+        /// <summary>
+        /// Gets or sets the URI of the build results.
+        /// </summary>
+        public static string BuildUri
+        {
+            get
+            {
+                // return the build uri
+                return buildUri;
+            }
+
+            set
+            {
+                // set the value
+                buildUri = value;
+
+                // update the environment variables
+                Build.Variable("BUILD_BUILDURI", value);
+            }
+        }
+
+        public static void LoadGitMetadata(string path)
+        {
+            if (!Build.TryGetRepositoryRoot(ref path))
+            {
+                return;
+            }
+
+            var node = Path.Combine(path, @".git", "HEAD");
+
+            if (!File.Exists(node))
+            {
+                return;
+            }
+
+            var head = File.ReadAllText(node);
+
+            var match = Regex.Match(head, "^ref: (?<branch>refs/heads/.*)$");
+
+            if (match.Success)
+            {
+                if (string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    AssemblyInfo.Branch = match.Groups["branch"].Value.Trim();
+                }
+
+                if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    node = Path.Combine(path, @".git", AssemblyInfo.Branch.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+                    if (File.Exists(node))
+                    {
+                        AssemblyInfo.CommitId = File.ReadAllText(node).Trim();
+                    }
+                }
+            }
+            else
+            {
+                Build.Log.Verbose("Match was not successful");
+                if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    AssemblyInfo.CommitId = head.Trim();
+                }
+
+                if (string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    node = Path.Combine(path, @".git\refs\remotes\origin");
+
+                    AssemblyInfo.Branch = AssemblyInfo.FindBranch(node) ?? "<unknown>";
+                }
+            }
+
+            node = Path.Combine(path, ".git", "config");
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri) || !File.Exists(node))
+            {
+                return;
+            }
+
+            using (var stream = new StreamReader(node))
+            {
+                string line;
+
+                while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
+
+                if (!string.IsNullOrEmpty(line))
+                {
+                    match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
+
+                    if (match.Success)
+                    {
+                        AssemblyInfo.RepositoryUri = match.Groups["url"].Value;
+
+                        if (AssemblyInfo.RepositoryUri.EndsWith(".git"))
+                        {
+                            AssemblyInfo.RepositoryUri.Substring(0, AssemblyInfo.RepositoryUri.Length - 4);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SaveInfo(string path)
+        {
+            // determine if the path exists
+            if (string.IsNullOrEmpty(path))
+            {
+                // throw an exception, since we need a path to be able to save the info
+                throw new ArgumentNullException("A path must be specified in order to save version info..", path);
+            }
+
+            // parse the version
+            var version = System.Version.Parse(AssemblyInfo.FileVersion);
+
+            // determine if the informational version is not specified
+            if (string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
+            {
+                // create an informational version which includes the revision number as a tag
+                AssemblyInfo.InformationalVersion = string.Format
+                    (@"{0}.{1}.{2}-{3}", version.Major, version.Minor, version.Build, version.Revision);
+            }
+
+            if (!File.Exists(path))
+            {
+                Build.MakeDirectory(Path.GetDirectoryName(path));
+
+                // create a string builder used to create the content
+                var builder = new StringBuilder();
+
+                // append the auto generated documentation header
+                builder.AppendLine("//------------------------------------------------------------------------------");
+                builder.AppendLine("// <auto-generated>");
+                builder.AppendLine("// This code was generated by a tool.");
+                builder.AppendLine("// </auto-generated>");
+                builder.AppendLine("//------------------------------------------------------------------------------");
+                builder.AppendLine();
+
+                // add the reflection namespace
+                builder.AppendLine("using System.Reflection;");
+                builder.AppendLine();
+
+                // determine if the version is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion))
+                {
+                    // append the assembly version
+                    builder.AppendFormat(@"[assembly: AssemblyVersion(""{0}.0"")]", AssemblyInfo.AssemblyVersion);
+                    builder.AppendLine();
+
+                    // append the assembly file version
+                    builder.AppendFormat(@"[assembly: AssemblyFileVersion(""{0}"")]", AssemblyInfo.FileVersion);
+                    builder.AppendLine();
+                }
+
+                // append the informational version
+                builder.AppendFormat(@"[assembly: AssemblyInformationalVersion(""{0}"")]", AssemblyInfo.InformationalVersion);
+                builder.AppendLine();
+
+                // add the portable pre-processor directive
+                builder.AppendLine("#if !PORTABLE");
+
+                // determine if the branch is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.Branch))
+                {
+                    // append the branch metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "Branch", AssemblyInfo.Branch);
+                    builder.AppendLine();
+                }
+
+                // determine if the build id is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuildId))
+                {
+                    // append the build id metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuildId", AssemblyInfo.BuildId);
+                    builder.AppendLine();
+                }
+
+                // determine if the commit id is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.CommitId))
+                {
+                    // append the commit id metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "CommitId", AssemblyInfo.CommitId);
+                    builder.AppendLine();
+                }
+
+                // append the build date metadata
+                builder.AppendFormat(
+                    @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                    "BuildDateUtc",
+                    AssemblyInfo.BuildDateUtc);
+                builder.AppendLine();
+
+                // determine if the built by is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
+                {
+                    // append the built by metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltBy", AssemblyInfo.BuiltBy);
+                    builder.AppendLine();
+                }
+
+                // determine if the built on is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
+                {
+                    // append the built on metadata
+                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltOn", AssemblyInfo.BuiltOn);
+                    builder.AppendLine();
+                }
+
+                // determine if the repository URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "RepositoryUri",
+                        AssemblyInfo.RepositoryUri);
+                    builder.AppendLine();
+                }
+
+                // determine if the team URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.TeamUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "TeamUri",
+                        AssemblyInfo.TeamUri);
+                    builder.AppendLine();
+                }
+
+                // determine if the build URI is specified
+                if (!string.IsNullOrEmpty(AssemblyInfo.BuildUri))
+                {
+                    // append the repository URI metadata
+                    builder.AppendFormat(
+                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
+                        "BuildUri",
+                        AssemblyInfo.BuildUri);
+                    builder.AppendLine();
+                }
+
+                // end the portable pre-processor directive
+                builder.AppendLine("#endif");
+
+                File.WriteAllText(path, builder.ToString());
+
+                return;
+            }
+
+            // read the contents of the file
+            var contents = File.ReadAllText(path);
+
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyVersion", AssemblyInfo.AssemblyVersion + ".0");
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyFileVersion", AssemblyInfo.FileVersion);
+            contents = AssemblyInfo.VersionReplace(contents, "AssemblyInformationalVersion", AssemblyInfo.InformationalVersion);
+
+            contents = AssemblyInfo.MetadataReplace(contents, "BuildDateUtc", AssemblyInfo.BuildDateUtc);
+
+            if (!string.IsNullOrEmpty(Branch))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "Branch", AssemblyInfo.Branch);
+            }
+
+            if (!string.IsNullOrEmpty(BuildId))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuildId", AssemblyInfo.BuildId);
+            }
+
+            if (!string.IsNullOrEmpty(CommitId))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "CommitId", AssemblyInfo.CommitId);
+            }
+
+            if (!string.IsNullOrEmpty(BuiltBy))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuiltBy", AssemblyInfo.BuiltBy);
+            }
+
+            if (!string.IsNullOrEmpty(BuiltOn))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuiltOn", AssemblyInfo.BuiltOn);
+            }
+
+            if (!string.IsNullOrEmpty(TeamUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "TeamUri", AssemblyInfo.TeamUri);
+            }
+
+            if (!string.IsNullOrEmpty(RepositoryUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "RepositoryUri", AssemblyInfo.RepositoryUri);
+            }
+
+            if (!string.IsNullOrEmpty(BuildUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "BuildUri", AssemblyInfo.BuildUri);
+            }
+
+            File.WriteAllText(path, contents);
+        }
+
+        private static string VersionReplace(string contents, string name, string version)
+        {
+            var expression = string.Format(VersionExpression, name);
+
+            var format = string.Format(ValueFormat, version);
+
+            var regex = new Regex(expression);
+
+            if (!regex.IsMatch(contents))
+            {
+                contents = string.Concat(contents, "{0}[assembly: ", name, "(\"", version, "\")]");
+                return contents;
+            }
+
+            return regex.Replace(contents, format, 1);
+        }
+
+        private static string MetadataReplace(string contents, string name, string value)
+        {
+            var expression = string.Format(MetadataExpression, name);
+            var format = string.Format(ValueFormat, value);
+
+            var regex = new Regex(expression);
+
+            if (!regex.IsMatch(contents))
+            {
+                contents = string.Concat(contents, Environment.NewLine, "[assembly: AssemblyMetadata(\"", name, "\", @\"", value, "\")]");
+                return contents;
+            }
+
+            return regex.Replace(contents, format, 1);
+        }
+
+        private static string FindBranch(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return null;
+            }
+
+            foreach (var branch in Directory.GetFiles(path))
+            {
+                var head = File.ReadAllText(branch).Trim();
+
+                if (string.Equals(AssemblyInfo.CommitId, head))
+                {
+                    return Path.GetFileName(branch).Trim();
+                }
+
+                foreach(var part in Directory.GetDirectories(path))
+                {
+                    var current = AssemblyInfo.FindBranch(part);
+                    
+                    if (current != null)
+                    {
+                        return Path.GetFileName(part) + '/' + current;
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+}

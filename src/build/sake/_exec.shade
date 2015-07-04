@@ -12,6 +12,8 @@ exec_args=''
 exec_path=''
     The working directory of the command line tool.
 
+exec_quiet='false'
+    A value indicating whether or not to execute the command quietly.
 */}
 
 use namespace = 'System'
@@ -20,11 +22,13 @@ use namespace = 'System.IO'
 default exec_cmd    = ''
 default exec_args   = ''
 default exec_path   = '${ Directory.GetCurrentDirectory() }'
+default exec_quiet  = '${ false }'
 
 log verbose='-exec'
 log verbose='--command      : ${ exec_cmd }'
 log verbose='--arguments    : ${ exec_args }'
 log verbose='--path         : ${ exec_path }'
+log verbose='--quiet        : ${ exec_quiet }'
 
 @{
     if (string.IsNullOrEmpty(exec_cmd))
@@ -37,7 +41,7 @@ log verbose='--path         : ${ exec_path }'
     string result;
 
     // attempt to execute the command
-    if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path))
+    if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path, exec_quiet))
     {
         // throw a new exception
         throw new Exception(string.Format("The command {0} failed with exit code {1}. The output was {2}.", exec_cmd, code, result));

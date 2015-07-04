@@ -6,18 +6,13 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.70315")]
-[assembly: AssemblyInformationalVersion("0.0.0-alpha-070315-2333")]
-
-#if !PORTABLE
-[assembly: AssemblyMetadata("BuildDateUtc", @"2015-07-03T23:33:28.022Z")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.70415")]
+[assembly: AssemblyInformationalVersion("1.0.0-alpha-070415-2247")]
+[assembly: AssemblyMetadata("BuildDateUtc", @"2015-07-04T22:47:53.856Z")]
 [assembly: AssemblyMetadata("Branch", @"refs/heads/feature/17-testall")]
-[assembly: AssemblyMetadata("CommitId", @"590bd99a1854ba60e061b8100c5d4160c094ea68")]
-[assembly: AssemblyMetadata("BuildId", @"070315")]
-[assembly: AssemblyMetadata("RepositoryUri", @"https://dmccaffery-pb.visualstudio.com/defaultcollection/open/_git/condo")]
-[assembly: AssemblyMetadata("BuiltOn", @"gio-ws-01.local")]
-[assembly: AssemblyMetadata("BuiltBy", @"dmccaffery@pulsebridge.com
-")]
-#endif
+[assembly: AssemblyMetadata("BuildId", @"070415")]
+[assembly: AssemblyMetadata("CommitId", @"ede6cdd87ccb1f5ebcae6f1dc68c8afef0dec30c")]
 [assembly: AssemblyMetadata("BuiltBy", @"dmccaffery@pulsebridge.com")]
+[assembly: AssemblyMetadata("BuiltOn", @"gio-ws-01.local")]
+[assembly: AssemblyMetadata("RepositoryUri", @"https://dmccaffery-pb.visualstudio.com/defaultcollection/open/_git/condo")]

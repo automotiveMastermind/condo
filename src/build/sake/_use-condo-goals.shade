@@ -7,28 +7,27 @@ default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
-default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) }'
+default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
-default configuration   = '${ Build.Variable("Configuration") }'
-default version         = '${ Build.Variable("BUILD_VERSION") }'
+default version             = '${ Build.Variable("BUILD_VERSION") ?? "1.0.0" }'
+default configuration       = '${ Build.Variable("Configuration") }'
 
 default Quiet='${ false }'
 default Verbose='${ false }'
 
 @{
-    // determine if the version was specified
-    if (string.IsNullOrEmpty(version))
-    {
-        // set the version
-        version = "0.0.0";
-    }
-
     // set the log instance on the helper class
     Build.Log = this.Log;
+
+    if (!string.IsNullOrEmpty(version))
+    {
+        // set the assembly version
+        AssemblyInfo.AssemblyVersion = version;
+    }
 
     if (string.IsNullOrEmpty(configuration))
     {
@@ -62,7 +61,7 @@ default Verbose='${ false }'
     log verbose='Options'
     log verbose='-------------------------------------------------------------'
     log verbose='Configuration         : ${ configuration }'
-    log verbose='Version               : ${ version }'
+    log verbose='Version               : ${ AssemblyInfo.AssemblyVersion }'
     log verbose='Date Time (UTC)       : ${ AssemblyInfo.BuildDateUtc }'
     log verbose='-------------------------------------------------------------'
 
