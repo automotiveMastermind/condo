@@ -4,7 +4,7 @@ dnu-pack
     Executes a dnu package manager command to pack all available projects.
 
 dnu_pack_args=''
-    The arguments to pass to the dnu command line tool (in addition to pack)
+    The arguments to pass to the dnu command line tool (in addition to pack).
 
 dnu_pack_options='' (Environment Variable: dnu_pack_options)
     Additional options to include when executing the dnu command line tool for pack operations.
@@ -13,7 +13,7 @@ dnu_pack_path='$(working_path)'
     The path in which to execute the dnu command line tool.
 
 dnu_pack_output_path='$(target_path)/build'
-    The path in which to store the resulting packages.
+    The path in which to store the resulting packages (the name of the project will always be appended).
 
 base_path='$(CurrentDirectory)'
     The base path in which to execute the dnu command line tool.
@@ -39,6 +39,11 @@ default dnu_pack_args           = ''
 default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
 
 @{
+    if (string.IsNullOrEmpty(dnu_pack_path))
+    {
+        throw new ArgumentException("dnu-pack: project path must be specified.", "dnu_pack_path");
+    }
+
     if (!string.IsNullOrEmpty(dnu_pack_args))
     {
         dnu_pack_args = dnu_pack_args.Trim();
@@ -48,6 +53,12 @@ default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
     {
         dnu_pack_options = dnu_pack_options.Trim();
     }
+
+    var dnu_pack_name = File.Exists(dnu_pack_path) 
+        ? Path.GetDirectoryName(dnu_pack_path) 
+        : Path.GetFileName(dnu_pack_path);
+
+    dnu_pack_output_path = Path.Combine(dnu_pack_output_path, dnu_pack_name);
 }
 
 log verbose='-dnu-pack'
