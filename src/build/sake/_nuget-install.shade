@@ -59,6 +59,8 @@ log verbose='--version     : ${ nuget_version }'
 
     if (!File.Exists(nuget_install))
     {
+        Directory.CreateDirectory(Path.GetDirectoryName(nuget_install));
+
         Log.Verbose("nuget-install: downloading the latest version of nuget.exe");
 
         var client = new WebClient();

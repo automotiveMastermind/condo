@@ -23,13 +23,24 @@ SETLOCAL
         CALL "%DNVMCMD%" update-self
     )
 
-    CALL "%DNVMCMD%" upgrade -runtime CLR -arch x86 -ngen
-    CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86 -ngen
+    CALL "%DNVMCMD%" upgrade -runtime CLR -arch x86
+    CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86
     CALL "%DNVMCMD%" use default -runtime CLR -arch x86
 
-    SET NUGETCMD=%LOCALAPPDATA%\NuGet\nuget.exe
+    IF "%AGENT_BUILDDIRECTORY%" == "" (
+        SET NUGETPATH=%LOCALAPPDATA%\NuGet
+    )
+    ELSE (
+        SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
+    )
+
+    SET NUGETCMD=%NUGETPATH%\nuget.exe
     SET NUGETURI="https://www.nuget.org/nuget.exe"
 
+    IF NOT EXIST "%NUGETPATH%" (
+        mkdir "%NUGETPATH%"
+    )
+    
     IF NOT EXIST "%NUGETCMD%" (
         @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest '%NUGETURI%' -OutFile '%NUGETCMD%'"
     )

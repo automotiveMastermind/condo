@@ -7,7 +7,7 @@ default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
-default appdata_path        = '${ Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) }'
+default appdata_path        = '${ Build.Variable("AGENT_BUILDDIRECTORY") ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
