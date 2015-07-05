@@ -45,5 +45,4 @@ log verbose='--path         : ${ dnx_path }'
     }
 }
 
-exec exec_cmd='dnvm' exec_args='run ${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' if='!Build.Unix'
-exec exec_cmd='dnx' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' if='Build.Unix'
+exec exec_cmd='dnx' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }'
