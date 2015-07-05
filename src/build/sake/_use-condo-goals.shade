@@ -38,8 +38,6 @@ default Verbose='${ false }'
 
 #--quiet @{
     Quiet = true;
-
-    Build.Variable("npm_install_options", "--quiet", append: true);
 }
 
 #-q .--quiet
