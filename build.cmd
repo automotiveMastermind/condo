@@ -27,11 +27,10 @@ SETLOCAL
     CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86
     CALL "%DNVMCMD%" use default -runtime CLR -arch x86
 
+    SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
+
     IF "%AGENT_BUILDDIRECTORY%" == "" (
         SET NUGETPATH=%LOCALAPPDATA%\NuGet
-    )
-    ELSE (
-        SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
     )
 
     SET NUGETCMD=%NUGETPATH%\nuget.exe
