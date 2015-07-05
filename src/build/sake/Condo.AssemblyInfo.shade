@@ -79,6 +79,17 @@ functions @{
         /// The version of the application.
         /// </summary>
         private static Version assemblyVersion = null;
+        
+        /// <summary>
+        /// Gets the full assembly version.
+        /// </summary>
+        public static Version Version
+        {
+            get
+            {
+                return assemblyVersion;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the version of the application.
@@ -545,6 +556,13 @@ functions @{
                         }
                     }
                 }
+            }
+
+            string build;
+
+            if (string.IsNullOrEmpty(AssemblyInfo.BuildId) && Build.TryExecute("git", out build, "rev-list HEAD --count"))
+            {
+                AssemblyInfo.BuildId = build.Trim();
             }
         }
 
