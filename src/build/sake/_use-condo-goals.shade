@@ -1,8 +1,8 @@
 use namespace = 'System'
 use namespace = 'System.IO'
 
-default base_path           = '${ Directory.GetCurrentDirectory() }'
-default target_path         = '${ Path.Combine(base_path, "artifacts") }'
+default base_path           = '${ Build.Variable("BUILD_SOURCESDIRECTORY") ?? Directory.GetCurrentDirectory() }'
+default target_path         = '${ Build.Variable("BUILD_STAGINGDIRECTORY") ?? Path.Combine(base_path, "artifacts") }'
 default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
