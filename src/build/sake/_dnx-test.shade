@@ -80,9 +80,6 @@ log verbose='--output path      : ${ dnx_test_output_path }'
         .Include(dnx_test_include)
         .Exclude(dnx_test_exclude);
 
-    Log.Verbose("includes: " + dnx_test_include);
-    Log.Verbose("folder: " + dnx_test_folder);
-
     var js = new JavaScriptSerializer();
 
     foreach (var dnx_test_file in dnx_test_files)
