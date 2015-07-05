@@ -1,0 +1,137 @@
+@{/*
+
+dnx-test
+    Executes unit tests for test projects.
+
+dnx_test_args=''
+    The arguments to pass to the test command.
+
+dnx_test_options='' (Environment Variable: dnx_test_options)
+    Additional options to pass to the test command.
+
+dnx_test_path='$(test_path)'
+    The path in which to locate test projects.
+
+dnx_test_output_path='$(target_path)/test'
+    The path in which to store the test results.
+    
+base_path='$(CurrentDirectory)'
+    The base path in which to locate test projects.
+
+working_path='$(base_path)'
+    The working path in which to execute unit tests.
+
+target_path='$(working_path)/artifacts'
+    The target path four build artifacts.
+
+test_path='$(base_path)/test'
+    The path in which to locate test projects.
+
+*/}
+
+use assembly = 'System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
+
+use namespace = 'System'
+use namespace = 'System.Web.Script.Serialization'
+
+use import = 'Files'
+
+default dnx_test_args           = ''
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+default test_path               = '${ Path.Combine(base_path, "test") }'
+default target_path             = '${ Path.Combine(base_path, "artifacts") }'
+default dnx_test_path           = '${ test_path }'
+default dnx_test_options        = '${ Build.Variable("dnx_test_options") }'
+default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
+
+@{
+    if (!string.IsNullOrEmpty(dnx_test_args))
+    {
+        dnx_test_args = dnx_test_args.Trim();
+    }
+
+    if (!string.IsNullOrEmpty(dnx_test_options))
+    {
+        dnx_test_options = dnx_test_options.Trim();
+    }
+}
+
+log verbose='-dnx-test'
+log verbose='--arguments        : ${ dnx_test_args }' if='!string.IsNullOrEmpty(dnx_test_args)'
+log verbose='--options          : ${ dnx_test_options }' if='!string.IsNullOrEmpty(dnx_test_options)'
+log verbose='--path             : ${ dnx_test_path }'
+log verbose='--output path      : ${ dnx_test_output_path }'
+
+@{
+    Build.MakeDirectory(dnx_test_output_path);
+
+    var dnx_test_exclude = '**/bin/**/project.json';
+    var dnx_test_include = '**/project.json';
+    var dnx_test_folder = Path.GetFullPath(dnx_test_path);
+
+    if (File.Exists(dnx_test_folder))
+    {
+        dnx_test_include = Path.GetFileName(dnx_test_folder);
+        dnx_test_folder = Path.GetDirectoryName(dnx_test_folder);
+    }
+
+    var dnx_test_files = Files.BasePath(dnx_test_folder)
+        .Include(dnx_test_include)
+        .Exclude(dnx_test_exclude);
+
+    Log.Verbose("includes: " + dnx_test_include);
+    Log.Verbose("folder: " + dnx_test_folder);
+
+    var js = new JavaScriptSerializer();
+
+    foreach (var dnx_test_file in dnx_test_files)
+    {
+        var dnx_test_file_path = Path.Combine(dnx_test_folder, dnx_test_file);
+        var dnx_test_file_text = File.ReadAllText(dnx_test_file_path);
+        var dnx_test_project = js.DeserializeObject(dnx_test_file_text) as Dictionary<string, object>;
+
+        object dnx_test_cmds_obj;
+
+        var dnx_test_cmds = dnx_test_project.TryGetValue("commands", out dnx_test_cmds_obj)
+            ? dnx_test_cmds_obj as Dictionary<string, object>
+            : new Dictionary<string, object>();
+
+        object dnx_test_cmd_obj;
+
+        if (!dnx_test_cmds.TryGetValue("test", out dnx_test_cmd_obj))
+        {
+            continue;
+        }
+        
+        var dnx_test_cmd = dnx_test_cmd_obj as string;
+
+        dnx_test_folder = Path.GetDirectoryName(dnx_test_file_path);
+        var dnx_test_name = Path.GetFileName(dnx_test_folder);
+
+        object dnx_test_cfgs_obj;
+
+        var dnx_test_cfgs = dnx_test_project.TryGetValue("frameworks", out dnx_test_cfgs_obj)
+            ? dnx_test_cfgs_obj as Dictionary<string, object>
+            : new Dictionary<string, object> { { "dnx451", new Dictionary<string, object>() } };
+
+        var dnx_test_frameworks = dnx_test_cfgs.Keys.Where(key => key.StartsWith("dnx", StringComparison.OrdinalIgnoreCase));
+
+        foreach (var dnx_test_framework in dnx_test_frameworks)
+        {
+            var dnx_test_args_current = ". test " + (dnx_test_args ?? "");
+            var dnx_test_options_current = dnx_test_options ?? "";
+
+            if (dnx_test_cmd.Contains("xunit"))
+            {
+                var dnx_test_output_file = Path.Combine(dnx_test_output_path, dnx_test_name + "-" + dnx_test_framework + ".xml");
+                dnx_test_options_current += " -xml \"" + dnx_test_output_file + "\"";
+            }
+
+            ExecuteDnx(dnx_test_args_current, dnx_test_options_current, dnx_test_folder);
+        }
+    }
+}
+
+macro name='ExecuteDnx' dnx_args='string' dnx_options='string' dnx_path='string'
+    dnx

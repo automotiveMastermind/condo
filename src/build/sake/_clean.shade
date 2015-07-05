@@ -19,15 +19,15 @@ default clean_path = ''
 
 var final_clean_path = '${ !string.IsNullOrEmpty(clean_project) ? Path.GetDirectoryName(clean_project) : clean_path }'
 
-log verbose='-clean'
-log verbose='--path : ${ final_clean_path }'
-
 @{
     if (string.IsNullOrEmpty(final_clean_path))
     {
         throw new ArgumentException("clean: no project or path was specified.", "clean_path");
     }
 }
+
+log verbose='-clean'
+log verbose='--path : ${ final_clean_path }'
 
 directory delete='${ Path.Combine(final_clean_path, "bin") }'
 directory delete='${ Path.Combine(final_clean_path, "obj") }'

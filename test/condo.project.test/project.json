@@ -1,0 +1,22 @@
+{
+    "version": "1.0.0-*",
+    "description": "An example test project.",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUri": "",
+
+    "dependencies": {
+        "condo.project": "",
+        "xunit": "2.1.0-beta3-*",
+        "xunit.runner.dnx": "2.1.0-beta3-*"
+    },
+    
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}

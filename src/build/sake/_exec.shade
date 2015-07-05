@@ -24,6 +24,20 @@ default exec_args   = ''
 default exec_path   = '${ Directory.GetCurrentDirectory() }'
 default exec_quiet  = '${ false }'
 
+@{
+    if (string.IsNullOrEmpty(exec_cmd))
+    {
+        throw new ArgumentException("A command must be specified in order for the command to execute.", "exec_cmd");
+    }
+
+    exec_cmd = exec_cmd.Trim();
+
+    if (!string.IsNullOrEmpty(exec_args))
+    {
+        exec_args = exec_args.Trim();
+    }
+}
+
 log verbose='-exec'
 log verbose='--command      : ${ exec_cmd }'
 log verbose='--arguments    : ${ exec_args }'
@@ -31,11 +45,6 @@ log verbose='--path         : ${ exec_path }'
 log verbose='--quiet        : ${ exec_quiet }'
 
 @{
-    if (string.IsNullOrEmpty(exec_cmd))
-    {
-        throw new ArgumentException("A command must be specified in order for the command to execute.", "exec_cmd");
-    }
-
     // define a variable to retain the exit code
     int code;
     string result;

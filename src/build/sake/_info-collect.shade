@@ -1,3 +1,16 @@
+@{/*
+
+info-collect
+    Collects assembly information used to update assembly info files prior to compilation.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to locate assembly information (such as from git).
+
+working_path='$(base_path)'
+    The working path in which to locate assembly information (such as from git).
+
+*/}
+
 use namespace = 'System'
 
 use import = 'Condo.AssemblyInfo'
@@ -96,3 +109,18 @@ default working_path            = '${ base_path }'
         }
     }
 }
+
+log verbose='-info-collect'
+log verbose='--version          : ${ AssemblyInfo.AssemblyVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion)'
+log verbose='--file version     : ${ AssemblyInfo.FileVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.FileVersion)'
+log verbose='--prerelease tag   : ${ AssemblyInfo.PrereleaseTag }' if='!string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag)'
+log verbose='--Semantic version : ${ AssemblyInfo.InformationalVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.InformationalVersion)'
+log verbose='--build ID         : ${ AssemblyInfo.BuildId }' if='!string.IsNullOrEmpty(AssemblyInfo.BuildId)'
+log verbose='--commit ID        : ${ AssemblyInfo.CommitId }' if='!string.IsNullOrEmpty(AssemblyInfo.CommitId)'
+log verbose='--branch           : ${ AssemblyInfo.Branch }' if='!string.IsNullOrEmpty(AssemblyInfo.Branch)'
+log verbose='--repository URI   : ${ AssemblyInfo.RepositoryUri }' if='!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri)'
+log verbose='--team URI         : ${ AssemblyInfo.TeamUri }' if='!string.IsNullOrEmpty(AssemblyInfo.TeamUri)'
+log verbose='--build URI        : ${ AssemblyInfo.BuildUri }' if='!string.IsNullOrEmpty(AssemblyInfo.BuildUri)'
+log verbose='--built by:        : ${ AssemblyInfo.BuiltBy }' if='!string.IsNullOrEmpty(AssemblyInfo.BuiltBy)'
+log verbose='--built on:        : ${ AssemblyInfo.BuiltOn }' if='!string.IsNullOrEmpty(AssemblyInfo.BuiltOn)'
+log verbose='--build date (UTC) : ${ AssemblyInfo.BuildDateUtc }' if='!string.IsNullOrEmpty(AssemblyInfo.BuildDateUtc)'

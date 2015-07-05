@@ -22,7 +22,7 @@ working_path='$(base_path)'
     The working path in which to execute the dnu command line tool.
 
 target_path='$(working_path)/artifacts'
-    The target path four build artifacts.
+    The target path for build artifacts.
 
 */}
 
@@ -38,15 +38,28 @@ default dnu_pack_output_path    = '${ Path.Combine(target_path, "build") }'
 default dnu_pack_args           = ''
 default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
 
+@{
+    if (!string.IsNullOrEmpty(dnu_pack_args))
+    {
+        dnu_pack_args = dnu_pack_args.Trim();
+    }
+
+    if (!string.IsNullOrEmpty(dnu_pack_options))
+    {
+        dnu_pack_options = dnu_pack_options.Trim();
+    }
+}
+
 log verbose='-dnu-pack'
-log verbose='--arguments   : ${ dnu_pack_args }'
-log verbose='--output path : ${ dnu_pack_output_path }' if='!string.IsNullOrEmpty(dnu_pack_output_path)'
-log verbose='--options     : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
+log verbose='--arguments    : ${ dnu_pack_args }'
+log verbose='--options      : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
+log verbose='--path         : ${ dnu_pack_path }'
+log verbose='--output path  : ${ dnu_pack_output_path }' if='!string.IsNullOrEmpty(dnu_pack_output_path)'
 
 @{
     if (!string.IsNullOrEmpty(dnu_pack_output_path))
     {
-        dnu_pack_options += string.Format(@" --out ""{0}""", dnu_pack_output_path);
+        dnu_pack_options += string.Format(@" --out ""{0}""", dnu_pack_output_path).Trim();
     }
 }
 

@@ -23,17 +23,30 @@ working_path='$(base_path)'
 use namespace = 'System'
 use namespace = 'System.IO'
 
-default gulp_args          = ''
-default gulp_options       = '${ Build.Variable("gulp_options") }'
+default gulp_args           = ''
+default gulp_options        = '${ Build.Variable("gulp_options") }'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default gulp_path           = '${ working_path }'
 default npm_install_options = '${ Build.Variable("npm_install_options") }'
 
+@{
+    if (!string.IsNullOrEmpty(gulp_args))
+    {
+        gulp_args = gulp_args.Trim();
+    }
+
+    if (!string.IsNullOrEmpty(gulp_options))
+    {
+        gulp_options = gulp_options.Trim();
+    }
+}
+
 log verbose='-gulp'
-log verbose='--arguments   : ${ gulp_args }'
-log verbose='--path        : ${ gulp_path }'
+log verbose='--arguments    : ${ gulp_args }'
+log verbose='--options      : ${ gulp_options }' if='!string.IsNullOrEmpty(gulp_options)'
+log verbose='--path         : ${ gulp_path }'
 
 var gulp_cmd                   = '${ Path.Combine(gulp_path, "node_modules", "gulp", "bin", "gulp.js") }'
 

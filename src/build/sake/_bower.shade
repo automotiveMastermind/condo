@@ -37,10 +37,6 @@ var bower_installed             = '${ bower_locally_installed || bower_globally_
 
 - bower_cmd = bower_globally_installed ? "bower" : bower_cmd;
 
-log verbose='-bower'
-log verbose='--arguments   : ${ bower_args }'
-log verbose='--path        : ${ bower_path }'
-
 @{
     if (string.IsNullOrEmpty(bower_args))
     {
@@ -51,7 +47,14 @@ log verbose='--path        : ${ bower_path }'
     {
         bower_args += " --quiet";
     }
+
+    // trim the arguments
+    bower_args = bower_args.Trim();
 }
+
+log verbose='-bower'
+log verbose='--arguments    : ${ bower_args }'
+log verbose='--path         : ${ bower_path }'
 
 - bower_args += " --config.interactive=false";
 

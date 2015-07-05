@@ -42,10 +42,18 @@ default Quiet='${ false }'
     {
         dnu_args += " --quiet";
     }
+
+    dnu_args = dnu_args.Trim();
+
+    if (!string.IsNullOrEmpty(dnu_options))
+    {
+        dnu_options = dnu_options.Trim();
+    }
 }
 
 log verbose='-dnu'
-log verbose='--arguments   : ${ dnu_args }'
-log verbose='--options     : ${ dnu_options }' if='!string.IsNullOrEmpty(dnu_options)'
+log verbose='--arguments    : ${ dnu_args }'
+log verbose='--options      : ${ dnu_options }' if='!string.IsNullOrEmpty(dnu_options)'
+log verbose='--path         : ${ dnu_path }'
 
 exec exec_cmd='dnu' exec_args='${ dnu_args } ${ dnu_options }' exec_path='${ dnu_path }'

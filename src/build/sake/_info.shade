@@ -1,3 +1,15 @@
+@{/*
+
+info
+    Saves assembly information to the specified assembly info file, or any assembly info file 
+    contained within the specified path.
+
+info_path
+    Required. The path to the assembly info file to update, or a path containing an assembly info 
+    file.
+
+*/}
+
 use namespace = 'System'
 
 default info_path    = ''

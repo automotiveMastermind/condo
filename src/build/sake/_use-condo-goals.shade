@@ -126,9 +126,13 @@ default Verbose='${ false }'
 
 #initialize-all .initialize-info .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
 
-#compile-dnx target='compile' description='Compiles and packages all projects found within the source directory.'
+#compile-dnx target='compile' description='Compiles and packages all dnx-based projects found within the source directory.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
     dnu-pack dnu_pack_output_path='${ target_build_path }' each='var dnu_pack_path in paths'
+
+#test-dnx target='test' description='Executes unit tests for all dnx-based projects found within the test directory.'
+    var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
+    dnx-test dnx_test_output_path='${ target_test_path }' each='var dnx_test_path in paths'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
     var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
