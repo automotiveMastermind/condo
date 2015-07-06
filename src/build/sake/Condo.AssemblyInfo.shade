@@ -13,8 +13,12 @@ use import = 'Condo.Build'
 functions @{
     public static class AssemblyInfo
     {
-        private const string VersionExpression = @"(\[assembly[\s:]+{0}\(\"")(.*)(\""\)\])";
+        private const string AttributeExpression = @"(\[assembly[\s:]+{0}\([\@\""]+)(.*)(\""\)\])";
         private const string MetadataExpression = @"(\[assembly[\s:]+AssemblyMetadata\([@\""]+{0}\""[\,\s]+[@\""]+)(.*)(\""\)\])";
+
+        private const string AttributeFormat = @"[assembly: {0}(@""{1}"")]";
+        private const string MetadataFormat = @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]";
+
         private const string ValueFormat = @"${{1}}{0}${{3}}";
         private const string BuildDateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK";
 
@@ -79,7 +83,7 @@ functions @{
         /// The version of the application.
         /// </summary>
         private static Version assemblyVersion = null;
-        
+
         /// <summary>
         /// Gets the full assembly version.
         /// </summary>
@@ -294,7 +298,7 @@ functions @{
 
                 // set the build id
                 buildId = value;
-                
+
                 // update the build environment variable
                 Build.Variable("BUILD_BUILDID", value);
                 Build.Variable("DNX_ASSEMBLY_FILE_VERSION", value);
@@ -352,7 +356,7 @@ functions @{
         /// The email address or name of the user that requested the build.
         /// </summary>
         private static string builtBy = null;
-        
+
         /// <summary>
         /// Gets the email address or name of the user that requested the build.
         /// </summary>
@@ -373,7 +377,7 @@ functions @{
                 Build.Variable("BUILD_REQUESTEDFOR", value);
             }
         }
-        
+
         /// <summary>
         /// The name of the machine on which the application is being built.
         /// </summary>
@@ -477,6 +481,16 @@ functions @{
                 Build.Variable("BUILD_BUILDURI", value);
             }
         }
+
+        public static string Product { get; set; }
+
+        public static string Company { get; set; }
+
+        public static string Copyright { get; set; }
+
+        public static string License { get; set; }
+
+        public static string LicenseUri { get; set; }
 
         public static void LoadGitMetadata(string path)
         {
@@ -586,7 +600,15 @@ functions @{
                     (@"{0}.{1}.{2}-{3}", version.Major, version.Minor, version.Build, version.Revision);
             }
 
-            if (!File.Exists(path))
+            string contents = null;
+
+            if (File.Exists(path))
+            {
+                // read the contents of the file
+                contents = File.ReadAllText(path).Trim();
+            }
+
+            if (string.IsNullOrEmpty(contents))
             {
                 Build.MakeDirectory(Path.GetDirectoryName(path));
 
@@ -605,176 +627,106 @@ functions @{
                 builder.AppendLine("using System.Reflection;");
                 builder.AppendLine();
 
-                // determine if the version is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion))
-                {
-                    // append the assembly version
-                    builder.AppendFormat(@"[assembly: AssemblyVersion(""{0}.0"")]", AssemblyInfo.AssemblyVersion);
-                    builder.AppendLine();
-
-                    // append the assembly file version
-                    builder.AppendFormat(@"[assembly: AssemblyFileVersion(""{0}"")]", AssemblyInfo.FileVersion);
-                    builder.AppendLine();
-                }
-
-                // append the informational version
-                builder.AppendFormat(@"[assembly: AssemblyInformationalVersion(""{0}"")]", AssemblyInfo.InformationalVersion);
-                builder.AppendLine();
-
-                // add the portable pre-processor directive
-                builder.AppendLine("#if !PORTABLE");
-
-                // determine if the branch is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.Branch))
-                {
-                    // append the branch metadata
-                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "Branch", AssemblyInfo.Branch);
-                    builder.AppendLine();
-                }
-
-                // determine if the build id is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.BuildId))
-                {
-                    // append the build id metadata
-                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuildId", AssemblyInfo.BuildId);
-                    builder.AppendLine();
-                }
-
-                // determine if the commit id is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.CommitId))
-                {
-                    // append the commit id metadata
-                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "CommitId", AssemblyInfo.CommitId);
-                    builder.AppendLine();
-                }
-
-                // append the build date metadata
-                builder.AppendFormat(
-                    @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
-                    "BuildDateUtc",
-                    AssemblyInfo.BuildDateUtc);
-                builder.AppendLine();
-
-                // determine if the built by is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
-                {
-                    // append the built by metadata
-                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltBy", AssemblyInfo.BuiltBy);
-                    builder.AppendLine();
-                }
-
-                // determine if the built on is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
-                {
-                    // append the built on metadata
-                    builder.AppendFormat(@"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]", "BuiltOn", AssemblyInfo.BuiltOn);
-                    builder.AppendLine();
-                }
-
-                // determine if the repository URI is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
-                {
-                    // append the repository URI metadata
-                    builder.AppendFormat(
-                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
-                        "RepositoryUri",
-                        AssemblyInfo.RepositoryUri);
-                    builder.AppendLine();
-                }
-
-                // determine if the team URI is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.TeamUri))
-                {
-                    // append the repository URI metadata
-                    builder.AppendFormat(
-                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
-                        "TeamUri",
-                        AssemblyInfo.TeamUri);
-                    builder.AppendLine();
-                }
-
-                // determine if the build URI is specified
-                if (!string.IsNullOrEmpty(AssemblyInfo.BuildUri))
-                {
-                    // append the repository URI metadata
-                    builder.AppendFormat(
-                        @"[assembly: AssemblyMetadata(""{0}"", @""{1}"")]",
-                        "BuildUri",
-                        AssemblyInfo.BuildUri);
-                    builder.AppendLine();
-                }
-
-                // end the portable pre-processor directive
-                builder.AppendLine("#endif");
-
-                File.WriteAllText(path, builder.ToString());
-
-                return;
+                // save the builder to the contents
+                contents = builder.ToString();
             }
 
-            // read the contents of the file
-            var contents = File.ReadAllText(path);
+            if (!string.IsNullOrEmpty(AssemblyInfo.Product))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyProduct", AssemblyInfo.Product);
+            }
 
-            contents = AssemblyInfo.VersionReplace(contents, "AssemblyVersion", AssemblyInfo.AssemblyVersion + ".0");
-            contents = AssemblyInfo.VersionReplace(contents, "AssemblyFileVersion", AssemblyInfo.FileVersion);
-            contents = AssemblyInfo.VersionReplace(contents, "AssemblyInformationalVersion", AssemblyInfo.InformationalVersion);
+            if (!string.IsNullOrEmpty(AssemblyInfo.Company))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyCompany", AssemblyInfo.Company);
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.Copyright))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyCopyright", AssemblyInfo.Copyright);
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyVersion", AssemblyInfo.AssemblyVersion + ".0");
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.FileVersion))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyFileVersion", AssemblyInfo.FileVersion);
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.InformationalVersion))
+            {
+                contents = AssemblyInfo.AttributeReplace(contents, "AssemblyInformationalVersion", AssemblyInfo.InformationalVersion);
+            }
 
             contents = AssemblyInfo.MetadataReplace(contents, "BuildDateUtc", AssemblyInfo.BuildDateUtc);
 
-            if (!string.IsNullOrEmpty(Branch))
+            if (!string.IsNullOrEmpty(AssemblyInfo.Branch))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "Branch", AssemblyInfo.Branch);
             }
 
-            if (!string.IsNullOrEmpty(BuildId))
+            if (!string.IsNullOrEmpty(AssemblyInfo.BuildId))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "BuildId", AssemblyInfo.BuildId);
             }
 
-            if (!string.IsNullOrEmpty(CommitId))
+            if (!string.IsNullOrEmpty(AssemblyInfo.CommitId))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "CommitId", AssemblyInfo.CommitId);
             }
 
-            if (!string.IsNullOrEmpty(BuiltBy))
+            if (!string.IsNullOrEmpty(AssemblyInfo.BuiltBy))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "BuiltBy", AssemblyInfo.BuiltBy);
             }
 
-            if (!string.IsNullOrEmpty(BuiltOn))
+            if (!string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "BuiltOn", AssemblyInfo.BuiltOn);
             }
 
-            if (!string.IsNullOrEmpty(TeamUri))
+            if (!string.IsNullOrEmpty(AssemblyInfo.TeamUri))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "TeamUri", AssemblyInfo.TeamUri);
             }
 
-            if (!string.IsNullOrEmpty(RepositoryUri))
+            if (!string.IsNullOrEmpty(AssemblyInfo.RepositoryUri))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "RepositoryUri", AssemblyInfo.RepositoryUri);
             }
 
-            if (!string.IsNullOrEmpty(BuildUri))
+            if (!string.IsNullOrEmpty(AssemblyInfo.BuildUri))
             {
                 contents = AssemblyInfo.MetadataReplace(contents, "BuildUri", AssemblyInfo.BuildUri);
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.License))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "License", AssemblyInfo.License);
+            }
+
+            if (!string.IsNullOrEmpty(AssemblyInfo.LicenseUri))
+            {
+                contents = AssemblyInfo.MetadataReplace(contents, "LicenseUri", AssemblyInfo.LicenseUri);
             }
 
             File.WriteAllText(path, contents);
         }
 
-        private static string VersionReplace(string contents, string name, string version)
+        private static string AttributeReplace(string contents, string name, string value)
         {
-            var expression = string.Format(VersionExpression, name);
+            var expression = string.Format(AttributeExpression, name);
 
-            var format = string.Format(ValueFormat, version);
+            var format = string.Format(ValueFormat, value);
 
             var regex = new Regex(expression);
 
             if (!regex.IsMatch(contents))
             {
-                contents = string.Concat(contents, "{0}[assembly: ", name, "(\"", version, "\")]");
+                contents = string.Concat(contents, Environment.NewLine, string.Format(AttributeFormat, name, value));
                 return contents;
             }
 
@@ -790,7 +742,7 @@ functions @{
 
             if (!regex.IsMatch(contents))
             {
-                contents = string.Concat(contents, Environment.NewLine, "[assembly: AssemblyMetadata(\"", name, "\", @\"", value, "\")]");
+                contents = string.Concat(contents, Environment.NewLine, string.Format(MetadataFormat, name, value));
                 return contents;
             }
 
@@ -816,7 +768,7 @@ functions @{
                 foreach(var part in Directory.GetDirectories(path))
                 {
                     var current = AssemblyInfo.FindBranch(part);
-                    
+
                     if (current != null)
                     {
                         return Path.GetFileName(part) + '/' + current;

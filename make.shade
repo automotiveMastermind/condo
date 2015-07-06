@@ -1,7 +1,9 @@
-var PROJECT='PulseBridge.Condo'
-var VERSION='0.1.0'
-var FULL_VERSION='${VERSION}'
-var AUTHORS='PulseBridge, Inc.'
+default product     = 'PulseBridge.Condo'
+default version     = '1.0.0'
+default company     = 'PulseBridge, Inc.'
+default copyright   = '© 2015. PulseBridge, Inc. All rights reserved.'
+default license     = 'Apache License, Version 2.0'
+default licenseUri  = 'http://www.apache.org/licenses/LICENSE-2.0'
 
 use-condo-lifecycle
 use-condo-goals

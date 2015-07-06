@@ -6,15 +6,19 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.37.1744")]
-[assembly: AssemblyInformationalVersion("1.0.0-alpha-00037-1744")]
-#if !PORTABLE
-[assembly: AssemblyMetadata("Branch", @"refs/heads/feature/12-buildtests")]
-[assembly: AssemblyMetadata("BuildId", @"37")]
-[assembly: AssemblyMetadata("CommitId", @"706d1178b7740b62f9da0f714a6076d6d66eeeb5")]
-[assembly: AssemblyMetadata("BuildDateUtc", @"2015-07-05T17:44:31.995Z")]
+
+[assembly: AssemblyProduct(@"PulseBridge.Condo")]
+[assembly: AssemblyCompany(@"PulseBridge, Inc.")]
+[assembly: AssemblyCopyright(@"© 2015. PulseBridge, Inc. All rights reserved.")]
+[assembly: AssemblyVersion(@"1.0.0.0")]
+[assembly: AssemblyFileVersion(@"1.0.40.222")]
+[assembly: AssemblyInformationalVersion(@"1.0.0-alpha-00040-0222")]
+[assembly: AssemblyMetadata("BuildDateUtc", @"2015-07-06T02:22:43.027Z")]
+[assembly: AssemblyMetadata("Branch", @"refs/heads/feature/19-22-asm-metadata")]
+[assembly: AssemblyMetadata("BuildId", @"40")]
+[assembly: AssemblyMetadata("CommitId", @"1d6922b312993f2864efd8dca2a03e9869eba1d0")]
 [assembly: AssemblyMetadata("BuiltBy", @"dmccaffery@pulsebridge.com")]
 [assembly: AssemblyMetadata("BuiltOn", @"gio-ws-01.local")]
 [assembly: AssemblyMetadata("RepositoryUri", @"https://dmccaffery-pb.visualstudio.com/defaultcollection/open/_git/condo")]
-#endif
+[assembly: AssemblyMetadata("License", @"Apache License, Version 2.0")]
+[assembly: AssemblyMetadata("LicenseUri", @"http://www.apache.org/licenses/LICENSE-2.0")]

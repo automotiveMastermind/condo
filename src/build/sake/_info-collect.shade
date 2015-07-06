@@ -18,6 +18,13 @@ use import = 'Condo.AssemblyInfo'
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 
+default version                 = ''
+default product                 = ''
+default company                 = ''
+default copyright               = ''
+default license                 = ''
+default licenseUri              = ''
+
 - AssemblyInfo.AssemblyVersion  = Build.Variable("BUILD_VERSION");
 - AssemblyInfo.Branch           = Build.Variable("BUILD_SOURCEBRANCH");
 - AssemblyInfo.CommitId         = Build.Variable("BUILD_SOURCEVERSION");
@@ -27,6 +34,11 @@ default working_path            = '${ base_path }'
 - AssemblyInfo.BuiltBy          = Build.Variable("BUILD_REQUESTEDFOR");
 - AssemblyInfo.BuiltOn          = Build.Variable("AGENT_NAME");
 - AssemblyInfo.BuildId          = Build.Variable("BUILD_BUILDID");
+- AssemblyInfo.Product          = product;
+- AssemblyInfo.Company          = company;
+- AssemblyInfo.Copyright        = copyright;
+- AssemblyInfo.License          = license;
+- AssemblyInfo.LicenseUri       = licenseUri;
 
 - AssemblyInfo.LoadGitMetadata(working_path);
 
@@ -60,7 +72,7 @@ default working_path            = '${ base_path }'
     {
         AssemblyInfo.InformationalVersion = AssemblyInfo.AssemblyVersion;
     }
-    
+
     if (string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag))
     {
         var prerelease = "alpha";
@@ -111,10 +123,13 @@ default working_path            = '${ base_path }'
 }
 
 log verbose='-info-collect'
+log verbose='--product          : ${ AssemblyInfo.Product }' if='!string.IsNullOrEmpty(AssemblyInfo.Product)'
+log verbose='--company          : ${ AssemblyInfo.Company }' if='!string.IsNullOrEmpty(AssemblyInfo.Company)'
+log verbose='--copyright        : ${ AssemblyInfo.Copyright }' if='!string.IsNullOrEmpty(AssemblyInfo.Copyright)'
 log verbose='--version          : ${ AssemblyInfo.AssemblyVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.AssemblyVersion)'
 log verbose='--file version     : ${ AssemblyInfo.FileVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.FileVersion)'
 log verbose='--prerelease tag   : ${ AssemblyInfo.PrereleaseTag }' if='!string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag)'
-log verbose='--Semantic version : ${ AssemblyInfo.InformationalVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.InformationalVersion)'
+log verbose='--semantic version : ${ AssemblyInfo.InformationalVersion }' if='!string.IsNullOrEmpty(AssemblyInfo.InformationalVersion)'
 log verbose='--build ID         : ${ AssemblyInfo.BuildId }' if='!string.IsNullOrEmpty(AssemblyInfo.BuildId)'
 log verbose='--commit ID        : ${ AssemblyInfo.CommitId }' if='!string.IsNullOrEmpty(AssemblyInfo.CommitId)'
 log verbose='--branch           : ${ AssemblyInfo.Branch }' if='!string.IsNullOrEmpty(AssemblyInfo.Branch)'
@@ -124,3 +139,5 @@ log verbose='--build URI        : ${ AssemblyInfo.BuildUri }' if='!string.IsNull
 log verbose='--built by:        : ${ AssemblyInfo.BuiltBy }' if='!string.IsNullOrEmpty(AssemblyInfo.BuiltBy)'
 log verbose='--built on:        : ${ AssemblyInfo.BuiltOn }' if='!string.IsNullOrEmpty(AssemblyInfo.BuiltOn)'
 log verbose='--build date (UTC) : ${ AssemblyInfo.BuildDateUtc }' if='!string.IsNullOrEmpty(AssemblyInfo.BuildDateUtc)'
+log verbose='--license          : ${ AssemblyInfo.License }' if='!string.IsNullOrEmpty(AssemblyInfo.License)'
+log verbose='--license URI      : ${ AssemblyInfo.LicenseUri }' if='!string.IsNullOrEmpty(AssemblyInfo.LicenseUri)'
