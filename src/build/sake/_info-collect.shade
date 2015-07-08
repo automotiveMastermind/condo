@@ -14,6 +14,7 @@ working_path='$(base_path)'
 use namespace = 'System'
 
 use import = 'Condo.AssemblyInfo'
+use import = 'Condo.Build'
 
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'

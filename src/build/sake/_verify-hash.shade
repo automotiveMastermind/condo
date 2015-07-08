@@ -1,5 +1,5 @@
-use namespace="System.Diagnostics"
-use namespace="System.IO"
+use namespace = 'System.Diagnostics'
+use namespace = 'System.IO'
 
 default working_path = '${ Directory.GetCurrentDirectory() }'
 

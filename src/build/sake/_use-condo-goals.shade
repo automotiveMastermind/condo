@@ -1,6 +1,9 @@
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+use import = 'Condo.AssemblyInfo'
+
 default base_path           = '${ Build.Variable("BUILD_SOURCESDIRECTORY") ?? Directory.GetCurrentDirectory() }'
 default target_path         = '${ Build.Variable("BUILD_STAGINGDIRECTORY") ?? Path.Combine(base_path, "artifacts") }'
 default bin_path            = '${ Path.Combine(base_path, "bin") }'
@@ -16,13 +19,16 @@ default target_package_path = '${ Path.Combine(target_path, "packages") }'
 default version             = '${ Build.Variable("BUILD_VERSION") ?? "1.0.0" }'
 default configuration       = '${ Build.Variable("Configuration") }'
 
-default Quiet='${ false }'
-default Verbose='${ false }'
+default Quiet               = '${ false }'
+default Verbose             = '${ false }'
 
 @{
     // set the log instance on the helper class
-    Build.Log = this.Log;
+    Build.Log = new QuietLog(this.Log, Quiet);
 
+    // replace the current instance of the logger with the one that handles "quiet"
+    this.Log = Build.Log;
+    
     if (!string.IsNullOrEmpty(version))
     {
         // set the assembly version
@@ -38,6 +44,7 @@ default Verbose='${ false }'
 
 #--quiet @{
     Quiet = true;
+    Build.Log.Quiet = true;
 }
 
 #-q .--quiet

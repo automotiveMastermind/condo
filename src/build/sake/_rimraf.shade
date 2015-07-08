@@ -17,6 +17,8 @@ node_install_path='$(base_path/bin/nodejs)'
 
 */}
 
+use import = 'Condo.Build'
+
 default rimraf_path         = ''
 
 default base_path 		    = '${ Directory.GetCurrentDirectory() }'

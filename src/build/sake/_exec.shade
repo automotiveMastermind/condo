@@ -19,10 +19,14 @@ exec_quiet='false'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
+default Quiet       = '$ { false }'
+
 default exec_cmd    = ''
 default exec_args   = ''
 default exec_path   = '${ Directory.GetCurrentDirectory() }'
-default exec_quiet  = '${ false }'
+default exec_quiet  = '${ Quiet }'
 
 @{
     if (string.IsNullOrEmpty(exec_cmd))

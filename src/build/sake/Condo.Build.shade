@@ -6,12 +6,53 @@ use namespace = 'System.Linq'
 
 use namespace = 'Sake.Engine.Logging'
 
+default Quiet = '${ false }'
+
 @{
     // set the log instance on the helper class
-    Build.Log = this.Log;
+    Build.Log = new QuietLog(this.Log, Quiet);
+
+    // replace the current instance of the logger with the one that handles "quiet"
+    this.Log = Build.Log;
 }
 
 functions @{
+    public interface IQuietLog : ILog
+    {
+        bool Quiet { get; set; }
+    }
+
+    public class QuietLog : IQuietLog
+    {
+        private ILog log;
+
+        public QuietLog(ILog log, bool quiet)
+        {
+            this.Quiet = quiet;
+            this.log = log;
+        }
+
+        public void Info(object value)
+        {
+            this.log.Info(value);
+        }
+
+        public void Warn(object value)
+        {
+            this.log.Warn(value);
+        }
+
+        public void Verbose(object value)
+        {
+            if (!this.Quiet)
+            {
+                this.log.Verbose(value);
+            }
+        }
+
+        public bool Quiet { get; set; }
+    }
+
     /// <summary>
     /// Represents a helper class used to store and retrieve build environment configuration.
     /// </summary>
@@ -410,6 +451,6 @@ functions @{
         /// <summary>
         /// Gets or sets the log used to emmit log entries.
         /// </summary>
-        public static ILog Log { get; set; }
+        public static IQuietLog Log { get; set; }
     }
 }

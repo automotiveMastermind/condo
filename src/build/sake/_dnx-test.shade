@@ -34,6 +34,7 @@ use assembly = 'System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicK
 use namespace = 'System'
 use namespace = 'System.Web.Script.Serialization'
 
+use import = 'Condo.Build'
 use import = 'Files'
 
 default dnx_test_args           = ''
@@ -44,6 +45,8 @@ default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default dnx_test_path           = '${ test_path }'
 default dnx_test_options        = '${ Build.Variable("dnx_test_options") }'
 default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
+
+default Quiet                   = '${ false }'
 
 @{
     if (!string.IsNullOrEmpty(dnx_test_args))
@@ -100,7 +103,7 @@ log verbose='--output path      : ${ dnx_test_output_path }'
         {
             continue;
         }
-        
+
         var dnx_test_cmd = dnx_test_cmd_obj as string;
 
         dnx_test_folder = Path.GetDirectoryName(dnx_test_file_path);
@@ -125,10 +128,10 @@ log verbose='--output path      : ${ dnx_test_output_path }'
                 dnx_test_options_current += " -xml \"" + dnx_test_output_file + "\"";
             }
 
-            ExecuteDnx(dnx_test_args_current, dnx_test_options_current, dnx_test_folder);
+            ExecuteDnx(dnx_test_args_current, dnx_test_options_current, dnx_test_folder, Quiet);
         }
     }
 }
 
-macro name='ExecuteDnx' dnx_args='string' dnx_options='string' dnx_path='string'
+macro name='ExecuteDnx' dnx_args='string' dnx_options='string' dnx_path='string' Quiet='bool'
     dnx

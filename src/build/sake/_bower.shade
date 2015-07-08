@@ -20,6 +20,8 @@ working_path='$(base_path)'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
 default bower_args          = ""
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'

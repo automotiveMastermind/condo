@@ -11,12 +11,14 @@ base_path='$(CurrentDirectory)'
 
 */}
 
-use assembly='System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
+use assembly = 'System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
 
-use namespace='System'
-use namespace='System.IO'
-use namespace='System.IO.Compression'
-use namespace='System.Net'
+use namespace = 'System'
+use namespace = 'System.IO'
+use namespace = 'System.IO.Compression'
+use namespace = 'System.Net'
+
+use import = 'Condo.Build'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
@@ -75,7 +77,7 @@ log verbose='-nodejs install'
 
     // attempt to retreive node version
     Build.TryExecute(node_install, out node_version, "--version");
-    
+
     // attempt to retrieve npm version
     Build.TryExecute("npm", out npm_version, "--version");
 }

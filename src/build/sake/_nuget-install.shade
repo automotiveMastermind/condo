@@ -14,9 +14,9 @@ base_path='$(CurrentDirectory)'
 
 */}
 
-use namespace='System'
-use namespace='System.IO'
-use namespace='System.Net'
+use namespace = 'System'
+use namespace = 'System.IO'
+use namespace = 'System.Net'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default nuget_install_path  = '${ Path.Combine(base_path, ".nuget") }'

@@ -27,6 +27,8 @@ use namespace = 'System.IO'
 use namespace = 'System.Linq'
 use namespace = 'System.Threading.Tasks'
 
+use import = 'Condo.Build'
+
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default nuget_pack_path     = '${ working_path }'
@@ -38,6 +40,8 @@ info-collect once='info-collect'
 
 default nuget_pack_version  = '${ AssemblyInfo.InformationalVersion }'
 default nuget_pack_options  = '${ Build.Variable("NUGET_PACK_OPTIONS") }'
+
+default Quiet               = '${ false }'
 
 log verbose='-nuget-pack'
 log verbose='--options      : ${ nuget_pack_options }' if='!string.IsNullOrEmpty(nuget_pack_options)'
@@ -65,7 +69,7 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
 
         try
         {
-            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(path)));
+            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(path), Quiet));
         }
         catch (AggregateException agEx)
         {
@@ -84,11 +88,11 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
             throw new ArgumentException("nuget-pack: the specified path for the specification or project was not found.", "nuget_pack_path");
         }
 
-        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path));
+        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Quiet);
     }
 }
 
-macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string'
+macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' Quiet='bool'
     - nuget_options = nuget_args.EndsWith("proj") ? nuget_options + " -Symbols" : nuget_options;
     - nuget_options += " -BasePath \"" + nuget_path + "\"";
     nuget

@@ -1,6 +1,3 @@
-use import = 'Condo.AssemblyInfo'
-use import = 'Condo.Build'
-
 #default description='The default target, which is called if no other targets are indicated. By default, this will call the clean, test, and package targets.' @{
     CallTarget("print-properties");
     CallTarget("verify");

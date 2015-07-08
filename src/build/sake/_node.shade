@@ -17,8 +17,10 @@ node_install_path='$(base_path)/bin/nodejs'
 
 */}
 
-use namespace="System"
-use namespace="System.IO"
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
 
 default node_args           = ''
 default base_path           = '${ Directory.GetCurrentDirectory() }'

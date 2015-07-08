@@ -20,6 +20,8 @@ working_path='$(base_path)'
 
 */}
 
+use import = 'Condo.Build'
+
 default dnx_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
@@ -38,7 +40,7 @@ log verbose='--path         : ${ dnx_path }'
     }
 
     dnx_args = dnx_args.Trim();
-    
+
     if (!string.IsNullOrEmpty(dnx_options))
     {
         dnx_options = dnx_options.Trim();

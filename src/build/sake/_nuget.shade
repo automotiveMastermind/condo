@@ -29,6 +29,8 @@ nuget_install_path='$(base_path)/.nuget'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default nuget_path          = '${ working_path }'
@@ -40,7 +42,7 @@ default nuget_options       = '${ Build.Variable("nuget_options") }'
 
 var nuget_cmd               = '${ Path.Combine(nuget_install_path, "nuget.exe") }'
 
-default Quiet='${ false }'
+default Quiet               = '${ false }'
 
 nuget-install once='nuget-install'
 
@@ -50,9 +52,16 @@ nuget-install once='nuget-install'
         throw new ArgumentException("nuget: arguments must be specified when executing the nuget command line tool.", "nuget_args");
     }
 
+    nuget_args = nuget_args.Trim();
+
     if (Quiet)
     {
         nuget_options += " -Verbosity quiet";
+    }
+
+    if (!string.IsNullOrEmpty(nuget_options))
+    {
+        nuget_options = nuget_options.Trim();
     }
 }
 
@@ -64,7 +73,7 @@ log verbose='--options      : ${ nuget_options }' if='!string.IsNullOrEmpty(nuge
 @{
     if (File.Exists(nuget_config_path))
     {
-        nuget_options += " -ConfigFile " + nuget_config_path;
+        nuget_options = (nuget_options + " -ConfigFile " + nuget_config_path).Trim();
     }
     else
     {

@@ -23,6 +23,8 @@ working_path='$(base_path)'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
 default grunt_args          = ''
 default grunt_options       = '${ Build.Variable("grunt_options") }'
 

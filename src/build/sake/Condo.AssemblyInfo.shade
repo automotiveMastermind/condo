@@ -72,7 +72,7 @@ functions @{
                 catch (Exception)
                 {
                     // log a warning
-                    Build.Log.Warn(string.Format("Unable to retrieve time from the time server ({0}) on port {1}, reverting to local time.", server, port));
+                    Build.Log.Warn(string.Format("date-time: unable to retrieve time from the time server ({0}) on port {1}, reverting to local time", server, port));
 
                     // use local time
                     return DateTime.UtcNow;
@@ -529,7 +529,8 @@ functions @{
             }
             else
             {
-                Build.Log.Verbose("Match was not successful");
+                Build.Log.Verbose("load-git-metadata: match was not successful");
+
                 if (string.IsNullOrEmpty(AssemblyInfo.CommitId))
                 {
                     AssemblyInfo.CommitId = head.Trim();

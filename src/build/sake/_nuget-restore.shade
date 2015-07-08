@@ -29,6 +29,8 @@ nuget_install_path='$(base_path)/.nuget'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default nuget_restore_path      = '${ working_path }'

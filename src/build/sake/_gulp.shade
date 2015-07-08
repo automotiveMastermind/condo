@@ -23,6 +23,8 @@ working_path='$(base_path)'
 use namespace = 'System'
 use namespace = 'System.IO'
 
+use import = 'Condo.Build'
+
 default gulp_args           = ''
 default gulp_options        = '${ Build.Variable("gulp_options") }'
 
