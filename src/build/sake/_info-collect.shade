@@ -93,9 +93,14 @@ default licenseUri              = ''
         AssemblyInfo.PrereleaseTag = prerelease;
     }
 
+    if (!string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag))
+    {
+        AssemblyInfo.PrereleaseTag += "-" + AssemblyInfo.BuildId.PadLeft(5, "0"[0]);
+    }
+
     if (string.IsNullOrEmpty(Build.Variable("BUILD_BUILDNUMBER")) && string.IsNullOrEmpty(Build.Variable("BUILD_SERVER")))
     {
-        AssemblyInfo.PrereleaseTag += "-" + AssemblyInfo.BuildId.PadLeft(5, "0"[0]) + "-" + commit.PadLeft(4, "0"[0]);
+        AssemblyInfo.PrereleaseTag += "-" + commit.PadLeft(4, "0"[0]);
     }
 
     if (string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
