@@ -3,14 +3,20 @@
 dnu-pack
     Executes a dnu package manager command to pack all available projects.
 
-dnu_pack_args=''
-    The arguments to pass to the dnu command line tool (in addition to pack).
+dnu_pack_path='$(working_path)'
+    Required. The path in which to execute the dnu command line tool.
+
+dnu_pack_project=''
+    The project to build using the dnu command line tool.
+
+dnu_pack_framework=''
+    A semi-colon (;) delimited list of target frameworks to build against.
+
+dnu_pack_configuration='$(configuration)'
+    A semi-colon (;) delimited list of configurations to build.
 
 dnu_pack_options='' (Environment Variable: dnu_pack_options)
     Additional options to include when executing the dnu command line tool for pack operations.
-
-dnu_pack_path='$(working_path)'
-    The path in which to execute the dnu command line tool.
 
 dnu_pack_output_path='$(target_path)/build'
     The path in which to store the resulting packages (the name of the project will always be appended).
@@ -24,6 +30,9 @@ working_path='$(base_path)'
 target_path='$(working_path)/artifacts'
     The target path for build artifacts.
 
+configuration=''
+    The default configurations to use if no configurations are specified.
+
 */}
 
 use namespace = 'System'
@@ -31,13 +40,17 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
+default configuration           = ''
+
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default dnu_pack_path           = '${ working_path }'
 default dnu_pack_output_path    = '${ Path.Combine(target_path, "build") }'
 
-default dnu_pack_args           = ''
+default dnu_pack_project        = ''
+default dnu_pack_framework      = ''
+default dnu_pack_configuration  = '${ configuration }'
 default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
 
 @{
@@ -46,9 +59,9 @@ default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
         throw new ArgumentException("dnu-pack: project path must be specified.", "dnu_pack_path");
     }
 
-    if (!string.IsNullOrEmpty(dnu_pack_args))
+    if (!string.IsNullOrEmpty(dnu_pack_project))
     {
-        dnu_pack_args = dnu_pack_args.Trim();
+        dnu_pack_project = dnu_pack_project.Trim();
     }
 
     if (!string.IsNullOrEmpty(dnu_pack_options))
@@ -64,16 +77,30 @@ default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
 }
 
 log verbose='-dnu-pack'
-log verbose='--arguments    : ${ dnu_pack_args }'
-log verbose='--options      : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
 log verbose='--path         : ${ dnu_pack_path }'
+log verbose='--project      : ${ dnu_pack_project }' if='!string.IsNullOrEmpty(dnu_pack_project)'
+log verbose='--framework    : ${ dnu_pack_framework }' if='!string.IsNullOrEmpty(dnu_pack_framework)'
+log verbose='--configuration: ${ dnu_pack_configuration }' if='!string.IsNullOrEmpty(dnu_pack_configuration)'
+log verbose='--options      : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
 log verbose='--output path  : ${ dnu_pack_output_path }' if='!string.IsNullOrEmpty(dnu_pack_output_path)'
 
 @{
     if (!string.IsNullOrEmpty(dnu_pack_output_path))
     {
-        dnu_pack_options += string.Format(@" --out ""{0}""", dnu_pack_output_path).Trim();
+        dnu_pack_options += string.Format(@" --out ""{0}""", dnu_pack_output_path);
     }
+
+    if (!string.IsNullOrEmpty(dnu_pack_framework))
+    {
+        dnu_pack_options += string.Format(@" --framework ""{0}""", dnu_pack_framework);
+    }
+
+    if (!string.IsNullOrEmpty(dnu_pack_configuration))
+    {
+        dnu_pack_options += string.Format(@" --configuration ""{0}""", dnu_pack_configuration);
+    }
+
+    dnu_pack_options = dnu_pack_options.Trim();
 }
 
-dnu dnu_args='pack ${ dnu_pack_args }' dnu_options='${ dnu_pack_options }' dnu_path='${ dnu_pack_path }'
+dnu dnu_args='pack ${ dnu_pack_project }' dnu_options='${ dnu_pack_options }' dnu_path='${ dnu_pack_path }'

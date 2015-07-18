@@ -9,6 +9,27 @@
         "Microsoft.AspNet.Server.WebListener": "1.0.0-beta5",
         "Kestrel": "1.0.0-beta5"
     },
+    
+    "configurations": {
+        "Debug": {
+            "compilationOptions": {
+                "warningsAsErrors": false
+            }
+        },
+
+        "Analysis": {
+            "compilationOptions": {
+                "warningsAsErrors": true
+            }
+        },
+
+        "Release": {
+            "compilationOptions": {
+                "warningsAsErrors": false,
+                "optimize": true
+            }
+        }
+    },
 
     "exclude": [
         "wwwroot",

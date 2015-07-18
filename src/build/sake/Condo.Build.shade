@@ -61,7 +61,7 @@ functions @{
         private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
 
         /// <summary>
-        /// Gets a value indicating whether or not the build environment is running on a Unix-based 
+        /// Gets a value indicating whether or not the build environment is running on a Unix-based
         /// host.
         /// </summary>
         public static bool Unix
@@ -69,8 +69,8 @@ functions @{
             get
             {
                 // get the platform identifier as an integer
-                // tricky: this is necessary as the 1.x mono runtime used a value of 128 for 
-                // unix environments, which doesn't exist on the PlatformID enumeration in 
+                // tricky: this is necessary as the 1.x mono runtime used a value of 128 for
+                // unix environments, which doesn't exist on the PlatformID enumeration in
                 // .NET or in 2.x mono runtime
                 var id = (int)Environment.OSVersion.Platform;
 
@@ -83,7 +83,23 @@ functions @{
         }
 
         /// <summary>
-        /// Gets a value indicating whether or not the build environment is executing within the 
+        /// Gets a value indicating whether or not the build environment is running on an OS X-based
+        /// host.
+        /// </summary>
+        public static bool OSX
+        {
+            get
+            {
+                // get the platform id
+                var id = (int)Environment.OSVersion.Platform;
+
+                // determine if the platform is OS X
+                return id == 4;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the build environment is executing within the
         /// mono runtime.
         /// </summary>
         public static bool Mono
@@ -101,7 +117,7 @@ functions @{
         /// The name of the environment variable for which to retrieve a value.
         /// </param>
         /// <returns>
-        /// The value of the environment variable with the specified <paramref name="key"/>; otherwise 
+        /// The value of the environment variable with the specified <paramref name="key"/>; otherwise
         /// <see langword="null"/>.
         /// </returns>
         public static string Variable(string key)
@@ -111,7 +127,7 @@ functions @{
         }
 
         /// <summary>
-        /// Sets the environment variable with the specified <paramref name="key"/> to the specified 
+        /// Sets the environment variable with the specified <paramref name="key"/> to the specified
         /// <paramref name="value"/>.
         /// </summary>
         /// <param name="key">
@@ -152,13 +168,13 @@ functions @{
         /// The working path in which the specified <paramref name="command"/> should be executed.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
         public static bool TryExecute(string command, out int exitCode, string args = "", string workingPath = "", bool quiet = false)
         {
             string result;
-            
+
             try
             {
                 // attempt to execute the command
@@ -173,7 +189,7 @@ functions @{
             // return true if the exit code is 0
             return exitCode == 0;
         }
-        
+
         /// <summary>
         /// Attempts to execute the specified <paramref name="command"/> with the optionally specified <paramref name="args"/>.
         /// </summary>
@@ -184,7 +200,7 @@ functions @{
         /// When the method returns, the exit code of the process that was used to execute the specified <paramref name="command"/>.
         /// </param>
         /// <param name="result">
-        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process 
+        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process
         /// was not successful.
         /// </param>
         /// <param name="args">
@@ -194,13 +210,13 @@ functions @{
         /// The working path in which the specified <paramref name="command"/> should be executed.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
         public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true)
         {
             result = null;
-            
+
             try
             {
                 // attempt to execute the command
@@ -210,7 +226,7 @@ functions @{
             {
                 // set the exit code to -1 as a default error
                 exitCode = -1;
-                
+
                 // set the result to the message
                 result = netEx.Message;
             }
@@ -233,7 +249,7 @@ functions @{
         /// The path in which to execute the specified <paramref name="command"/>.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
         public static bool TryExecute(string command, string args = "", string workingPath = "", bool quiet = false)
@@ -252,7 +268,7 @@ functions @{
         /// The command to execute at the command line.
         /// </param>
         /// <param name="result">
-        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process 
+        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process
         /// was not successful.
         /// </param>
         /// <param name="args">
@@ -262,7 +278,7 @@ functions @{
         /// The path in which to execute the specified <paramref name="command"/>.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         public static bool TryExecute(string command, out string result, string args = "", string workingPath = "")
         {
@@ -287,13 +303,13 @@ functions @{
         /// The path in which to execute the specified <paramref name="command"/>.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
         public static int Execute(string command, string args = "", string workingPath = "", bool quiet = false)
         {
             string result;
-            
+
             return Build.Execute(command, out result, args, workingPath, quiet);
         }
 
@@ -305,7 +321,7 @@ functions @{
         /// The command to execute at the command line.
         /// </param>
         /// <param name="result">
-        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process 
+        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process
         /// was not successful.
         /// </param>
         /// <param name="args">
@@ -315,7 +331,7 @@ functions @{
         /// The path in which to execute the specified <paramref name="command"/>.
         /// </param>
         /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the 
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
         public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true)
@@ -371,8 +387,8 @@ functions @{
                 throw new Exception(string.Format("The specified path {0} does not exist.", path));
             }
 
-            excludes = DefaultExcludes.Union(excludes).ToArray(); 
-            
+            excludes = DefaultExcludes.Union(excludes).ToArray();
+
             var files = Directory.GetFiles(path, filter, SearchOption.AllDirectories).AsEnumerable();
 
             var separator = Path.DirectorySeparatorChar;
@@ -384,7 +400,7 @@ functions @{
 
             return files.Select(f => Path.GetDirectoryName(f)).Distinct();
         }
-        
+
         public static IEnumerable<string> GetPaths(string path, string filter)
         {
             if (string.IsNullOrEmpty(path))
@@ -410,9 +426,9 @@ functions @{
         /// </param>
         public static string MakeDirectory(string path)
         {
-            return Directory.CreateDirectory(path).FullName;
+            return Directory.Exists(path) ? path : Directory.CreateDirectory(path).FullName;
         }
-        
+
         public static bool TryGetRepositoryRoot(ref string root)
         {
             try
@@ -444,7 +460,7 @@ functions @{
 
                 return false;
             }
-            
+
             return false;
         }
 

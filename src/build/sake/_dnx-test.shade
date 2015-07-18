@@ -14,7 +14,12 @@ dnx_test_path='$(test_path)'
 
 dnx_test_output_path='$(target_path)/test'
     The path in which to store the test results.
-    
+
+dnx_test_coverage='$(Coverage)'
+    A value indicating whether or not to perform code coverage analysis.
+
+    NOTE: Performing code coverage is only supported on Windows at the present time.
+
 base_path='$(CurrentDirectory)'
     The base path in which to locate test projects.
 
@@ -27,6 +32,9 @@ target_path='$(working_path)/artifacts'
 test_path='$(base_path)/test'
     The path in which to locate test projects.
 
+Coverage='${ false }'
+    The default value indicating whether or not to perform code coverage analysis.
+
 */}
 
 use assembly = 'System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
@@ -37,6 +45,11 @@ use namespace = 'System.Web.Script.Serialization'
 use import = 'Condo.Build'
 use import = 'Files'
 
+default Quiet                   = '${ false }'
+default Coverage                = '${ false }'
+
+default configuration           = 'Debug'
+
 default dnx_test_args           = ''
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
@@ -45,8 +58,7 @@ default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default dnx_test_path           = '${ test_path }'
 default dnx_test_options        = '${ Build.Variable("dnx_test_options") }'
 default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
-
-default Quiet                   = '${ false }'
+default dnx_test_coverage       = '${ Coverage }'
 
 @{
     if (!string.IsNullOrEmpty(dnx_test_args))
@@ -61,10 +73,10 @@ default Quiet                   = '${ false }'
 }
 
 log verbose='-dnx-test'
-log verbose='--arguments        : ${ dnx_test_args }' if='!string.IsNullOrEmpty(dnx_test_args)'
-log verbose='--options          : ${ dnx_test_options }' if='!string.IsNullOrEmpty(dnx_test_options)'
-log verbose='--path             : ${ dnx_test_path }'
-log verbose='--output path      : ${ dnx_test_output_path }'
+log verbose='--arguments    : ${ dnx_test_args }' if='!string.IsNullOrEmpty(dnx_test_args)'
+log verbose='--options      : ${ dnx_test_options }' if='!string.IsNullOrEmpty(dnx_test_options)'
+log verbose='--path         : ${ dnx_test_path }'
+log verbose='--output path  : ${ dnx_test_output_path }'
 
 @{
     Build.MakeDirectory(dnx_test_output_path);
@@ -128,10 +140,15 @@ log verbose='--output path      : ${ dnx_test_output_path }'
                 dnx_test_options_current += " -xml \"" + dnx_test_output_file + "\"";
             }
 
-            ExecuteDnx(dnx_test_args_current, dnx_test_options_current, dnx_test_folder, Quiet);
+            ExecuteTests(dnx_test_args_current.Trim(), dnx_test_options_current.Trim(), dnx_test_folder, dnx_test_output_path, dnx_test_name, dnx_test_framework, dnx_test_coverage, Quiet);
         }
     }
 }
 
-macro name='ExecuteDnx' dnx_args='string' dnx_options='string' dnx_path='string' Quiet='bool'
-    dnx
+macro name='ExecuteTests' args='string' options='string' path='string' output='string' name='string' framework='string' coverage='bool' Quiet='bool'
+    log warn='dnx-test: code coverage is only supported on the Windows platform at the present time.' if='coverage && Build.Unix'
+
+    var cover_pdb_path = '${ Path.Combine(output, name, "Analysis", framework) }'
+
+    dnx dnx_args='${ args }' dnx_options='${ options }' dnx_path='${ path }' if='!coverage'
+    cover cover_target='dnx' cover_args='${ args } ${ options }' cover_output_path = '${ path }' cover_path='${ path }' if='coverage'

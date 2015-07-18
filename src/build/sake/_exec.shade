@@ -12,8 +12,12 @@ exec_args=''
 exec_path=''
     The working directory of the command line tool.
 
-exec_quiet='false'
+exec_quiet='$(Quiet)'
     A value indicating whether or not to execute the command quietly.
+
+Quiet='false'
+    The default value indicating whether or not to execute the command quietly.
+
 */}
 
 use namespace = 'System'
@@ -21,7 +25,7 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default Quiet       = '$ { false }'
+default Quiet       = '${ false }'
 
 default exec_cmd    = ''
 default exec_args   = ''

@@ -5,7 +5,7 @@ node-install
 
 node_install_path='$(base_path)/bin/nodejs'
     The path in which to install node.
-    
+
 base_path='$(CurrentDirectory)'
     The base path in which to install node.
 
@@ -33,9 +33,10 @@ var node_dist       = 'http://nodejs.org/dist'
 var node_url        = '${ node_dist }/v${ node_version }/${ node_exe }'
 var node_install    = '${ Path.Combine(node_install_path, node_exe) }'
 
-var npm_zip     = 'npm-${ npm_version }.zip'
-var npm_url     = '${ node_dist }/npm/${ npm_zip }'
-var npm_install = '${ Path.Combine(node_install_path, npm_zip) }'
+var npm_zip         = 'npm-${ npm_version }.zip'
+var npm_url         = '${ node_dist }/npm/${ npm_zip }'
+var npm_install     = '${ Path.Combine(node_install_path, npm_zip) }'
+var npm_cmd_install = '${ Path.Combine(node_install_path, "npm.cmd") }'
 
 var node_locally_installed  = '${ File.Exists(node_install) }'
 var node_globally_installed = '${ Build.TryExecute("node", "--version", quiet:true) }'
@@ -43,16 +44,11 @@ var node_installed          = '${ node_globally_installed || node_locally_instal
 
 - node_install = node_globally_installed ? "node" : node_install;
 
-log verbose='-nodejs install'
+log verbose='-node-install'
 
 @{
-    if (!node_installed)
+    if (!node_installed && !Build.Unix)
     {
-        if (Build.Unix)
-        {
-            throw new NotImplementedException("Node was not found and cannot be automatically installed on a Unix-based system.");
-        }
-
         Log.Info(string.Format("--installing nodejs to: {0}", node_install_path));
 
         if (Directory.Exists(node_install_path))
@@ -73,17 +69,19 @@ log verbose='-nodejs install'
             Log.Info(string.Format("--extracting npm from: {0} to: {1}", npm_install, node_install_path));
             ZipFile.ExtractToDirectory(npm_install, node_install_path);
         }
+
+        // attempt to retreive node version
+        Build.TryExecute(node_install, out node_version, "--version");
+
+        // attempt to retrieve npm version
+        Build.TryExecute(npm_cmd_install, out npm_version, "--version");
     }
-
-    // attempt to retreive node version
-    Build.TryExecute(node_install, out node_version, "--version");
-
-    // attempt to retrieve npm version
-    Build.TryExecute("npm", out npm_version, "--version");
 }
 
-log verbose='--path        : ${ node_install }'
-log verbose='--version     : ${ node_version }'
-log verbose='--npm version : ${ npm_version }'
+brew-install brew_install_formula='node' if='!node_installed && Build.OSX'
 
-verify-hash assembly='${ node_install }' hash='${ node_hash }' if='!node_installed'
+log verbose='--path         : ${ node_install }' if='!Build.Unix'
+log verbose='--version      : ${ node_version }'
+log verbose='--npm version  : ${ npm_version }'
+
+verify-hash assembly='${ node_install }' hash='${ node_hash }' if='!node_installed && !Build.Unix'

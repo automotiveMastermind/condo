@@ -1,0 +1,44 @@
+@{/*
+
+brew-install
+    Installs a formula using brew on OS X.
+
+brew_install_formula=''
+    Required. The name of the formula to install.
+
+brew_install_options=''
+    Additional options to use when executing brew.
+
+brew_install_path='$(working_path)'
+    The path in which to execute brew.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute brew.
+
+working_path='$(base_path)'
+    The working path in which to execute brew.
+
+*/}
+
+default brew_install_formula    = ''
+default brew_install_options    = ''
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default brew_install_path   = '${ working_path }'
+
+@{
+    if (string.IsNullOrEmpty(brew_install_formula))
+    {
+        throw new ArgumentException("brew-install: required formula was not specified.", "brew_install_formula");
+    }
+
+    brew_install_formula = brew_install_formula.Trim();
+}
+
+log verbose='-brew-install'
+log verbose='--formula          : ${ brew_install_formula }'
+log verbose='--options          : ${ brew_install_options }' if='!string.IsNullOrEmpty(brew_install_options)'
+log verbose='--path             : ${ brew_install_path }'
+
+brew brew_args='${ brew_install_formula }' brew_options='install ${ brew_install_options }' brew_path='${ brew_install_path }'

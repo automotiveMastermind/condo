@@ -1,0 +1,44 @@
+@{/*
+
+ruby
+    Executes the ruby command line tool.
+
+ruby_args=''
+    Required. The arguments used to execute the command.
+
+ruby_options='-e'
+    The options used to execute the command.
+
+ruby_path='$(working_path)'
+    The path in which to execute the command.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the nuget package manager command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the nuget package manager command line tool.
+
+*/}
+
+default ruby_args       = ''
+default ruby_options    = ''
+
+default base_path       = '${ Directory.GetCurrentDirectory() }'
+default working_path    = '${ base_path }'
+default ruby_path       = '${ working_path }'
+
+var ruby_installed      = '${ Build.TryExecute("ruby", "--version") }'
+
+@{
+    if (!ruby_installed)
+    {
+        throw new InvalidOperationException("ruby: ruby was not found on the system. Please install ruby and try again.");
+    }
+}
+
+log verbose='-ruby'
+log verbose='--arguments    : ${ ruby_args }'
+log verbose='--options      : ${ ruby_options }' if='!string.IsNullOrEmpty(ruby_options)'
+log verbose='--path         : ${ ruby_path }'
+
+exec exec_cmd='ruby' exec_args='${ ruby_options } "${ ruby_args }"' exec_path='${ ruby_path }'

@@ -1,9 +1,11 @@
-default product     = 'PulseBridge.Condo'
-default version     = '1.0.0'
-default company     = 'PulseBridge, Inc.'
-default copyright   = '© 2015. PulseBridge, Inc. All rights reserved.'
-default license     = 'Apache License, Version 2.0'
-default licenseUri  = 'http://www.apache.org/licenses/LICENSE-2.0'
+var product     = 'PulseBridge.Condo'
+var version     = '1.0.0'
+var company     = 'PulseBridge, Inc.'
+var copyright   = '© 2015. PulseBridge, Inc. All rights reserved.'
+var license     = 'Apache License, Version 2.0'
+var licenseUri  = 'http://www.apache.org/licenses/LICENSE-2.0'
+
+var configuration = 'Debug'
 
 use-condo-lifecycle
 use-condo-goals

@@ -37,8 +37,8 @@ default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
 node-install once='node-install'
 
 log verbose='-node'
-log verbose='--arguments   : ${ node_args }'
-log verbose='--path        : ${ node_path }'
+log verbose='--arguments    : ${ node_args }'
+log verbose='--path         : ${ node_path }'
 
 var node_cmd    = '${ Path.Combine(node_install_path, "node.exe") }'
 - node_cmd      = !Build.Unix && File.Exists(node_cmd) ? node_cmd : "node";

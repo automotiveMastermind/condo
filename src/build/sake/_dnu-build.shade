@@ -3,14 +3,20 @@
 dnu-build
     Executes a dnu package manager command to build all available projects.
 
-dnu_build_args=''
-    The arguments to pass to the dnu command line tool (in addition to build)
+dnu_build_path='$(working_path)'
+    Required. The path in which to execute the dnu command line tool.
+
+dnu_build_project=''
+    The project to build using the dnu command line tool.
+
+dnu_build_framework=''
+    A semi-colon (;) delimited list of target frameworks to build against.
+
+dnu_build_configuration='$(configuration)'
+    A semi-colon (;) delimited list of configurations to build.
 
 dnu_build_options='' (Environment Variable: dnu_build_options)
     Additional options to include when executing the dnu command line tool for build operations.
-
-dnu_build_path='$(working_path)'
-    The path in which to execute the dnu command line tool.
 
 dnu_build_output_path='$(target_path)/build'
     The path in which to store the resulting packages.
@@ -24,6 +30,9 @@ working_path='$(base_path)'
 target_path='$(working_path)/artifacts'
     The target path for build artifacts.
 
+configuration=''
+    The default configurations to use if no configurations are specified.
+
 */}
 
 use namespace = 'System'
@@ -31,14 +40,18 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
+default configuration           = ''
+
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default dnu_build_path          = '${ working_path }'
 default dnu_build_output_path   = '${ Path.Combine(target_path, "build") }'
 
-default dnu_build_args      = ''
-default dnu_build_options   = '${ Build.Variable("dnu_build_options") }'
+default dnu_build_project       = ''
+default dnu_build_framework     = ''
+default dnu_build_configuration = '${ configuration }'
+default dnu_build_options       = '${ Build.Variable("dnu_build_options") }'
 
 @{
     if (string.IsNullOrEmpty(dnu_build_path))
@@ -46,9 +59,9 @@ default dnu_build_options   = '${ Build.Variable("dnu_build_options") }'
         throw new ArgumentException("dnu-build: project path must be specified.", "dnu_build_path");
     }
 
-    if (!string.IsNullOrEmpty(dnu_build_args))
+    if (!string.IsNullOrEmpty(dnu_build_project))
     {
-        dnu_build_args = dnu_build_args.Trim();
+        dnu_build_project = dnu_build_project.Trim();
     }
 
     if (!string.IsNullOrEmpty(dnu_build_options))
@@ -64,16 +77,30 @@ default dnu_build_options   = '${ Build.Variable("dnu_build_options") }'
 }
 
 log verbose='-dnu-build'
-log verbose='--arguments    : ${ dnu_build_args }' if='!string.IsNullOrEmpty(dnu_build_args)'
-log verbose='--options      : ${ dnu_build_options }' if='!string.IsNullOrEmpty(dnu_build_options)'
 log verbose='--path         : ${ dnu_build_path }'
+log verbose='--project      : ${ dnu_build_project }' if='!string.IsNullOrEmpty(dnu_build_project)'
+log verbose='--framework    : ${ dnu_build_framework }' if='!string.IsNullOrEmpty(dnu_build_framework)'
+log verbose='--configuration: ${ dnu_build_configuration }' if='!string.IsNullOrEmpty(dnu_build_configuration)'
+log verbose='--options      : ${ dnu_build_options }' if='!string.IsNullOrEmpty(dnu_build_options)'
 log verbose='--output path  : ${ dnu_build_output_path }' if='!string.IsNullOrEmpty(dnu_build_output_path)'
 
 @{
     if (!string.IsNullOrEmpty(dnu_build_output_path))
     {
-        dnu_build_options += string.Format(@" --out ""{0}""", dnu_build_output_path).Trim();
+        dnu_build_options += string.Format(@" --out ""{0}""", dnu_build_output_path);
     }
+
+    if (!string.IsNullOrEmpty(dnu_build_framework))
+    {
+        dnu_build_options += string.Format(@" --framework ""{0}""", dnu_build_framework);
+    }
+
+    if (!string.IsNullOrEmpty(dnu_build_configuration))
+    {
+        dnu_build_options += string.Format(@" --configuration ""{0}""", dnu_build_configuration);
+    }
+
+    dnu_build_options = dnu_build_options.Trim();
 }
 
-dnu dnu_args='build ${ dnu_build_args }' dnu_options='${ dnu_build_options }' dnu_path='${ dnu_build_path }'
+dnu dnu_args='build ${ dnu_build_project }' dnu_options='${ dnu_build_options }' dnu_path='${ dnu_build_path }'

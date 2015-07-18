@@ -1,0 +1,13 @@
+@{/*
+
+gm-install
+    Installs the GraphicsMagick library.
+
+    NOTE: This is only spuported on OS X at the present time, but will be expanded to include other
+    operating systems in the future.
+
+*/}
+
+var gm_installed = '${ Build.TryExecute("gm", "-version") }'
+
+brew-install brew_install_formula='graphicsmagick' if='!gm_installed && Build.OSX'
