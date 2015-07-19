@@ -38,9 +38,9 @@ default brew_path       = '${ working_path }'
 }
 
 log verbose='-brew'
-log verbose='--arguments        : ${ brew_args }'
-log verbose='--options          : ${ brew_options }' if='!string.IsNullOrEmpty(brew_options)'
-log verbose='--path             : ${ brew_path }'
+log verbose='--arguments    : ${ brew_args }'
+log verbose='--options      : ${ brew_options }' if='!string.IsNullOrEmpty(brew_options)'
+log verbose='--path         : ${ brew_path }'
 
 brew-download once='brew-install'
 

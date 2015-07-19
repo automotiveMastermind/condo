@@ -7,5 +7,7 @@ var licenseUri  = 'http://www.apache.org/licenses/LICENSE-2.0'
 
 var configuration = 'Debug'
 
+gm-install
+
 use-condo-lifecycle
 use-condo-goals

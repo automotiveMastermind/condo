@@ -64,7 +64,7 @@ var brew_download       = '${ Path.Combine(working_path, "brew.rb") }'
 }
 
 log verbose='-brew-download'
-log verbose='--version          : ${ brew_version }'
+log verbose='--version      : ${ brew_version }'
 
 macro name='ExecuteRuby' args='string'
     ruby ruby_args='${ args }'
