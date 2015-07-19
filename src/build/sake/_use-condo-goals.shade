@@ -102,7 +102,7 @@ default Coverage            = '${ false }'
 
 #restore-npm-modules description='Restores all NPM modules. This will install NodeJS and NPM if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json") }'
-    npm npm_args='install ${ Build.Get("NPM_INSTALL_OPTIONS") }' each='var npm_path in paths'
+    npm-install each='var npm_install_path in paths'
 
 #restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
