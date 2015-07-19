@@ -116,14 +116,17 @@ functions @{
         /// <param name="key">
         /// The name of the environment variable for which to retrieve a value.
         /// </param>
+        /// <param name="default">
+        /// The default value if no value is present.
+        /// </param>
         /// <returns>
         /// The value of the environment variable with the specified <paramref name="key"/>; otherwise
-        /// <see langword="null"/>.
+        /// <see langword="string.Empty"/>.
         /// </returns>
-        public static string Variable(string key)
+        public static string Get(string key, string @default = "")
         {
             // get the environment variable
-            return Environment.GetEnvironmentVariable(key) ?? null;
+            return Environment.GetEnvironmentVariable(key) ?? @default;
         }
 
         /// <summary>
@@ -139,13 +142,13 @@ functions @{
         /// <param name="replace">
         /// A value indicating whether or not to append the value to any existing value.
         /// </param>
-        public static void Variable(string key, string value, bool append = false)
+        public static void Set(string key, string value, bool append = false)
         {
             // determine if the value is being appended
             if (append)
             {
                 // get the current value and append the new value; finally trim any whitespace
-                value = string.Concat(Build.Variable(key), " ", value).Trim();
+                value = string.Concat(Build.Get(key), " ", value).Trim();
             }
 
             // set the environment variable

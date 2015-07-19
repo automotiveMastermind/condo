@@ -30,7 +30,7 @@ default working_path            = '${ base_path }'
 default dnu_restore_path        = '${ working_path }'
 
 default dnu_restore_args        = ''
-default dnu_restore_options     = '${ Build.Variable("DNU_RESTORE_OPTIONS") }'
+default dnu_restore_options     = '${ Build.Get("DNU_RESTORE_OPTIONS") }'
 
 @{
     if (!string.IsNullOrEmpty(dnu_restore_args))

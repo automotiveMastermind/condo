@@ -51,7 +51,7 @@ default dnu_build_output_path   = '${ Path.Combine(target_path, "build") }'
 default dnu_build_project       = ''
 default dnu_build_framework     = ''
 default dnu_build_configuration = '${ configuration }'
-default dnu_build_options       = '${ Build.Variable("DNU_BUILD_OPTIONS") }'
+default dnu_build_options       = '${ Build.Get("DNU_BUILD_OPTIONS") }'
 
 @{
     if (string.IsNullOrEmpty(dnu_build_path))

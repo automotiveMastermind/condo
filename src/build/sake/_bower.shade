@@ -6,6 +6,9 @@ bower
 bower_args=''
     Required. The arguments to pass to the bower command line tool.
 
+bower_options='' (Environment Variable: BOWER_OPTIONS)
+    Additional options to use when executing the bower command.
+
 bower_path='$(base_path)'
     The path in which to execute bower.
 
@@ -22,22 +25,16 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default bower_args          = ""
+default bower_args          = ''
+default bower_options       = '${ Build.Get("BOWER_OPTIONS") }'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default bower_path          = '${ working_path }'
-default npm_install_options = '${ Build.Variable("NPM_INSTALL_OPTIONS") }'
+default bower_download_path = '${ base_path }'
+default bower_cmd           = '${ Path.Combine(bower_download_path, "node_modules", "bower", "bin", "bower") }'
 
 default Quiet               = '${ false }'
-
-var bower_cmd               = '${ Path.Combine(bower_path, "node_modules", "bower", "bin", "bower") }'
-
-var bower_locally_installed     = '${ File.Exists(bower_cmd) }'
-var bower_globally_installed    = '${ !bower_locally_installed && Build.TryExecute("bower", "--version --config.interactive=false", quiet:true) }'
-var bower_installed             = '${ bower_locally_installed || bower_globally_installed }'
-
-- bower_cmd = bower_globally_installed ? "bower" : bower_cmd;
 
 @{
     if (string.IsNullOrEmpty(bower_args))
@@ -47,21 +44,28 @@ var bower_installed             = '${ bower_locally_installed || bower_globally_
 
     if (Quiet)
     {
-        bower_args += " --quiet";
+        bower_options += " --quiet";
     }
 
     // trim the arguments
     bower_args = bower_args.Trim();
+    bower_options = bower_options.Trim();
 }
+
+bower-download once='bower-download'
+
+var bower_locally_installed     = '${ File.Exists(bower_cmd) }'
+var bower_globally_installed    = '${ !bower_locally_installed && Build.TryExecute("bower", "--version --config.interactive=false", quiet:true) }'
+var bower_installed             = '${ bower_locally_installed || bower_globally_installed }'
+
+- bower_cmd = bower_globally_installed ? "bower" : bower_cmd;
 
 log verbose='-bower'
 log verbose='--arguments    : ${ bower_args }'
+log verbose='--options      : ${ bower_options }'
 log verbose='--path         : ${ bower_path }'
 
-- bower_args += " --config.interactive=false";
-
-npm npm_args='install ${ npm_install_options } --prefix "${ bower_path }" bower' if='!bower_installed' once='bower-install'
+- bower_options = (bower_options + " --config.interactive=false").Trim();
 
 exec exec_cmd='${ bower_cmd }' exec_args='${ bower_args }' exec_path='${ bower_path }' if='bower_globally_installed'
-
 node node_args='"${ bower_cmd }" ${ bower_args }' node_path='${ bower_path }' if='!bower_globally_installed'

@@ -43,11 +43,11 @@ use import = 'Condo.Build'
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default nuget_push_path         = '${ working_path }'
-default nuget_push_feed         = '${ Build.Variable("NUGET_PUSH_FEED") }'
-default nuget_push_apikey       = '${ Build.Variable("NUGET_PUSH_APIKEY") }'
+default nuget_push_feed         = '${ Build.Get("NUGET_PUSH_FEED") }'
+default nuget_push_apikey       = '${ Build.Get("NUGET_PUSH_APIKEY") }'
 
 default nuget_push_args         = ''
-default nuget_push_options      = '${ Build.Variable("NUGET_PUSH_OPTIONS") }'
+default nuget_push_options      = '${ Build.Get("NUGET_PUSH_OPTIONS") }'
 
 default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.config") }'
@@ -98,6 +98,4 @@ log verbose='--config path  : ${ nuget_config_path }' if='!string.IsNullOrEmpty(
     }
 }
 
-@{
-    // nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
-}
+nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'

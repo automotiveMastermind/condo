@@ -39,7 +39,7 @@ default target_package_path = '${ Path.Combine(target_path, "packages") }'
 info-collect once='info-collect'
 
 default nuget_pack_version  = '${ AssemblyInfo.InformationalVersion }'
-default nuget_pack_options  = '${ Build.Variable("NUGET_PACK_OPTIONS") }'
+default nuget_pack_options  = '${ Build.Get("NUGET_PACK_OPTIONS") }'
 
 default Quiet               = '${ false }'
 

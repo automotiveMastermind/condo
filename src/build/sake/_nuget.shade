@@ -34,7 +34,7 @@ default nuget_path          = '${ working_path }'
 default nuget_download_path = '${ Path.Combine(base_path, ".nuget") }'
 
 default nuget_args          = 'restore'
-default nuget_options       = '${ Build.Variable("NUGET_OPTIONS") }'
+default nuget_options       = '${ Build.Get("NUGET_OPTIONS") }'
 
 var nuget_cmd               = '${ Path.Combine(nuget_download_path, "nuget.exe") }'
 

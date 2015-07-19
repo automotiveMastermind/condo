@@ -26,15 +26,15 @@ default copyright               = ''
 default license                 = ''
 default licenseUri              = ''
 
-- AssemblyInfo.AssemblyVersion  = Build.Variable("BUILD_VERSION");
-- AssemblyInfo.Branch           = Build.Variable("BUILD_SOURCEBRANCH");
-- AssemblyInfo.CommitId         = Build.Variable("BUILD_SOURCEVERSION");
-- AssemblyInfo.RepositoryUri    = Build.Variable("BUILD_REPOSITORY_URI");
-- AssemblyInfo.BuildUri         = Build.Variable("BUILD_BUILDURI");
-- AssemblyInfo.TeamUri          = Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
-- AssemblyInfo.BuiltBy          = Build.Variable("BUILD_REQUESTEDFOR");
-- AssemblyInfo.BuiltOn          = Build.Variable("AGENT_NAME");
-- AssemblyInfo.BuildId          = Build.Variable("BUILD_BUILDID");
+- AssemblyInfo.AssemblyVersion  = Build.Get("BUILD_VERSION");
+- AssemblyInfo.Branch           = Build.Get("BUILD_SOURCEBRANCH");
+- AssemblyInfo.CommitId         = Build.Get("BUILD_SOURCEVERSION");
+- AssemblyInfo.RepositoryUri    = Build.Get("BUILD_REPOSITORY_URI");
+- AssemblyInfo.BuildUri         = Build.Get("BUILD_BUILDURI");
+- AssemblyInfo.TeamUri          = Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+- AssemblyInfo.BuiltBy          = Build.Get("BUILD_REQUESTEDFOR");
+- AssemblyInfo.BuiltOn          = Build.Get("AGENT_NAME");
+- AssemblyInfo.BuildId          = Build.Get("BUILD_BUILDID");
 - AssemblyInfo.Product          = product;
 - AssemblyInfo.Company          = company;
 - AssemblyInfo.Copyright        = copyright;
@@ -99,7 +99,7 @@ default licenseUri              = ''
         AssemblyInfo.PrereleaseTag += "-" + AssemblyInfo.BuildId.PadLeft(5, "0"[0]);
     }
 
-    if (string.IsNullOrEmpty(Build.Variable("BUILD_BUILDNUMBER")) && string.IsNullOrEmpty(Build.Variable("BUILD_SERVER")))
+    if (string.IsNullOrEmpty(Build.Get("BUILD_BUILDNUMBER")) && string.IsNullOrEmpty(Build.Get("BUILD_SERVER")))
     {
         AssemblyInfo.PrereleaseTag += "-" + commit.PadLeft(4, "0"[0]);
     }

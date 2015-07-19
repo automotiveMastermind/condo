@@ -26,7 +26,7 @@ default dnx_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 default dnx_path        = '${ working_path }'
-default dnx_options     = '${ Build.Variable("DNX_OPTIONS") }'
+default dnx_options     = '${ Build.Get("DNX_OPTIONS") }'
 
 log verbose='-dnx'
 log verbose='--arguments    : ${ dnx_args }'

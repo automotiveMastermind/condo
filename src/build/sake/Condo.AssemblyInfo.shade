@@ -114,7 +114,7 @@ functions @{
                     assemblyVersion = null;
 
                     // clear the build variable
-                    Build.Variable("BUILD_VERSION", null);
+                    Build.Set("BUILD_VERSION", string.Empty);
 
                     // move on immediately
                     return;
@@ -134,7 +134,7 @@ functions @{
                 assemblyVersion = new Version(current.Major, current.Minor, current.Build);
 
                 // update the build version environment variable
-                Build.Variable("BUILD_VERSION", assemblyVersion.ToString());
+                Build.Set("BUILD_VERSION", assemblyVersion.ToString());
             }
         }
 
@@ -164,7 +164,7 @@ functions @{
                     // move on immediately
                     return;
                 }
-                
+
                 // define a variable to retain the parsed value
                 Version current;
 
@@ -199,7 +199,7 @@ functions @{
                 prereleaseTag = value;
 
                 // update the environment variables
-                Build.Variable("DNX_BUILD_VERSION", value);
+                Build.Set("DNX_BUILD_VERSION", value);
             }
         }
 
@@ -251,7 +251,7 @@ functions @{
                 branch = value;
 
                 // update the environment variables
-                Build.Variable("BUILD_SOURCEBRANCH", value);
+                Build.Set("BUILD_SOURCEBRANCH", value);
             }
         }
 
@@ -279,8 +279,8 @@ functions @{
                     buildId = null;
 
                     // update the build environment variable
-                    Build.Variable("BUILD_BUILDID", null);
-                    Build.Variable("DNX_ASSEMBLY_FILE_VERSION", null);
+                    Build.Set("BUILD_BUILDID", value);
+                    Build.Set("DNX_ASSEMBLY_FILE_VERSION", value);
 
                     // move on immediately
                     return;
@@ -300,8 +300,8 @@ functions @{
                 buildId = value;
 
                 // update the build environment variable
-                Build.Variable("BUILD_BUILDID", value);
-                Build.Variable("DNX_ASSEMBLY_FILE_VERSION", value);
+                Build.Set("BUILD_BUILDID", value);
+                Build.Set("DNX_ASSEMBLY_FILE_VERSION", value);
             }
         }
 
@@ -326,7 +326,7 @@ functions @{
                 commitId = value;
 
                 // update the build variables
-                Build.Variable("BUILD_SOURCEVERSION", value);
+                Build.Set("BUILD_SOURCEVERSION", value);
             }
         }
 
@@ -374,7 +374,7 @@ functions @{
                 builtBy = value;
 
                 // update the environment variables
-                Build.Variable("BUILD_REQUESTEDFOR", value);
+                Build.Set("BUILD_REQUESTEDFOR", value);
             }
         }
 
@@ -400,7 +400,7 @@ functions @{
                 builtOn = value;
 
                 // update the environment variables
-                Build.Variable("AGENT_NAME", value);
+                Build.Set("AGENT_NAME", value);
             }
         }
 
@@ -426,7 +426,7 @@ functions @{
                 teamUri = value;
 
                 // update the environment variables
-                Build.Variable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", value);
+                Build.Set("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI", value);
             }
         }
 
@@ -452,7 +452,7 @@ functions @{
                 repositoryUri = value;
 
                 // update the environment variables
-                Build.Variable("BUILD_REPOSITORY_URI", value);
+                Build.Set("BUILD_REPOSITORY_URI", value);
             }
         }
 
@@ -478,7 +478,7 @@ functions @{
                 buildUri = value;
 
                 // update the environment variables
-                Build.Variable("BUILD_BUILDURI", value);
+                Build.Set("BUILD_BUILDURI", value);
             }
         }
 

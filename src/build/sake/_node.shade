@@ -12,8 +12,8 @@ node_path='$(base_path)'
 base_path='$(CurrentDirectory)'
     The base path of the project.
 
-node_install_path='$(base_path)/bin/nodejs'
-    The path in which to install nodejs if not already installed.
+node_download_path='$(base_path)/bin/nodejs'
+    The path in which to download and install nodejs if not already installed.
 
 */}
 
@@ -25,7 +25,7 @@ use import = 'Condo.Build'
 default node_args           = ''
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default node_path           = '${ base_path }'
-default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default node_download_path  = '${ Path.Combine(base_path, "bin", "nodejs") }'
 
 @{
     if (string.IsNullOrEmpty(node_args))
@@ -34,13 +34,13 @@ default node_install_path   = '${ Path.Combine(base_path, "bin", "nodejs") }'
     }
 }
 
-node-install once='node-install'
+node-download once='node-download'
 
 log verbose='-node'
 log verbose='--arguments    : ${ node_args }'
 log verbose='--path         : ${ node_path }'
 
-var node_cmd    = '${ Path.Combine(node_install_path, "node.exe") }'
+var node_cmd    = '${ Path.Combine(node_download_path, "node.exe") }'
 - node_cmd      = !Build.Unix && File.Exists(node_cmd) ? node_cmd : "node";
 
 exec exec_cmd='${ node_cmd }' exec_args='${ node_args }' exec_path='${ node_path }'

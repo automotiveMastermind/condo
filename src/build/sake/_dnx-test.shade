@@ -56,7 +56,7 @@ default working_path            = '${ base_path }'
 default test_path               = '${ Path.Combine(base_path, "test") }'
 default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default dnx_test_path           = '${ test_path }'
-default dnx_test_options        = '${ Build.Variable("DNX_TEST_OPTIONS") }'
+default dnx_test_options        = '${ Build.Get("DNX_TEST_OPTIONS") }'
 default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
 default dnx_test_coverage       = '${ Coverage }'
 

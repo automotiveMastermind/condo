@@ -29,7 +29,7 @@ default git_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 default git_path        = '${ working_path }'
-default git_options     = '${ Build.Variable("GIT_OPTIONS") }'
+default git_options     = '${ Build.Get("GIT_OPTIONS") }'
 
 @{
     if (string.IsNullOrEmpty(git_args))

@@ -1,7 +1,7 @@
 @{/*
 
-gm-install
-    Installs the GraphicsMagick library.
+gm-download
+    Downloads and installs the GraphicsMagick library.
 
     NOTE: This is only spuported on OS X at the present time, but will be expanded to include other
     operating systems in the future.

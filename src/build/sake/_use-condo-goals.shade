@@ -4,20 +4,21 @@ use namespace = 'System.IO'
 use import = 'Condo.Build'
 use import = 'Condo.AssemblyInfo'
 
-default base_path           = '${ Build.Variable("BUILD_SOURCESDIRECTORY") ?? Directory.GetCurrentDirectory() }'
-default target_path         = '${ Build.Variable("BUILD_STAGINGDIRECTORY") ?? Path.Combine(base_path, "artifacts") }'
+default base_path           = '${ Build.Get("BUILD_SOURCESDIRECTORY", Directory.GetCurrentDirectory()) }'
+
+default target_path         = '${ Build.Get("BUILD_STAGINGDIRECTORY", Path.Combine(base_path, "artifacts")) }'
 default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
-default appdata_path        = '${ Build.Variable("AGENT_BUILDDIRECTORY") ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) }'
+default appdata_path        = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Path.Combine(target_path, "test") }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
-default version             = '${ Build.Variable("BUILD_VERSION") ?? "1.0.0" }'
-default configuration       = '${ Build.Variable("CONFIGURATION") }'
+default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
+default configuration       = '${ Build.Get("CONFIGURATION"), "Debug" }'
 
 default Quiet               = '${ false }'
 default Coverage            = '${ false }'
@@ -101,11 +102,11 @@ default Coverage            = '${ false }'
 
 #restore-npm-modules description='Restores all NPM modules. This will install NodeJS and NPM if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json") }'
-    npm npm_args='install ${ Build.Variable("NPM_INSTALL_OPTIONS") }' each='var npm_path in paths'
+    npm npm_args='install ${ Build.Get("NPM_INSTALL_OPTIONS") }' each='var npm_path in paths'
 
 #restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
-    bower bower_args='install ${ Build.Variable("BOWER_INSTALL_OPTIONS") }' each='var bower_path in paths'
+    bower bower_args='install ${ Build.Get("BOWER_INSTALL_OPTIONS") }' each='var bower_path in paths'
 
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
