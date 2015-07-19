@@ -22,6 +22,7 @@ x86/
 # visual studio 2015 cache/options
 .vs/
 [Pp]roject.lock.json
+[Cc]ondo.[Aa]ssembly[Ii]nfo.cs
 
 # ria/silverlight projects
 Generated_Code/
@@ -77,7 +78,7 @@ nuget.exe
 !**/packages/repositories.config
 
 # include config file for nuget
-!**/.nuget/nuget.config
+![Nn]u[Gg]et.config
 
 # include self (tfignore)
 !.tfignore
