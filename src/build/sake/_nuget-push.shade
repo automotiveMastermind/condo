@@ -98,6 +98,4 @@ log verbose='--config path  : ${ nuget_config_path }' if='!string.IsNullOrEmpty(
     }
 }
 
-@{
-    // nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
-}
+nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
