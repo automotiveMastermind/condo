@@ -62,7 +62,7 @@ var bower_installed             = '${ bower_locally_installed || bower_globally_
 
 log verbose='-bower'
 log verbose='--arguments    : ${ bower_args }'
-log verbose='--options      : ${ bower_options }'
+log verbose='--options      : ${ bower_options }' if='!string.IsNullOrEmpty(bower_options)'
 log verbose='--path         : ${ bower_path }'
 
 - bower_options = (bower_options + " --config.interactive=false").Trim();

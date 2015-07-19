@@ -106,7 +106,7 @@ default Coverage            = '${ false }'
 
 #restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
-    bower bower_args='install ${ Build.Get("BOWER_INSTALL_OPTIONS") }' each='var bower_path in paths'
+    bower-install each='var bower_install_path in paths'
 
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
