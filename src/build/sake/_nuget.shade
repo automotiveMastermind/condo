@@ -6,7 +6,7 @@ nuget
 nuget_args=''
     Required. The arguments to pass to the nuget package manager command line tool.
 
-nuget_options='' (Environment Variable: nuget_options)
+nuget_options='' (Environment Variable: NUGET_OPTIONS)
     Additional options to include when executuing the nuget package manager command line tool.
 
 nuget_path='$(working_path)'
@@ -31,10 +31,10 @@ use import = 'Condo.Build'
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default nuget_path          = '${ working_path }'
-default nuget_download_path = '${ Path.Combine(base_path, ".nuget") }' 
+default nuget_download_path = '${ Path.Combine(base_path, ".nuget") }'
 
 default nuget_args          = 'restore'
-default nuget_options       = '${ Build.Variable("nuget_options") }'
+default nuget_options       = '${ Build.Variable("NUGET_OPTIONS") }'
 
 var nuget_cmd               = '${ Path.Combine(nuget_download_path, "nuget.exe") }'
 

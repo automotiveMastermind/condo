@@ -15,7 +15,7 @@ dnu_pack_framework=''
 dnu_pack_configuration='$(configuration)'
     A semi-colon (;) delimited list of configurations to build.
 
-dnu_pack_options='' (Environment Variable: dnu_pack_options)
+dnu_pack_options='' (Environment Variable: DNU_PACK_OPTIONS)
     Additional options to include when executing the dnu command line tool for pack operations.
 
 dnu_pack_output_path='$(target_path)/build'
@@ -51,7 +51,7 @@ default dnu_pack_output_path    = '${ Path.Combine(target_path, "build") }'
 default dnu_pack_project        = ''
 default dnu_pack_framework      = ''
 default dnu_pack_configuration  = '${ configuration }'
-default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
+default dnu_pack_options        = '${ Build.Variable("DNU_PACK_OPTIONS") }'
 
 @{
     if (string.IsNullOrEmpty(dnu_pack_path))
@@ -69,8 +69,8 @@ default dnu_pack_options        = '${ Build.Variable("dnu_pack_options") }'
         dnu_pack_options = dnu_pack_options.Trim();
     }
 
-    var dnu_pack_name = File.Exists(dnu_pack_path) 
-        ? Path.GetDirectoryName(dnu_pack_path) 
+    var dnu_pack_name = File.Exists(dnu_pack_path)
+        ? Path.GetDirectoryName(dnu_pack_path)
         : Path.GetFileName(dnu_pack_path);
 
     dnu_pack_output_path = Path.Combine(dnu_pack_output_path, dnu_pack_name);

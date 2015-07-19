@@ -4,11 +4,11 @@
 nuget-pack
     Executes a nuget package manager command to pack the specified packages.
 
-nuget_pack_options='' (Environment Variable: nuget_nuget_pack_options)
+nuget_pack_options='' (Environment Variable: NUGET_PACK_OPTIONS)
     Additional options to include when executing the nuget command line tool for the pack operation.
 
 nuget_pack_path='$(working_path)'
-    The path to the nuget specification or project that should be packed or the directory in which 
+    The path to the nuget specification or project that should be packed or the directory in which
     a nuget specification or project should be found.
 
 nuget_pack_version='$(AssemblyInfo.InformationalVersion)'

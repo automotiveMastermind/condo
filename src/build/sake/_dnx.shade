@@ -6,7 +6,7 @@ dnx
 dnx_args=''
     The arguments for the dnx command.
 
-dnx_options='' (Environment Variable: dnx_options)
+dnx_options='' (Environment Variable: DNX_OPTIONS)
     Additional options to use when executing the dnx command.
 
 dnx_path='$(working_path)'
@@ -26,7 +26,7 @@ default dnx_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 default dnx_path        = '${ working_path }'
-default dnx_options     = '${ Build.Variable("dnx_options") }'
+default dnx_options     = '${ Build.Variable("DNX_OPTIONS") }'
 
 log verbose='-dnx'
 log verbose='--arguments    : ${ dnx_args }'

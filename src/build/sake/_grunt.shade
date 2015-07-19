@@ -6,7 +6,7 @@ grunt
 grunt_args=''
     Required. The arguments to pass to the grunt command line tool.
 
-grunt_options='' (Environment Variable: grunt_options)
+grunt_options='' (Environment Variable: GRUNT_OPTIONS)
     Additional options to pass to the grunt command.
 
 grunt_path='$(base_path)'
@@ -26,12 +26,12 @@ use namespace = 'System.IO'
 use import = 'Condo.Build'
 
 default grunt_args          = ''
-default grunt_options       = '${ Build.Variable("grunt_options") }'
+default grunt_options       = '${ Build.Variable("GRUNT_OPTIONS") }'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default grunt_path          = '${ working_path }'
-default npm_install_options = '${ Build.Variable("npm_install_options") }'
+default npm_install_options = '${ Build.Variable("NPM_INSTALL_OPTIONS") }'
 
 @{
     if (!string.IsNullOrEmpty(grunt_args))

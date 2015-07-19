@@ -12,7 +12,7 @@ nuget_install_version=''
 nuget_install_path='$(working_path)'
     THe path in which to execure the nuget install command.
 
-nuget_install_options=''
+nuget_install_options='' (Environment Variable: NUGET_INSTALL_OPTIONS)
     Additional options to include when executing the nuget install command.
 
 nuget_install_prerelease='${ false }'
@@ -23,9 +23,6 @@ nuget_install_exclude_version='${ true }'
 
 nuget_install_output_path='$(base_path)/packages'
     The path in which packages should be installed.
-
-nuget_install_sources=''
-    A semi-colon (;) delimited array of sources from which to install packages.
 
 nuget_config_path='$(nuget_download_path)/nuget.config'
     The path to the nuget configuration file to use when executing nuget commands.
@@ -42,7 +39,7 @@ default nuget_install_id                = ''
 default nuget_install_version           = ''
 default nuget_install_prerelease        = '${ false }'
 default nuget_install_exclude_version   = '${ true }'
-default nuget_install_options           = ''
+default nuget_install_options           = '${ Build.Variable("NUGET_INSTALL_OPTIONS") }'
 
 default base_path                       = '${ Directory.GetCurrentDirectory() }'
 default working_path                    = '${ base_path }'
@@ -76,12 +73,12 @@ log verbose='--options          : ${ nuget_install_options }' if='!string.IsNull
     {
         nuget_install_options += " -Version " + nuget_install_version;
     }
- 
+
     if (nuget_install_prerelease)
     {
         nuget_install_options += " -Prerelease";
     }
-    
+
     if (nuget_install_exclude_version)
     {
         nuget_install_options += " -ExcludeVersion";

@@ -101,11 +101,11 @@ default Coverage            = '${ false }'
 
 #restore-npm-modules description='Restores all NPM modules. This will install NodeJS and NPM if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json") }'
-    npm npm_args='install ${ Build.Variable("npm_install_options") }' each='var npm_path in paths'
+    npm npm_args='install ${ Build.Variable("NPM_INSTALL_OPTIONS") }' each='var npm_path in paths'
 
 #restore-bower-components description='Restores all Bower components. This will install the Bower node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
-    bower bower_args='install ${ Build.Variable("bower_install_options") }' each='var bower_path in paths'
+    bower bower_args='install ${ Build.Variable("BOWER_INSTALL_OPTIONS") }' each='var bower_path in paths'
 
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
