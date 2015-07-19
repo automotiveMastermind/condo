@@ -60,6 +60,8 @@ functions @{
     {
         private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
 
+        private static readonly IList<Process> Processes = new List<Process>();
+
         /// <summary>
         /// Gets a value indicating whether or not the build environment is running on a Unix-based
         /// host.
@@ -216,14 +218,17 @@ functions @{
         /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
-        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true)
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
+        /// </param>
+        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true)
         {
             result = null;
 
             try
             {
                 // attempt to execute the command
-                exitCode = Build.Execute(command, out result, args, workingPath, quiet);
+                exitCode = Build.Execute(command, out result, args, workingPath, quiet, wait);
             }
             catch (Exception netEx)
             {
@@ -337,7 +342,10 @@ functions @{
         /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
-        public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true)
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
+        /// </param>
+        public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true)
         {
             result = null;
 
@@ -365,17 +373,49 @@ functions @{
             // start the process
             var process = Process.Start(info);
 
-            // wait for the process to exit
-            process.WaitForExit();
-
-            if (quiet)
+            if (wait)
             {
-                // read out the results
-                result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
+                // wait for the process to exit
+                process.WaitForExit();
+
+                if (quiet)
+                {
+                    // read out the results
+                    result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
+                }
+
+                // get the exit code
+                return process.ExitCode;
             }
 
-            // get the exit code
-            return process.ExitCode;
+            // track the process
+            Processes.Add(process);
+
+            // return zero, since we can't do anything else
+            return 0;
+        }
+
+        public static void Wait()
+        {
+            ConsoleKeyInfo key;
+
+            Console.WriteLine(string.Empty);
+
+            do
+            {
+                Console.WriteLine("Press <enter> or <return> to stop all processes and exit.");
+            } while(!Console.ReadKey().Key.Equals(ConsoleKey.Enter));
+
+            foreach (var process in Processes)
+            {
+                try
+                {
+                    process.Kill();
+                }
+                catch
+                {
+                }
+            }
         }
 
         public static IEnumerable<string> GetPathsContaining(string path, string filter, params string[] excludes)

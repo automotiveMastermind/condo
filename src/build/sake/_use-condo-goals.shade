@@ -154,3 +154,8 @@ default Coverage            = '${ false }'
 #push-nuget-packages target='push' description='Pushes NuGet packages to the a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
     nuget-push each='var nuget_push_args in pkgs'
+
+#run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
+    dnx-run each='var dnx_run_project in paths'
+    - Build.Wait();

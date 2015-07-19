@@ -61,15 +61,8 @@ default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
 default dnx_test_coverage       = '${ Coverage }'
 
 @{
-    if (!string.IsNullOrEmpty(dnx_test_args))
-    {
-        dnx_test_args = dnx_test_args.Trim();
-    }
-
-    if (!string.IsNullOrEmpty(dnx_test_options))
-    {
-        dnx_test_options = dnx_test_options.Trim();
-    }
+    dnx_test_args = dnx_test_args.Trim();
+    dnx_test_options = dnx_test_options.Trim();
 }
 
 log verbose='-dnx-test'

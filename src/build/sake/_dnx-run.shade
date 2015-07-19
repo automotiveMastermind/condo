@@ -1,0 +1,93 @@
+@{/*
+
+dnx-run
+    Executes the command for a project based on the current platform.
+
+dnx_run_project=''
+    Required. The project.json or the path containing the project.json that should be executed.
+
+dnx_run_cmd=''
+    The command that should be executed.
+
+    NOTE: this is automatically discovered based on the current platform if not specified.
+
+dnx_run_options='' (Environment Variable: DNX_RUN_OPTIONS)
+    Additional options to pass to DNX when executing the specified command.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute dnx.
+
+working_path='$(base_path)'
+    The working path in which to execute dnx.
+
+*/}
+
+default dnx_run_project = ''
+default dnx_run_cmd     = ''
+default dnx_run_options = '${ Build.Get("DNX_RUN_OPTIONS") }'
+
+default base_path       = '${ Directory.GetCurrentDirectory() }'
+default working_path    = '${ base_path }'
+
+default Quiet           = '${ false }'
+
+var dnx_run_path = ''
+
+@{
+    // determine if a project is specified
+    if (string.IsNullOrEmpty(dnx_run_project))
+    {
+        // throw an exception
+        throw new ArgumentException("dnx-run: a project must be specified.", "dnx_run_project");
+    }
+
+    dnx_run_path = File.Exists(dnx_run_project) ? dnx_run_project : Path.Combine(dnx_run_project, "project.json");
+
+    // determine if the file still does not exist
+    if (!File.Exists(dnx_run_path))
+    {
+        // throw an argument exception
+        throw new ArgumentException("dnx-run: the specified project file does not exist.", "dnx_run_project");
+    }
+
+    // determine if the command is specified
+    if (string.IsNullOrEmpty(dnx_run_cmd))
+    {
+        // use kestrel for POSIX, otherwise web
+        dnx_run_cmd = Build.Unix ? "kestrel" : "web";
+    }
+
+    // trim the arguments
+    dnx_run_path = dnx_run_path.Trim();
+    dnx_run_cmd = dnx_run_cmd.Trim();
+    dnx_run_options = dnx_run_options.Trim();
+}
+
+log verbose='-dnx-run'
+log verbose='--project      : ${ dnx_run_project.Trim() }'
+log verbose='--command      : ${ dnx_run_cmd }'
+log verbose='--options      : ${ dnx_run_options }' if='!string.IsNullOrEmpty(dnx_run_options)'
+log verbose='--path         : ${ dnx_run_path }' if='!string.IsNullOrEmpty(dnx_run_path)'
+
+@{
+    var js = new JavaScriptSerializer();
+
+    var dnx_run_text = File.ReadAllText(dnx_run_path);
+    var dnx_run_json = js.DeserializeObject(dnx_run_text) as Dictionary<string, object>;
+
+    object dnx_run_cmds_obj;
+
+    var dnx_run_cmds = dnx_run_json.TryGetValue("commands", out dnx_run_cmds_obj)
+        ? dnx_run_cmds_obj as Dictionary<string, object>
+        : new Dictionary<string, object>();
+
+    object dnx_run_cmd_obj;
+
+    if (dnx_run_cmds.TryGetValue(dnx_run_cmd, out dnx_run_cmd_obj))
+    {
+        ExecuteRunCmd(dnx_run_cmd, dnx_run_path, Quiet);
+    }
+}
+
+macro name='ExecuteRunCmd' dnx_args='string' dnx_path='string' Quiet='bool'
+    dnx dnx_wait='${ false }'
