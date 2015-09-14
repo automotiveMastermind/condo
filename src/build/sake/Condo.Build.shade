@@ -41,6 +41,11 @@ functions @{
         {
             this.log.Warn(value);
         }
+        
+        public void Error(object value)
+        {
+            this.log.Error(value);
+        }
 
         public void Verbose(object value)
         {

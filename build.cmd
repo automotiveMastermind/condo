@@ -52,7 +52,7 @@ SETLOCAL
     )
 
     IF NOT EXIST "%NUGET%" (
-        cp "%NUGETCMD%" "%NUGET%"
+        copy "%NUGETCMD%" "%NUGET%"
     )
 
     SET SAKE=packages\Sake\tools\Sake.exe
