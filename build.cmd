@@ -23,8 +23,8 @@ SETLOCAL
         CALL "%DNVMCMD%" update-self
     )
 
-    CALL "%DNVMCMD%" upgrade -runtime CLR -arch x86
-    CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86
+    CALL "%DNVMCMD%" upgrade -runtime CLR -arch x86 -NoNative
+    CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86 -NoNative
     CALL "%DNVMCMD%" use default -runtime CLR -arch x86
 
     SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
