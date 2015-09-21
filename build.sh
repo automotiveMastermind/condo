@@ -88,8 +88,6 @@ fi
 # determine if the condo build includes exist
 if ! test -f "$includes"; then
     mono "$nuget" install PulseBridge.Condo -pre -o packages -ExcludeVersion -Source $sources -NonInteractive
-else
-    mono "$nuget" update PulseBridge.Condo -RepositoryPath packages -pre -Source $sources -NonInteractive
 fi
 
 # execute the build with sake
