@@ -6,6 +6,7 @@ SETLOCAL
     SET DNVMPATH=%DNXPATH%\dnvm
     SET DNVMCMD=%DNVMPATH%\dnvm.cmd
     SET DNVMPS1=%DNVMPATH%\dnvm.ps1
+    
     SET DNVMCMDURI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.cmd"
     SET DNVMPS1URI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.ps1"
 
@@ -14,7 +15,7 @@ SETLOCAL
     )
 
     IF NOT EXIST "%DNVMPS1%" (
-	@powershell -NoProfile -ExecutionPolicy Unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest '%DNVMPS1URI%' -OutFile '%DNVMPS1%' -UseBasicParsing"
+	   @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest '%DNVMPS1URI%' -OutFile '%DNVMPS1%' -UseBasicParsing"
     )
 
     IF NOT EXIST "%DNVMCMD%" (
@@ -23,9 +24,7 @@ SETLOCAL
         CALL "%DNVMCMD%" update-self
     )
 
-    CALL "%DNVMCMD%" upgrade -runtime CLR -arch x86 -NoNative
-    CALL "%DNVMCMD%" upgrade -runtime CoreCLR -arch x86 -NoNative
-    CALL "%DNVMCMD%" use default -runtime CLR -arch x86
+    CALL "%DNVMCMD%" upgrade -r coreclr -nonative
 
     SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
 
