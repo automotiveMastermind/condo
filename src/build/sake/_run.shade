@@ -1,0 +1,55 @@
+@{/*
+
+run
+    Executes the run command line tool.
+
+run_args=''
+    The arguments for the run command.
+
+run_options='' (Environment Variable: RUN_OPTIONS)
+    Additional options to use when executing the run command.
+
+run_path='$(working_path)'
+    The path in which to execute run.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute run.
+
+working_path='$(base_path)'
+    The working path in which to execute run.
+
+run_wait='true'
+    A value indicating whether or not to wait for exit.
+
+*/}
+
+use import = 'Condo.Build'
+
+default run_args        = ''
+default base_path       = '${ Directory.GetCurrentDirectory() }'
+default working_path    = '${ base_path }'
+default run_path        = '${ working_path }'
+default run_options     = '${ Build.Get("RUN_OPTIONS") }'
+default run_wait        = '${ true }'
+
+log verbose='-run'
+log verbose='--arguments    : ${ run_args }'
+log verbose='--options      : ${ run_options}' if='!string.IsNullOrEmpty(run_options)'
+log verbose='--path         : ${ run_path }'
+
+@{
+    if (string.IsNullOrEmpty(run_args))
+    {
+        throw new ArgumentException("run: arguments must be specified.", "run_args");
+    }
+
+    run_args = run_args.Trim();
+
+    if (!string.IsNullOrEmpty(run_options))
+    {
+        run_options = run_options.Trim();
+    }
+}
+
+exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' if='Build.Unix'
+exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' if='!Build.Unix'

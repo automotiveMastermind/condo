@@ -66,4 +66,4 @@ log verbose='--path         : ${ nuget_path }'
 log verbose='--arguments    : ${ nuget_args }'
 log verbose='--options      : ${ nuget_options }' if='!string.IsNullOrEmpty(nuget_options)'
 
-dnx dnx_args='"${ nuget_cmd }"' dnx_options = '${ nuget_args } ${ nuget_options }' dnx_path='${ nuget_path }'
+run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }'
