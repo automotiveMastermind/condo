@@ -390,7 +390,7 @@ functions @{
                 }
 
                 // get the exit code
-                return process.ExitCode;
+                return process.ExitCode == 133 ? 0 : process.ExitCode;
             }
 
             // track the process
