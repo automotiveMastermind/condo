@@ -126,6 +126,8 @@ default licenseUri              = ''
             AssemblyInfo.BuiltBy = Environment.UserName;
         }
     }
+    
+    Build.Set("BUILD_BUILDNUMBER", AssemblyInfo.InformationalVersion);
 }
 
 log verbose='-info-collect'

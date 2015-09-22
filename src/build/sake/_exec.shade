@@ -66,6 +66,6 @@ log verbose='--wait         : ${ exec_wait }'
     if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path, exec_quiet, exec_wait))
     {
         // throw a new exception
-        throw new Exception(string.Format("The command {0} failed with exit code {1}. The output was {2}.", exec_cmd, code, result));
+        throw new Exception(string.Format("The command {0} with args {1} failed with exit code {2}. The output was {3}.", exec_cmd, exec_args, code, result));
     }
 }
