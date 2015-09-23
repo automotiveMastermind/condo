@@ -82,11 +82,11 @@ default licenseUri              = ''
         {
             prerelease = "beta";
         }
-        else if (AssemblyInfo.Branch.Contains(@"/master") || AssemblyInfo.Branch.Contains(@"/main"))
+        else if (AssemblyInfo.Branch.Contains(@"/release"))
         {
             prerelease = "rc";
         }
-        else if (AssemblyInfo.Branch.Contains(@"/release"))
+        else if (AssemblyInfo.Branch.Contains(@"/master"))
         {
             prerelease = null;
         }
