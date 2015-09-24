@@ -21,6 +21,9 @@ working_path='$(base_path)'
 dnx_wait='true'
     A value indicating whether or not to wait for exit.
 
+dnx_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use import = 'Condo.Build'
@@ -31,11 +34,10 @@ default working_path    = '${ base_path }'
 default dnx_path        = '${ working_path }'
 default dnx_options     = '${ Build.Get("DNX_OPTIONS") }'
 default dnx_wait        = '${ true }'
+default dnx_quiet       = '${ Build.Log.Quiet }'
 
-log verbose='-dnx'
-log verbose='--arguments    : ${ dnx_args }'
-log verbose='--options      : ${ dnx_options}' if='!string.IsNullOrEmpty(dnx_options)'
-log verbose='--path         : ${ dnx_path }'
+log log_header='dnx'
+log log_line='-'
 
 @{
     if (string.IsNullOrEmpty(dnx_args))
@@ -51,4 +53,11 @@ log verbose='--path         : ${ dnx_path }'
     }
 }
 
-exec exec_cmd='dnx' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }'
+log log_name='arguments'    log_value='${ dnx_args }'
+log log_name='options'      log_value='${ dnx_options }'
+log log_name='path'         log_value='${ dnx_path }'
+log log_name='wait'         log_value='${ dnx_wait }'
+log log_name='quiet'        log_value='${ dnx_quiet }'
+log log_line='-'
+
+exec exec_cmd='dnx' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'

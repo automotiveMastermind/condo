@@ -32,15 +32,18 @@ default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default bower_install_path      = '${ working_path }'
 
+log log_header='bower-install'
+log log_line='-'
+
 @{
     // trim the arguments
     bower_install_id = bower_install_id.Trim();
     bower_install_options = bower_install_options.Trim();
 }
 
-log verbose='-bower-install'
-log verbose='--package id   : ${ bower_install_id }' if='!string.IsNullOrEmpty(bower_install_id)'
-log verbose='--options      : ${ bower_install_options }' if='!string.IsNullOrEmpty(bower_install_options)'
-log verbose='--path         : ${ bower_install_path }'
+log log_name='package id'   log_value = '${ bower_install_id }'
+log log_name='options'      log_value='${ bower_install_options }'
+log log_name='path'         log_value='${ bower_install_path }'
+log log_line='-'
 
 bower bower_args='install ${ bower_install_id }' bower_options='${ bower_install_options }' bower_path='${ bower_install_path }'

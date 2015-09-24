@@ -11,16 +11,19 @@ working_path='$(base_path)'
 
 */}
 
+use namespace = 'System'
+use namespace = 'System.IO'
+use namespace = 'System.Net'
+
+log log_header='brew-download'
+log log_line='-'
+
 @{
     if (!Build.OSX)
     {
         throw new NotSupportedException("brew-download: brew is only available on OS X-based systems.");
     }
 }
-
-use namespace = 'System'
-use namespace = 'System.IO'
-use namespace = 'System.Net'
 
 var brew_version        = ''
 var brew_installed      = '${ Build.TryExecute("brew", out brew_version, "--version") }'
@@ -63,8 +66,8 @@ var brew_download       = '${ Path.Combine(working_path, "brew.rb") }'
     }
 }
 
-log verbose='-brew-download'
-log verbose='--version      : ${ brew_version }'
+log log_name='version' log_value='${ brew_version }'
+log log_line='-'
 
 macro name='ExecuteRuby' args='string'
     ruby ruby_args='${ args }'

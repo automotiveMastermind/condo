@@ -9,3 +9,6 @@ var configuration = 'Debug'
 
 use-condo-lifecycle
 use-condo-goals
+
+#test-mocha target='test' description='Executes JavaScript unit tests using mocha.'
+	mocha

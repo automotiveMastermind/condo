@@ -21,6 +21,9 @@ working_path='$(base_path)'
 run_wait='true'
     A value indicating whether or not to wait for exit.
 
+run_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use import = 'Condo.Build'
@@ -31,11 +34,10 @@ default working_path    = '${ base_path }'
 default run_path        = '${ working_path }'
 default run_options     = '${ Build.Get("RUN_OPTIONS") }'
 default run_wait        = '${ true }'
+default run_quiet       = '${ Build.Log.Quiet }'
 
-log verbose='-run'
-log verbose='--arguments    : ${ run_args }'
-log verbose='--options      : ${ run_options}' if='!string.IsNullOrEmpty(run_options)'
-log verbose='--path         : ${ run_path }'
+log log_header='run'
+log log_line='-'
 
 @{
     if (string.IsNullOrEmpty(run_args))
@@ -51,5 +53,12 @@ log verbose='--path         : ${ run_path }'
     }
 }
 
-exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' if='Build.Unix'
-exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' if='!Build.Unix'
+log log_name='arguments'    log_value='${ run_args }'
+log log_name='options'      log_value='${ run_options }'
+log log_name='path'         log_value='${ run_path }'
+log log_name='wait'         log_value='${ run_wait }'
+log log_name='quiet'        log_value='${ run_quiet }'
+log log_line='-'
+
+exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' exec_quiet='${ run_quiet }' if='Build.Unix'
+exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' if='!Build.Unix'

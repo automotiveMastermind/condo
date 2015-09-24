@@ -27,6 +27,9 @@ default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default brew_install_path   = '${ working_path }'
 
+log log_header='brew-install'
+log log_line='-'
+
 @{
     if (string.IsNullOrEmpty(brew_install_formula))
     {
@@ -37,9 +40,9 @@ default brew_install_path   = '${ working_path }'
     brew_install_options = string.IsNullOrEmpty(brew_install_options) ? string.Empty : brew_install_options.Trim();
 }
 
-log verbose='-brew-install'
-log verbose='--formula      : ${ brew_install_formula }'
-log verbose='--options      : ${ brew_install_options }' if='!string.IsNullOrEmpty(brew_install_options)'
-log verbose='--path         : ${ brew_install_path }'
+log log_name='formula'  log_value='${ brew_install_formula }'
+log log_name='options'  log_value='${ brew_install_options }'
+log log_name='path'     log_value='${ brew_install_path }'
+log log_line='-'
 
 brew brew_args='${ brew_install_formula }' brew_options='install ${ brew_install_options }' brew_path='${ brew_install_path }'

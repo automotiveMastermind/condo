@@ -53,6 +53,9 @@ default dnu_pack_framework      = ''
 default dnu_pack_configuration  = '${ configuration }'
 default dnu_pack_options        = '${ Build.Get("DNU_PACK_OPTIONS") }'
 
+log log_header='dnu-pack'
+log log_line='-'
+
 @{
     if (string.IsNullOrEmpty(dnu_pack_path))
     {
@@ -76,13 +79,13 @@ default dnu_pack_options        = '${ Build.Get("DNU_PACK_OPTIONS") }'
     dnu_pack_output_path = Path.Combine(dnu_pack_output_path, dnu_pack_name);
 }
 
-log verbose='-dnu-pack'
-log verbose='--path         : ${ dnu_pack_path }'
-log verbose='--project      : ${ dnu_pack_project }' if='!string.IsNullOrEmpty(dnu_pack_project)'
-log verbose='--framework    : ${ dnu_pack_framework }' if='!string.IsNullOrEmpty(dnu_pack_framework)'
-log verbose='--configuration: ${ dnu_pack_configuration }' if='!string.IsNullOrEmpty(dnu_pack_configuration)'
-log verbose='--options      : ${ dnu_pack_options }' if='!string.IsNullOrEmpty(dnu_pack_options)'
-log verbose='--output path  : ${ dnu_pack_output_path }' if='!string.IsNullOrEmpty(dnu_pack_output_path)'
+log log_name='path'             log_value='${ dnu_pack_path }'
+log log_name='project'          log_value='${ dnu_pack_project }'
+log log_name='framework'        log_value='${ dnu_pack_framework }'
+log log_name='configuration'    log_value='${ dnu_pack_configuration }'
+log log_name='options'          log_value='${ dnu_pack_options }'
+log log_name='output path'      log_value='${ dnu_pack_output_path }'
+log log_line='-'
 
 @{
     if (!string.IsNullOrEmpty(dnu_pack_output_path))

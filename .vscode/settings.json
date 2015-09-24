@@ -1,0 +1,7 @@
+{
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+
+    "files.encoding": "utf8",
+    "files.trimTrailingWhitespace": true
+}

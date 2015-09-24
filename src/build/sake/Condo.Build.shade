@@ -41,7 +41,7 @@ functions @{
         {
             this.log.Warn(value);
         }
-        
+
         public void Error(object value)
         {
             this.log.Error(value);
@@ -58,6 +58,12 @@ functions @{
         public bool Quiet { get; set; }
     }
 
+    public class InstallPath
+    {
+        public string Path { get; set; }
+        public bool Global { get; set; }
+    }
+
     /// <summary>
     /// Represents a helper class used to store and retrieve build environment configuration.
     /// </summary>
@@ -66,6 +72,8 @@ functions @{
         private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
 
         private static readonly IList<Process> Processes = new List<Process>();
+
+        private static readonly IDictionary<string, InstallPath> InstallPaths = new Dictionary<string, InstallPath>();
 
         /// <summary>
         /// Gets a value indicating whether or not the build environment is running on a Unix-based
@@ -115,6 +123,46 @@ functions @{
             {
                 return Type.GetType("Mono.Runtime") != null;
             }
+        }
+
+        /// <summary>
+        /// Gets the path for the specified name.
+        /// </summary>
+        public static InstallPath GetPath(string name)
+        {
+            InstallPath path;
+
+            if (InstallPaths.TryGetValue(name, out path))
+            {
+                return path;
+            }
+
+            return null;
+        }
+
+        public static InstallPath GetOrSetPath(string name, string path, bool global)
+        {
+            InstallPath temp;
+
+            if (InstallPaths.TryGetValue(name, out temp))
+            {
+                return temp;
+            }
+
+            temp = new InstallPath { Path = path, Global = global };
+
+            InstallPaths.Add(name, temp);
+
+            return temp;
+        }
+
+        public static InstallPath SetPath(string name, string path, bool global)
+        {
+            var temp = new InstallPath { Path = path, Global = global };
+
+            InstallPaths[name] = temp;
+
+            return temp;
         }
 
         /// <summary>
