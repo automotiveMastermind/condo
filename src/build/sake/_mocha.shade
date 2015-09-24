@@ -1,0 +1,55 @@
+@{/*
+
+mocha
+    Executes a mocha package manager command.
+
+mocha_args=''
+    The arguments to pass to the mocha command line tool.
+
+mocha_options='' (Environment Variable: mocha_OPTIONS)
+    Additional options to use when executing the mocha command.
+
+mocha_path='$(base_path)'
+    The path in which to execute mocha.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute mocha.
+
+working_path='$(base_path)'
+    The working path in which to execute mocha.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+default mocha_args          = ''
+default mocha_options       = '${ Build.Get("mocha_OPTIONS") }'
+
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+default mocha_path          = '${ working_path }'
+
+mocha-download once='mocha-download'
+
+log log_header='mocha'
+log log_line='-'
+
+var mocha_cmd               = '${ Build.GetPath("mocha") }'
+
+@{
+    // trim the arguments
+    mocha_args = mocha_args.Trim();
+    mocha_options = mocha_options.Trim();
+}
+
+log log_name='cli'          log_value='${ mocha_cmd.Path }'
+log log_name='arguments'    log_value='${ mocha_args }'
+log log_name='options'      log_value='${ mocha_options }'
+log log_name='path'         log_value='${ mocha_path }'
+log log_line='-'
+
+exec exec_cmd='${ mocha_cmd.Path }' exec_args='${ mocha_args } ${ mocha_options }' exec_path='${ mocha_path }' if='mocha_cmd.Global'
+node node_args='"${ mocha_cmd.Path }" ${ mocha_args } ${ mocha_options }' node_path='${ mocha_path }' if='!mocha_cmd.Global'

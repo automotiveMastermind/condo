@@ -18,6 +18,12 @@ base_path='$(CurrentDirectory)'
 working_path='$(base_path)'
     The working path in which to execute git.
 
+git_wait='true'
+    A value indicating whether or not to wait for exit.
+
+git_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use namespace = 'System'
@@ -30,8 +36,21 @@ default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 default git_path        = '${ working_path }'
 default git_options     = '${ Build.Get("GIT_OPTIONS") }'
+default git_wait        = '${ true }'
+default git_quiet       = '${ Build.Log.Quiet }'
+
+var git_version         = ''
+var git_installed       = '${ Build.TryExecute("git", out git_version, "--version") }'
+
+log log_header='git'
+log log_line='-'
 
 @{
+    if (!git_installed)
+    {
+        throw new Exception("git: git must be manually installed in order to use the git cmd.");
+    }
+
     if (string.IsNullOrEmpty(git_args))
     {
         throw new ArgumentException("git: arguments must be specified.", "git_args");
@@ -45,9 +64,11 @@ default git_options     = '${ Build.Get("GIT_OPTIONS") }'
     }
 }
 
-log verbose='-git'
-log verbose='--arguments    : ${ git_args }'
-log verbose='--options      : ${ git_options }' if='!string.IsNullOrEmpty(git_options)'
-log verbose='--path         : ${ git_path }'
+log log_name='version'      log_value='${ git_version }'
+log log_name='arguments'    log_value='${ git_args }'
+log log_name='options'      log_value='${ git_options }'
+log log_name='path'         log_value='${ git_path }'
+log log_name='wait'         log_value='${ git_wait }'
+log log_name='quiet'        log_value='${ git_quiet }'
 
-exec exec_cmd='git' exec_args='${ git_options } ${ git_args }' exec_path='${ git_path }'
+exec exec_cmd='git' exec_args='${ git_options } ${ git_args }' exec_path='${ git_path }' exec_wait='${ git_wait }' exec_quiet='${ git_quiet }'

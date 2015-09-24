@@ -25,14 +25,16 @@ default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 
 default nuget_version           = '2.8.0'
 
+log log_header='nuget-download'
+log log_line='-'
+
 var nuget_exe       = 'nuget.exe'
 var nuget_dist      = 'https://www.nuget.org'
 var nuget_url       = '${ nuget_dist }/${ nuget_exe }'
 var nuget_download  = '${ Path.Combine(nuget_download_path, nuget_exe) }'
 
-log verbose='-nuget-download'
-log verbose='--path         : ${ nuget_download }'
-log verbose='--version      : ${ nuget_version }'
+log log_name='path'                 log_value='${ nuget_download }'
+log log_name='version (minimum)'    log_value='${ nuget_version }'
 
 @{
     Version minimum;
@@ -69,4 +71,9 @@ log verbose='--version      : ${ nuget_version }'
 
         client.DownloadFile(nuget_url, nuget_download);
     }
+
+    nuget_version = FileVersionInfo.GetVersionInfo(nuget_download).ProductVersion.ToString();
 }
+
+log log_name='version (actual)'  log_value='${ nuget_version }'
+log log_line='-'

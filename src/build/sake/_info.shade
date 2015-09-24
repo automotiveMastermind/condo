@@ -14,9 +14,15 @@ use namespace = 'System'
 
 default info_path    = ''
 
-var info_asm_path    = '${ info_path }'
-
 info-collect once='info-collect'
+
+log log_header='info'
+log log_line='-'
+
+log log_name='path' log_value='${ info_path }'
+log log_line='-'
+
+var info_asm_path    = '${ info_path }'
 
 @{
     if (!string.IsNullOrEmpty(info_asm_path) && !info_asm_path.EndsWith("AssemblyInfo.cs"))

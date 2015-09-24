@@ -41,12 +41,13 @@ info-collect once='info-collect'
 default nuget_pack_version  = '${ AssemblyInfo.InformationalVersion }'
 default nuget_pack_options  = '${ Build.Get("NUGET_PACK_OPTIONS") }'
 
-default Quiet               = '${ false }'
+log log_header='nuget-pack'
+log log_line='-'
 
-log verbose='-nuget-pack'
-log verbose='--options      : ${ nuget_pack_options }' if='!string.IsNullOrEmpty(nuget_pack_options)'
-log verbose='--path         : ${ nuget_pack_path }' if='!string.IsNullOrEmpty(nuget_pack_path)'
-log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty(nuget_pack_version)'
+log log_name='options'  log_value='${ nuget_pack_options }'
+log log_name='path'     log_value='${ nuget_pack_path }'
+log log_name='version'  log_value='${ nuget_pack_version }'
+log log_line='-'
 
 @{
     if (!string.IsNullOrEmpty(nuget_pack_version))
@@ -69,7 +70,7 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
 
         try
         {
-            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(path), Quiet));
+            Parallel.ForEach(nuget_pack_paths, path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(path), Build.Log.Quiet));
         }
         catch (AggregateException agEx)
         {
@@ -88,11 +89,11 @@ log verbose='--version      : ${ nuget_pack_version }' if='!string.IsNullOrEmpty
             throw new ArgumentException("nuget-pack: the specified path for the specification or project was not found.", "nuget_pack_path");
         }
 
-        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Quiet);
+        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Build.Log.Quiet);
     }
 }
 
-macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' Quiet='bool'
+macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' nuget_quiet='bool'
     - nuget_options = nuget_args.EndsWith("proj") ? nuget_options + " -Symbols" : nuget_options;
     - nuget_options += " -BasePath \"" + nuget_path + "\"";
     nuget

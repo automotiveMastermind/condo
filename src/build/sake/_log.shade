@@ -19,8 +19,24 @@ use namespace = 'System'
 default verbose = ''
 default info = ''
 default warn = ''
+default log_name = ''
+default log_value = ''
+default log_line = ''
+default log_header = ''
+
+global arg_format = '- {0,-20}: {1}' type='string'
 
 @{
+    if (!string.IsNullOrEmpty(log_header))
+    {
+        Log.Info(string.Concat("   ", log_header.ToUpper()));
+    }
+
+    if (!string.IsNullOrEmpty(log_name) && log_value != null && !string.IsNullOrEmpty(log_value.ToString()))
+    {
+        Log.Verbose(string.Format(arg_format, log_name, log_value));
+    }
+
     if (!string.IsNullOrEmpty(info))
     {
         Log.Info(info);
@@ -34,5 +50,10 @@ default warn = ''
     if (!string.IsNullOrEmpty(verbose))
     {
         Log.Verbose(verbose);
+    }
+
+    if (!string.IsNullOrEmpty(log_line))
+    {
+        Log.Verbose(string.Empty.PadLeft(120, log_line[0]));
     }
 }

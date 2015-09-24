@@ -8,6 +8,13 @@ gm-download
 
 */}
 
-var gm_installed = '${ Build.TryExecute("gm", "-version") }'
+log log_header='gm'
+log log_line='-'
+
+var gm_version      = ''
+var gm_installed    = '${ Build.TryExecute("gm", out gm_version, "-version") }'
+
+log log_name='version' log_value='${ gm_version }'
+log log_line='-'
 
 brew-install brew_install_formula='graphicsmagick' if='!gm_installed && Build.OSX'

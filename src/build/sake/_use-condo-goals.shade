@@ -20,12 +20,11 @@ default target_package_path = '${ Path.Combine(target_path, "packages") }'
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
 default configuration       = '${ Build.Get("CONFIGURATION"), "Debug" }'
 
-default Quiet               = '${ false }'
 default Coverage            = '${ false }'
 
 @{
     // set the log instance on the helper class
-    Build.Log = new QuietLog(this.Log, Quiet);
+    Build.Log = new QuietLog(this.Log, false);
 
     // replace the current instance of the logger with the one that handles "quiet"
     this.Log = Build.Log;
@@ -38,7 +37,6 @@ default Coverage            = '${ false }'
 }
 
 #--quiet @{
-    Quiet = true;
     Build.Log.Quiet = true;
 }
 
@@ -49,27 +47,27 @@ default Coverage            = '${ false }'
 #-q .--quiet
 
 #print-properties
-    log verbose='Paths'
-    log verbose='-------------------------------------------------------------'
-    log verbose='Base Path             : ${ base_path }'
-    log verbose='Source Path           : ${ src_path }'
-    log verbose='Test Path             : ${ test_path }'
-    log verbose='Working Path          : ${ working_path }'
-    log verbose='Bin Path              : ${ bin_path }'
-    log verbose='Target Path           : ${ target_path }'
-    log verbose='Build Results Path    : ${ target_build_path }'
-    log verbose='Test Results Path     : ${ target_test_path }'
-    log verbose='NuGet Packages Path   : ${ target_package_path }'
-    log verbose='-------------------------------------------------------------'
+    log log_line='-'
+    log log_header='paths'
+    log log_line='-'
+    log log_name='base path'            log_value='${ base_path }'
+    log log_name='source path'          log_value='${ src_path }'
+    log log_name='test path'            log_value='${ test_path }'
+    log log_name='working path'         log_value='${ working_path }'
+    log log_name='bin path'             log_value='${ bin_path }'
+    log log_name='target path'          log_value='${ target_path }'
+    log log_name='build results path'   log_value='${ target_build_path }'
+    log log_name='test results path'    log_value='${ target_test_path }'
+    log log_name='nuget packages path'  log_value='${ target_package_path }'
+    log log_line='-'
 
-    log info='Options'
-    log info='-------------------------------------------------------------'
-    log info='Configuration     : ${ string.IsNullOrEmpty(configuration) ? "<All>" : configuration }'
-    log info='Version           : ${ AssemblyInfo.AssemblyVersion }'
-    log info='Date Time (UTC)   : ${ AssemblyInfo.BuildDateUtc }'
-    log info='Code Coverage     : ${ Coverage }'
-    log info='Quiet             : ${ Quiet }'
-    log info='-------------------------------------------------------------'
+    log log_header='options'
+    log log_line='-'
+    log log_name='configuration' log_value='${ string.IsNullOrEmpty(configuration) ? "<All>" : configuration }'
+    log log_name='version' log_value='${ AssemblyInfo.AssemblyVersion }'
+    log log_name='date time (utc)' log_value='${ AssemblyInfo.BuildDateUtc }'
+    log log_name='quiet' log_value='${ Build.Log.Quiet }'
+    log log_line='-'
 
 #clean-bin description='Cleans the bin directory.'
     rimraf rimraf_path='${ bin_path }' if='Directory.Exists(bin_path)'

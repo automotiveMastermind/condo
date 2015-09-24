@@ -18,6 +18,12 @@ base_path='$(CurrentDirectory)'
 working_path='$(base_path)'
     The working path in which to execute grunt.
 
+grunt_wait='true'
+    A value indicating whether or not to wait for exit.
+
+grunt_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use namespace = 'System'
@@ -31,7 +37,15 @@ default grunt_options       = '${ Build.Get("GRUNT_OPTIONS") }'
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default grunt_path          = '${ working_path }'
-default npm_install_options = '${ Build.Get("NPM_INSTALL_OPTIONS") }'
+default grunt_wait          = '${ true }'
+default grunt_quiet         = '${ Build.Log.Quiet }'
+
+grunt-download once='grunt-download'
+
+log log_header='grunt'
+log log_line='-'
+
+var grunt_cmd = '${ Build.GetPath("grunt") }'
 
 @{
     if (!string.IsNullOrEmpty(grunt_args))
@@ -45,21 +59,13 @@ default npm_install_options = '${ Build.Get("NPM_INSTALL_OPTIONS") }'
     }
 }
 
-log verbose='-grunt'
-log verbose='--arguments    : ${ grunt_args }'
-log verbose='--options      : ${ grunt_options }' if='!string.IsNullOrEmpty(grunt_options)'
-log verbose='--path         : ${ grunt_path }'
+log log_name='cli'          log_value='${ grunt_cmd.Path }'
+log log_name='arguments'    log_value='${ grunt_args }'
+log log_name='options'      log_value='${ grunt_options }'
+log log_name='path'         log_value='${ grunt_path }'
+log log_name='wait'         log_value='${ grunt_wait }'
+log log_name='quiet'        log_value='${ grunt_quiet }'
+log log_line='-'
 
-var grunt_cmd                   = '${ Path.Combine(grunt_path, "node_modules", "grunt-cli", "bin", "grunt") }'
-
-var grunt_locally_installed     = '${ File.Exists(grunt_cmd) }'
-var grunt_globally_installed    = '${ !grunt_locally_installed && Build.TryExecute("grunt", "--version", quiet:true) }'
-var grunt_installed             = '${ grunt_locally_installed || grunt_globally_installed }'
-
-- grunt_cmd = grunt_globally_installed ? "grunt" : grunt_cmd;
-
-npm npm_args='install ${ npm_install_options } --prefix "${ grunt_path }" grunt-cli' if='!grunt_installed' once='grunt-install'
-
-exec exec_cmd='${ grunt_cmd }' exec_args='${ grunt_args } ${ grunt_options }' exec_path='${ grunt_path }' if='grunt_globally_installed'
-
-node node_args='"${ grunt_cmd }" ${ grunt_args } ${ grunt_options }' node_path='${ grunt_path }' if='!grunt_globally_installed'
+exec exec_cmd='${ grunt_cmd.Path }' exec_args='${ grunt_args } ${ grunt_options }' exec_path='${ grunt_path }' exec_wait='${ grunt_wait }' exec_quiet='${ grunt_quiet }' if='grunt_cmd.Global'
+node node_args='"${ grunt_cmd.Path }" ${ grunt_args } ${ grunt_options }' node_path='${ grunt_path }' node_wait='${ grunt_wait }' node_quiet='${ grunt_quiet }' if='!grunt_cmd.Global'
