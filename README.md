@@ -1,6 +1,15 @@
-# condo [![Travis Build Status](https://img.shields.io/travis/PulseBridge/Condo.svg?label=travis)](https://travis-ci.org/PulseBridge/Condo) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/dmccaffery/condo.svg)](https://ci.appveyor.com/project/dmccaffery/condo) [![NuGet Version](https://img.shields.io/nuget/v/PulseBridge.Condo.svg?label=version)](https://www.nuget.org/packages/PulseBridge.Condo/) [![NuGet Downloads](https://img.shields.io/nuget/dt/PulseBridge.Condo.svg?label=downloads)](https://www.nuget.org/packages/PulseBridge.Condo/)
+# condo
 
 > A build system for [DNX](http://docs.asp.net/en/latest/dnx/index.html) projects.
+
+## Vitals
+
+Info          | Badges
+--------------|--------------
+Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nuget-v-image]][nuget-url]
+License       | [![License][license-image]][license]
+Downloads     | [![NuGet Downloads][nuget-d-image]][nuget-url]
+Build Status  | [![Travis Build Status][travis-image][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 
 ## Getting Started
 
@@ -21,7 +30,7 @@ These are just some of the most-used features of the build system.
 
 ### Using Condo
 
-The easiest way to start using Condo is to use the [Yeoman Condo Generator](https://github.com/PulseBridge/Generator-Condo), which will configure a new "solution" structure for use with the Condo build system.
+The easiest way to start using Condo is to use the [Yeoman Condo Generator][yo-url], which will configure a new "solution" structure for use with the Condo build system.
 
 1. Make sure that you have Yeoman installed:
 
@@ -60,6 +69,29 @@ The easiest way to start using Condo is to use the [Yeoman Condo Generator](http
 	./build.ps1
 	```
 
-### Documentation
+## Documentation
 
 For more information, please refer to the [official documentation](http://open.pulsebridge.com/condo).
+
+## Copright and License
+
+&copy;. PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
+
+[license-image]: //img.shields.io/badge/license-APACHE%202.0-blue.svg
+[license]: LICENSE
+[credits]: CREDITS
+
+[release-url]: //github.com/PulseBridge/Condo/releases/latest
+[release-v-image]: //img.shields.io/github/release/PulseBridge/Condo.svg?style=flat-square
+
+[travis-url]: //travis-ci.org/PulseBridge/Condo
+[travis-image]: //img.shields.io/travis/PulseBridge/Condo.svg?label=travis
+
+[appveyor-url]: //ci.appveyor.com/project/dmccaffery/condo
+[appveyor-image]: //img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
+
+[nuget-url]: //www.nuget.org/packages/pulsebridge.condo
+[nuget-v-image]: //img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
+[nuget-d-image]: //img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
+
+[yo-url]: //github.com/PulseBridge/Generator-Condo
