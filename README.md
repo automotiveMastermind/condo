@@ -82,7 +82,7 @@ For more information, please refer to the [official documentation][docs-url].
 [credits]: CREDITS
 
 [release-url]: //github.com/pulsebridge/condo/releases/latest
-[release-v-image]:https://img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square
+[release-v-image]:https://img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square&label=github
 
 [travis-url]: //travis-ci.org/pulsebridge/condo
 [travis-image]: https://img.shields.io/travis/pulsebridge/condo.svg?label=travis
@@ -91,8 +91,8 @@ For more information, please refer to the [official documentation][docs-url].
 [appveyor-image]: https://img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
 
 [nuget-url]: //www.nuget.org/packages/pulsebridge.condo
-[nuget-v-image]: https://img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
-[nuget-d-image]: https://img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
+[nuget-v-image]: https://img.shields.io/nuget/v/pulsebridge.condo.svg?label=nuget
+[nuget-d-image]: https://img.shields.io/nuget/dt/pulsebridge.condo.svg?label=nuget
 
 [yo-url]: //www.npmjs.com/package/generator-condo
 
