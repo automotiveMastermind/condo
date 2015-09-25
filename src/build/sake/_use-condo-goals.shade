@@ -92,7 +92,7 @@ default Coverage            = '${ false }'
     path.Delete(true);
 }
 
-#clean-build target='clean' if='Directory.Exists(src_path)' description='Clean the build artifactes from each project within the working directory.'
+#clean-build target='clean' description='Clean the build artifactes from each project within the working directory.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
     clean each='var clean_path in paths'
 
