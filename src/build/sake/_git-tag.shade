@@ -48,4 +48,4 @@ log log_line='-'
 }
 
 git git_args='tag -a ${ git_tag_name } -m "${ git_tag_message }" ${ git_tag_commit }'
-git git_args='git push --tags'
+git git_args='push --tags'
