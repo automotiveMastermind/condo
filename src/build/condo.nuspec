@@ -9,9 +9,10 @@
     <description>Tooling support for cross-platform build automation.</description>
     <language>en-US</language>
     <projectUrl>http://open.pulsebridge.com/condo</projectUrl>
-    <iconUrl>https://s.gravatar.com/avatar/51d7a0733773946495b625449bd47211?size=300</iconUrl>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <iconUrl>https://github.com/pulsebridge/condo/blob/develop/logo.png</iconUrl>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
     <tags>build asp.net dnx xplat</tags>
+    <copyright>©. PulseBridge, Inc. and contributors. All Rights Reserved.</copyright>
   </metadata>
   <files>
     <file src="sake/**" target="build" />
