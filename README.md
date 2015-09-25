@@ -81,11 +81,11 @@ For more information, please refer to the [official documentation][docs-url].
 [license]: LICENSE
 [credits]: CREDITS
 
-[release-url]: //github.com/PulseBridge/Condo/releases/latest
-[release-v-image]: //img.shields.io/github/release/PulseBridge/Condo.svg?style=flat-square
+[release-url]: //github.com/pulsebridge/condo/releases/latest
+[release-v-image]: //img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square
 
-[travis-url]: //travis-ci.org/PulseBridge/Condo
-[travis-image]: //img.shields.io/travis/PulseBridge/Condo.svg?label=travis
+[travis-url]: //travis-ci.org/pulsebridge/condo
+[travis-image]: //img.shields.io/travis/pulsebridge/condo.svg?label=travis
 
 [appveyor-url]: //ci.appveyor.com/project/dmccaffery/condo
 [appveyor-image]: //img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
@@ -94,7 +94,7 @@ For more information, please refer to the [official documentation][docs-url].
 [nuget-v-image]: //img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
 [nuget-d-image]: //img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
 
-[yo-url]: //github.com/PulseBridge/Generator-Condo
+[yo-url]: //github.com/pulsebridge/generator-condo
 
 [dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
 [docs-url]: http://open.pulsebridge.com/condo
