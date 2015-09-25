@@ -480,7 +480,7 @@ functions @{
 
             if (!Directory.Exists(path))
             {
-                throw new Exception(string.Format("The specified path {0} does not exist.", path));
+                return new List<string>();
             }
 
             excludes = DefaultExcludes.Union(excludes).ToArray();
