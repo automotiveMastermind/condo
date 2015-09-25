@@ -1,6 +1,6 @@
 # condo
 
-> A build system for [DNX](http://docs.asp.net/en/latest/dnx/index.html) projects.
+> A build system for [DNX][dnx-url] projects.
 
 ## Vitals
 
@@ -71,7 +71,7 @@ The easiest way to start using Condo is to use the [Yeoman Condo Generator][yo-u
 
 ## Documentation
 
-For more information, please refer to the [official documentation](http://open.pulsebridge.com/condo).
+For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
@@ -95,3 +95,6 @@ For more information, please refer to the [official documentation](http://open.p
 [nuget-d-image]: //img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
 
 [yo-url]: //github.com/PulseBridge/Generator-Condo
+
+[dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
+[docs-url]: http://open.pulsebridge.com/condo
