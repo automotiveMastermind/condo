@@ -1,4 +1,4 @@
-# condo [![Travis Build Status](https://img.shields.io/travis/PulseBridge/Condo.svg?label=travis)](https://travis-ci.org/PulseBridge/Condo) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor)](https://ci.appveyor.com/project/dmccaffery/condo)
+# condo [![Travis Build Status](https://img.shields.io/travis/PulseBridge/Condo.svg?label=travis)](https://travis-ci.org/PulseBridge/Condo) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/dmccaffery/condo.svg)](https://ci.appveyor.com/project/dmccaffery/condo) [![NuGet Version](https://img.shields.io/nuget/v/PulseBridge.Condo.svg?label=version)](https://www.nuget.org/packages/PulseBridge.Condo/) [![NuGet Downloads](https://img.shields.io/nuget/dt/PulseBridge.Condo.svg?label=downloads)](https://www.nuget.org/packages/PulseBridge.Condo/)
 
 > A build system for [DNX](http://docs.asp.net/en/latest/dnx/index.html) projects.
 

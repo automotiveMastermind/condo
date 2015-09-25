@@ -49,19 +49,26 @@ default nuget_push_apikey       = '${ Build.Get("NUGET_PUSH_APIKEY") }'
 default nuget_push_args         = ''
 default nuget_push_options      = '${ Build.Get("NUGET_PUSH_OPTIONS") }'
 
-default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
-default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.config") }'
+log log_header='nuget-push'
+log log_line='-'
 
-log verbose='-nuget-push'
-log verbose='--api key      : ${ nuget_push_apikey }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
-log verbose='--push feed    : ${ nuget_push_feed }' if='!string.IsNullOrEmpty(nuget_push_feed)'
-log verbose='--arguments    : ${ nuget_push_args }' if='!string.IsNullOrEmpty(nuget_push_args)'
-log verbose='--options      : ${ nuget_push_options }' if='!string.IsNullOrEmpty(nuget_push_options)'
+var nuget_download_path         = '${ Path.Combine(base_path, ".nuget") }'
+var nuget_config_path           = '${ Path.Combine(nuget_download_path, "nuget.config") }'
+var nuget_root_config_path      = '${ Path.Combine(base_path, "nuget.config" }'
+
+log log_name='api key'    log_value='${ nuget_push_apikey }'
+log log_name='push feed'  log_value='${ nuget_push_feed }'
+log log_name='arguments'  log_value='${ nuget_push_args }'
+log log_name='options'    log_value='${ nuget_push_options }'
 
 @{
     if (File.Exists(nuget_config_path))
     {
         nuget_push_options = (nuget_push_options + " -ConfigFile " + nuget_config_path).Trim();
+    }
+    else if (File.Exists(nuget_root_config_path))
+    {
+        nuget_push_options = (nuget_push_options + " -ConfigFile " + nuget_root_config_path).Trim();
     }
     else
     {
