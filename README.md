@@ -94,7 +94,7 @@ For more information, please refer to the [official documentation][docs-url].
 [nuget-v-image]: //img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
 [nuget-d-image]: //img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
 
-[yo-url]: //github.com/pulsebridge/generator-condo
+[yo-url]: //www.npmjs.com/package/generator-condo
 
 [dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
 [docs-url]: http://open.pulsebridge.com/condo
