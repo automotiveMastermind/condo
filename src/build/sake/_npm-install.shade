@@ -4,7 +4,10 @@ npm-install
     Installs a module using the node package manager (npm).
 
 npm_install_id=''
-    Required. The identifier of the module to install with npm.
+    The identifier of the module to install with npm. If no id is specified, the package.json file at the npm_install_path will be used.
+
+npm_install_prefix='$(base_path)'
+    The prefix path to use when installing the NPM module.
 
 npm_install_options='' (Environment Variable: NPM_INSTALL_OPTIONS)
     Additional options to use when executing the npm install command.
@@ -30,6 +33,10 @@ default working_path        = '${ base_path }'
 default npm_install_id      = ''
 default npm_install_options = '${ Build.Get("NPM_INSTALL_OPTIONS") }'
 default npm_install_path    = '${ working_path }'
+default npm_install_prefix  = '${ working_path }'
+
+log log_header='npm-install'
+log log_line='-'
 
 @{
     // trim variables
@@ -37,9 +44,11 @@ default npm_install_path    = '${ working_path }'
     npm_install_options = npm_install_options.Trim();
 }
 
-log verbose='-npm-install'
-log verbose='--module id    : ${ npm_install_id }' if='!string.IsNullOrEmpty(npm_install_id)'
-log verbose='--options      : ${ npm_install_options }' if='!string.IsNullOrEmpty(npm_install_options)'
-log verbose='--path         : ${ npm_install_path }'
+log log_name='module id'    log_value='${ npm_install_id }'
+log log_name='prefix'       log_value='${ npm_install_prefix }'
+log log_name='options'      log_value='${ npm_install_options }'
+log log_name='path'         log_value='${ npm_install_path }'
+log log_line='-'
 
-npm npm_args='install ${ npm_install_id }' npm_options='${ npm_install_options }' npm_path='${ npm_install_path }'
+npm npm_args='install ${ npm_install_id }' npm_options='--prefix "${ npm_install_prefix }" ${ npm_install_options }' npm_path='${ npm_install_path }' if='!string.IsNullOrEmpty(npm_install_id)'
+npm npm_args='install' npm_options='${ npm_install_options }' npm_path='${ npm_install_path }' if='string.IsNullOrEmpty(npm_install_id)'

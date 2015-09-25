@@ -12,8 +12,11 @@ node_path='$(base_path)'
 base_path='$(CurrentDirectory)'
     The base path of the project.
 
-node_download_path='$(base_path)/bin/nodejs'
-    The path in which to download and install nodejs if not already installed.
+node_wait='true'
+    A value indicating whether or not to wait for exit.
+
+node_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
 
 */}
 
@@ -25,22 +28,28 @@ use import = 'Condo.Build'
 default node_args           = ''
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default node_path           = '${ base_path }'
-default node_download_path  = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default node_wait           = '${ true }'
+default node_quiet          = '${ Build.Log.Quiet }'
+
+node-download once='node-download'
+
+log log_header='node'
+log log_line='-'
+
+var node_cmd                = '${ Build.GetPath("node") }'
 
 @{
     if (string.IsNullOrEmpty(node_args))
     {
-        throw new ArgumentException("Node cannot be executed without arguments.", "node_args");
+        throw new ArgumentException("node: cannot be executed without arguments.", "node_args");
     }
 }
 
-node-download once='node-download'
+log log_name='cli'          log_value='${ node_cmd.Path }'
+log log_name='arguments'    log_value='${ node_args }'
+log log_name='path'         log_value='${ node_path }'
+log log_name='wait'         log_value='${ node_wait }'
+log log_name='quiet'        log_value='${ node_quiet }'
+log log_line='-'
 
-log verbose='-node'
-log verbose='--arguments    : ${ node_args }'
-log verbose='--path         : ${ node_path }'
-
-var node_cmd    = '${ Path.Combine(node_download_path, "node.exe") }'
-- node_cmd      = !Build.Unix && File.Exists(node_cmd) ? node_cmd : "node";
-
-exec exec_cmd='${ node_cmd }' exec_args='${ node_args }' exec_path='${ node_path }'
+exec exec_cmd='${ node_cmd.Path }' exec_args='${ node_args }' exec_path='${ node_path }' exec_wait='${ node_wait }' exec_quiet='${ node_quiet }'

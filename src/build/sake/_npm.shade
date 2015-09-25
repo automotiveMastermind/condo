@@ -18,6 +18,12 @@ working_path='$(base_path)'
 base_path='$(CurrentDirectory)'
     The base path in which to execute the npm command.
 
+npm_wait='true'
+    A value indicating whether or not to wait for exit.
+
+npm_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use namespace = 'System'
@@ -30,9 +36,15 @@ default working_path        = '${ base_path }'
 default npm_args            = ''
 default npm_options         = '${ Build.Get("NPM_OPTIONS") }'
 default npm_path            = '${ working_path }'
-default node_download_path  = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default npm_wait            = '${ true }'
+default npm_quiet           = '${ Build.Log.Quiet }'
 
-default Quiet               = '${ false }'
+node-download once='node-download'
+
+log log_header='npm'
+log log_line='-'
+
+var npm_cmd = '${ Build.GetPath("npm") }'
 
 @{
     if (string.IsNullOrEmpty(npm_args))
@@ -41,23 +53,14 @@ default Quiet               = '${ false }'
     }
 }
 
-node-download once='node-download'
+log log_name='cli'          log_value='${ npm_cmd.Path }'
+log log_name='arguments'    log_value='${ npm_args }'
+log log_name='options'      log_value='${ npm_options }'
+log log_name='path'         log_value='${ npm_path }'
+log log_name='wait'         log_value='${ npm_wait }'
+log log_name='quiet'        log_value='${ npm_quiet }'
+log log_line='-'
 
-log verbose='-npm'
-log verbose='--arguments    : ${ npm_args }'
-log verbose='--options      : ${ npm_options }' if='!string.IsNullOrEmpty(npm_options)'
-log verbose='--path         : ${ npm_path }'
+- npm_options = npm_options.Trim();
 
-@{
-    if (Quiet)
-    {
-        npm_options += " --quiet";
-    }
-
-    npm_options = npm_options.Trim();
-}
-
-var npm_cmd = '${ Path.Combine(node_download_path, "npm.cmd") }'
-- npm_cmd = !Build.Unix && File.Exists(npm_cmd) ? ("\"" + npm_cmd + "\"") : "npm";
-
-exec exec_cmd='${ npm_cmd }' exec_args='${ npm_options } ${ npm_args }' exec_path='${ npm_path }' exec_quiet='${ false }'
+exec exec_cmd='${ npm_cmd.Path }' exec_args='${ npm_options } ${ npm_args }' exec_path='${ npm_path }' exec_wait='${ npm_wait }' exec_quiet='${ npm_quiet }'

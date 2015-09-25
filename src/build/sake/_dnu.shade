@@ -18,6 +18,12 @@ base_path='$(CurrentDirectory)'
 working_path='$(base_path)'
     The working path in which to execute the dnu command line tool.
 
+dnu_wait='true'
+    A value indicating whether or not to wait for exit.
+
+dnu_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 use namespace = 'System'
@@ -31,18 +37,16 @@ default dnu_path            = '${ working_path }'
 
 default dnu_args            = ''
 default dnu_options         = '${ Build.Get("DNU_OPTIONS") }'
+default dnu_wait            = '${ true }'
+default dnu_quiet           = '${ Build.Log.Quiet }'
 
-default Quiet='${ false }'
+log log_header='dnu'
+log log_line='-'
 
 @{
     if (string.IsNullOrEmpty(dnu_args))
     {
         throw new ArgumentException("dnu: arguments must be specified when executing the dnu command line tool.", "dnu_args");
-    }
-
-    if (Quiet)
-    {
-        dnu_args += " --quiet";
     }
 
     dnu_args = dnu_args.Trim();
@@ -53,9 +57,11 @@ default Quiet='${ false }'
     }
 }
 
-log verbose='-dnu'
-log verbose='--arguments    : ${ dnu_args }'
-log verbose='--options      : ${ dnu_options }' if='!string.IsNullOrEmpty(dnu_options)'
-log verbose='--path         : ${ dnu_path }'
+log log_name='arguments'    log_value='${ dnu_args }'
+log log_name='options'      log_value='${ dnu_options }'
+log log_name='path'         log_value='${ dnu_path }'
+log log_name='wait'         log_value='${ dnu_wait }'
+log log_name='quiet'        log_value='${ dnu_quiet }'
+log log_line='-'
 
-exec exec_cmd='dnu' exec_args='${ dnu_args } ${ dnu_options }' exec_path='${ dnu_path }'
+exec exec_cmd='dnu' exec_args='${ dnu_args } ${ dnu_options }' exec_path='${ dnu_path }' exec_wait='${ dnu_wait }' exec_quiet='${ dnu_quiet }'

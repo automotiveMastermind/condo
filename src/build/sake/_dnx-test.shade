@@ -60,16 +60,19 @@ default dnx_test_options        = '${ Build.Get("DNX_TEST_OPTIONS") }'
 default dnx_test_output_path    = '${ Path.Combine(target_path, "tests") }'
 default dnx_test_coverage       = '${ Coverage }'
 
+log log_header='dnx-test'
+log log_line='-'
+
 @{
     dnx_test_args = dnx_test_args.Trim();
     dnx_test_options = dnx_test_options.Trim();
 }
 
-log verbose='-dnx-test'
-log verbose='--arguments    : ${ dnx_test_args }' if='!string.IsNullOrEmpty(dnx_test_args)'
-log verbose='--options      : ${ dnx_test_options }' if='!string.IsNullOrEmpty(dnx_test_options)'
-log verbose='--path         : ${ dnx_test_path }'
-log verbose='--output path  : ${ dnx_test_output_path }'
+log log_name='arguments'    log_value='${ dnx_test_args }'
+log log_name='options'      log_value='${ dnx_test_options }'
+log log_name='path'         log_value='${ dnx_test_path }'
+log log_name='output path'  log_value='${ dnx_test_output_path }'
+log log_line='-'
 
 @{
     Build.MakeDirectory(dnx_test_output_path);

@@ -12,14 +12,11 @@ exec_args=''
 exec_path=''
     The working directory of the command line tool.
 
-exec_quiet='$(Quiet)'
-    A value indicating whether or not to execute the command quietly.
-
 exec_wait='true'
     A value indicating whether or not to wait for exit.
 
-Quiet='false'
-    The default value indicating whether or not to execute the command quietly.
+exec_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to execute the command quietly.
 
 */}
 
@@ -28,13 +25,14 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default Quiet       = '${ false }'
-
 default exec_cmd    = ''
 default exec_args   = ''
 default exec_path   = '${ Directory.GetCurrentDirectory() }'
-default exec_quiet  = '${ Quiet }'
 default exec_wait   = '${ true }'
+default exec_quiet  = '${ Build.Log.Quiet }'
+
+log log_header='exec'
+log log_line='-'
 
 @{
     if (string.IsNullOrEmpty(exec_cmd))
@@ -50,12 +48,12 @@ default exec_wait   = '${ true }'
     }
 }
 
-log verbose='-exec'
-log verbose='--command      : ${ exec_cmd }'
-log verbose='--arguments    : ${ exec_args }'
-log verbose='--path         : ${ exec_path }'
-log verbose='--quiet        : ${ exec_quiet }'
-log verbose='--wait         : ${ exec_wait }'
+log log_name='command'      log_value='${ exec_cmd }'
+log log_name='arguments'    log_value='${ exec_args }'
+log log_name='path'         log_value='${ exec_path }'
+log log_name='wait'         log_value='${ exec_wait }'
+log log_name='quiet'        log_value='${ exec_quiet }'
+log log_line='-'
 
 @{
     // define a variable to retain the exit code
@@ -69,3 +67,5 @@ log verbose='--wait         : ${ exec_wait }'
         throw new Exception(string.Format("The command {0} with args {1} failed with exit code {2}. The output was {3}.", exec_cmd, exec_args, code, result));
     }
 }
+
+log log_line='-'

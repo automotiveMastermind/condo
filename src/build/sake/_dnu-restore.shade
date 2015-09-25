@@ -32,6 +32,9 @@ default dnu_restore_path        = '${ working_path }'
 default dnu_restore_args        = ''
 default dnu_restore_options     = '${ Build.Get("DNU_RESTORE_OPTIONS") }'
 
+log log_header='dnu-restore'
+log log_line='-'
+
 @{
     if (!string.IsNullOrEmpty(dnu_restore_args))
     {
@@ -44,9 +47,9 @@ default dnu_restore_options     = '${ Build.Get("DNU_RESTORE_OPTIONS") }'
     }
 }
 
-log verbose='-dnu-restore'
-log verbose='--arguments    : ${ dnu_restore_args }' if='!string.IsNullOrEmpty(dnu_restore_args)'
-log verbose='--options      : ${ dnu_restore_options }' if='!string.IsNullOrEmpty(dnu_restore_options)'
-log verbose='--path         : ${ dnu_restore_path }'
+log log_name='arguments' log_value='${ dnu_restore_args }'
+log log_name='options' log_value='${ dnu_restore_options }'
+log log_name='path' log_value='${ dnu_restore_path }'
+log log_line='-'
 
 dnu dnu_args='restore ${ dnu_restore_args }' dnu_options='${ dnu_restore_options }' dnu_path='${ dnu_restore_path }'

@@ -13,7 +13,7 @@ dnvmsh=$dnvmpath/dnvm.sh
 dnvmuri="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.sh"
 
 # determine if dnx path exists
-if ! test -f "$dnvmpath"; then
+if ! test -d "$dnvmpath"; then
     # make the dnx directory
     mkdir -p "$dnvmpath"
 fi
@@ -24,7 +24,7 @@ if ! type dnvm > /dev/null 2>&1; then
     if ! test -f "$dnvmsh"; then
         # attempt to download it from curl
         result=$(curl -L -D - "$dnvmuri" -o "$dnvmsh" -# | grep "^HTTP/1.1" | head -n 1 | sed "s/HTTP.1.1 \([0-9]*\).*/\1/")
-       
+
         # source it if it was successfully retrieved
         [[ $result == "200" ]] && chmod ugo+x "$dnvmsh"
     fi
@@ -43,9 +43,9 @@ nugetpath=$appdata/NuGet
 nugetcmd=$nugetpath/nuget.exe
 
 # determine if the nuget directory exists
-if ! test -f "$nugetpath"; then
+if ! test -d "$nugetpath"; then
     # make the nuget directory
-    mkdir -p "$nugetpath"    
+    mkdir -p "$nugetpath"
 fi
 
 # download nuget if it doesn't already exist
@@ -58,9 +58,9 @@ nugetpath=$root/.nuget
 nuget=$root/.nuget/nuget.exe
 
 # determine if the .nuget directory exists
-if ! test -f "$nugetpath"; then
+if ! test -d "$nugetpath"; then
     # make the nuget directory
-    mkdir -p "$nugetpath"    
+    mkdir -p "$nugetpath"
 fi
 
 # determine if the nuget exe exists
@@ -86,7 +86,7 @@ if ! test -f "$sake"; then
 fi
 
 # determine if the condo build includes exist
-if ! test -f "$includes"; then
+if ! test -d "$includes"; then
     mono "$nuget" install PulseBridge.Condo -pre -o packages -ExcludeVersion -Source $sources -NonInteractive
 fi
 

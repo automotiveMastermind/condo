@@ -51,6 +51,12 @@ target_path='$(base_path)/artifacts'
 target_test_path='$(target_path)/test'
     The path where test results should be stored.
 
+cover_wait='true'
+    A value indicating whether or not to wait for exit.
+
+cover_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 */}
 
 default cover_target                = ''
@@ -70,6 +76,11 @@ default target_path                 = '${ Path.Combine(base_path, "artifacts") }
 default target_test_path            = '${ Path.Combine(target_path, "test") }'
 default cover_output_path           = '${ target_test_path }'
 default cover_path                  = '${ working_path }'
+default cover_wait                  = '${ true }'
+default cover_quiet                 = '${ Build.Log.Quiet }'
+
+log log_header='cover'
+log log_line='-'
 
 @{
     if (string.IsNullOrEmpty(cover_target))
@@ -86,18 +97,20 @@ var cover_install                   = '${ Path.Combine(cover_install_path, cover
 
 nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install)' nuget_install_prerelease='${ true }' once='cover-install'
 
-log verbose='-cover'
-log verbose='--target           : ${ cover_target }'
-log verbose='--arguments        : ${ cover_args }' if='!string.IsNullOrEmpty(cover_args)'
-log verbose='--options          : ${ cover_options }' if='!string.IsNullOrEmpty(cover_options)'
-log verbose='--excluded files   : ${ cover_exclude_files }' if='!string.IsNullOrEmpty(cover_exclude_files)'
-log verbose='--excluded attrs   : ${ cover_exclude_attributes }' if='!string.IsNullOrEmpty(cover_exclude_attributes)'
-log verbose='--filter           : ${ cover_filter }' if='!string.IsNullOrEmpty(cover_filter)'
-log verbose='--output path      : ${ cover_output_path }' if='!string.IsNullOrEmpty(cover_output_path)'
-log verbose='--pdb path         : ${ cover_pdb_path }' if='!string.IsNullOrEmpty(cover_pdb_path)'
-log verbose='--register         : ${ cover_register }'
-log verbose='--show unvisited   : ${ cover_show_unvisited }'
-log verbose='--skip auto-props  : ${ cover_skip_autoprops }'
+log log_name='target'           log_value='${ cover_target }'
+log log_name='arguments'        log_value='${ cover_args }'
+log log_name='options'          log_value='${ cover_options }'
+log log_name='excluded files'   log_value='${ cover_exclude_files }'
+log log_name='excluded attrs'   log_value='${ cover_exclude_attributes }'
+log log_name='filter'           log_value='${ cover_filter }'
+log log_name='output path'      log_value='${ cover_output_path }'
+log log_name='pdb path'         log_value='${ cover_pdb_path }'
+log log_name='register'         log_value='${ cover_register }'
+log log_name='show unvisited'   log_value='${ cover_show_unvisited }'
+log log_name='skip auto-props'  log_value='${ cover_skip_autoprops }'
+log log_name='wait'             log_value='${ cover_wait }'
+log log_name='quiet'            log_value='${ cover_quiet }'
+log log_line='-'
 
 log warn='cover: code coverage analysis is only available on the Windows platform at the present time.' if='Build.Unix'
 exec exec_cmd='${ cover_target }' exec_args='${ cover_args }' exec_path='${ cover_path }' if='Build.Unix'
@@ -148,4 +161,4 @@ exec exec_cmd='${ cover_target }' exec_args='${ cover_args }' exec_path='${ cove
     cover_options = cover_options.Trim();
 }
 
-exec exec_cmd='${ cover_install }' exec_args='${ cover_options }' exec_path='${ cover_path }' if='!Build.Unix'
+exec exec_cmd='${ cover_install }' exec_args='${ cover_options }' exec_path='${ cover_path }' exec_wait='${ cover_wait }' exec_quiet='${ cover_quiet }' if='!Build.Unix'
