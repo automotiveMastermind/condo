@@ -153,6 +153,9 @@ default Coverage            = '${ false }'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
     nuget-push each='var nuget_push_args in pkgs'
 
+#tag description='Tags the current commit with the generated semantic version.'
+  git-tag
+
 #run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
     dnx-run each='var dnx_run_project in paths'

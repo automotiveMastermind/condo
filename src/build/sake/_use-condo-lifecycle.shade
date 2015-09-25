@@ -37,10 +37,12 @@
 
 #verify .compile .test .package .integration-test description='Verifies a build by compiling the project, packaging any NuGet specifications, and executing unit and integration tests.'
 
-#push .verify description='A target used to push package artifacts to package management sources.'
+#push .verify .tag description='A target used to push package artifacts to package management sources.'
 
-#publish .verify .doc description='A target used to publish the project artifacts.'
-#install .verify .doc description='A target used to install the project artifacts.'
+#publish .push .doc description='A target used to publish the project artifacts.'
+#deploy .push .doc description='A target used to deploy the project artifacts.'
+
+#tag description='A target used to tag the source during build.'
 
 functions @{
     void ListTargets(string name)
