@@ -9,7 +9,7 @@ Info          | Badges
 Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nuget-v-image]][nuget-url]
 License       | [![License][license-image]][license]
 Downloads     | [![NuGet Downloads][nuget-d-image]][nuget-url]
-Build Status  | [![Travis Build Status][travis-image][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
+Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 
 ## Getting Started
 
@@ -77,22 +77,22 @@ For more information, please refer to the [official documentation][docs-url].
 
 &copy;. PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
 
-[license-image]: //img.shields.io/badge/license-APACHE%202.0-blue.svg
+[license-image]: https://img.shields.io/badge/license-APACHE%202.0-blue.svg
 [license]: LICENSE
 [credits]: CREDITS
 
 [release-url]: //github.com/pulsebridge/condo/releases/latest
-[release-v-image]: //img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square
+[release-v-image]:https://img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square
 
 [travis-url]: //travis-ci.org/pulsebridge/condo
-[travis-image]: //img.shields.io/travis/pulsebridge/condo.svg?label=travis
+[travis-image]: https://img.shields.io/travis/pulsebridge/condo.svg?label=travis
 
 [appveyor-url]: //ci.appveyor.com/project/dmccaffery/condo
-[appveyor-image]: //img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
+[appveyor-image]: https://img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
 
 [nuget-url]: //www.nuget.org/packages/pulsebridge.condo
-[nuget-v-image]: //img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
-[nuget-d-image]: //img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
+[nuget-v-image]: https://img.shields.io/nuget/v/pulsebridge.condo.svg?label=version
+[nuget-d-image]: https://img.shields.io/nuget/dt/pulsebridge.condo.svg?label=downloads
 
 [yo-url]: //www.npmjs.com/package/generator-condo
 
