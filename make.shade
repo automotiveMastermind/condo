@@ -13,5 +13,5 @@ use-condo-goals
 #test-mocha target='test' description='Executes JavaScript unit tests using mocha.'
 	mocha
 
-#tag-git target='push' description='Tags the current commit with the semantic version of the build.'
+#tag-git target='tag' description='Tags the current commit with the semantic version of the build.'
   git-tag
