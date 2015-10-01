@@ -99,7 +99,6 @@ if ! test -f "dnx"; then
 fi
 
 # set sake and make file paths
-sources="https://www.myget.org/F/pulsebridge/api/v2;https://www.nuget.org/api/v2"
 sake=$root/packages/Sake/tools/Sake.exe
 includes=$root/src/build/sake
 make=make.shade
