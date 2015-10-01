@@ -87,3 +87,6 @@ nuget.exe
 
 # mac files
 .DS_Store
+
+# win files
+[Tt]humbs.db
