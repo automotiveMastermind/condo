@@ -110,11 +110,5 @@ if ! test -f "$sake"; then
     mono "$nuget" install Sake -pre -o packages -ExcludeVersion
 fi
 
-# determine if the condo build includes exist
-if ! test -d "$includes"; then
-    #
-    mono "$nuget" install PulseBridge.Condo -pre -o packages -ExcludeVersion -Source $sources -NonInteractive
-fi
-
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
