@@ -624,6 +624,9 @@ functions @{
                 builder.AppendLine("//------------------------------------------------------------------------------");
                 builder.AppendLine();
 
+                // add the system namespace
+                builder.AppendLine("using System;");
+
                 // add the reflection namespace
                 builder.AppendLine("using System.Reflection;");
                 builder.AppendLine();
