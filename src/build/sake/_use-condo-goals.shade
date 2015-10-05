@@ -34,6 +34,20 @@ default Coverage            = '${ false }'
         // set the assembly version
         AssemblyInfo.AssemblyVersion = version;
     }
+
+    // determine if the src path was overwritten without using a fully-qualified path
+    if (!src_path.Contains(Path.DirectorySeparatorChar) && !src_path.Contains(Path.AltDirectorySeparatorChar))
+    {
+        // make src path a fully qualified path
+        src_path = Path.Combine(base_path, src_path);
+    }
+
+    // determine if the test path was overwritten without using a fully-qualified path
+    if (!test_path.Contains(Path.DirectorySeparatorChar) && !test_path.Contains(Path.AltDirectorySeparatorChar))
+    {
+        // make the test path a fully qualified path
+        test_path = Path.Combine(base_path, test_path);
+    }
 }
 
 #--quiet @{
