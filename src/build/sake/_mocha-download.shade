@@ -28,10 +28,11 @@ var mocha_installed             = '${ mocha_locally_installed || mocha_globally_
 
 - mocha_install = mocha_globally_installed ? "mocha" : mocha_install;
 
-log log_name='path'     log_value='${ mocha_install }'
-log log_name='version'  log_value='${ mocha_version }'
-log log_line='-'
-
 npm-install npm_install_id='mocha' npm_install_prefix='${ mocha_download_path }' if='!mocha_installed'
 
 - Build.SetPath("mocha", mocha_install, mocha_globally_installed);
+- Build.TryExecute(mocha_install, out mocha_version, "--version --config.interactive=false");
+
+log log_name='path'     log_value='${ mocha_install }'
+log log_name='version'  log_value='${ mocha_version }'
+log log_line='-'
