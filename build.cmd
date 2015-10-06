@@ -54,13 +54,16 @@ SETLOCAL
         copy "%NUGETCMD%" "%NUGET%"
     )
 
-    SET SAKE=packages\Sake\tools\Sake.exe
+    SET SAKEPKG=packages\Sake
+    SET SAKE=%SAKEPKG%\tools\Sake.exe
     SET INCLUDES=src\build\sake
     SET MAKE=make.shade
 
-    IF NOT EXIST "%SAKE%" (
-        "%NUGET%" install Sake -pre -o packages -ExcludeVersion
+    IF EXIST "%SAKEPKG%" (
+        rd "%SAKEPKG% /s /q
     )
+
+    "%NUGET%" install Sake -pre -o packages -ExcludeVersion
 
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
 ENDLOCAL

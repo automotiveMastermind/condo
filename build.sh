@@ -99,15 +99,17 @@ if ! test -f "dnx"; then
 fi
 
 # set sake and make file paths
-sake=$root/packages/Sake/tools/Sake.exe
+sakepkg=$root/packages/Sake
+sake=$sakepkg/tools/Sake.exe
 includes=$root/src/build/sake
 make=make.shade
 
-# determine if sake is installed
-if ! test -f "$sake"; then
-    # install sake using nuget (so we have additional options not supported by DNU)
-    mono "$nuget" install Sake -pre -o packages -ExcludeVersion
+if test -f "$sakepkg"; then
+    rm -rRf "$sakepkg"
 fi
+
+# install sake using nuget (so we have additional options not supported by DNU)
+mono "$nuget" install Sake -pre -o packages -ExcludeVersion
 
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
