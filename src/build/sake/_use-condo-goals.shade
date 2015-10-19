@@ -6,7 +6,7 @@ use import = 'Condo.AssemblyInfo'
 
 default base_path           = '${ Build.Get("BUILD_SOURCESDIRECTORY", Directory.GetCurrentDirectory()) }'
 
-default target_path         = '${ Build.Get("BUILD_STAGINGDIRECTORY", Path.Combine(base_path, "artifacts")) }'
+default target_path         = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
 default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
@@ -14,7 +14,7 @@ default working_path        = '${ base_path }'
 default appdata_path        = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)) }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
-default target_test_path    = '${ Path.Combine(target_path, "test") }'
+default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
