@@ -20,12 +20,12 @@ working_path='$(base_path)'
 
 */}
 
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+
 default brew_install_formula    = ''
 default brew_install_options    = ''
-
-default base_path           = '${ Directory.GetCurrentDirectory() }'
-default working_path        = '${ base_path }'
-default brew_install_path   = '${ working_path }'
+default brew_install_path       = '${ working_path }'
 
 log log_header='brew-install'
 log log_line='-'

@@ -31,11 +31,11 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default gulp_args           = ''
-default gulp_options        = '${ Build.Get("GULP_OPTIONS") }'
-
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
+
+default gulp_args           = ''
+default gulp_options        = '${ Build.Get("GULP_OPTIONS") }'
 default gulp_path           = '${ working_path }'
 default gulp_wait           = '${ true }'
 default gulp_quiet          = '${ Build.Log.Quiet }'

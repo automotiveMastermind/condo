@@ -34,45 +34,47 @@ log log_name='hash' log_value='${ verify_hash }'
 
     if (string.IsNullOrEmpty(signtool))
     {
-        throw new Exception("signtool.exe was not located on the machine. Please install Visual Studio 2013 or greater.");
+        Log.Warn("signtool.exe was not located on the machine. Please install Visual Studio 2013 or greater. If you are using Visual Studio 2015, you must install the ClickOnce Publishing Tools in order to make signtool.exe available.");
     }
-
-    var start = new ProcessStartInfo
-        {
-            UseShellExecute = false,
-            WorkingDirectory = working_path,
-            FileName = signtool,
-            RedirectStandardOutput = true,
-            Arguments = "verify /pa /v \"" + verify_assembly + "\""
-        };
-
-    var process = Process.Start(start);
-    var output = process.StandardOutput.ReadToEnd();
-
-    process.WaitForExit();
-
-    if (process.ExitCode != 0)
+    else
     {
-        File.Delete(verify_assembly);
+        var start = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                WorkingDirectory = working_path,
+                FileName = signtool,
+                RedirectStandardOutput = true,
+                Arguments = "verify /pa /v \"" + verify_assembly + "\""
+            };
+    
+        var process = Process.Start(start);
+        var output = process.StandardOutput.ReadToEnd();
 
-        throw new Exception(string.Format("The signature verification for {0} failed:{1}{2}", verify_assembly, Environment.NewLine, output));
-    }
+        process.WaitForExit();
 
-    if (!string.IsNullOrEmpty(verify_hash))
-    {
-        var lines = output.Split(new [] { Environment.NewLine }, StringSplitOptions.None);
-        var hash_line = lines[3];
-        var actual = hash_line.Substring(hash_line.IndexOf(":") + 1).Trim();
-
-        if (!string.Equals(verify_hash, actual, StringComparison.Ordinal))
+        if (process.ExitCode != 0)
         {
             File.Delete(verify_assembly);
 
-            throw new Exception(string.Format("The hash comparison for {0} failed: expected '{1}', actual '{2}'", verify_assembly, hash, actual));
+            throw new Exception(string.Format("The signature verification for {0} failed:{1}{2}", verify_assembly, Environment.NewLine, output));
         }
-    }
 
-    Log.Info("verify-hash: authenticode signature successfully verified.");
+        if (!string.IsNullOrEmpty(verify_hash))
+        {
+            var lines = output.Split(new [] { Environment.NewLine }, StringSplitOptions.None);
+            var hash_line = lines[3];
+            var actual = hash_line.Substring(hash_line.IndexOf(":") + 1).Trim();
+
+            if (!string.Equals(verify_hash, actual, StringComparison.Ordinal))
+            {
+                File.Delete(verify_assembly);
+
+                throw new Exception(string.Format("The hash comparison for {0} failed: expected '{1}', actual '{2}'", verify_assembly, verify_hash, actual));
+            }
+        }
+
+        Log.Info("verify-hash: authenticode signature successfully verified.");
+    }
 }
 
 log log_line='-'

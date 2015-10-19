@@ -29,8 +29,8 @@ use import = 'Condo.Build'
 
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
-default git_config_path = '${ working_path }'
 
+default git_config_path = '${ working_path }'
 default git_config_user   = '${ Build.Get("GIT_USER_NAME") }'
 default git_config_email  = '${ Build.Get("GIT_USER_EMAIL") }'
 default git_config_quiet  = '${ Build.Log.Quiet }'

@@ -25,8 +25,9 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default node_args           = ''
 default base_path           = '${ Directory.GetCurrentDirectory() }'
+
+default node_args           = ''
 default node_path           = '${ base_path }'
 default node_wait           = '${ true }'
 default node_quiet          = '${ Build.Log.Quiet }'

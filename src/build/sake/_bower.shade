@@ -31,11 +31,12 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
+
 default bower_args          = ''
 default bower_options       = '${ Build.Get("BOWER_OPTIONS") }'
 
-default base_path           = '${ Directory.GetCurrentDirectory() }'
-default working_path        = '${ base_path }'
 default bower_path          = '${ working_path }'
 default bower_wait          = '${ true }'
 default bower_quiet         = '${ Build.Log.Quiet }'

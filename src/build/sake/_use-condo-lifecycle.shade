@@ -20,7 +20,8 @@
 #run .initialize description='Starts the process for a project.'
 
 #test-compile .compile description='Compiles the project in preparation for executing tests.'
-#test .test-compile description='The default test target.'
+#test .test-compile description='The default test target.' -CallTarget("test-coverage");
+#test-coverage description='Generates code coverage reports for executed tests.'
 
 #pre-package description='A target called immediately before the package target, which can be used to prepare artifacts for packaging.'
 #package .compile .pre-package description='A target used to pack package management specifications.' -CallTarget('post-package');

@@ -22,13 +22,12 @@ working_path='$(base_path)'
 
 */}
 
-default dnx_run_project = ''
-default dnx_run_cmd     = ''
-default dnx_run_options = '${ Build.Get("DNX_RUN_OPTIONS") }'
-
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 
+default dnx_run_project = ''
+default dnx_run_cmd     = ''
+default dnx_run_options = '${ Build.Get("DNX_RUN_OPTIONS") }'
 default dnx_run_quiet   = '${ Build.Log.Quiet }'
 
 log log_header='dnx-run'

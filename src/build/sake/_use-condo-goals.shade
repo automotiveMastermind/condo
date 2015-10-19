@@ -83,8 +83,20 @@ default Coverage            = '${ false }'
     log log_name='quiet' log_value='${ Build.Log.Quiet }'
     log log_line='-'
 
-#clean-bin description='Cleans the bin directory.'
-    rimraf rimraf_path='${ bin_path }' if='Directory.Exists(bin_path)'
+#clean-bin description='Cleans the bin directory.' @{
+    if (Directory.Exists(bin_path)) {
+        var path = new DirectoryInfo(bin_path);
+
+        path.Attributes &= ~FileAttributes.ReadOnly;
+
+        foreach (var info in path.GetFileSystemInfos("*", SearchOption.AllDirectories))
+        {
+            info.Attributes &= ~FileAttributes.ReadOnly;
+        }
+
+        path.Delete(true);
+    }
+}
 
 #clean-npm-modules description='Cleans any installed NPM modules.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "node_modules")).Where(p => Directory.Exists(p)) }'
@@ -94,19 +106,21 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "bower_components")).Where(p => Directory.Exists(p)) }'
     rimraf each='var rimraf_path in paths'
 
-#clean-artifacts target='clean' if='Directory.Exists(target_path)' description='Cleans the artifacts directory from the working directory.' @{
-    var path = new DirectoryInfo(target_path);
-    path.Attributes &= ~FileAttributes.ReadOnly;
+#clean-artifacts target='clean' description='Cleans the artifacts directory from the working directory.' @{
+    if (Directory.Exists(target_path)) {
+        var path = new DirectoryInfo(target_path);
+        path.Attributes &= ~FileAttributes.ReadOnly;
 
-    foreach (var info in path.GetFileSystemInfos("*", SearchOption.AllDirectories))
-    {
-        info.Attributes &= ~FileAttributes.ReadOnly;
+        foreach (var info in path.GetFileSystemInfos("*", SearchOption.AllDirectories))
+        {
+            info.Attributes &= ~FileAttributes.ReadOnly;
+        }
+
+        path.Delete(true);
     }
-
-    path.Delete(true);
 }
 
-#clean-build target='clean' description='Clean the build artifactes from each project within the working directory.'
+#clean-build target='clean' description='Clean the build artifacts from each project within the working directory.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
     clean each='var clean_path in paths'
 
@@ -156,6 +170,9 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
     dnu-build dnu_build_output_path='${ target_test_path }' each='var dnu_build_path in paths'
 
+#test-coverage-dnx target='test-coverage' description='Generates a code coverage report for DNX-based projects'
+    cover-report if='Coverage'
+    
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
     var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
     nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
