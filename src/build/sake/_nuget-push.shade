@@ -76,7 +76,7 @@ log log_name='options'    log_value='${ nuget_push_options }'
     }
 }
 
-log verbose='--config path  : ${ nuget_config_path }' if='!string.IsNullOrEmpty(nuget_config_path)'
+log log_name='config path'  log_value='${ nuget_config_path }'
 
 @{
     if (string.IsNullOrEmpty(nuget_push_args))
