@@ -80,6 +80,12 @@ default cover_wait                  = '${ true }'
 default cover_quiet                 = '${ Build.Log.Quiet }'
 default cover_install_path          = '${ Path.Combine(base_path, "packages") }'
 
+var cover_id                        = 'OpenCover'
+var cover_exe                       = 'OpenCover.Console.exe'
+var cover_install                   = '${ Path.Combine(cover_install_path, cover_id, "tools", cover_exe) }'
+
+nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-install'
+
 log log_header='cover'
 log log_line='-'
 
@@ -96,12 +102,6 @@ log log_line='-'
 
     Build.MakeDirectory(Path.GetDirectoryName(cover_output_path));
 }
-
-var cover_id                        = 'OpenCover'
-var cover_exe                       = 'OpenCover.Console.exe'
-var cover_install                   = '${ Path.Combine(cover_install_path, cover_id, "tools", cover_exe) }'
-
-nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-install'
 
 log log_name='target'           log_value='${ cover_target }'
 log log_name='arguments'        log_value='${ cover_args }'

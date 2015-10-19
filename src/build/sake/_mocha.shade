@@ -15,6 +15,9 @@ mocha_reporter='' (Environment Variable: MOCHA_REPORTER)
 mocha_path='$(base_path)'
     The path in which to execute mocha.
 
+mocha_output_path='' (Environment Variable: MOCHA_OUTPUT)
+    The output path for the report file.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute mocha.
 
@@ -33,9 +36,11 @@ default working_path        = '${ base_path }'
 default target_path         = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 
+default mocha_output_path   = '${ Build.Get("XUNIT_FILE", Path.Combine(target_test_path, "mocha.xml")) }'
+
 default mocha_args          = ''
 default mocha_options       = '${ Build.Get("MOCHA_OPTIONS") }'
-default mocha_reporter      = '${ Build.Get("MOCHA_REPORTER") }'
+default mocha_reporter      = '${ Build.Get("MOCHA_REPORTER", "xunit") }'
 default mocha_path          = '${ working_path }'
 default mocha_output_path   = '${ target_test_path }'
 
@@ -62,8 +67,15 @@ log log_line='-'
 @{
     if (!string.IsNullOrEmpty(mocha_reporter))
     {
-        mocha_options = (mocha_options + " --reporter " + mocha_reporter).Trim();
+        mocha_options = mocha_options + " --reporter " + mocha_reporter;
     }
+
+    if (!string.IsNullOrEmpty(mocha_output_path))
+    {
+        mocha_options = string.Format(@"{0} --reporter-options output=""{1}""", mocha_options, mocha_output_path);
+    }
+
+    mocha_options = mocha_options.Trim();
 }
 
 exec exec_cmd='${ mocha_cmd.Path }' exec_args='${ mocha_args } ${ mocha_options }' exec_path='${ mocha_path }' if='mocha_cmd.Global'
