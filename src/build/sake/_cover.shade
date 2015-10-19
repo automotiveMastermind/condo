@@ -93,6 +93,11 @@ log log_line='-'
     {
         throw new ArgumentNullException("cover: cover_target must be specified.", "cover_target");
     }
+
+    if (!Directory.Exists(cover_output_path))
+    {
+        Directory.CreateDirectory(cover_output_path);
+    }
 }
 
 var cover_id                        = 'OpenCover'
