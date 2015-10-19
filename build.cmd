@@ -1,12 +1,14 @@
 @echo off
 cd %~dp0
 
+ECHO.
+
 SETLOCAL
     SET DNXPATH=%USERPROFILE%\.dnx
     SET DNVMPATH=%DNXPATH%\dnvm
     SET DNVMCMD=%DNVMPATH%\dnvm.cmd
     SET DNVMPS1=%DNVMPATH%\dnvm.ps1
-    
+
     SET DNVMCMDURI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.cmd"
     SET DNVMPS1URI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.ps1"
 
@@ -33,12 +35,12 @@ SETLOCAL
     )
 
     SET NUGETCMD=%NUGETPATH%\nuget.exe
-    SET NUGETURI="https://www.nuget.org/nuget.exe"
+    SET NUGETURI="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
     IF NOT EXIST "%NUGETPATH%" (
         mkdir "%NUGETPATH%"
     )
-    
+
     IF NOT EXIST "%NUGETCMD%" (
         @powershell -NoProfile -ExecutionPolicy Unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest '%NUGETURI%' -OutFile '%NUGETCMD%'"
     )
@@ -60,10 +62,12 @@ SETLOCAL
     SET MAKE=make.shade
 
     IF EXIST "%SAKEPKG%" (
-        rd "%SAKEPKG% /s /q
+        rd "%SAKEPKG%" /s /q
     )
 
-    "%NUGET%" install Sake -pre -o packages -ExcludeVersion
+    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
+
+    ECHO.
 
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
 ENDLOCAL

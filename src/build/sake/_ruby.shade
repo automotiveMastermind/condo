@@ -26,11 +26,11 @@ ruby_quiet='$(Build.Log.Quiet)'
 
 */}
 
-default ruby_args       = ''
-default ruby_options    = ''
-
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
+
+default ruby_args       = ''
+default ruby_options    = ''
 default ruby_path       = '${ working_path }'
 default ruby_wait       = '${ true }'
 default ruby_quiet      = '${ Build.Log.Quiet }'

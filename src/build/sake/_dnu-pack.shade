@@ -45,9 +45,9 @@ default configuration           = ''
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
 default target_path             = '${ Path.Combine(base_path, "artifacts") }'
+
 default dnu_pack_path           = '${ working_path }'
 default dnu_pack_output_path    = '${ Path.Combine(target_path, "build") }'
-
 default dnu_pack_project        = ''
 default dnu_pack_framework      = ''
 default dnu_pack_configuration  = '${ configuration }'

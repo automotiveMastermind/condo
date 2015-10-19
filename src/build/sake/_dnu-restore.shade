@@ -27,8 +27,8 @@ use import = 'Condo.Build'
 
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 default working_path            = '${ base_path }'
-default dnu_restore_path        = '${ working_path }'
 
+default dnu_restore_path        = '${ working_path }'
 default dnu_restore_args        = ''
 default dnu_restore_options     = '${ Build.Get("DNU_RESTORE_OPTIONS") }'
 

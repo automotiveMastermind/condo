@@ -21,10 +21,10 @@ use namespace = 'System.Net'
 use import = 'Condo.Build'
 
 default base_path           = '${ Directory.GetCurrentDirectory() }'
-default node_download_path  = '${ Path.Combine(base_path, "bin", "nodejs") }'
 
-default node_version    = '0.10.28'
-default npm_version     = '1.4.9'
+default node_download_path  = '${ Path.Combine(base_path, "bin", "nodejs") }'
+default node_version        = '0.10.28'
+default npm_version         = '1.4.9'
 
 default node_hash = '628FFD6C3577068C00CEC9F6F897F0EC8F5212D9'
 
@@ -47,7 +47,7 @@ var npm_globally_installed  = '${ Build.TryExecute("npm", out npm_version, "--ve
 var node_installed          = '${ node_globally_installed || node_locally_installed }'
 
 - node_install = node_globally_installed || Build.Unix ? "node" : node_install;
-- npm_install = npm_globally_installed || Build.Unix ? "npm" : npm_install;
+- npm_cmd_install = npm_globally_installed || Build.Unix ? "npm" : npm_cmd_install;
 
 @{
     if (!node_installed)
@@ -55,7 +55,7 @@ var node_installed          = '${ node_globally_installed || node_locally_instal
         if (Build.OSX)
         {
             node_install = "node";
-            npm_install = "npm";
+            npm_cmd_install = "npm";
         }
         else if (Build.Unix)
         {
@@ -83,20 +83,20 @@ var node_installed          = '${ node_globally_installed || node_locally_instal
                 Log.Info(string.Format("--extracting npm from: {0} to: {1}", npm_install, node_download_path));
                 ZipFile.ExtractToDirectory(npm_install, node_download_path);
             }
-
-            // attempt to retreive node version
-            Build.TryExecute(node_install, out node_version, "--version");
-
-            // attempt to retrieve npm version
-            Build.TryExecute(npm_cmd_install, out npm_version, "--version");
         }
     }
 
+    // attempt to retreive node version
+    Build.TryExecute(node_install, out node_version, "--version");
+
+    // attempt to retrieve npm version
+    Build.TryExecute(npm_cmd_install, out npm_version, "--version");
+
     Build.SetPath("node", node_install, node_globally_installed);
-    Build.SetPath("npm", npm_install, node_globally_installed);
+    Build.SetPath("npm", npm_cmd_install, node_globally_installed);
 }
 
-verify-hash assembly='${ node_install }' hash='${ node_hash }' if='!node_installed && !Build.Unix'
+verify-hash verify_assembly='${ node_install }' verify_hash='${ node_hash }' if='!node_installed && !Build.Unix'
 brew-install brew_install_formula='node' if='!node_installed && Build.OSX'
 
 log log_name='path'         log_value='${ node_install }'

@@ -28,11 +28,11 @@ brew_quiet='$(Build.Log.Quiet)'
 
 use import = 'Condo.Build'
 
-default brew_args       = ''
-default brew_options    = '${ Build.Get("BREW_OPTIONS") }'
-
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
+
+default brew_args       = ''
+default brew_options    = '${ Build.Get("BREW_OPTIONS") }'
 default brew_path       = '${ working_path }'
 default brew_wait       = '${ true }'
 default brew_quiet      = '${ Build.Log.Quiet }'
