@@ -28,9 +28,10 @@ dnx_quiet='$(Build.Log.Quiet)'
 
 use import = 'Condo.Build'
 
-default dnx_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
+
+default dnx_args        = ''
 default dnx_path        = '${ working_path }'
 default dnx_options     = '${ Build.Get("DNX_OPTIONS") }'
 default dnx_wait        = '${ true }'

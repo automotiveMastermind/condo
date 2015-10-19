@@ -3,6 +3,9 @@
 # find the script path
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
+# emit a newline for clarity
+echo
+
 # change to the root path
 cd $root
 
@@ -36,7 +39,7 @@ if ! type mono > /dev/null 2>&1; then
 fi
 
 # determine if dnx path exists
-if ! test -d "$dnvmpath"; then
+if ! test -f "$dnvmpath"; then
     # make the dnx directory
     mkdir -p "$dnvmpath"
 fi
@@ -66,7 +69,7 @@ nugetpath=$appdata/NuGet
 nugetcmd=$nugetpath/nuget.exe
 
 # determine if the nuget directory exists
-if ! test -d "$nugetpath"; then
+if ! test -f "$nugetpath"; then
     # make the nuget directory
     mkdir -p "$nugetpath"
 fi
@@ -81,7 +84,7 @@ nugetpath=$root/.nuget
 nuget=$root/.nuget/nuget.exe
 
 # determine if the .nuget directory exists
-if ! test -d "$nugetpath"; then
+if ! test -f "$nugetpath"; then
     # make the nuget directory
     mkdir -p "$nugetpath"
 fi
@@ -92,22 +95,27 @@ if ! test -f "$nuget"; then
     cp "$nugetcmd" "$nuget"
 fi
 
-# determine if DNX exists on the path
-if ! test -f "dnx"; then
-  # upgrade to latest version of the core clr
-  dnvm upgrade -r coreclr
-fi
+# upgrade dnx to latest
+dnvm upgrade -r coreclr
 
 # set sake and make file paths
-sake=$root/packages/Sake/tools/Sake.exe
+sakepkg=$root/packages/Sake
+sake=$sakepkg/tools/Sake.exe
 includes=$root/src/build/sake
+
 make=make.shade
 
-# determine if sake is installed
-if ! test -f "$sake"; then
-    # install sake using nuget (so we have additional options not supported by DNU)
-    mono "$nuget" install Sake -pre -o packages -ExcludeVersion
+# determine if sake exists
+if test -f "$sakepkg"; then
+    # remove sake
+    rm -rRf "$sakepkg"
 fi
+
+# install sake using nuget (so we have additional options not supported by DNU)
+mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
+
+# emit a newline for clarity
+echo
 
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"

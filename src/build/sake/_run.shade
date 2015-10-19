@@ -28,9 +28,10 @@ run_quiet='$(Build.Log.Quiet)'
 
 use import = 'Condo.Build'
 
-default run_args        = ''
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
+
+default run_args        = ''
 default run_path        = '${ working_path }'
 default run_options     = '${ Build.Get("RUN_OPTIONS") }'
 default run_wait        = '${ true }'

@@ -21,8 +21,8 @@ use namespace = 'System.Net'
 use import = 'Condo.Build'
 
 default base_path               = '${ Directory.GetCurrentDirectory() }'
-default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 
+default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 default nuget_version           = '2.8.0'
 
 log log_header='nuget-download'
