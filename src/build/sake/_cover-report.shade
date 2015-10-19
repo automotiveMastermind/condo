@@ -49,7 +49,7 @@ default working_path                  = '${ base_path }'
 default target_path                   = '${ Build.Get("BUILD_STAGINGDIRECTORY", Path.Combine(base_path, "artifacts")) }'
 default target_test_path              = '${ Path.Combine(target_path, "test") }'
 
-default cover_report_target           = '${ Path.Combine(target_test_path, "*-coverage.xml") }'
+default cover_report_target           = '${ Path.Combine(target_test_path, "coverage", "*.xml") }'
 default cover_report_output_path      = '${ Path.Combine(target_test_path, "coverage") }'
 default cover_report_type             = ''
 default cover_report_src_path         = ''

@@ -139,7 +139,7 @@ log log_line='-'
         {
             var dnx_test_args_current = "test " + (dnx_test_args ?? "");
             var dnx_test_options_current = dnx_test_options ?? "";
-            var dnx_test_coverage_output_file = Path.Combine(dnx_test_output_path, dnx_test_name + "-" + dnx_test_framework + "-coverage.xml");
+            var dnx_test_coverage_output_file = Path.Combine(dnx_test_output_path, "coverage", dnx_test_name + "-" + dnx_test_framework + "-coverage.xml");
 
             var dnx_coverage_pdb_path = string.Format
                 (
