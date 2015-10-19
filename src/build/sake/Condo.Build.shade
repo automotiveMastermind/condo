@@ -450,8 +450,6 @@ functions @{
 
         public static void Wait()
         {
-            ConsoleKeyInfo key;
-
             Console.WriteLine(string.Empty);
 
             do
@@ -523,6 +521,24 @@ functions @{
         public static string MakeDirectory(string path)
         {
             return Directory.Exists(path) ? path : Directory.CreateDirectory(path).FullName;
+        }
+
+        public static void RemoveDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            var dir = new DirectoryInfo(path);
+            dir.Attributes &= ~FileAttributes.ReadOnly;
+
+            foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            {
+                info.Attributes &= ~FileAttributes.ReadOnly;
+            }
+
+            dir.Delete(true);
         }
 
         public static bool TryGetRepositoryRoot(ref string root)
