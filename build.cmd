@@ -62,19 +62,12 @@ SETLOCAL
     SET MAKE=make.shade
 
     IF EXIST "%SAKEPKG%" (
-<<<<<<< HEAD
         rd "%SAKEPKG%" /s /q
-=======
-        rd "%SAKEPKG% /s /q
->>>>>>> origin/release/1.0.0
     )
 
-    "%NUGET%" install Sake -pre -o packages -ExcludeVersion
+    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInterative
 
-<<<<<<< HEAD
     ECHO.
 
-=======
->>>>>>> origin/release/1.0.0
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
 ENDLOCAL
