@@ -69,7 +69,7 @@ functions @{
     /// </summary>
     public static class Build
     {
-        private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components" };
+        private static readonly string[] DefaultExcludes = new[] { "node_modules", "bower_components", "wwwroot" };
 
         private static readonly IList<Process> Processes = new List<Process>();
 
