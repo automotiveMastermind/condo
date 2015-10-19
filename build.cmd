@@ -65,7 +65,7 @@ SETLOCAL
         rd "%SAKEPKG%" /s /q
     )
 
-    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInterative
+    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 
     ECHO.
 
