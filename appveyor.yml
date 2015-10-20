@@ -7,14 +7,12 @@ test: off
 deploy: off
 notifications:
 - provider: Webhook
-  url:
-    secure: Gax9QyIw3MBLdedUK0jx/PHsp+ueN7DymrS/YDD7y8vaH5GrGOtCIQKNH3X0U3Yg8MXtsockpVOX+hoZO/VzKg==
+  url: https://webhooks.gitter.im/e/959cc86b71d0d9463066
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: true
 - provider: Webhook
-  url:
-    secure: Gax9QyIw3MBLdedUK0jx/C9AHdU7KWZ4V3/fyXbL5wn++QzjUaigsdRlDrJXmbz6W8xhsczxoxp8eqmYPUVYFw==
+  url: https://webhooks.gitter.im/e/74ab780e7b8298a8d2b5
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: true
