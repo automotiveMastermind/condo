@@ -10,6 +10,7 @@ Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nug
 License       | [![License][license-image]][license]
 Downloads     | [![NuGet Downloads][nuget-d-image]][nuget-url]
 Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
+Chat          | [![Join Chat][gitter-image]][gitter-url]
 
 ## Getting Started
 
@@ -75,7 +76,7 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy;. PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
+&copy; PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
 
 [license-image]: https://img.shields.io/badge/license-APACHE%202.0-blue.svg
 [license]: LICENSE
@@ -87,8 +88,8 @@ For more information, please refer to the [official documentation][docs-url].
 [travis-url]: //travis-ci.org/pulsebridge/condo
 [travis-image]: https://img.shields.io/travis/pulsebridge/condo.svg?label=travis
 
-[appveyor-url]: //ci.appveyor.com/project/dmccaffery/condo
-[appveyor-image]: https://img.shields.io/appveyor/ci/dmccaffery/condo.svg?label=appveyor
+[appveyor-url]: //ci.appveyor.com/project/pulsebridge/condo
+[appveyor-image]: https://img.shields.io/appveyor/ci/pulsebridge/condo.svg?label=appveyor
 
 [nuget-url]: //www.nuget.org/packages/pulsebridge.condo
 [nuget-v-image]: https://img.shields.io/nuget/v/pulsebridge.condo.svg?label=nuget
@@ -98,3 +99,6 @@ For more information, please refer to the [official documentation][docs-url].
 
 [dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
 [docs-url]: http://open.pulsebridge.com/condo
+
+[gitter-url]: //gitter.im/pulsebridge/condo
+[gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg
