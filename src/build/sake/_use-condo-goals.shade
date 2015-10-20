@@ -54,6 +54,10 @@ default Coverage            = '${ false }'
     Build.Log.Quiet = true;
 }
 
+#--secure @{
+    Build.Log.Secure = true;
+}
+
 #--coverage @{
     Coverage = true;
 }

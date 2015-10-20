@@ -18,6 +18,9 @@ exec_wait='true'
 exec_quiet='$(Build.Log.Quiet)'
     A value indicating whether or not to execute the command quietly.
 
+exec_secure='false'
+    A value indicating wehther or not to avoid printing output for public builds.
+
 */}
 
 use namespace = 'System'
@@ -31,6 +34,7 @@ default exec_path         = '${ Directory.GetCurrentDirectory() }'
 default exec_output_path  = ''
 default exec_wait         = '${ true }'
 default exec_quiet        = '${ Build.Log.Quiet }'
+default exec_secure       = '${ false }' type='bool'
 
 log log_header='exec'
 log log_line='-'
@@ -50,7 +54,7 @@ log log_line='-'
 }
 
 log log_name='command'      log_value='${ exec_cmd }'
-log log_name='arguments'    log_value='${ exec_args }'
+log log_name='arguments'    log_value='${ exec_args }'          log_secure='${ exec_secure }'
 log log_name='path'         log_value='${ exec_path }'
 log log_name='output path'  log_value='${ exec_output_path }'
 log log_name='wait'         log_value='${ exec_wait }'
@@ -66,7 +70,7 @@ log log_line='-'
     if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path, exec_quiet, exec_wait))
     {
         // throw a new exception
-        throw new Exception(string.Format("The command {0} with args {1} failed with exit code {2}. The output was {3}.", exec_cmd, exec_args, code, result));
+        throw new Exception(string.Format("The command {0} with args {1} failed with exit code {2}. The output was {3}.", exec_cmd, exec_args, code, exec_secure && Build.Log.Secure ? "<secured>" : result));
     }
 
     // determine if an output path was specified
