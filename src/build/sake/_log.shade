@@ -23,37 +23,37 @@ default log_name = ''
 default log_value = ''
 default log_line = ''
 default log_header = ''
-
-global arg_format = '- {0,-20}: {1}' type='string'
+default log_quiet = '${ false }'
+default log_secure = '${ false }'
 
 @{
     if (!string.IsNullOrEmpty(log_header))
     {
-        Log.Info(string.Concat("   ", log_header.ToUpper()));
+        Build.Log.Info(string.Concat("   ", log_header.ToUpper()));
     }
 
     if (!string.IsNullOrEmpty(log_name) && log_value != null && !string.IsNullOrEmpty(log_value.ToString()))
     {
-        Log.Verbose(string.Format(arg_format, log_name, log_value));
+        Build.Log.Argument(log_name, log_value, log_secure);
     }
 
     if (!string.IsNullOrEmpty(info))
     {
-        Log.Info(info);
+        Build.Log.Info(info, log_secure);
     }
 
     if (!string.IsNullOrEmpty(warn))
     {
-        Log.Warn(warn);
+        Build.Log.Warn(warn, log_secure);
     }
 
     if (!string.IsNullOrEmpty(verbose))
     {
-        Log.Verbose(verbose);
+        Build.Log.Verbose(verbose, log_secure);
     }
 
     if (!string.IsNullOrEmpty(log_line))
     {
-        Log.Verbose(string.Empty.PadLeft(120, log_line[0]));
+        Build.Log.Verbose(string.Empty.PadLeft(120, log_line[0]));
     }
 }
