@@ -54,6 +54,6 @@ default log_secure = '${ false }'
 
     if (!string.IsNullOrEmpty(log_line))
     {
-        Build.Log.Verbose(string.Empty.PadLeft(120, log_line[0]));
+        Build.Log.Verbose(string.Empty.PadLeft(105, log_line[0]));
     }
 }
