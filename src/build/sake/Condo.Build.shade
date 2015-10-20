@@ -20,11 +20,21 @@ functions @{
     public interface IQuietLog : ILog
     {
         bool Quiet { get; set; }
+
+        bool Secure { get; set; }
+
+        void Info(object value, bool secure);
+        void Warn(object value, bool secure);
+        void Error(object value, bool secure);
+        void Verbose(object value, bool secure);
+        void Argument(string name, object value, bool secure);
     }
 
     public class QuietLog : IQuietLog
     {
         private ILog log;
+
+        private const string ArgumentFormat = "- {0,-20}: {1}";
 
         public QuietLog(ILog log, bool quiet)
         {
@@ -37,14 +47,29 @@ functions @{
             this.log.Info(value);
         }
 
+        public void Info(object value, bool secure)
+        {
+            this.Info(this.Secure && secure ? "<secured>" : value);
+        }
+
         public void Warn(object value)
         {
             this.log.Warn(value);
         }
 
+        public void Warn(object value, bool secure)
+        {
+            this.Warn(this.Secure && secure ? "<secured>" : value);
+        }
+
         public void Error(object value)
         {
             this.log.Error(value);
+        }
+
+        public void Error(object value, bool secure)
+        {
+            this.Error(this.Secure && secure ? "<secured>" : value);
         }
 
         public void Verbose(object value)
@@ -55,7 +80,23 @@ functions @{
             }
         }
 
+        public void Verbose(object value, bool secure)
+        {
+            this.Verbose(this.Secure && secure ? "<secured>" : value);
+        }
+
+        public void Argument(string name, object value, bool secure)
+        {
+            if (this.Secure && secure)
+            {
+                value = "<secured>";
+            }
+
+            this.Verbose(string.Format(ArgumentFormat, name, value), false);
+        }
+
         public bool Quiet { get; set; }
+        public bool Secure {get; set; }
     }
 
     public class InstallPath

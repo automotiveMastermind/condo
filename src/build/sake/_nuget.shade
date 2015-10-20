@@ -27,6 +27,9 @@ nuget_wait='true'
 nuget_quiet='$(Build.Log.Quiet)'
     A value indicating whether or not to avoid printing output.
 
+nuget_secure='false'
+    A value indicating whether or not to avoid printing output for public builds used to hide secure information.
+
 */}
 
 use namespace = 'System'
@@ -43,6 +46,7 @@ default nuget_args          = 'restore'
 default nuget_options       = '${ Build.Get("NUGET_OPTIONS") }'
 default nuget_wait          = '${ true }'
 default nuget_quiet         = '${ Build.Log.Quiet }'
+default nuget_secure        = '${ false }' type='bool'
 
 nuget-download once='nuget-download'
 
@@ -66,10 +70,10 @@ var nuget_cmd               = '${ Path.Combine(nuget_download_path, "nuget.exe")
 }
 
 log log_name='path'         log_value='${ nuget_path }'
-log log_name='arguments'    log_value='${ nuget_args }'
-log log_name='options'      log_value='${ nuget_options }'
+log log_name='arguments'    log_value='${ nuget_args }'       log_secure='${ nuget_secure }'
+log log_name='options'      log_value='${ nuget_options }'    log_secure='${ nuget_secure }'
 log log_name='wait'         log_value='${ nuget_wait }'
 log log_name='quiet'        log_value='${ nuget_quiet }'
 log log_line='-'
 
-run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }' run_wait='${ nuget_wait }' run_quiet='${ nuget_quiet }'
+run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }' run_wait='${ nuget_wait }' run_quiet='${ nuget_quiet }' run_secure='${ nuget_secure }'

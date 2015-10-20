@@ -12,9 +12,3 @@ var configuration = 'Debug'
 
 use-condo-lifecycle
 use-condo-goals
-
-#test-mocha target='test' description='Executes JavaScript unit tests using mocha.'
-	mocha
-
-#tag-git target='tag' description='Tags the current commit with the semantic version of the build.'
-  git-tag

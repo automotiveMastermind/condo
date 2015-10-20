@@ -56,10 +56,11 @@ var nuget_download_path         = '${ Path.Combine(base_path, ".nuget") }'
 var nuget_config_path           = '${ Path.Combine(nuget_download_path, "nuget.config") }'
 var nuget_root_config_path      = '${ Path.Combine(base_path, "nuget.config" }'
 
-log log_name='api key'    log_value='${ nuget_push_apikey }'
+log log_name='api key'    log_value='${ nuget_push_apikey }'    log_secure='${ true }'
 log log_name='push feed'  log_value='${ nuget_push_feed }'
 log log_name='arguments'  log_value='${ nuget_push_args }'
 log log_name='options'    log_value='${ nuget_push_options }'
+log log_line='-'
 
 @{
     if (File.Exists(nuget_config_path))
@@ -84,11 +85,6 @@ log log_name='config path'  log_value='${ nuget_config_path }'
         throw new ArgumentException("nuget-push: arguments must be specified.", "nuget_push_args");
     }
 
-    if (!string.IsNullOrEmpty(nuget_push_apikey))
-    {
-        nuget_push_options += ' -ApiKey ' + nuget_push_apikey;
-    }
-
     if (!string.IsNullOrEmpty(nuget_push_feed))
     {
         var nuget_push_feeds = nuget_push_feed.Split(";"[0]);
@@ -105,4 +101,5 @@ log log_name='config path'  log_value='${ nuget_config_path }'
     }
 }
 
+nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
 nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
