@@ -468,7 +468,7 @@ functions @{
                 }
             }
         }
-
+        
         public static IEnumerable<string> GetPathsContaining(string path, string filter, params string[] excludes)
         {
             if (string.IsNullOrEmpty(path))

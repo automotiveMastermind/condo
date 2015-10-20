@@ -36,13 +36,11 @@ default working_path        = '${ base_path }'
 default target_path         = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 
-default mocha_output_path   = '${ Build.Get("XUNIT_FILE", Path.Combine(target_test_path, "mocha.xml")) }'
-
 default mocha_args          = ''
 default mocha_options       = '${ Build.Get("MOCHA_OPTIONS") }'
 default mocha_reporter      = '${ Build.Get("MOCHA_REPORTER", "xunit") }'
 default mocha_path          = '${ working_path }'
-default mocha_output_path   = '${ target_test_path }'
+default mocha_output_path   = '${ Build.Get("MOCHA_OUTPUT", target_test_path) }'
 
 mocha-download once='mocha-download'
 
@@ -50,6 +48,7 @@ log log_header='mocha'
 log log_line='-'
 
 var mocha_cmd               = '${ Build.GetPath("mocha") }'
+var mocha_output_name       = '${ new DirectoryInfo(mocha_path).Name }'
 
 @{
     // trim the arguments
@@ -72,6 +71,10 @@ log log_line='-'
 
     if (!string.IsNullOrEmpty(mocha_output_path))
     {
+        // make sure that the output path exists
+        Build.MakeDirectory(mocha_output_path);
+
+        mocha_output_path = Path.Combine(mocha_output_path, mocha_output_name + "-mocha.xml");
         mocha_options = string.Format(@"{0} --reporter-options output=""{1}""", mocha_options, mocha_output_path);
     }
 
