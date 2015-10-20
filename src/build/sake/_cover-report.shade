@@ -60,6 +60,12 @@ default cover_report_wait             = '${ true }'
 default cover_report_quiet            = '${ Build.Log.Quiet }'
 default cover_report_install_path     = '${ Path.Combine(base_path, "packages") }'
 
+var cover_report_id                   = 'ReportGenerator'
+var cover_report_exe                  = 'ReportGenerator.exe'
+var cover_report_install              = '${ Path.Combine(cover_report_install_path, cover_report_id, "tools", cover_report_exe) }'
+
+nuget-install nuget_install_id='${ cover_report_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_report_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-report-install'
+
 log log_header='cover-report'
 log log_line='-'
 
@@ -69,12 +75,6 @@ log log_line='-'
         throw new ArgumentException("cover-report: a report target must be specified.", "cover_report_target");
     }
 }
-
-var cover_report_id                   = 'ReportGenerator'
-var cover_report_exe                  = 'ReportGenerator.exe'
-var cover_report_install              = '${ Path.Combine(cover_report_install_path, cover_report_id, "tools", cover_report_exe) }'
-
-nuget-install nuget_install_id='${ cover_report_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_report_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-report-install'
 
 log log_name='target'           log_value='${ cover_report_target }'
 log log_name='type'             log_value='${ cover_report_type }'

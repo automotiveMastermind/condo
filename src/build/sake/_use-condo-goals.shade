@@ -153,6 +153,10 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
     dnx-test dnx_test_output_path='${ target_test_path }' each='var dnx_test_path in paths'
 
+#test-mocha target='test' description='Executes client-side tests using mocha'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json").Where(path => { var test = Path.Combine(path, "test"); return Directory.Exists(test) && Directory.GetFiles(test, "*.js").Any(); }) }'
+    mocha mocha_output_path='${ target_test_path }' each='var mocha_path in paths'
+
 #test-compile-dnx target='compile' description='Compiles dnx-based projects found within the test directory.'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
     dnu-build dnu_build_output_path='${ target_test_path }' each='var dnu_build_path in paths'
