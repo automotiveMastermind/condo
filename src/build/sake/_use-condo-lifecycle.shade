@@ -63,3 +63,6 @@ functions @{
 }
 
 #targets for each='var target in Targets.Keys' -ListTargets(target);
+
+#update-self
+    update-self
