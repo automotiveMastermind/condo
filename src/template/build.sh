@@ -103,23 +103,32 @@ dnvm install latest
 dnvm install latest -r coreclr
 
 # set sake and make file paths
+feedsrc=$CONDO_NUGET_SOURCE
 sakepkg=$root/packages/Sake
 sake=$sakepkg/tools/Sake.exe
 
-condopkg=$root/src
-includes=$condopkg/build/sake
+condopkg=$root/packages/PulseBridge.Condo
+includes=$condopkg/build
 condo=$condopkg/PulseBridge.Condo.nupkg
 
 make=make.shade
 
-# determine if sake exists
-if ! test "$sake"; then
-  # remove the sake directory
-  rm -rRf "$sake"
+# determine if the feed was set from an environment variable
+if [ -z "$feedsrc" ]; then
+    # set the feed
+    feedsrc=https://api.nuget.org/v3/index.json
 fi
 
-# install sake using nuget (so we have additional options not supported by DNU)
-mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
+# determine if sake exists
+if ! test -f "$sake"; then
+    # install sake using nuget (so we have additional options not supported by DNU)
+    mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
+fi
+
+if ! test -f "$condo"; then
+    # install the condo build system
+    mono "$nuget" install PulseBridge.Condo -pre -o packages -ExcludeVersion -NonInteractive -Source "$feedsrc"
+fi
 
 # write a newline for separation
 echo

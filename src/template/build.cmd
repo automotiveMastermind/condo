@@ -70,16 +70,12 @@ SETLOCAL
     )
 
     IF EXIST "%SAKE%" (
-	      rd "%SAKEPKG%" /s /q
+        "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
     )
 
     IF EXIST "%CONDOPKG%" (
-        rd "%CONDOPKG%" /s /q
+        "%NUGET%" install PulseBridge.Condo -pre -o packages -ExcludeVersion -NonInteractive -Source "%FEEDSRC%"
     )
-
-    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
-
-    "%NUGET%" install PulseBridge.Condo -pre -o packages -ExcludeVersion -NonInteractive -Source "%FEEDSRC%"
 
     ECHO.
 
