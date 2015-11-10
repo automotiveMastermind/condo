@@ -108,7 +108,6 @@ sake=$sakepkg/tools/Sake.exe
 
 condopkg=$root/src
 includes=$condopkg/build/sake
-condo=$condopkg/PulseBridge.Condo.nupkg
 
 make=make.shade
 

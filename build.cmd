@@ -57,29 +57,19 @@ SETLOCAL
     CALL "%DNVMCMD%" install latest -nonative
     CALL "%DNVMCMD%" install latest -r coreclr -nonative
 
-    SET FEEDSRC=%CONDO_NUGET_SRC%
     SET SAKEPKG=packages\Sake
     SET SAKE=%SAKEPKG%\tools\Sake.exe
-    SET CONDOPKG=packages\PulseBridge.Condo
-    SET CONDO=%CONDOPKG%\PulseBridge.Condo.nuspec
-    SET INCLUDES=%CONDOPKG%\build
-    SET MAKE=make.shade
 
-    IF [%FEEDSRC%] == [] (
-        SET FEEDSRC=https://api.nuget.org/v3/index.json
-    )
+    SET CONDOPKG=src
+    SET INCLUDES=%CONDOPKG%\build\sake
+
+    SET MAKE=make.shade
 
     IF EXIST "%SAKE%" (
 	      rd "%SAKEPKG%" /s /q
     )
 
-    IF EXIST "%CONDOPKG%" (
-        rd "%CONDOPKG%" /s /q
-    )
-
     "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
-
-    "%NUGET%" install PulseBridge.Condo -pre -o packages -ExcludeVersion -NonInteractive -Source "%FEEDSRC%"
 
     ECHO.
 
