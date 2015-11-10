@@ -45,6 +45,7 @@ default nuget_install_exclude_version   = '${ true }'
 default nuget_install_options           = '${ Build.Get("NUGET_INSTALL_OPTIONS") }'
 default nuget_install_path              = '${ working_path }'
 default nuget_download_path             = '${ Path.Combine(base_path, ".nuget") }'
+default nuget_root_config_path          = '${ Path.Combine(base_path, "nuget.config" }'
 default nuget_config_path               = '${ Path.Combine(nuget_download_path, "nuget.config") }'
 default nuget_install_output_path       = '${ Path.Combine(base_path, "packages") }'
 
@@ -69,6 +70,24 @@ log log_name='pre-release'      log_value='${ nuget_install_prerelease }'
 log log_name='exclude version'  log_value='${ nuget_install_exclude_version }'
 log log_name='output path'      log_value='${ nuget_install_output_path }'
 log log_name='options'          log_value='${ nuget_install_options }'
+
+@{
+    if (File.Exists(nuget_config_path))
+    {
+        nuget_install_options = (nuget_install_options + " -ConfigFile " + nuget_config_path).Trim();
+    }
+    else if (File.Exists(nuget_root_config_path))
+    {
+        nuget_install_options = (nuget_install_options + " -ConfigFile " + nuget_root_config_path).Trim();
+    }
+    else
+    {
+        nuget_config_path = "";
+    }
+}
+
+log log_name='config path'  log_value='${ nuget_config_path }'
+log log_name='root config path' log_value='${ nuget_root_config_path }'
 log log_line='-'
 
 @{
