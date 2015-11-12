@@ -29,7 +29,7 @@ log log_header='nuget-download'
 log log_line='-'
 
 var nuget_exe       = 'nuget.exe'
-var nuget_dist      = 'https://www.nuget.org'
+var nuget_dist      = 'https://dist.nuget.org/win-x86-commandline/latest/'
 var nuget_url       = '${ nuget_dist }/${ nuget_exe }'
 var nuget_download  = '${ Path.Combine(nuget_download_path, nuget_exe) }'
 
