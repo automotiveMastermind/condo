@@ -90,3 +90,6 @@ nuget.exe
 
 # win files
 [Tt]humbs.db
+
+# log files
+*.log

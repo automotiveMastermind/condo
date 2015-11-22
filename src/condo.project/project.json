@@ -2,14 +2,26 @@
     "version": "1.0.0-*",
     "description": "A test project used to prove that condo is working as expected.",
 
+    "tooling": {
+      "defaultNamespace": "Condo.Project"
+    },
+
     "webroot": "wwwroot",
 
     "dependencies": {
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta7",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta7",
-        "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta7"
+      "Microsoft.AspNet.IISPlatformHandler": "1.0.0-*",
+      "Microsoft.AspNet.Server.Kestrel": "1.0.0-*"
     },
-    
+
+    "commands": {
+      "web": "Microsoft.AspNet.Server.Kestrel"
+    },
+
+    "compilationOptions": {
+      "emitEntryPoint": true,
+      "warningsAsErrors": true
+    },
+
     "configurations": {
         "Debug": {
             "compilationOptions": {
@@ -18,9 +30,6 @@
         },
 
         "Analysis": {
-            "compilationOptions": {
-                "warningsAsErrors": true
-            }
         },
 
         "Release": {
@@ -36,7 +45,7 @@
         "node_modules",
         "bower_components"
     ],
-    
+
     "publishExclude": [
         "node_modules",
         "bower_components",
@@ -44,13 +53,11 @@
         "**.user",
         "**.vspscc"
     ],
-    
-    "frameworks": {
-        "dnxcore50": { }
-    },
 
-    "commands": {
-        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5001",
-        "kestrel": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.Kestrel --server.urls http://localhost:5001"
+    "frameworks": {
+        "dnx451": {
+        },
+        "dnxcore50": {
+         }
     }
 }

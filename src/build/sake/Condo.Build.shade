@@ -44,7 +44,10 @@ functions @{
 
         public void Info(object value)
         {
-            this.log.Info(value);
+            var padded = (value ?? string.Empty).ToString().Trim();
+            padded = padded.PadLeft(3 + padded.Length);
+
+            this.log.Info(padded);
         }
 
         public void Info(object value, bool secure)
@@ -54,7 +57,10 @@ functions @{
 
         public void Warn(object value)
         {
-            this.log.Warn(value);
+            var padded = (value ?? string.Empty).ToString().Trim();
+            padded = padded.PadLeft(3 + padded.Length);
+
+            this.log.Warn(padded);
         }
 
         public void Warn(object value, bool secure)
@@ -64,7 +70,10 @@ functions @{
 
         public void Error(object value)
         {
-            this.log.Error(value);
+            var padded = (value ?? string.Empty).ToString().Trim();
+            padded = padded.PadLeft(2 + padded.Length);
+
+            this.log.Error(padded);
         }
 
         public void Error(object value, bool secure)
@@ -449,6 +458,8 @@ functions @{
                 // set the working path to the current directory
                 workingPath = Directory.GetCurrentDirectory();
             }
+
+            command = "\"" + command + "\"";
 
             // determine process start information based on whether or not the CLI is executing on unix/linux or windows
             var info = Build.Unix

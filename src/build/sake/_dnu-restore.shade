@@ -52,4 +52,4 @@ log log_name='options' log_value='${ dnu_restore_options }'
 log log_name='path' log_value='${ dnu_restore_path }'
 log log_line='-'
 
-dnu dnu_args='restore ${ dnu_restore_args }' dnu_options='${ dnu_restore_options }' dnu_path='${ dnu_restore_path }'
+dnu dnu_args='restore ${ dnu_restore_args }' dnu_options='${ dnu_restore_options }' dnu_runtime='default -r coreclr' dnu_path='${ dnu_restore_path }'

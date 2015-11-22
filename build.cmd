@@ -54,8 +54,8 @@ SETLOCAL
         copy "%NUGETCMD%" "%NUGET%"
     )
 
-    CALL "%DNVMCMD%" install latest -nonative
-    CALL "%DNVMCMD%" install latest -r coreclr -nonative
+    CALL "%DNVMCMD%" install latest -nonative -alias default
+    CALL "%DNVMCMD%" install latest -r coreclr -nonative -alias default
 
     SET SAKEPKG=packages\Sake
     SET SAKE=%SAKEPKG%\tools\Sake.exe

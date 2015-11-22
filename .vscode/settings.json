@@ -1,5 +1,5 @@
 {
-    "editor.tabSize": 2,
+    "editor.tabSize": "auto",
     "editor.insertSpaces": true,
 
     "files.encoding": "utf8",
