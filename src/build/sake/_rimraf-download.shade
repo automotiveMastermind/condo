@@ -28,9 +28,9 @@ var rimraf_installed            = '${ rimraf_locally_installed || rimraf_globall
 
 - rimraf_install = rimraf_globally_installed ? "rimraf" : rimraf_install;
 
-log log_name='path'     log_value='${ rimraf_install }'
-log log_line='-'
-
 npm-install npm_install_id='rimraf' npm_install_prefix='${ rimraf_download_path }' if='!rimraf_installed'
 
 - Build.SetPath("rimraf", rimraf_install, rimraf_globally_installed);
+
+log log_name='path'     log_value='${ rimraf_install }'
+log log_line='-'

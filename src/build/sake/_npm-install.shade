@@ -41,6 +41,9 @@ log log_line='-'
 @{
     // trim variables
     npm_install_id = npm_install_id.Trim();
+
+    // add no-bin-links (for windows -- stupid)
+    npm_install_options += " --no-bin-links";
     npm_install_options = npm_install_options.Trim();
 }
 

@@ -6,8 +6,8 @@ dnx
 dnx_args=''
     The arguments for the dnx command.
 
-dnx_version=''
-    The version of dnx to use when executing the command.
+dnx_runtime=''
+    The runtime to use when executing dnx. This argument is passed in the raw to 'dnvm use.'
 
 dnx_options='' (Environment Variable: DNX_OPTIONS)
     Additional options to use when executing the dnx command.
@@ -85,7 +85,7 @@ log log_line='-'
         }
         else
         {
-            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_args, dnx_options);
+            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
             dnx_exec_cmd = dnvm_path;
         }
 

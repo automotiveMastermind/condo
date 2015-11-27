@@ -29,8 +29,7 @@
             }
         },
 
-        "Analysis": {
-        },
+        "Analysis": { },
 
         "Release": {
             "compilationOptions": {
@@ -55,9 +54,7 @@
     ],
 
     "frameworks": {
-        "dnx451": {
-        },
-        "dnxcore50": {
-         }
+        "dnx451": { },
+        "dnxcore50": { }
     }
 }
