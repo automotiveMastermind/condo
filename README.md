@@ -56,18 +56,18 @@ The easiest way to start using Condo is to use the [Yeoman Condo Generator][yo-u
 	OS X / Linux:
 
 	```bash
-	./build.sh
+	./condo.sh
 	```
 
 	Windows (CLI):
 
 	```cmd
-	build
+	condo
 	```
 
 	Windows (PoSH):
 	```posh
-	./build.ps1
+	./condo.ps1
 	```
 
 ## Documentation
