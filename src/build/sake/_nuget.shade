@@ -47,6 +47,7 @@ default nuget_options       = '${ Build.Get("NUGET_OPTIONS") }'
 default nuget_wait          = '${ true }'
 default nuget_quiet         = '${ Build.Log.Quiet }'
 default nuget_secure        = '${ false }' type='bool'
+default nuget_retries       = '${ 1 }' type='int'
 
 nuget-download once='nuget-download'
 
@@ -74,6 +75,7 @@ log log_name='arguments'    log_value='${ nuget_args }'       log_secure='${ nug
 log log_name='options'      log_value='${ nuget_options }'    log_secure='${ nuget_secure }'
 log log_name='wait'         log_value='${ nuget_wait }'
 log log_name='quiet'        log_value='${ nuget_quiet }'
+log log_name='retries'      log_value='${ nuget_retries }'
 log log_line='-'
 
-run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }' run_wait='${ nuget_wait }' run_quiet='${ nuget_quiet }' run_secure='${ nuget_secure }'
+run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }' run_wait='${ nuget_wait }' run_quiet='${ nuget_quiet }' run_secure='${ nuget_secure }' run_retries='${ nuget_retries }'

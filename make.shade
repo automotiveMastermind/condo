@@ -1,14 +1,12 @@
 var product             = 'PulseBridge.Condo'
 var version             = '1.0.0'
 var company             = 'PulseBridge, Inc.'
-var copyright           = '© 2015. PulseBridge, Inc. All rights reserved.'
+var copyright           = '©. PulseBridge, Inc. All rights reserved.'
 var license             = 'Apache License, Version 2.0'
 var licenseUri          = 'http://www.apache.org/licenses/LICENSE-2.0'
 
 var src_path            = 'src'
 var test_path           = 'test'
-
-var configuration = 'Debug'
 
 use-condo-lifecycle
 use-condo-goals

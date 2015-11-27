@@ -40,7 +40,7 @@ default run_options     = '${ Build.Get("RUN_OPTIONS") }'
 default run_wait        = '${ true }'
 default run_quiet       = '${ Build.Log.Quiet }'
 default run_secure      = '${ false }' type='bool'
-
+default run_retries     = '${ 1 }' type='int'
 log log_header='run'
 log log_line='-'
 
@@ -63,7 +63,8 @@ log log_name='options'      log_value='${ run_options }'    log_secure='${ run_s
 log log_name='path'         log_value='${ run_path }'
 log log_name='wait'         log_value='${ run_wait }'
 log log_name='quiet'        log_value='${ run_quiet }'
+log log_name='retries'      log_value='${ run_retries }'
 log log_line='-'
 
-exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' if='Build.Unix'
-exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' if='!Build.Unix'
+exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' if='Build.Unix'
+exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' if='!Build.Unix'

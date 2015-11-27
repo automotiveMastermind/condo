@@ -48,6 +48,7 @@ default nuget_push_feed         = '${ Build.Get("NUGET_PUSH_FEED") }'
 default nuget_push_apikey       = '${ Build.Get("NUGET_PUSH_APIKEY") }'
 default nuget_push_args         = ''
 default nuget_push_options      = '${ Build.Get("NUGET_PUSH_OPTIONS") }'
+default nuget_push_retries      = '${ 3 }' type='int'
 default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 default nuget_root_config_path  = '${ Path.Combine(base_path, "nuget.config" }'
 default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.config") }'
@@ -59,6 +60,7 @@ log log_name='api key'    log_value='${ nuget_push_apikey }'    log_secure='${ t
 log log_name='push feed'  log_value='${ nuget_push_feed }'
 log log_name='arguments'  log_value='${ nuget_push_args }'
 log log_name='options'    log_value='${ nuget_push_options }'
+log log_name='retries'    log_value='${ nuget_push_retries }'
 
 @{
     if (File.Exists(nuget_config_path))
@@ -101,5 +103,5 @@ log log_line='-'
     }
 }
 
-nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
-nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }'
+nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' nuget_retries='${ nuget_push_retries }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
+nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_retries='${ nuget_push_retries }'

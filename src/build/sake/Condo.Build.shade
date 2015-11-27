@@ -324,14 +324,17 @@ functions @{
         /// <param name="wait">
         /// A value indicating whether or not to wait for the process to exit.
         /// </param>
-        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true)
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
+        /// </param>
+        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true, int attempts = 1)
         {
             result = null;
 
             try
             {
                 // attempt to execute the command
-                exitCode = Build.Execute(command, out result, args, workingPath, quiet, wait);
+                exitCode = Build.Execute(command, out result, args, workingPath, quiet, wait, attempts);
             }
             catch (Exception netEx)
             {
@@ -448,7 +451,10 @@ functions @{
         /// <param name="wait">
         /// A value indicating whether or not to wait for the process to exit.
         /// </param>
-        public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true)
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
+        /// </param>
+        public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true, int attempts = 1)
         {
             result = null;
 
@@ -463,7 +469,7 @@ functions @{
             {
                 command = "\"" + command + "\"";
             }
-            
+
             // determine process start information based on whether or not the CLI is executing on unix/linux or windows
             var info = Build.Unix
                 ? new ProcessStartInfo { FileName = command, Arguments = args }
@@ -478,29 +484,48 @@ functions @{
                 info.RedirectStandardError = true;
             }
 
-            // start the process
-            var process = Process.Start(info);
+            var retries = attempts;
+            var exitCode = -1;
 
-            if (wait)
+            while (retries-- > 0)
             {
-                // wait for the process to exit
-                process.WaitForExit();
+                // start the process
+                var process = Process.Start(info);
 
-                if (quiet)
+                if (wait || process.HasExited)
                 {
-                    // read out the results
-                    result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
+                    // wait for the process to exit
+                    process.WaitForExit();
+
+                    if (quiet)
+                    {
+                        // read out the results
+                        result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
+                    }
+
+                    // determine if the exit code is zero
+                    if (process.ExitCode == 133 || process.ExitCode == 0)
+                    {
+                        // move on immediately
+                        return 0;
+                    }
+
+                    // set the exit code
+                    exitCode = process.ExitCode;
+
+                    // try again
+                    continue;
                 }
 
-                // get the exit code
-                return process.ExitCode == 133 ? 0 : process.ExitCode;
+                // track the process
+                Processes.Add(process);
+
+                // return zero, since we can't do anything else
+                return 0;
             }
 
-            // track the process
-            Processes.Add(process);
-
-            // return zero, since we can't do anything else
-            return 0;
+            // return the exit code from the process
+            return exitCode;
         }
 
         public static void Wait()
