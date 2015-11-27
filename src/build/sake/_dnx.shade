@@ -6,6 +6,9 @@ dnx
 dnx_args=''
     The arguments for the dnx command.
 
+dnx_runtime=''
+    The runtime to use when executing dnx. This argument is passed in the raw to 'dnvm use.'
+
 dnx_options='' (Environment Variable: DNX_OPTIONS)
     Additional options to use when executing the dnx command.
 
@@ -30,8 +33,10 @@ use import = 'Condo.Build'
 
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
+default dnvm_path       = ''
 
 default dnx_args        = ''
+default dnx_runtime     = ''
 default dnx_path        = '${ working_path }'
 default dnx_options     = '${ Build.Get("DNX_OPTIONS") }'
 default dnx_wait        = '${ true }'
@@ -39,6 +44,10 @@ default dnx_quiet       = '${ Build.Log.Quiet }'
 
 log log_header='dnx'
 log log_line='-'
+
+var dnx_exec_cmd        = 'dnx'
+var dnx_where_cmd       = '${ Build.Unix ? "which" : "where" }'
+var dnx_dnvm_cmd        = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
 
 @{
     if (string.IsNullOrEmpty(dnx_args))
@@ -61,4 +70,27 @@ log log_name='wait'         log_value='${ dnx_wait }'
 log log_name='quiet'        log_value='${ dnx_quiet }'
 log log_line='-'
 
-exec exec_cmd='dnx' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'
+@{
+    if (!string.IsNullOrEmpty(dnx_runtime))
+    {
+        if (string.IsNullOrEmpty(dnvm_path))
+        {
+            Build.TryExecute(dnx_where_cmd, out dnvm_path, dnx_dnvm_cmd);
+        }
+
+        if (Build.Unix)
+        {
+            dnx_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3} {4}'", dnvm_path, dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
+            dnx_exec_cmd = "/usr/bin/env";
+        }
+        else
+        {
+            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
+            dnx_exec_cmd = dnvm_path;
+        }
+
+        dnx_options = string.Empty;
+    }
+}
+
+exec exec_cmd='${ dnx_exec_cmd }' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'

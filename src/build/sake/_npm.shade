@@ -24,6 +24,9 @@ npm_wait='true'
 npm_quiet='$(Build.Log.Quiet)'
     A value indicating whether or not to avoid printing output.
 
+npm_loglevel='error'
+    The log level to use when calling npm: (silent, error, warn, http, info, verbose, silly)
+
 */}
 
 use namespace = 'System'
@@ -38,6 +41,7 @@ default npm_options         = '${ Build.Get("NPM_OPTIONS") }'
 default npm_path            = '${ working_path }'
 default npm_wait            = '${ true }'
 default npm_quiet           = '${ Build.Log.Quiet }'
+default npm_loglevel        = 'error'
 
 node-download once='node-download'
 
@@ -59,8 +63,16 @@ log log_name='options'      log_value='${ npm_options }'
 log log_name='path'         log_value='${ npm_path }'
 log log_name='wait'         log_value='${ npm_wait }'
 log log_name='quiet'        log_value='${ npm_quiet }'
+log log_name='log level'    log_value='${ npm_loglevel }'
 log log_line='-'
 
-- npm_options = npm_options.Trim();
+@{
+    if (!string.IsNullOrEmpty(npm_loglevel))
+    {
+        npm_options += " --loglevel " + npm_loglevel;
+    }
+
+    npm_options = npm_options.Trim();
+}
 
 exec exec_cmd='${ npm_cmd.Path }' exec_args='${ npm_options } ${ npm_args }' exec_path='${ npm_path }' exec_wait='${ npm_wait }' exec_quiet='${ npm_quiet }'

@@ -140,6 +140,20 @@ log log_line='-'
             var dnx_test_args_current = "test " + (dnx_test_args ?? "");
             var dnx_test_options_current = dnx_test_options ?? "";
             var dnx_test_coverage_output_file = Path.Combine(dnx_test_output_path, "coverage", dnx_test_name + "-" + dnx_test_framework + "-coverage.xml");
+            var dnx_test_runtime = "default";
+
+            if (dnx_test_framework.IndexOf("core", StringComparison.OrdinalIgnoreCase) > -1)
+            {
+                dnx_test_runtime += " -r coreclr";
+            }
+            else if (Build.Unix)
+            {
+                dnx_test_runtime += " -r mono";
+            }
+            else
+            {
+                dnx_test_runtime += " -r clr";
+            }
 
             var dnx_coverage_pdb_path = string.Format
                 (
@@ -156,13 +170,11 @@ log log_line='-'
                 dnx_test_options_current += " -xml \"" + dnx_test_output_file + "\"";
             }
 
-            ExecuteTests(dnx_test_args_current.Trim(), dnx_test_options_current.Trim(), dnx_test_folder, dnx_coverage_pdb_path, dnx_test_coverage_output_file, dnx_test_coverage, Quiet);
+            ExecuteTests(dnx_test_args_current.Trim(), dnx_test_options_current.Trim(), dnx_test_folder, dnx_coverage_pdb_path, dnx_test_coverage_output_file, dnx_test_runtime, dnx_test_coverage, Quiet);
         }
     }
 }
 
-macro name='ExecuteTests' args='string' options='string' path='string' pdb='string' output='string' coverage='bool' Quiet='bool'
-    log warn='dnx-test: code coverage is only supported on the Windows platform at the present time.' if='coverage && Build.Unix'
-
-    dnx dnx_args='${ args }' dnx_options='${ options }' dnx_path='${ path }' if='!coverage'
-    cover cover_args='${ args } ${ options }' cover_output_path='${ output }' cover_path='${ path }' cover_pdb_path='${ pdb }' if='coverage'
+macro name='ExecuteTests' args='string' options='string' path='string' pdb='string' output='string' runtime='string' coverage='bool' Quiet='bool'
+    dnx dnx_args='${ args }' dnx_options='${ options }' dnx_path='${ path }' dnx_runtime='${ runtime }' if='!coverage'
+    cover cover_args='${ args } ${ options }' cover_output_path='${ output }' cover_path='${ path }' cover_pdb_path='${ pdb }' cover_dnx_runtime='${ runtime }' if='coverage'

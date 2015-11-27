@@ -35,6 +35,7 @@ default exec_output_path  = ''
 default exec_wait         = '${ true }'
 default exec_quiet        = '${ Build.Log.Quiet }'
 default exec_secure       = '${ false }' type='bool'
+default exec_retries      = '${ 1 }' type='int'
 
 log log_header='exec'
 log log_line='-'
@@ -59,6 +60,7 @@ log log_name='path'         log_value='${ exec_path }'
 log log_name='output path'  log_value='${ exec_output_path }'
 log log_name='wait'         log_value='${ exec_wait }'
 log log_name='quiet'        log_value='${ exec_quiet }'
+log log_name='retries'      log_value='${ exec_retries }'
 log log_line='-'
 
 @{
@@ -67,7 +69,7 @@ log log_line='-'
     string result;
 
     // attempt to execute the command
-    if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path, exec_quiet, exec_wait))
+    if(!Build.TryExecute(exec_cmd, out code, out result, exec_args, exec_path, exec_quiet, exec_wait, exec_retries))
     {
         // throw a new exception
         throw new Exception(string.Format("The command {0} with args {1} failed with exit code {2}. The output was {3}.", exec_cmd, exec_args, code, exec_secure && Build.Log.Secure ? "<secured>" : result));

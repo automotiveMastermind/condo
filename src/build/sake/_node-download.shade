@@ -99,7 +99,8 @@ var node_installed          = '${ node_globally_installed || node_locally_instal
 verify-hash verify_assembly='${ node_install }' verify_hash='${ node_hash }' if='!node_installed && !Build.Unix'
 brew-install brew_install_formula='node' if='!node_installed && Build.OSX'
 
-log log_name='path'         log_value='${ node_install }'
+log log_name='node path'    log_value='${ node_install }'
+log log_name='npm path'     log_value='${ npm_cmd_install }'
 log log_name='version'      log_value='${ node_version }'
 log log_name='npm version'  log_value='${ npm_version }'
 log log_line='-'

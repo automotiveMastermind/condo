@@ -29,7 +29,7 @@ default log_secure = '${ false }'
 @{
     if (!string.IsNullOrEmpty(log_header))
     {
-        Build.Log.Info(string.Concat("   ", log_header.ToUpper()));
+        Build.Log.Info(log_header.ToUpper());
     }
 
     if (!string.IsNullOrEmpty(log_name) && log_value != null && !string.IsNullOrEmpty(log_value.ToString()))

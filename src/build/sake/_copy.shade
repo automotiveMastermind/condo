@@ -30,6 +30,7 @@ default copy_dst_path   = ''
 default copy_include    = '**/*.*'
 default copy_exclude    = ''
 default copy_overwrite  = '${ false }'
+default copy_flatten    = '${ false }'
 
 log log_header='copy'
 log log_line='-'
@@ -57,6 +58,7 @@ log log_name='destination'  log_value='${ copy_dst_path }'
 log log_name='include'      log_value='${ copy_include }'
 log log_name='exclude'      log_value='${ copy_exclude }'
 log log_name='overwrite'    log_value='${ copy_overwrite }'
+log log_name='flatten'      log_value='${ copy_flatten }'
 log log_line='-'
 
 @{
@@ -75,7 +77,7 @@ log log_line='-'
     foreach(var copy_file in copy_files)
     {
         var copy_src_file = Path.Combine(copy_src_path, copy_file);
-        var copy_dst_file = Path.Combine(copy_dst_path, copy_file);
+        var copy_dst_file = Path.Combine(copy_dst_path, copy_flatten ? Path.GetFileName(copy_file) : copy_file);
 
         Directory.CreateDirectory(Path.GetDirectoryName(copy_dst_file));
 
