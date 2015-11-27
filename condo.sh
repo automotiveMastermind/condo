@@ -107,7 +107,7 @@ sakepkg=$root/packages/Sake
 sake=$sakepkg/tools/Sake.exe
 
 condopkg=$root/src
-includes=$condopkg/build/sake
+includes=$condopkg/build
 
 make=make.shade
 

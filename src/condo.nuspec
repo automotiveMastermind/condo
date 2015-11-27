@@ -15,6 +15,6 @@
     <copyright>©. PulseBridge, Inc. and contributors. All Rights Reserved.</copyright>
   </metadata>
   <files>
-    <file src="sake/*" target="build" />
+    <file src="build/*.shade" target="build" />
   </files>
 </package>

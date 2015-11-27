@@ -61,7 +61,7 @@ SETLOCAL
     SET SAKE=%SAKEPKG%\tools\Sake.exe
 
     SET CONDOPKG=src
-    SET INCLUDES=%CONDOPKG%\build\sake
+    SET INCLUDES=%CONDOPKG%\build
 
     SET MAKE=make.shade
 
