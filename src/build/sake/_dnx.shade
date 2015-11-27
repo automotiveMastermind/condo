@@ -75,7 +75,10 @@ log log_line='-'
     {
         if (string.IsNullOrEmpty(dnvm_path))
         {
-            Build.TryExecute(dnx_where_cmd, out dnvm_path, dnx_dnvm_cmd);
+            if (!Build.TryExecute(dnx_where_cmd, out dnvm_path, dnx_dnvm_cmd) || string.IsNullOrEmpty(dnvm_path))
+            {
+                dnvm_path = Path.Combine(Build.Get("HOME"), ".dnx", "dnvm", "dnvm.sh");
+            }
         }
 
         if (Build.Unix)
