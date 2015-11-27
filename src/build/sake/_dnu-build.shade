@@ -106,4 +106,4 @@ log log_line='-'
     dnu_build_options = dnu_build_options.Trim();
 }
 
-dnu dnu_args='build ${ dnu_build_project }' dnu_options='${ dnu_build_options }' dnu_path='${ dnu_build_path }'
+dnu dnu_args='build ${ dnu_build_project }' dnu_options='${ dnu_build_options }' dnu_runtime='default -r ${ Build.Unix ? "mono" : "clr" }' dnu_path='${ dnu_build_path }'

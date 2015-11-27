@@ -173,10 +173,17 @@ default Coverage            = '${ false }'
     nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
 
 #push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.' if='Directory.Exists(target_package_path)'
-    copy copy_src_path='${ target_package_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_overwrite='${ true }'
+    copy copy_src_path='${ target_package_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
-#push-nuget-packages target='push' description='Pushes NuGet packages to the a NuGet feed.'
-    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg") }'
+#push-dnx-packages-local target='post-package' description='Pushes DNX packages to the local feed for development purposes.' if='Directory.Exists(target_build_path)'
+    copy copy_src_path='${ target_build_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
+
+#push-nuget-packages target='push' description='Pushes NuGet packages to a NuGet feed.'
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
+    nuget-push each='var nuget_push_args in pkgs'
+
+#push-dnx-packages target='push' description='Pushes DNX packages to a NuGet feed.'
+    var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
     nuget-push each='var nuget_push_args in pkgs'
 
 #run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'

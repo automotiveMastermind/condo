@@ -1,9 +1,10 @@
 namespace Condo.Project
 {
     using Microsoft.AspNet.Builder;
+    using Microsoft.AspNet.Hosting;
     using Microsoft.AspNet.Http;
 
-    using Microsoft.Framework.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Startup
     {
@@ -13,10 +14,14 @@ namespace Condo.Project
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseIISPlatformHandler();
+
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World");
             });
         }
+
+        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

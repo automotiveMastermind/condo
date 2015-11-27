@@ -84,6 +84,7 @@ log log_name='assembly filter'  log_value='${ cover_report_assembly_filter }'
 log log_name='class filter'     log_value='${ cover_report_class_filter }'
 log log_name='wait'             log_value='${ cover_report_wait }'
 log log_name='quiet'            log_value='${ cover_report_quiet }'
+log log_line='-'
 
 log warn='cover-report: code coverage analysis is only available on the Windows platform at the present time.' if='Build.Unix'
 
@@ -118,4 +119,4 @@ log warn='cover-report: code coverage analysis is only available on the Windows 
     cover_report_args = cover_report_args.Trim();
 }
 
-exec exec_cmd='${ cover_report_install }' exec_args='${ cover_report_args }' exec_wait='${ cover_report_wait }' exec_quiet='${ cover_report_quiet }'
+exec exec_cmd='${ cover_report_install }' exec_args='${ cover_report_args }' exec_wait='${ cover_report_wait }' exec_quiet='${ cover_report_quiet }' if='!Build.Unix'

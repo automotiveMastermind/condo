@@ -12,26 +12,26 @@ default base_path               = '${ Directory.GetCurrentDirectory() }'
 
 var update_self_base_uri        = 'https://raw.githubusercontent.com/pulsebridge/condo/develop/src/template/'
 
-var update_buildcmd_path        = '${ Path.Combine(base_path, "build.cmd") }'
-var update_buildps1_path        = '${ Path.Combine(base_path, "build.ps1") }'
-var update_buildsh_path         = '${ Path.Combine(base_path, "build.sh") }'
+var update_buildcmd_path        = '${ Path.Combine(base_path, "condo.cmd") }'
+var update_buildps1_path        = '${ Path.Combine(base_path, "condo.ps1") }'
+var update_buildsh_path         = '${ Path.Combine(base_path, "condo.sh") }'
 
-var update_buildtmp_path        = '${ Path.Combine(base_path, "build.tmp") }'
+var update_buildtmp_path        = '${ Path.Combine(base_path, "condo.tmp") }'
 
 var update_package_path         = '${ Path.Combine(base_path, "packages") }'
 var update_sake_path            = '${ Path.Combine(update_package_path, "Sake") }'
 var update_condo_path           = '${ Path.Combine(update_package_path, "PulseBridge.Condo") }'
 
-var update_buildcmd_uri         = '${ update_self_base_uri + "build.cmd" }'
-var update_buildps1_uri         = '${ update_self_base_uri + "build.ps1" }'
-var update_buildsh_uri          = '${ update_self_base_uri + "build.sh" }'
+var update_buildcmd_uri         = '${ update_self_base_uri + "condo.cmd" }'
+var update_buildps1_uri         = '${ update_self_base_uri + "condo.ps1" }'
+var update_buildsh_uri          = '${ update_self_base_uri + "condo.sh" }'
 
 log log_header='update-self'
 log log_line='-'
 
-log log_name='build cmd path'   log_value='${ update_buildcmd_path }'
-log log_name='build ps1 path'   log_value='${ update_buildps1_path }'
-log log_name='build sh path'    log_value='${ update_buildsh_path }'
+log log_name='condo cmd path'   log_value='${ update_buildcmd_path }'
+log log_name='condo ps1 path'   log_value='${ update_buildps1_path }'
+log log_name='condo sh path'    log_value='${ update_buildsh_path }'
 log log_line='-'
 
 @{
@@ -39,7 +39,7 @@ log log_line='-'
     {
         if (File.Exists(update_buildcmd_path))
         {
-            Log.Verbose("update-self: updating build.cmd from " + update_buildcmd_uri);
+            Log.Verbose("update-self: updating condo.cmd from " + update_buildcmd_uri);
 
             try
             {
@@ -48,13 +48,13 @@ log log_line='-'
             }
             catch
             {
-                Log.Warn("update-self: could not download build.cmd. Please try again later.");
+                Log.Warn("update-self: could not download condo.cmd. Please try again later.");
             }
         }
 
         if (File.Exists(update_buildps1_path))
         {
-            Log.Verbose("update-self: updating build.ps1 from " + update_buildps1_uri);
+            Log.Verbose("update-self: updating condo.ps1 from " + update_buildps1_uri);
 
             try
             {
@@ -63,13 +63,13 @@ log log_line='-'
             }
             catch
             {
-                Log.Warn("update-self: could not download build.ps1. Please try again later.");
+                Log.Warn("update-self: could not download condo.ps1. Please try again later.");
             }
         }
 
         if (File.Exists(update_buildsh_path))
         {
-            Log.Verbose("update-self: updating build.sh from " + update_buildsh_uri);
+            Log.Verbose("update-self: updating condo.sh from " + update_buildsh_uri);
 
             try
             {
@@ -78,7 +78,7 @@ log log_line='-'
             }
             catch
             {
-                Log.Warn("update-self: could not download build.sh. Please try again later.");
+                Log.Warn("update-self: could not download condo.sh. Please try again later.");
             }
         }
 
