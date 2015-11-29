@@ -99,15 +99,15 @@ if ! test -f "$nuget"; then
 fi
 
 # upgrade dnx to latest
-dnvm install latest
-dnvm install latest -r coreclr
+dnvm install latest -r coreclr -alias default
+dnvm install latest -r mono -alias -default
 
 # set sake and make file paths
 sakepkg=$root/packages/Sake
 sake=$sakepkg/tools/Sake.exe
 
 condopkg=$root/src
-includes=$condopkg/build/sake
+includes=$condopkg/build
 
 make=make.shade
 

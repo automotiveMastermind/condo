@@ -99,8 +99,8 @@ if ! test -f "$nuget"; then
 fi
 
 # upgrade dnx to latest
-dnvm install latest
-dnvm install latest -r coreclr
+dnvm install latest -r coreclr -alias default
+dnvm install latest -r mono -alias -default
 
 # set sake and make file paths
 feedsrc=$CONDO_NUGET_SOURCE

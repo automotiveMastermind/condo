@@ -45,7 +45,7 @@ default nuget_install_exclude_version   = '${ true }'
 default nuget_install_options           = '${ Build.Get("NUGET_INSTALL_OPTIONS") }'
 default nuget_install_path              = '${ working_path }'
 default nuget_download_path             = '${ Path.Combine(base_path, ".nuget") }'
-default nuget_root_config_path          = '${ Path.Combine(base_path, "nuget.config" }'
+default nuget_root_config_path          = '${ Path.Combine(base_path, "nuget.config") }'
 default nuget_config_path               = '${ Path.Combine(nuget_download_path, "nuget.config") }'
 default nuget_install_output_path       = '${ Path.Combine(base_path, "packages") }'
 
