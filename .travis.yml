@@ -3,7 +3,7 @@ sudo: false
 os:
 - osx
 script:
-- ./condo.sh --secure verify
+- ./condo.sh --secure push
 notifications:
   webhooks:
     urls:

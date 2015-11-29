@@ -162,6 +162,8 @@ functions @{
                 return id == 4;
             }
         }
+        
+        public static bool PullRequest { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether or not the build environment is executing within the
