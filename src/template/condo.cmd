@@ -69,11 +69,11 @@ SETLOCAL
         SET FEEDSRC=https://api.nuget.org/v3/index.json
     )
 
-    IF EXIST "%SAKE%" (
+    IF NOT EXIST "%SAKE%" (
         "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
     )
 
-    IF EXIST "%CONDOPKG%" (
+    IF NOT EXIST "%CONDOPKG%" (
         "%NUGET%" install PulseBridge.Condo -pre -o packages -ExcludeVersion -NonInteractive -Source "%FEEDSRC%"
     )
 
