@@ -32,10 +32,10 @@ log log_line='-'
 @{
     if (!string.IsNullOrEmpty(Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI")))
     {
-        AssemblyInfo.AssemblyVersion  = Build.Get("BUILD_VERSION");
-        AssemblyInfo.Branch           = Build.Get("BUILD_SOURCEBRANCH");
-        AssemblyInfo.CommitId         = Build.Get("BUILD_SOURCEVERSION");
-        AssemblyInfo.BuildId          = Build.Get("BUILD_BUILDID");
+        AssemblyInfo.AssemblyVersion    = Build.Get("BUILD_VERSION");
+        AssemblyInfo.Branch             = Build.Get("BUILD_SOURCEBRANCH");
+        AssemblyInfo.CommitId           = Build.Get("BUILD_SOURCEVERSION");
+        AssemblyInfo.BuildId            = Build.Get("BUILD_BUILDID");
 
         if (AssemblyInfo.Branch.StartsWith("refs/pull/"))
         {
@@ -44,45 +44,56 @@ log log_line='-'
             AssemblyInfo.PullRequestId = segments[2];
         }
 
-        AssemblyInfo.BuiltBy          = Build.Get("BUILD_REQUESTEDFOR");
-        AssemblyInfo.BuiltOn          = Build.Get("AGENT_NAME");
+        AssemblyInfo.BuiltBy            = Build.Get("BUILD_REQUESTEDFOR");
+        AssemblyInfo.BuiltOn            = Build.Get("AGENT_NAME");
 
-        AssemblyInfo.TeamUri          = Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
-        AssemblyInfo.RepositoryUri    = Build.Get("BUILD_REPOSITORY_URI");
-        AssemblyInfo.BuildUri         = Build.Get("BUILD_BUILDURI");
+        AssemblyInfo.RepositoryProvider = Build.Get("BUILD_REPOSITORY_PROVIDER");
+        AssemblyInfo.TeamUri            = Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+        AssemblyInfo.RepositoryUri      = Build.Get("BUILD_REPOSITORY_URI");
+        AssemblyInfo.BuildUri           = Build.Get("BUILD_BUILDURI");
     }
 
     else if (!string.IsNullOrEmpty(Build.Get("APPVEYOR")))
     {
-        AssemblyInfo.Branch           = Build.Get("APPVEYOR_REPO_BRANCH");
-        AssemblyInfo.CommitId         = Build.Get("APPVEYOR_REPO_COMMIT");
-        AssemblyInfo.BuildId          = Build.Get("APPVEYOR_BUILD_NUMBER");
-        AssemblyInfo.PullRequestId    = Build.Get("APPVEYOR_PULL_REQUEST_NUMBER");
+        AssemblyInfo.Branch             = Build.Get("APPVEYOR_REPO_BRANCH");
+        AssemblyInfo.CommitId           = Build.Get("APPVEYOR_REPO_COMMIT");
+        AssemblyInfo.BuildId            = Build.Get("APPVEYOR_BUILD_NUMBER");
+        AssemblyInfo.PullRequestId      = Build.Get("APPVEYOR_PULL_REQUEST_NUMBER");
 
-        AssemblyInfo.BuiltBy          = Build.Get("APPVEYOR_REPO_COMMIT_AUTHOR");
-        AssemblyInfo.BuiltOn          = "AppVeyor";
+        AssemblyInfo.BuiltBy            = Build.Get("APPVEYOR_REPO_COMMIT_AUTHOR");
+        AssemblyInfo.BuiltOn            = "AppVeyor";
 
-        AssemblyInfo.TeamUri          = Build.Get("APPVEYOR_REPO_NAME");
-        AssemblyInfo.RepositoryUri    = Build.Get("APPVEYOR_REPO_NAME");
-        AssemblyInfo.BuildUri         = Build.Get("APPVEYOR_API_URL");
+        AssemblyInfo.RepositoryProvider = Build.Get("APPVEYOR_REPO_PROVIDER");
+        AssemblyInfo.TeamUri            = Build.Get("APPVEYOR_REPO_NAME");
+        AssemblyInfo.RepositoryUri      = Build.Get("APPVEYOR_REPO_NAME");
+        AssemblyInfo.BuildUri           = "https://ci.appveyor.com/project/" + Build.Get("APPVEYOR_PROJECT_SLUG");
+
+        if (AssemblyInfo.RepositoryProvider.Equals("GitHub", StringComparison.OrdinalIgnoreCase))
+        {
+            AssemblyInfo.RepositoryUri = "https://github.com/" + AssemblyInfo.RepositoryUri;
+            AssemblyInfo.TeamUri = AssemblyInfo.RepositoryUri;
+        }
     }
 
     else if (!string.IsNullOrEmpty(Build.Get("TRAVIS")))
     {
-        AssemblyInfo.Branch           = Build.Get("TRAVIS_BRANCH");
-        AssemblyInfo.CommitId         = Build.Get("TRAVIS_COMMIT");
-        AssemblyInfo.BuildId          = Build.Get("TRAVIS_BUILD_NUMBER");
-        AssemblyInfo.PullRequestId    = Build.Get("TRAVIS_PULL_REQUEST");
+        AssemblyInfo.Branch             = Build.Get("TRAVIS_BRANCH");
+        AssemblyInfo.CommitId           = Build.Get("TRAVIS_COMMIT");
+        AssemblyInfo.BuildId            = Build.Get("TRAVIS_BUILD_NUMBER");
+        AssemblyInfo.PullRequestId      = Build.Get("TRAVIS_PULL_REQUEST");
 
         if (AssemblyInfo.PullRequestId.Contains("false"))
         {
             AssemblyInfo.PullRequestId = string.Empty;
         }
 
-        AssemblyInfo.BuiltOn          = "Travis-CI";
+        AssemblyInfo.BuiltBy            = Build.Get("USER");
+        AssemblyInfo.BuiltOn            = "Travis-CI";
 
-        AssemblyInfo.TeamUri          = Build.Get("TRAVIS_REPO_SLUG");
-        AssemblyInfo.RepositoryUri    = Build.Get("TRAVIS_REPO_SLUG");
+        AssemblyInfo.RepositoryProvider = "GitHub";
+        AssemblyInfo.TeamUri            = "https://github.com/" + Build.Get("TRAVIS_REPO_SLUG");
+        AssemblyInfo.RepositoryUri      = "https://github.com/" + Build.Get("TRAVIS_REPO_SLUG");
+        AssemblyInfo.BuildUri           = "https://travis-ci.org/" + Build.Get("TRAVIS_REPO_SLUG");
     }
 
     AssemblyInfo.Product          = product;

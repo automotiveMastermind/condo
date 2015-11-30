@@ -1,9 +1,22 @@
 language: csharp
-sudo: false
+sudo: required
+dist: trusty
 os:
-- osx
+  - linux
+  - osx
+addons:
+  apt:
+    packages:
+    - gettext
+    - libcurl4-openssl-dev
+    - libicu-dev
+    - libssl-dev
+    - libunwind8
+    - zlib1g
+mono:
+  - 4.2.1
 script:
-- ./condo.sh --secure push
+  - ./condo.sh --secure default
 notifications:
   webhooks:
     urls:

@@ -501,6 +501,23 @@ functions @{
             }
         }
 
+        private static string repositoryProvider;
+
+        public static string RepositoryProvider
+        {
+            get
+            {
+                return repositoryProvider;
+            }
+
+            set
+            {
+                repositoryProvider = value;
+
+                Build.Set("BUILD_REPOSITORY_PROVIDER", value);
+            }
+        }
+
         public static string Product { get; set; }
 
         public static string Company { get; set; }
