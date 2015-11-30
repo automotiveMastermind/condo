@@ -143,11 +143,11 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js") }'
     gulp each='var gulp_path in paths'
 
-#initialize-info
+#validate-info target='validate' description='Collects and validates assembly information used during the build.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
     info each='var info_path in paths'
 
-#initialize-all .initialize-info .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
+#initialize-all .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
 
 #compile-dnx target='compile' description='Compiles and packages all dnx-based projects found within the source directory.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'

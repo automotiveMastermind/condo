@@ -54,7 +54,6 @@ log log_line='-'
 
     else if (!string.IsNullOrEmpty(Build.Get("APPVEYOR")))
     {
-        AssemblyInfo.AssemblyVersion  = Build.Get("APPVEYOR_BUILD_VERSION");
         AssemblyInfo.Branch           = Build.Get("APPVEYOR_REPO_BRANCH");
         AssemblyInfo.CommitId         = Build.Get("APPVEYOR_REPO_COMMIT");
         AssemblyInfo.BuildId          = Build.Get("APPVEYOR_BUILD_NUMBER");
@@ -70,7 +69,6 @@ log log_line='-'
 
     else if (!string.IsNullOrEmpty(Build.Get("TRAVIS")))
     {
-        AssemblyInfo.AssemblyVersion  = Build.Get("APPVEYOR_BUILD_VERSION");
         AssemblyInfo.Branch           = Build.Get("TRAVIS_BRANCH");
         AssemblyInfo.CommitId         = Build.Get("TRAVIS_COMMIT");
         AssemblyInfo.BuildId          = Build.Get("TRAVIS_BUILD_NUMBER");
@@ -190,6 +188,7 @@ log log_name='prerelease tag'   log_value='${ AssemblyInfo.PrereleaseTag }'
 log log_name='semantic version' log_value='${ AssemblyInfo.InformationalVersion }'
 log log_name='build id'         log_value='${ AssemblyInfo.BuildId }'
 log log_name='commit id'        log_value='${ AssemblyInfo.CommitId }'
+log log_name='pull request id'  log_value='${ AssemblyInfo.PullRequestId }'
 log log_name='branch'           log_value='${ AssemblyInfo.Branch }'
 log log_name='repository uri'   log_value='${ AssemblyInfo.RepositoryUri }'
 log log_name='team uri'         log_value='${ AssemblyInfo.TeamUri }'
