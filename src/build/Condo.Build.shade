@@ -71,7 +71,7 @@ functions @{
         public void Error(object value)
         {
             var padded = (value ?? string.Empty).ToString().Trim();
-            padded = padded.PadLeft(2 + padded.Length);
+            padded = padded.PadLeft(3 + padded.Length);
 
             this.log.Error(padded);
         }
@@ -162,7 +162,7 @@ functions @{
                 return id == 4;
             }
         }
-        
+
         public static bool PullRequest { get; set; }
 
         /// <summary>
@@ -480,37 +480,70 @@ functions @{
             info.WorkingDirectory = workingPath;
             info.UseShellExecute = false;
 
-            if (quiet)
-            {
-                info.RedirectStandardOutput = true;
-                info.RedirectStandardError = true;
-            }
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
 
             var retries = attempts;
             var exitCode = -1;
 
             while (retries-- > 0)
             {
+                // create the process
+                var process = new Process();
+                process.StartInfo = info;
+                process.EnableRaisingEvents = true;
+
+                var standard = string.Empty;
+                var error = string.Empty;
+
+                // determine if we should suppress output
+                if (quiet)
+                {
+                    // attach a handler for capturing standard out/error
+                    process.OutputDataReceived += (outSender, outArgs) => standard += outArgs.Data;
+                    process.ErrorDataReceived += (errorSender, errorArgs) => {
+                        if (!string.IsNullOrEmpty(errorArgs.Data))
+                        {
+                           error += errorArgs.Data;
+                        }
+                    };
+                }
+                else
+                {
+                    // attach a handler for capturing standard out/error
+                    process.OutputDataReceived += (outSender, outArgs) => Build.Log.Verbose(outArgs.Data);
+                    process.ErrorDataReceived += (errorSender, errorArgs) => {
+                        if (!string.IsNullOrEmpty(errorArgs.Data))
+                        {
+                            Build.Log.Error(errorArgs.Data);
+                        }
+                    };
+                }
+
                 // start the process
-                var process = Process.Start(info);
+                process.Start();
+
+                // begin reading output and error streams
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
 
                 if (wait || process.HasExited)
                 {
                     // wait for the process to exit
                     process.WaitForExit();
 
-                    if (quiet)
+                    // determine if the exit code is an error
+                    if (process.ExitCode == 0)
                     {
-                        // read out the results
-                        result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
-                    }
+                        // set the result to the standard out
+                        result = standard;
 
-                    // determine if the exit code is zero
-                    if (process.ExitCode == 133 || process.ExitCode == 0)
-                    {
                         // move on immediately
                         return 0;
                     }
+
+                    // set the result to the standard error
+                    result = error;
 
                     // set the exit code
                     exitCode = process.ExitCode;
@@ -532,18 +565,35 @@ functions @{
 
         public static void Wait()
         {
-            Console.WriteLine(string.Empty);
+            Console.WriteLine();
+            Console.WriteLine("Press <Ctrl> + C to cancel.");
 
-            do
-            {
-                Console.WriteLine("Press <enter> or <return> to stop all processes and exit.");
-            } while(!Console.ReadKey().Key.Equals(ConsoleKey.Enter));
+            Console.TreatControlCAsInput = false;
+            Console.CancelKeyPress += (sender, args) =>
+                {
+                    foreach (var process in Processes)
+                    {
+                        try
+                        {
+                            process.Kill();
+                            process.Close();
+                        }
+                        catch
+                        {
+                        }
+                    }
+                };
 
             foreach (var process in Processes)
             {
+                if (!process.HasExited)
+                {
+                    process.WaitForExit();
+                }
+
                 try
                 {
-                    process.Kill();
+                    process.Close();
                 }
                 catch
                 {

@@ -19,6 +19,7 @@ use namespace = 'System'
 default verbose = ''
 default info = ''
 default warn = ''
+default error = ''
 default log_name = ''
 default log_value = ''
 default log_line = ''
@@ -45,6 +46,11 @@ default log_secure = '${ false }'
     if (!string.IsNullOrEmpty(warn))
     {
         Build.Log.Warn(warn, log_secure);
+    }
+
+    if (!string.IsNullOrEmpty(error))
+    {
+        Build.Log.Error(error, log_secure);
     }
 
     if (!string.IsNullOrEmpty(verbose))

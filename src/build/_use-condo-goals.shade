@@ -188,5 +188,8 @@ default Coverage            = '${ false }'
 
 #run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
-    dnx-run each='var dnx_run_project in paths'
-    - Build.Wait();
+    dnx-run each='var dnx_run_project in paths' dnx_run_watch='${ false }'
+
+#watch-dnx target='watch' description='Runs and watches any DNX projects that contain a command for execution based on the platform.'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
+    dnx-run each='var dnx_run_project in paths' dnx_run_watch='${ true }'

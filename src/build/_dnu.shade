@@ -81,16 +81,16 @@ log log_line='-'
             }
         }
 
-        dnu_options = ("\"" + dnu_path + "\" " + dnu_options).Trim();
+        dnu_args = (dnu_args + " \"" + dnu_path + "\"").Trim();
 
         if (Build.Unix)
         {
-            dnu_args = string.Format(@"bash -c ""source '{0}' && dnvm use {1} && {2} {3} {4}""", dnvm_path, dnu_runtime, dnu_exec_cmd, dnu_args, dnu_options);
+            dnu_args = string.Format(@"bash -c ""source '{0}' && dnvm use {1} && {2} {3} {4}""", dnvm_path, dnu_runtime, dnu_exec_cmd, dnu_options, dnu_args);
             dnu_exec_cmd = "/usr/bin/env";
         }
         else
         {
-            dnu_args = string.Format(@"use {0} && {1} {2} {3}", dnu_runtime, dnu_exec_cmd, dnu_args, dnu_options);
+            dnu_args = string.Format(@"use {0} && {1} {2} {3}", dnu_runtime, dnu_exec_cmd, dnu_options, dnu_args);
             dnu_exec_cmd = dnvm_path;
         }
 
@@ -98,4 +98,4 @@ log log_line='-'
     }
 }
 
-exec exec_cmd='${ dnu_exec_cmd }' exec_args='${ dnu_args } ${ dnu_options }' exec_path='${ dnu_path }' exec_wait='${ dnu_wait }' exec_quiet='${ dnu_quiet }'
+exec exec_cmd='${ dnu_exec_cmd }' exec_args='${ dnu_options } ${ dnu_args }' exec_path='${ dnu_path }' exec_wait='${ dnu_wait }' exec_quiet='${ dnu_quiet }'

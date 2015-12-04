@@ -83,12 +83,12 @@ log log_line='-'
 
         if (Build.Unix)
         {
-            dnx_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3} {4}'", dnvm_path, dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
+            dnx_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3} {4}'", dnvm_path, dnx_runtime, dnx_exec_cmd, dnx_options, dnx_args);
             dnx_exec_cmd = "/usr/bin/env";
         }
         else
         {
-            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
+            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_options, dnx_args);
             dnx_exec_cmd = dnvm_path;
         }
 
@@ -96,4 +96,4 @@ log log_line='-'
     }
 }
 
-exec exec_cmd='${ dnx_exec_cmd }' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'
+exec exec_cmd='${ dnx_exec_cmd }' exec_args='${ dnx_options } ${ dnx_args }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'

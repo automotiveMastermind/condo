@@ -27,6 +27,7 @@ default working_path    = '${ base_path }'
 
 default dnx_run_project = ''
 default dnx_run_cmd     = ''
+default dnx_run_watch   = '${ true }' type='bool'
 default dnx_run_options = '${ Build.Get("DNX_RUN_OPTIONS") }'
 default dnx_run_quiet   = '${ Build.Log.Quiet }'
 
@@ -55,8 +56,8 @@ var dnx_run_path = ''
     // determine if the command is specified
     if (string.IsNullOrEmpty(dnx_run_cmd))
     {
-        // use kestrel for POSIX, otherwise web
-        dnx_run_cmd = Build.Unix ? "kestrel" : "web";
+        // always use web for now
+        dnx_run_cmd = "web";
     }
 
     // trim the arguments
@@ -68,11 +69,17 @@ var dnx_run_path = ''
 log log_name='project'  log_value='${ dnx_run_project.Trim() }'
 log log_name='command'  log_value='${ dnx_run_cmd }'
 log log_name='options'  log_value='${ dnx_run_options }'
+log log_name='watch'    log_value='${ dnx_run_watch }'
 log log_name='path'     log_value='${ dnx_run_path }'
 log log_line='-'
 
 @{
     var js = new JavaScriptSerializer();
+
+    if (dnx_run_watch)
+    {
+        dnx_run_options = (dnx_run_options + " --watch").Trim();
+    }
 
     var dnx_run_text = File.ReadAllText(dnx_run_path);
     var dnx_run_json = js.DeserializeObject(dnx_run_text) as Dictionary<string, object>;
@@ -87,9 +94,9 @@ log log_line='-'
 
     if (dnx_run_cmds.TryGetValue(dnx_run_cmd, out dnx_run_cmd_obj))
     {
-        ExecuteRunCmd(dnx_run_cmd, dnx_run_path, dnx_run_quiet);
+        ExecuteRunCmd(dnx_run_cmd, dnx_run_options, dnx_run_project, dnx_run_quiet);
     }
 }
 
-macro name='ExecuteRunCmd' dnx_args='string' dnx_path='string' dnx_quiet='bool'
+macro name='ExecuteRunCmd' dnx_args='string' dnx_options='string' dnx_path='string' dnx_quiet='bool'
     dnx dnx_wait='${ false }'

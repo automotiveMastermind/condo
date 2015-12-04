@@ -8,6 +8,8 @@ base_path='$(CurrentDirectory)'
 
 */}
 
+use namespace = 'System.Net'
+
 default base_path               = '${ Directory.GetCurrentDirectory() }'
 
 var update_self_base_uri        = 'https://raw.githubusercontent.com/pulsebridge/condo/develop/src/template/'
