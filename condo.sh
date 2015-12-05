@@ -100,7 +100,6 @@ fi
 
 # upgrade dnx to latest
 dnvm install latest -r coreclr -alias default
-dnu commands install Microsoft.Dnx.Watcher 1>/dev/null 2>&1
 dnvm install latest -r mono -alias -default
 
 # set sake and make file paths
