@@ -67,5 +67,5 @@ log log_name='wait'         log_value='${ grunt_wait }'
 log log_name='quiet'        log_value='${ grunt_quiet }'
 log log_line='-'
 
-exec exec_cmd='${ grunt_cmd.Path }' exec_args='${ grunt_args } ${ grunt_options }' exec_path='${ grunt_path }' exec_wait='${ grunt_wait }' exec_quiet='${ grunt_quiet }' if='grunt_cmd.Global'
+exec exec_cmd='${ grunt_cmd.Path }' exec_args='${ grunt_args } ${ grunt_options }' exec_path='${ grunt_path }' exec_wait='${ grunt_wait }' exec_quiet='${ grunt_quiet }' exec_redirect='${ false }' if='grunt_cmd.Global'
 node node_args='"${ grunt_cmd.Path }" ${ grunt_args } ${ grunt_options }' node_path='${ grunt_path }' node_wait='${ grunt_wait }' node_quiet='${ grunt_quiet }' if='!grunt_cmd.Global'

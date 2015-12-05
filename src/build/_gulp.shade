@@ -67,5 +67,5 @@ log log_name='wait'         log_value='${ gulp_wait }'
 log log_name='quiet'        log_value='${ gulp_quiet }'
 log log_line='-'
 
-exec exec_cmd='${ gulp_cmd.Path }' exec_args='${ gulp_args } ${ gulp_options }' exec_path='${ gulp_path }' exec_wait='${ gulp_wait }' exec_quiet='${ gulp_quiet }' if='gulp_cmd.Global'
+exec exec_cmd='${ gulp_cmd.Path }' exec_args='${ gulp_args } ${ gulp_options }' exec_path='${ gulp_path }' exec_wait='${ gulp_wait }' exec_quiet='${ gulp_quiet }' exec_redirect='${ false }' if='gulp_cmd.Global'
 node node_args='"${ gulp_cmd.Path }" ${ gulp_args } ${ gulp_options }' node_path='${ gulp_path }' node_wait='${ gulp_wait }' node_quiet='${ gulp_quiet }' if='!gulp_cmd.Global'

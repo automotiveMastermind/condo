@@ -31,9 +31,11 @@ dnx_quiet='$(Build.Log.Quiet)'
 
 use import = 'Condo.Build'
 
+dnvm-locate once='dnvm-locate'
+
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
-default dnvm_path       = ''
+default dnvm_path       = '${ Build.GetPath("dnvm").Path }'
 
 default dnx_args        = ''
 default dnx_runtime     = ''
@@ -46,8 +48,6 @@ log log_header='dnx'
 log log_line='-'
 
 var dnx_exec_cmd        = 'dnx'
-var dnx_where_cmd       = '${ Build.Unix ? "which" : "where" }'
-var dnx_dnvm_cmd        = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
 
 @{
     if (string.IsNullOrEmpty(dnx_args))
@@ -73,22 +73,14 @@ log log_line='-'
 @{
     if (!string.IsNullOrEmpty(dnx_runtime))
     {
-        if (string.IsNullOrEmpty(dnvm_path))
-        {
-            if (!Build.TryExecute(dnx_where_cmd, out dnvm_path, dnx_dnvm_cmd) || string.IsNullOrEmpty(dnvm_path))
-            {
-                dnvm_path = Path.Combine(Build.Get("HOME"), ".dnx", "dnvm", "dnvm.sh");
-            }
-        }
-
         if (Build.Unix)
         {
-            dnx_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3} {4}'", dnvm_path, dnx_runtime, dnx_exec_cmd, dnx_options, dnx_args);
+            dnx_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3} {4}'", dnvm_path, dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
             dnx_exec_cmd = "/usr/bin/env";
         }
         else
         {
-            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_options, dnx_args);
+            dnx_args = string.Format(@"use {0} && {1} {2} {3}", dnx_runtime, dnx_exec_cmd, dnx_args, dnx_options);
             dnx_exec_cmd = dnvm_path;
         }
 
@@ -96,4 +88,4 @@ log log_line='-'
     }
 }
 
-exec exec_cmd='${ dnx_exec_cmd }' exec_args='${ dnx_options } ${ dnx_args }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'
+exec exec_cmd='${ dnx_exec_cmd }' exec_args='${ dnx_args } ${ dnx_options }' exec_path='${ dnx_path }' exec_wait='${ dnx_wait }' exec_quiet='${ dnx_quiet }'

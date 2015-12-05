@@ -53,4 +53,4 @@ log log_name='wait'         log_value='${ node_wait }'
 log log_name='quiet'        log_value='${ node_quiet }'
 log log_line='-'
 
-exec exec_cmd='${ node_cmd.Path }' exec_args='${ node_args }' exec_path='${ node_path }' exec_wait='${ node_wait }' exec_quiet='${ node_quiet }'
+exec exec_cmd='${ node_cmd.Path }' exec_args='${ node_args }' exec_path='${ node_path }' exec_wait='${ node_wait }' exec_quiet='${ node_quiet }' exec_redirect='${ false }'

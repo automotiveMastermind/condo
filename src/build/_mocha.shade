@@ -80,5 +80,5 @@ log log_line='-'
     mocha_options = mocha_options.Trim();
 }
 
-exec exec_cmd='${ mocha_cmd.Path }' exec_args='${ mocha_args } ${ mocha_options }' exec_path='${ mocha_path }' if='mocha_cmd.Global'
+exec exec_cmd='${ mocha_cmd.Path }' exec_args='${ mocha_args } ${ mocha_options }' exec_path='${ mocha_path }' exec_redirect='${ false }' if='mocha_cmd.Global'
 node node_args='"${ mocha_cmd.Path }" ${ mocha_args } ${ mocha_options }' node_path='${ mocha_path }' if='!mocha_cmd.Global'

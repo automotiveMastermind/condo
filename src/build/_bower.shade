@@ -69,5 +69,5 @@ log log_line='-'
 
 - bower_options = (bower_options + " --config.interactive=false").Trim();
 
-exec exec_cmd='${ bower_cmd.Path }' exec_args='${ bower_args } ${ bower_options }' exec_path='${ bower_path }' exec_quiet='${ bower_quiet }' if='bower_cmd.Global'
+exec exec_cmd='${ bower_cmd.Path }' exec_args='${ bower_args } ${ bower_options }' exec_path='${ bower_path }' exec_quiet='${ bower_quiet }' if='bower_cmd.Global' exec_redirect='${ false }'
 node node_args='"${ bower_cmd.Path }" ${ bower_args } ${ bower_options }' node_path='${ bower_path }' node_wait='${ bower_wait }' node_quiet='${ bower_quiet }' if='!bower_cmd.Global'

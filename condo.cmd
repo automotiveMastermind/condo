@@ -55,6 +55,7 @@ SETLOCAL
     )
 
     CALL "%DNVMCMD%" install latest -r coreclr -a x86 -nonative -alias default
+    dnu commands install Microsoft.Dnx.Watcher 1>nul 2>&1
     CALL "%DNVMCMD%" install latest -r clr -a x86 -nonative -alias default
 
     SET SAKEPKG=packages\Sake
