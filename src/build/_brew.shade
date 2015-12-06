@@ -59,4 +59,4 @@ log log_name='wait'         log_value='${ brew_wait }'
 log log_name='quiet'        log_value='${ brew_quiet }'
 log log_line='-'
 
-exec exec_cmd='brew' exec_args='${ brew_options } ${ brew_args }' exec_wait='${ brew_wait }' exec_quiet='${ brew_quiet }'
+exec exec_cmd='brew' exec_args='${ brew_options } ${ brew_args }' exec_wait='${ brew_wait }' exec_quiet='${ brew_quiet }' exec_redirect='${ false }'

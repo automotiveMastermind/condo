@@ -66,4 +66,4 @@ log log_name='wait'         log_value='${ git_wait }'
 log log_name='quiet'        log_value='${ git_quiet }'
 log log_line='-'
 
-exec exec_cmd='git' exec_args='${ git_options } ${ git_args }' exec_path='${ git_path }' exec_wait='${ git_wait }' exec_quiet='${ git_quiet }'
+exec exec_cmd='git' exec_args='${ git_options } ${ git_args }' exec_path='${ git_path }' exec_wait='${ git_wait }' exec_quiet='${ git_quiet }' exec_redirect='${ false }'

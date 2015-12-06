@@ -75,4 +75,4 @@ log log_line='-'
     npm_options = npm_options.Trim();
 }
 
-exec exec_cmd='${ npm_cmd.Path }' exec_args='${ npm_options } ${ npm_args }' exec_path='${ npm_path }' exec_wait='${ npm_wait }' exec_quiet='${ npm_quiet }'
+exec exec_cmd='${ npm_cmd.Path }' exec_args='${ npm_options } ${ npm_args }' exec_path='${ npm_path }' exec_wait='${ npm_wait }' exec_quiet='${ npm_quiet }' exec_redirect='${ false }'

@@ -1,3 +1,5 @@
+use import = 'Condo.Build'
+
 #default description='The default target, which is called if no other targets are indicated. By default, this will call the clean, test, and package targets.' @{
     CallTarget("print-properties");
     CallTarget("verify");
@@ -17,7 +19,9 @@
 
 #compile .initialize description='Compiles the project.'
 
-#run .initialize description='Starts the process for a project.'
+#run .compile description='Starts the process for a project.'
+
+#watch .compile description='Starts the process for a project and watches for changes.' -CallTarget('wait');
 
 #test-compile .compile description='Compiles the project in preparation for executing tests.'
 #test .test-compile description='The default test target.' -CallTarget("test-coverage");
@@ -64,5 +68,7 @@ functions @{
 
 #targets for each='var target in Targets.Keys' -ListTargets(target);
 
-#update-self
+#update-self description='Updates the command line scripts for condo, including the NuGet package.'
     update-self
+
+#wait description='Waits for all processes to finish. Can be terminated by pressing <Ctrl> + C.' -Build.Wait();

@@ -10,3 +10,6 @@ var test_path           = 'test'
 
 use-condo-lifecycle
 use-condo-goals
+
+#watch-gulp target='watch'
+    log info='Multiple watchers are available'

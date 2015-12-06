@@ -1,0 +1,27 @@
+@{/*
+
+dnvm-locate
+    Locates the dnvm script and adds it the build paths.
+
+*/}
+
+var dnvm_locate_where_cmd   = '${ Build.Unix ? "which" : "where" }'
+var dnvm_locate_cmd         = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
+var dnvm_locate_found       = '${ false }' type='bool'
+
+log log_header='dnvm-locate'
+log log_line='-'
+
+@{
+    dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, dnvm_locate_cmd);
+
+    if (!dnvm_locate_found)
+    {
+        throw new NotSupportedException("dnvm-locate: could not find an instance of dnvm. The build process cannot continue");
+    }
+
+    Build.SetPath("dnvm", dnvm_locate_cmd, true);
+}
+
+log log_name='path' log_value='${ dnvm_locate_cmd }'
+log log_line='-'

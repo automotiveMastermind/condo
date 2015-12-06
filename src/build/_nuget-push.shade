@@ -62,6 +62,8 @@ log log_name='arguments'  log_value='${ nuget_push_args }'
 log log_name='options'    log_value='${ nuget_push_options }'
 log log_name='retries'    log_value='${ nuget_push_retries }'
 
+var nuget_push_pr               = '${ Build.PullRequest }' type='bool'
+
 @{
     if (File.Exists(nuget_config_path))
     {
@@ -91,6 +93,11 @@ log log_line='-'
     {
         var nuget_push_feeds = nuget_push_feed.Split(";"[0]);
 
+        if (nuget_push_pr)
+        {
+            nuget_push_pr = nuget_push_feeds.Any(feed => feed.StartsWith("http"));
+        }
+
         foreach (var feed in nuget_push_feeds)
         {
             if (!feed.StartsWith("http"))
@@ -103,5 +110,5 @@ log log_line='-'
     }
 }
 
-nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' nuget_retries='${ nuget_push_retries }' if='!string.IsNullOrEmpty(nuget_push_apikey)'
-nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_retries='${ nuget_push_retries }'
+nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' nuget_retries='${ nuget_push_retries }' if='!string.IsNullOrEmpty(nuget_push_apikey) && !nuget_push_pr'
+nuget nuget_args='push "${ nuget_push_args }"' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_retries='${ nuget_push_retries }' if='!nuget_push_pr'

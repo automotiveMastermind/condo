@@ -482,6 +482,42 @@ functions @{
             }
         }
 
+        private static string pullRequestId;
+
+        public static string PullRequestId
+        {
+            get
+            {
+                return pullRequestId;
+            }
+
+            set
+            {
+                pullRequestId = value;
+
+                Build.Set("BUILD_PULLREQUEST", value);
+
+                Build.PullRequest = !string.IsNullOrEmpty(value);
+            }
+        }
+
+        private static string repositoryProvider;
+
+        public static string RepositoryProvider
+        {
+            get
+            {
+                return repositoryProvider;
+            }
+
+            set
+            {
+                repositoryProvider = value;
+
+                Build.Set("BUILD_REPOSITORY_PROVIDER", value);
+            }
+        }
+
         public static string Product { get; set; }
 
         public static string Company { get; set; }

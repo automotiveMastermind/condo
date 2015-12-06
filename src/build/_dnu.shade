@@ -31,10 +31,12 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
+dnvm-locate once='dnvm-locate'
+
 default base_path           = '${ Directory.GetCurrentDirectory() }'
 default working_path        = '${ base_path }'
 default dnu_path            = '${ working_path }'
-default dnvm_path           = ''
+default dnvm_path           = '${ Build.GetPath("dnvm").Path }'
 
 default dnu_args            = ''
 default dnu_options         = '${ Build.Get("DNU_OPTIONS") }'
@@ -43,8 +45,6 @@ default dnu_quiet           = '${ Build.Log.Quiet }'
 default dnu_runtime         = ''
 
 var dnu_exec_cmd            = 'dnu'
-var dnu_where_cmd           = '${ Build.Unix ? "which" : "where" }'
-var dnu_dnvm_cmd            = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
 
 log log_header='dnu'
 log log_line='-'
@@ -73,15 +73,7 @@ log log_line='-'
 @{
     if (!string.IsNullOrEmpty(dnu_runtime))
     {
-        if (string.IsNullOrEmpty(dnvm_path))
-        {
-            if (!Build.TryExecute(dnu_where_cmd, out dnvm_path, dnu_dnvm_cmd) || string.IsNullOrEmpty(dnvm_path))
-            {
-                dnvm_path = Path.Combine(Build.Get("HOME"), ".dnx", "dnvm", "dnvm.sh");
-            }
-        }
-
-        dnu_options = ("\"" + dnu_path + "\" " + dnu_options).Trim();
+        dnu_args = (dnu_args + " \"" + dnu_path + "\"").Trim();
 
         if (Build.Unix)
         {

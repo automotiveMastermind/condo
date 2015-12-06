@@ -71,7 +71,7 @@ functions @{
         public void Error(object value)
         {
             var padded = (value ?? string.Empty).ToString().Trim();
-            padded = padded.PadLeft(2 + padded.Length);
+            padded = padded.PadLeft(3 + padded.Length);
 
             this.log.Error(padded);
         }
@@ -162,6 +162,8 @@ functions @{
                 return id == 4;
             }
         }
+
+        public static bool PullRequest { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether or not the build environment is executing within the
@@ -261,6 +263,49 @@ functions @{
         }
 
         /// <summary>
+        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
+        /// whether or not it succeeds at the command line.
+        /// </summary>
+        /// <param name="command">
+        /// The command to execute at the command line.
+        /// </param>
+        /// <param name="args">
+        /// The arguments to execute at the command line.
+        /// </param>
+        /// <param name="workingPath">
+        /// The path in which to execute the specified <paramref name="command"/>.
+        /// </param>
+        /// <param name="quiet">
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
+        /// process.
+        /// </param>
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
+        /// </param>
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
+        /// </param>
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
+        /// </param>
+        public static bool TryExecute
+            (
+                string command,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
+        {
+            string result;
+            int exitCode;
+
+            return Build.TryExecute(command, out exitCode, out result, args, workingPath, quiet, wait, redirect, attempts);
+        }
+
+        /// <summary>
         /// Attempts to execute the specified <paramref name="command"/> with the optionally specified <paramref name="args"/>.
         /// </summary>
         /// <param name="command">
@@ -279,23 +324,77 @@ functions @{
         /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
-        public static bool TryExecute(string command, out int exitCode, string args = "", string workingPath = "", bool quiet = false)
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
+        /// </param>
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
+        /// </param>
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
+        /// </param>
+        public static bool TryExecute
+            (
+                string command,
+                out int exitCode,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
         {
             string result;
 
-            try
-            {
-                // attempt to execute the command
-                exitCode = Build.Execute(command, out result, args, workingPath, quiet);
-            }
-            catch
-            {
-                // set the exit code to -1 as a default error
-                exitCode = -1;
-            }
+            return Build.TryExecute(command, out exitCode, out result, args, workingPath, quiet, wait, redirect, attempts);
+        }
 
-            // return true if the exit code is 0
-            return exitCode == 0;
+        /// <summary>
+        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
+        /// whether or not it succeeds at the command line.
+        /// </summary>
+        /// <param name="command">
+        /// The command to execute at the command line.
+        /// </param>
+        /// <param name="result">
+        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process
+        /// was not successful.
+        /// </param>
+        /// <param name="args">
+        /// The arguments to execute at the command line.
+        /// </param>
+        /// <param name="workingPath">
+        /// The path in which to execute the specified <paramref name="command"/>.
+        /// </param>
+        /// <param name="quiet">
+        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
+        /// process.
+        /// </param>
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
+        /// </param>
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
+        /// </param>
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
+        /// </param>
+        public static bool TryExecute
+            (
+                string command,
+                out string result,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
+        {
+            int exitCode;
+
+            return Build.TryExecute(command, out exitCode, out result, args, workingPath, quiet, wait, redirect, attempts);
         }
 
         /// <summary>
@@ -324,17 +423,31 @@ functions @{
         /// <param name="wait">
         /// A value indicating whether or not to wait for the process to exit.
         /// </param>
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
+        /// </param>
         /// <param name="attempts">
         /// The total number of attempts to try for a successful result.
         /// </param>
-        public static bool TryExecute(string command, out int exitCode, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true, int attempts = 1)
+        public static bool TryExecute
+            (
+                string command,
+                out int exitCode,
+                out string result,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
         {
             result = null;
 
             try
             {
                 // attempt to execute the command
-                exitCode = Build.Execute(command, out result, args, workingPath, quiet, wait, attempts);
+                exitCode = Build.Execute(command, out result, args, workingPath, quiet, wait, redirect, attempts);
             }
             catch (Exception netEx)
             {
@@ -366,65 +479,29 @@ functions @{
         /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
         /// process.
         /// </param>
-        public static bool TryExecute(string command, string args = "", string workingPath = "", bool quiet = false)
-        {
-            string result;
-            int exitCode;
-
-            return Build.TryExecute(command, out exitCode, out result, args, workingPath, quiet);
-        }
-
-        /// <summary>
-        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
-        /// whether or not it succeeds at the command line.
-        /// </summary>
-        /// <param name="command">
-        /// The command to execute at the command line.
+        /// <param name="wait">
+        /// A value indicating whether or not to wait for the process to exit.
         /// </param>
-        /// <param name="result">
-        /// When the method returns, will contain the output from standard output if the process was successful or standard error if the process
-        /// was not successful.
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
         /// </param>
-        /// <param name="args">
-        /// The arguments to execute at the command line.
+        /// <param name="attempts">
+        /// The total number of attempts to try for a successful result.
         /// </param>
-        /// <param name="workingPath">
-        /// The path in which to execute the specified <paramref name="command"/>.
-        /// </param>
-        /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
-        /// process.
-        public static bool TryExecute(string command, out string result, string args = "", string workingPath = "")
-        {
-            result = null;
-
-            int exitCode;
-
-            return Build.TryExecute(command, out exitCode, out result, args, workingPath, true);
-        }
-
-        /// <summary>
-        /// Executes the specified <paramref name="command"/> with the specified <paramref name="arguments"/> and determines
-        /// whether or not it succeeds at the command line.
-        /// </summary>
-        /// <param name="command">
-        /// The command to execute at the command line.
-        /// </param>
-        /// <param name="args">
-        /// The arguments to execute at the command line.
-        /// </param>
-        /// <param name="workingPath">
-        /// The path in which to execute the specified <paramref name="command"/>.
-        /// </param>
-        /// <param name="quiet">
-        /// A value indicating whether or not to execute the specified <paramref name="command"/> without emitting output from the
-        /// process.
-        /// </param>
-        public static int Execute(string command, string args = "", string workingPath = "", bool quiet = false)
+        public static int Execute
+            (
+                string command,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
         {
             string result;
 
-            return Build.Execute(command, out result, args, workingPath, quiet);
+            return Build.Execute(command, out result, args, workingPath, quiet, wait, redirect, attempts);
         }
 
         /// <summary>
@@ -451,10 +528,23 @@ functions @{
         /// <param name="wait">
         /// A value indicating whether or not to wait for the process to exit.
         /// </param>
+        /// <param name="redirect">
+        /// A value indicating whether or not to redirect output.
+        /// </param>
         /// <param name="attempts">
         /// The total number of attempts to try for a successful result.
         /// </param>
-        public static int Execute(string command, out string result, string args = "", string workingPath = "", bool quiet = true, bool wait = true, int attempts = 1)
+        public static int Execute
+            (
+                string command,
+                out string result,
+                string args = "",
+                string workingPath = "",
+                bool quiet = true,
+                bool wait = true,
+                bool redirect = true,
+                int attempts = 1
+            )
         {
             result = null;
 
@@ -478,7 +568,7 @@ functions @{
             info.WorkingDirectory = workingPath;
             info.UseShellExecute = false;
 
-            if (quiet)
+            if (redirect)
             {
                 info.RedirectStandardOutput = true;
                 info.RedirectStandardError = true;
@@ -489,26 +579,59 @@ functions @{
 
             while (retries-- > 0)
             {
+                // create the process
+                var process = new Process();
+                process.StartInfo = info;
+                process.EnableRaisingEvents = true;
+
+                var standard = string.Empty;
+                var error = string.Empty;
+
+                process.OutputDataReceived += (sender, eventArgs) => {
+                    standard += eventArgs.Data;
+
+                    if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
+                    {
+                        Build.Log.Verbose(eventArgs.Data);
+                    }
+                };
+
+                process.ErrorDataReceived += (sender, eventArgs) => {
+                    error += eventArgs.Data;
+
+                    if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
+                    {
+                        Build.Log.Error(eventArgs.Data);
+                    }
+                };
+
                 // start the process
-                var process = Process.Start(info);
+                process.Start();
+
+                if (redirect)
+                {
+                    // begin reading output and error streams
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+                }
 
                 if (wait || process.HasExited)
                 {
                     // wait for the process to exit
                     process.WaitForExit();
 
-                    if (quiet)
+                    // determine if the exit code is an error
+                    if (process.ExitCode == 0)
                     {
-                        // read out the results
-                        result = (process.ExitCode == 0 ? process.StandardOutput.ReadToEnd() : process.StandardError.ReadToEnd()).Trim();
-                    }
+                        // set the result to the standard out
+                        result = standard;
 
-                    // determine if the exit code is zero
-                    if (process.ExitCode == 133 || process.ExitCode == 0)
-                    {
                         // move on immediately
                         return 0;
                     }
+
+                    // set the result to the standard error
+                    result = error;
 
                     // set the exit code
                     exitCode = process.ExitCode;
@@ -530,18 +653,38 @@ functions @{
 
         public static void Wait()
         {
-            Console.WriteLine(string.Empty);
+            Console.WriteLine();
+            Console.WriteLine("Press <Ctrl> + C to cancel.");
 
-            do
-            {
-                Console.WriteLine("Press <enter> or <return> to stop all processes and exit.");
-            } while(!Console.ReadKey().Key.Equals(ConsoleKey.Enter));
+            Console.TreatControlCAsInput = false;
+            Console.CancelKeyPress += (sender, args) =>
+                {
+                    foreach (var process in Processes)
+                    {
+                        try
+                        {
+                            process.Kill();
+                            process.Close();
+                            Build.Log.Verbose(string.Format("Process {0} has exited with code {1}.", process.StartInfo.FileName, process.ExitCode));
+                        }
+                        catch
+                        {
+                        }
+                    }
+                };
 
             foreach (var process in Processes)
             {
+                if (!process.HasExited)
+                {
+                    Build.Log.Verbose(string.Format("Waiting for process {0} to exit.", process.StartInfo.FileName));
+                    process.WaitForExit();
+                }
+
                 try
                 {
-                    process.Kill();
+                    Build.Log.Verbose(string.Format("Process {0} has exited with code {1}.", process.StartInfo.FileName, process.ExitCode));
+                    process.Close();
                 }
                 catch
                 {

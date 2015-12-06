@@ -54,4 +54,4 @@ log log_name='path'         log_value='${ ruby_path }'
 log log_name='wait'         log_value='${ ruby_wait }'
 log log_name='quiet'        log_value='${ ruby_quiet }'
 
-exec exec_cmd='ruby' exec_args='${ ruby_options } "${ ruby_args }"' exec_path='${ ruby_path }'
+exec exec_cmd='ruby' exec_args='${ ruby_options } "${ ruby_args }"' exec_path='${ ruby_path }' exec_redirect='${ false }'
