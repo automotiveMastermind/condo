@@ -119,19 +119,19 @@ The following global arguments are used by bower:
 blah
 
 #### Install all packages defined in bower.json
-{% highlight shell %}
+{% highlight sh %}
 #install-bower-packages
     bower bower_args='install'
 {% endhighlight %}
 
 #### Install Bootstrap via Bower and update the bower.json file with the dependency
-{% highlight shell %}
+{% highlight sh %}
 #example
     bower bower_args='install bootstrap' bower_options='--save-dev'
 {% endhighlight %}
 
 #### Install Bootstrap via Bower quietly and do not wait for exit
-{% highlight shell %}
+{% highlight sh %}
 #example
     bower bower_args='install bootstrap' bower_quiet='${ true }' bower_wait='${ false }'
 {% endhighlight %}
