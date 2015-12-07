@@ -125,20 +125,20 @@ The following global arguments are used by bower:
 
 blah
 
-#### Install all packages defined in bower.json
+#### Execute Nuget commands via the command line tool (i.e., mono)
 {% highlight sh %}
-#install-bower-packages
-    bower bower_args='install'
+#run nuget command without options
+    run run_args='nuget.exe'
 {% endhighlight %}
 
-#### Install Bootstrap via Bower and update the bower.json file with the dependency
+#### Restore nuget packages
 {% highlight sh %}
-#example
-    bower bower_args='install bootstrap' bower_options='--save-dev'
+#run nuget command and provide retore flag
+    run run_args='nuget.exe' run_options='restore'
 {% endhighlight %}
 
-#### Install Bootstrap via Bower quietly and do not wait for exit
+#### Specify at what path to run a command
 {% highlight sh %}
-#example
-    bower bower_args='install bootstrap' bower_quiet='${ true }' bower_wait='${ false }'
+#run nuget command and provide retore flag
+    run run_args='example_command.exe' run_path='./myfolder'
 {% endhighlight %}
