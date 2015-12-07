@@ -93,3 +93,6 @@ nuget.exe
 
 # log files
 *.log
+
+_gh_pages/**
+.sass-cache/**

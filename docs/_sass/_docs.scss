@@ -1,0 +1,34 @@
+@import "vnd/variables";
+@import "vnd/mixins";
+
+$docs-purple:         #563d7c;
+$docs-purple-bright:  lighten(saturate($docs-purple, 5%), 15%);
+$docs-purple-light:   #cdbfe3;
+$docs-graphite:       #2a2730;
+$docs-graphite-light: lighten($docs-graphite, 40%);
+$docs-yellow:         #ffe484;
+$docs-danger:         #d9534f;
+$docs-warning:        #f0ad4e;
+$docs-info:           #5bc0de;
+
+@import "booticon";
+@import "nav";
+@import "masthead";
+@import "featurettes";
+@import "featured-sites";
+@import "content";
+@import "page-header";
+@import "skiplink";
+@import "sidebar";
+@import "footer";
+@import "component-examples";
+@import "responsive-tests";
+@import "buttons";
+@import "callouts";
+@import "examples";
+@import "team";
+@import "brand";
+@import "clipboard-js";
+
+@import "syntax";
+@import "anchor";

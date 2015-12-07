@@ -1,0 +1,17 @@
+- title: Getting started
+  pages:
+    - title: Introduction
+    - title: Prerequisites
+    - title: Using Condo
+    - title: Cross-platform support
+    - title: Best practices
+
+- title: Shades
+  pages:
+    - title: Bower
+
+- title: About
+  pages:
+    - title: History
+    - title: Team
+    - title: License

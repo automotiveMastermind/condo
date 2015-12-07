@@ -12,17 +12,17 @@ bower_options='' (Environment Variable: BOWER_OPTIONS)
 bower_path='$(base_path)'
     The path in which to execute bower.
 
-base_path='$(CurrentDirectory)'
-    The base path in which to execute bower.
-
-working_path='$(base_path)'
-    The working path in which to execute bower.
-
 bower_wait='true'
     A value indicating whether or not to wait for exit.
 
 bower_quiet='$(Build.Log.Quiet)'
     A value indicating whether or not to avoid printing output.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute bower.
+
+working_path='$(base_path)'
+    The working path in which to execute bower.
 
 */}
 
