@@ -126,6 +126,18 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(base_path, "bower.json") }'
     bower-install each='var bower_install_path in paths'
 
+#restore-gems description='Restores all gems specified in a Gemfile.'
+    var paths = '${ Build.GetPathsContaining(base_path, "Gemfile") }'
+    bundle-install each='var bundle_install_path in paths'
+    var lower = '${ Build.GetPathsContaining(base_path, "gemfile") }'
+    bundle-install each='var bundle_install_path in lower'
+
+#restore-tsd-definitions description='Restores TypeScript definitions.'
+    var paths = '${ Build.GetPathsContaining(base_path, "tsd.json") }'
+    tsd tsd_args='install --resolve --overwrite --save' each='var tsd_path in paths'
+    tsd tsd_args='link' each='var tsd_path in paths'
+    tsd tsd_args='rebundle' each='var tsd_path in paths'
+
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
     dnu-restore each='var dnu_restore_path in paths'
@@ -134,7 +146,7 @@ default Coverage            = '${ false }'
     var paths = '${ Build.GetPathsContaining(src_path, "packages.config").Union(Build.GetPathsContaining(test_path, "packages.config")) }'
     nuget-restore each='var nuget_restore_path in paths'
 
-#restore-packages .restore-project-packages .restore-nuget-packages .restore-npm-modules .restore-bower-components target='restore' description='Restores all NuGet packages, Bower components, and NPM modules.'
+#restore-packages .restore-project-packages .restore-nuget-packages .restore-tsd-definitions .restore-npm-modules .restore-bower-components .restore-gems target='restore' description='Restores all NuGet packages, Bower components, and NPM modules.'
 
 #initialize-grunt description='Initializes the project by executing the default grunt task. This will install the grunt node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "gruntfile.js") }'

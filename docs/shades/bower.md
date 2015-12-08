@@ -1,5 +1,5 @@
 ---
-layout: shade
+layout: docs
 title: Bower
 group: shades
 ---

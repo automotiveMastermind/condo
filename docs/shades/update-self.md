@@ -1,5 +1,5 @@
 ---
-layout: shade
+layout: docs
 title: Update self
 group: shades
 ---
@@ -43,10 +43,6 @@ The following global arguments are used by bower:
     </table>
 </div>
 
-## Related
-
-There are no related shades.
-
 ## Examples
 
 Condo can update itself by adding the following call within any target:
@@ -56,3 +52,7 @@ Condo can update itself by adding the following call within any target:
 {% endhighlight %}
 
 The default lifecycle includes a target aptly named `#update-self` that calls this shade.
+
+## See Also
+
+There are no related shades.

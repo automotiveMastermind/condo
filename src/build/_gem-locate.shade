@@ -1,0 +1,30 @@
+@{/*
+
+gem-locate
+    Locates the gem command line utility available on the current path.
+
+*/}
+
+var gem_locate_where_cmd   = '${ Build.Unix ? "which" : "where" }'
+var gem_locate_cmd         = '${ "gem" }'
+var gem_locate_found       = '${ false }' type='bool'
+var gem_locate_version     = '' type='string'
+
+log log_header='gem-locate'
+log log_line='-'
+
+@{
+    gem_locate_found = Build.TryExecute(gem_locate_where_cmd, out gem_locate_cmd, gem_locate_cmd);
+
+    if (!gem_locate_found)
+    {
+        throw new NotSupportedException("gem-locate: could not find an instance of gem. The build process cannot continue.");
+    }
+
+    Build.SetPath("gem", gem_locate_cmd, true);
+    Build.TryExecute(gem_locate_cmd, out gem_locate_version, "--version");
+}
+
+log log_name='path'     log_value='${ gem_locate_cmd }'
+log log_name='version'  log_value='${ gem_locate_version }'
+log log_line='-'

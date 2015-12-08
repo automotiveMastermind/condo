@@ -1,5 +1,5 @@
 ---
-layout: shade
+layout: docs
 title: Run
 group: shades
 ---
@@ -114,10 +114,6 @@ The following global arguments are used by bower:
     </table>
 </div>
 
-## Related
-
-* [exec](/shades/exec)
-
 ## Examples
 
 Condo can execute any managed executable, regardless of the platform. On OS X and Linux, the executable is
@@ -138,3 +134,7 @@ run run_args='nuget.exe' run_options='restore'
 {% highlight sh %}
 run run_args='example_command.exe' run_path='./myfolder'
 {% endhighlight %}
+
+## See Also
+
+* [exec](/shades/exec)

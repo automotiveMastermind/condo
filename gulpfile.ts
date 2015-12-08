@@ -47,7 +47,7 @@ gulp.task('styles:compile', () => {
         .pipe(prod ? css() : util.noop())
         .pipe(prod ? rename({ suffix: '.min', extname: '.css' }) : util.noop())
         .pipe(prod ? util.noop() : maps.write('.'))
-        .pipe(gulp.dest('_docs/assets/css'))
+        .pipe(gulp.dest('.docs/assets/css'))
         .pipe(prod ? util.noop() : browser.stream());
 });
 
@@ -55,7 +55,7 @@ gulp.task('scripts:vnd:jquery', () => {
     return gulp
         .src('bower_components/jquery/dist/jquery.min.js')
         .pipe(gulp.dest('docs/assets/js/vnd/jquery'))
-        .pipe(gulp.dest('_docs/assets/js'));
+        .pipe(gulp.dest('.docs/assets/js'));
 });
 
 gulp.task('scripts:vnd:bootstrap', () => {
@@ -83,7 +83,7 @@ gulp.task('scripts:vnd:tether', () => {
 });
 
 gulp.task('clean', () => {
-    return del(['docs/assets/**/vnd', '_docs', '_docs_jekyll', 'docs/assets/**/docs*.js', 'docs/assets/**/docs*.css', 'docs/assets/**/docs*.map']);
+    return del(['docs/assets/**/vnd', '.docs', '.docs_jekyll', 'docs/assets/**/docs*.js', 'docs/assets/**/docs*.css', 'docs/assets/**/docs*.map']);
 });
 
 gulp.task('scripts:vnd', (done:any) => sequence([
@@ -108,25 +108,32 @@ gulp.task('scripts:compile', () => {
         .pipe(prod ? js() : util.noop())
         .pipe(concat(prod ? 'docs.min.js' : 'docs.js'))
         .pipe(prod ? util.noop() : maps.write('.'))
-        .pipe(gulp.dest('_docs/assets/js'))
+        .pipe(gulp.dest('.docs/assets/js'))
         .pipe(prod ? util.noop() : browser.stream());
 });
 
 gulp.task('fonts:vnd:font-awesome', () => {
     return gulp
         .src('bower_components/font-awesome/fonts/fontawesome-*')
-        .pipe(gulp.dest('_docs/assets/fonts'));
+        .pipe(gulp.dest('.docs/assets/fonts'));
 });
 
 gulp.task('fonts:vnd', (done:any) => sequence('fonts:vnd:font-awesome', done));
 
 gulp.task('html:build', shell.task('jekyll build'));
+
 gulp.task('html:compile', () => {
     return gulp
-        .src('_docs_jekyll/**/*.html')
+        .src('.docs_jekyll/**/*.html')
         .pipe(prod ? html({ cdata: true, conditionals: true }) : util.noop())
-        .pipe(gulp.dest('_docs'));
+        .pipe(gulp.dest('.docs'));
 });
+
+gulp.task('html:static', () => {
+    return gulp
+        .src('.docs_jekyll/*')
+        .pipe(gulp.dest('.docs'));
+})
 
 gulp.task('dev', () => {
     prod = false;
@@ -135,7 +142,7 @@ gulp.task('dev', () => {
 gulp.task('serve', () => {
     browser.init({
         server: {
-            baseDir: '_docs'
+            baseDir: '.docs'
         }
     });
 });
@@ -147,7 +154,7 @@ gulp.task('reload', ['html'], () => {
 gulp.task('styles', (done:any) => sequence('styles:vnd', 'styles:compile', done));
 gulp.task('scripts', (done:any) => sequence('scripts:vnd', 'scripts:compile', done));
 gulp.task('fonts', (done:any) => sequence('fonts:vnd', done));
-gulp.task('html', (done:any) => sequence('html:build', 'html:compile', done));
+gulp.task('html', (done:any) => sequence('html:build', ['html:compile', 'html:static'], done));
 gulp.task('docs', (done:any) => sequence('clean', 'html', ['styles', 'scripts', 'fonts'], done));
 
 gulp.task('sync', (done:any) => {

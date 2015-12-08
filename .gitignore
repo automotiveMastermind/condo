@@ -20,7 +20,6 @@ x86/
 [Bb]ower_[Cc]omponents/
 
 # visual studio 2015 cache/options
-.vs/
 [Pp]roject.lock.json
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
 
@@ -115,5 +114,6 @@ bower.cmd
 
 # docs
 vnd/
-_docs/
-_docs_jekyll/
+
+# hidden folders
+.*/

@@ -9,6 +9,9 @@ info=''
 warn=''
     The warning message to log.
 
+error=''
+    The error message to log.
+
 verbose=''
     The verbose message to log.
 
