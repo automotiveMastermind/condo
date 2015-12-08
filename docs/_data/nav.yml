@@ -1,16 +1,70 @@
-- title: Getting started
+- title: Start
   pages:
-    - title: Introduction
+    - title: Overview
     - title: Prerequisites
-    - title: Using Condo
-    - title: Cross-platform support
-    - title: Best practices
+    - title: Default Lifecycle
+    - title: Default Goals
+    - title: Best Practices
+    - title: Cross-Platform Support
 
 - title: Shades
   pages:
-    - title: Bower
-    - title: Update Self
-    - title: Run
+    - title: bower
+    - title: Bower-download
+    - title: bower-install
+    - title: brew
+    - title: brew-download
+    - title: brew-install
+    - title: clean
+    - title: copy
+    - title: cover
+    - title: cover-report
+    - title: dnu
+    - title: dnu-build
+    - title: dnu-pack
+    - title: dnu-restore
+    - title: dnvm-locate
+    - title: dnx
+    - title: dnx-run
+    - title: dnx-test
+    - title: dnx-watch
+    - title: dnx-watch-download
+    - title: exec
+    - title: git
+    - title: git-config
+    - title: git-tag
+    - title: gm-download
+    - title: grunt
+    - title: grunt-download
+    - title: gulp
+    - title: gulp-download
+    - title: info
+    - title: info-collect
+    - title: log
+    - title: mkdir
+    - title: mocha
+    - title: mocha-download
+    - title: node
+    - title: node-download
+    - title: npm
+    - title: npm-install
+    - title: nuget
+    - title: nuget-download
+    - title: nuget-install
+    - title: nuget-pack
+    - title: nuget-push
+    - title: nuget-restore
+    - title: rimraf
+    - title: rimraf-download
+    - title: ruby
+    - title: run
+    - title: update-self
+    - title: verify-hash
+
+- title: Utilities
+  pages:
+    - title: Build
+    - title: AssemblyInfo
 
 - title: About
   pages:

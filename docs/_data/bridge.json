@@ -1,9 +1,0 @@
-{
-  "paths": {
-    "docs": [
-      "../assets/js/vnd/anchor.min.js",
-      "../assets/js/vnd/clipboard.min.js",
-      "../assets/js/vnd/holder.min.js"
-    ]
-  }
-}

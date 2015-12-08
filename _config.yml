@@ -10,13 +10,13 @@ permalink:        pretty
 
 # Server
 source:           docs
-destination:      _gh_pages
+destination:      _docs_jekyll
 host:             0.0.0.0
 port:             9001
 baseurl:          ""
 url:              http://code.pulsebridge.com
 encoding:         UTF-8
-exclude:          [assets/scss/]
+exclude:          [assets/]
 
 gems:
   - jekyll-redirect-from
@@ -27,7 +27,7 @@ sass:
   compressed: true
 
 # Custom vars
-current_version:  4.0.0-alpha
+current_version:  1.0.0-rc
 repo:             https://github.com/pulsebridge/condo
 
 cdn:

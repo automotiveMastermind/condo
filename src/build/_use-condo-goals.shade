@@ -1,5 +1,6 @@
 use namespace = 'System'
 use namespace = 'System.IO'
+use namespace = 'System.Linq'
 
 use import = 'Condo.Build'
 use import = 'Condo.AssemblyInfo'
@@ -141,7 +142,12 @@ default Coverage            = '${ false }'
 
 #initialize-gulp description='Initializes the project by executing the default gulp task. This will install the gulp node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js") }'
+    var babel = '${ Build.GetPathsContaining(base_path, "gulpfile.babel.js") }'
+    var typescript = '${ Build.GetPathsContaining(base_path, "gulpfile.ts") }'
+
     gulp each='var gulp_path in paths'
+    gulp each='var gulp_path in babel'
+    gulp each='var gulp_path in typescript'
 
 #validate-info target='validate' description='Collects and validates assembly information used during the build.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'

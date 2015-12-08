@@ -1,6 +1,6 @@
 ---
 layout: shade
-title: Update Self
+title: Update self
 group: shades
 ---
 
@@ -10,17 +10,15 @@ Updates the build scripts located at the root of the project structure.
 * Will be replaced with the ToC, excluding the "Contents" header
 {:toc}
 
-### Supported Operating Systems
+## Supported Operating Systems
 
-* Windows
-* OS X
-* Linux
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
 
-### Arguments
+## Arguments
 
 This uses no arguments.
 
-### Global Arguments
+## Global Arguments
 
 The following global arguments are used by bower:
 
@@ -45,16 +43,16 @@ The following global arguments are used by bower:
     </table>
 </div>
 
-### Related
+## Related
 
 There are no related shades.
 
-### Examples
+## Examples
 
+Condo can update itself by adding the following call within any target:
 
-
-#### Update condo to the latest version
 {% highlight sh %}
-#update
     update-self
 {% endhighlight %}
+
+The default lifecycle includes a target aptly named `#update-self` that calls this shade.

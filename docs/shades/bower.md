@@ -7,16 +7,15 @@ group: shades
 Executes a bower package manager command
 
 ## Contents
-* Will be replaced with the ToC, excluding the "Contents" header
+
+* Will be replaced with the table of contents
 {:toc}
 
-### Supported Operating Systems
+## Supported Operating Systems
 
-* Windows
-* OS X
-* Linux
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
 
-### Arguments
+## Arguments
 
 The following optional arguments are available within bower.
 
@@ -71,7 +70,7 @@ The following optional arguments are available within bower.
     </table>
 </div>
 
-### Global Arguments
+## Global Arguments
 
 The following global arguments are used by bower:
 
@@ -108,30 +107,41 @@ The following global arguments are used by bower:
     </table>
 </div>
 
-### Related
+## Examples
 
-* one
-* two
-* three
+Condo can install all packages found within a bower.json file (on the working path):
 
-### Examples
-
-blah
-
-#### Install all packages defined in bower.json
 {% highlight sh %}
-#install-bower-packages
-    bower bower_args='install'
+bower bower_args='install'
 {% endhighlight %}
 
-#### Install Bootstrap via Bower and update the bower.json file with the dependency
+Note: Use the `bower-install` shade instead of calling `bower` directly. This shade exists primarily to support more specialized shades.
+
+### Bower with Options
+
 {% highlight sh %}
-#example
-    bower bower_args='install bootstrap' bower_options='--save-dev'
+bower bower_args='install bootstrap' bower_options='--save-dev'
 {% endhighlight %}
 
-#### Install Bootstrap via Bower quietly and do not wait for exit
+This would not be a likely scenario for a repeatable process, but its still possible.
+
+### Bower Asynchronously
+
 {% highlight sh %}
-#example
-    bower bower_args='install bootstrap' bower_quiet='${ true }' bower_wait='${ false }'
+bower bower_args='install bootstrap' bower_quiet='${ true }' bower_wait='${ false }'
 {% endhighlight %}
+
+Any processes created with a `false` wait argument are monitored. The default goals will wait for running processes that have not yet exited during the
+`#wait` stage of the default lifecycle. You can also use the `Build` utilities to wait for processes to complete at any time:
+
+{% highlight sh %}
+#my-stage target='post-restore'
+    - Build.Wait();
+{% endhighlight %}
+
+A shade will be introduced in the future that will wrap this utility method.
+
+## See Also
+
+* [bower-install](/shades/bower-install)
+* [bower-download](/shades/bower-download)

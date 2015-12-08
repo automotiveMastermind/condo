@@ -94,5 +94,9 @@ nuget.exe
 # log files
 *.log
 
-_gh_pages/**
-.sass-cache/**
+_docs/
+_docs_jekyll/
+.sass-cache/
+tsd/
+vnd/
+[Gg]emfile.lock

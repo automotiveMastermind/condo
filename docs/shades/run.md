@@ -7,16 +7,15 @@ group: shades
 Executes the run command line tool.
 
 ## Contents
+
 * Will be replaced with the ToC, excluding the "Contents" header
 {:toc}
 
-### Supported Operating Systems
+## Supported Operating Systems
 
-* Windows
-* OS X
-* Linux
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
 
-### Arguments
+## Arguments
 
 The following optional arguments are available within bower.
 
@@ -78,7 +77,7 @@ The following optional arguments are available within bower.
     </table>
 </div>
 
-### Global Arguments
+## Global Arguments
 
 The following global arguments are used by bower:
 
@@ -115,30 +114,27 @@ The following global arguments are used by bower:
     </table>
 </div>
 
-### Related
+## Related
 
-* one
-* two
-* three
+* [exec](/shades/exec)
 
-### Examples
+## Examples
 
-blah
+Condo can execute any managed executable, regardless of the platform. On OS X and Linux, the executable is
+passed to the mono bootstrapper, which obviously creates a dependency on mono.
 
-#### Execute Nuget commands via the command line tool (i.e., mono)
 {% highlight sh %}
-#run nuget command without options
-    run run_args='nuget.exe'
+run run_args='nuget.exe'
 {% endhighlight %}
 
-#### Restore nuget packages
+### Run with Options
+
 {% highlight sh %}
-#run nuget command and provide retore flag
-    run run_args='nuget.exe' run_options='restore'
+run run_args='nuget.exe' run_options='restore'
 {% endhighlight %}
 
-#### Specify at what path to run a command
+### Run in a Path
+
 {% highlight sh %}
-#run nuget command and provide retore flag
-    run run_args='example_command.exe' run_path='./myfolder'
+run run_args='example_command.exe' run_path='./myfolder'
 {% endhighlight %}
