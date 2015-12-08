@@ -10,7 +10,7 @@
 - title: Shades
   pages:
     - title: bower
-    - title: Bower-download
+    - title: bower-download
     - title: bower-install
     - title: brew
     - title: brew-download
@@ -30,6 +30,8 @@
     - title: dnx-watch
     - title: dnx-watch-download
     - title: exec
+    - title: gem
+    - title: gem-install
     - title: git
     - title: git-config
     - title: git-tag
@@ -58,6 +60,8 @@
     - title: rimraf-download
     - title: ruby
     - title: run
+    - title: tsd
+    - title: tsd-download
     - title: update-self
     - title: verify-hash
 
