@@ -20,13 +20,5 @@
 <script src="{{ site.baseurl }}/assets/js/docs.js"></script>
 {% endif %}
 {% if page.layout == "docs" %}
-<script>
-SimpleJekyllSearch.init({
-  searchInput: document.getElementById('search-input'),
-  resultsContainer: document.getElementById('search-results'),
-  searchResultTemplate: '<a class="dropdown-item" href="{url}">{title}</a>',
-  noResultsText: '<div class="dropdown-item no-results">Sorry, there are no results for that search.</div>',
-  json: '/search.json'
-});
-</script>
+<script src="{{ site.baseurl }}/assets/js/search.min.js"></script>
 {% endif %}

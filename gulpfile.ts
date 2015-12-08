@@ -82,11 +82,19 @@ gulp.task('scripts:vnd:tether', () => {
         .pipe(gulp.dest('docs/assets/js/vnd/tether'));
 });
 
+gulp.task('scripts:vnd:lunr', () => {
+    return gulp
+        .src('node_modules/lunr/lunr.min.js')
+        .pipe(gulp.dest('docs/assets/js/vnd/lunr'))
+        .pipe(gulp.dest('.docs/assets/js'));
+});
+
 gulp.task('clean', () => {
     return del(['docs/assets/**/vnd', '.docs', '.docs_jekyll', 'docs/assets/**/docs*.js', 'docs/assets/**/docs*.css', 'docs/assets/**/docs*.map']);
 });
 
 gulp.task('scripts:vnd', (done:any) => sequence([
+    'scripts:vnd:lunr',
     'scripts:vnd:jquery',
     'scripts:vnd:bootstrap',
     'scripts:vnd:anchor-js',
@@ -95,12 +103,13 @@ gulp.task('scripts:vnd', (done:any) => sequence([
 ], done));
 
 gulp.task('scripts:compile', () => {
-    const src =[
+    const src = [
         'docs/assets/js/vnd/tether/*.js',
         'docs/assets/js/vnd/clipboard/*.js',
         'docs/assets/js/vnd/anchor-js/*.js',
         'docs/assets/js/vnd/bootstrap/*.js',
-        'docs/assets/js/*.js'];
+        'docs/assets/js/*.js',
+        '!docs/assets/js/search*.js'];
 
     return gulp
         .src(src)
@@ -110,6 +119,18 @@ gulp.task('scripts:compile', () => {
         .pipe(prod ? util.noop() : maps.write('.'))
         .pipe(gulp.dest('.docs/assets/js'))
         .pipe(prod ? util.noop() : browser.stream());
+});
+
+gulp.task('scripts:search', () => {
+    const src = [
+        'docs/assets/js/search*.js'
+    ];
+
+    return gulp
+        .src(src)
+        .pipe(prod ? js() : util.noop())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest('.docs/assets/js'));
 });
 
 gulp.task('fonts:vnd:font-awesome', () => {
@@ -152,13 +173,13 @@ gulp.task('reload', ['html'], () => {
 });
 
 gulp.task('styles', (done:any) => sequence('styles:vnd', 'styles:compile', done));
-gulp.task('scripts', (done:any) => sequence('scripts:vnd', 'scripts:compile', done));
+gulp.task('scripts', (done:any) => sequence('scripts:vnd', ['scripts:compile', 'scripts:search'], done));
 gulp.task('fonts', (done:any) => sequence('fonts:vnd', done));
 gulp.task('html', (done:any) => sequence('html:build', ['html:compile', 'html:static'], done));
 gulp.task('docs', (done:any) => sequence('clean', 'html', ['styles', 'scripts', 'fonts'], done));
 
 gulp.task('sync', (done:any) => {
-    gulp.watch('docs/assets/js/*.js', ['scripts:compile']).on('deleted', (event) => delete cache.caches['scripts'][event.path]);
+    gulp.watch('docs/assets/js/*.js', ['scripts:compile', 'scripts:search']).on('deleted', (event) => delete cache.caches['scripts'][event.path]);
     gulp.watch('docs/assets/scss/**/*.scss', ['styles:compile']);
     gulp.watch(['docs/**/*.md', 'docs/**/*.rb', 'docs/**/*.yml'], ['reload']);
 });
