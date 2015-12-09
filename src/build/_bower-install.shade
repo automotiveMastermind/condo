@@ -32,18 +32,17 @@ default bower_install_id        = ''
 default bower_install_options   = '${ Build.Get("BOWER_INSTALL_OPTIONS") }'
 default bower_install_path      = '${ working_path }'
 
-log log_header='bower-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("bower-install");
+
     // trim the arguments
     bower_install_id = bower_install_id.Trim();
     bower_install_options = bower_install_options.Trim();
-}
 
-log log_name='package id'   log_value = '${ bower_install_id }'
-log log_name='options'      log_value='${ bower_install_options }'
-log log_name='path'         log_value='${ bower_install_path }'
-log log_line='-'
+    Build.Log.Argument("package id", bower_install_id);
+    Build.Log.Argument("options", bower_install_options);
+    Build.Log.Argument("path", bower_install_path);
+    Build.Log.Header();
+}
 
 bower bower_args='install ${ bower_install_id }' bower_options='${ bower_install_options }' bower_path='${ bower_install_path }'

@@ -32,10 +32,9 @@ default dnu_restore_path        = '${ working_path }'
 default dnu_restore_args        = ''
 default dnu_restore_options     = '${ Build.Get("DNU_RESTORE_OPTIONS") }'
 
-log log_header='dnu-restore'
-log log_line='-'
-
 @{
+    Build.Log.Header("dnu-restore");
+
     if (!string.IsNullOrEmpty(dnu_restore_args))
     {
         dnu_restore_args = dnu_restore_args.Trim();
@@ -45,11 +44,11 @@ log log_line='-'
     {
         dnu_restore_options = dnu_restore_options.Trim();
     }
-}
 
-log log_name='arguments' log_value='${ dnu_restore_args }'
-log log_name='options' log_value='${ dnu_restore_options }'
-log log_name='path' log_value='${ dnu_restore_path }'
-log log_line='-'
+    Build.Log.Argument("arguments", dnu_restore_args);
+    Build.Log.Argument("options", dnu_restore_options);
+    Build.Log.Argument("path", dnu_restore_path);
+    Build.Log.Header();
+}
 
 dnu dnu_args='restore ${ dnu_restore_args }' dnu_options='${ dnu_restore_options }' dnu_runtime='default -r coreclr' dnu_path='${ dnu_restore_path }'

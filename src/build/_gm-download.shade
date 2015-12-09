@@ -8,13 +8,18 @@ gm-download
 
 */}
 
-log log_header='gm'
-log log_line='-'
+use namespace = 'System'
 
-var gm_version      = ''
-var gm_installed    = '${ Build.TryExecute("gm", out gm_version, "-version") }'
+use import = 'Condo.Build'
 
-log log_name='version' log_value='${ gm_version }'
-log log_line='-'
+@{
+    Build.Log.Header("gm-download");
+
+    var gm_version = string.Empty;
+    var gm_installed = Build.TryExecute("gm", out gm_version, "-version");
+
+    Build.Log.Argument("version", gm_version);
+    Build.Log.Header();
+}
 
 brew-install brew_install_formula='graphicsmagick' if='!gm_installed && Build.OSX'

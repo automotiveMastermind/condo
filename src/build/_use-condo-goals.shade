@@ -1,3 +1,5 @@
+use assembly = 'System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'
+
 use namespace = 'System'
 use namespace = 'System.IO'
 use namespace = 'System.Linq'
@@ -49,6 +51,27 @@ default Coverage            = '${ false }'
         // make the test path a fully qualified path
         test_path = Path.Combine(base_path, test_path);
     }
+
+    Build.Log.Header();
+    Build.Log.Header("paths");
+    Build.Log.Argument("base path", base_path);
+    Build.Log.Argument("source path", src_path);
+    Build.Log.Argument("test path", test_path);
+    Build.Log.Argument("working path", working_path);
+    Build.Log.Argument("bin path", bin_path);
+    Build.Log.Argument("target path", target_path);
+
+    Build.Log.Argument("build results path", target_build_path);
+    Build.Log.Argument("test results path", target_test_path);
+    Build.Log.Argument("nuget packages path", target_package_path);
+    Build.Log.Header();
+
+    Build.Log.Header("options");
+    Build.Log.Argument("configuration", string.IsNullOrEmpty(configuration) ? "<All>" : configuration);
+    Build.Log.Argument("version", AssemblyInfo.AssemblyVersion);
+    Build.Log.Argument("date time (utc)", AssemblyInfo.BuildDateUtc);
+    Build.Log.Argument("quiet", Build.Log.Quiet);
+    Build.Log.Header();
 }
 
 #--quiet @{
@@ -64,29 +87,6 @@ default Coverage            = '${ false }'
 }
 
 #-q .--quiet
-
-#print-properties
-    log log_line='-'
-    log log_header='paths'
-    log log_line='-'
-    log log_name='base path'            log_value='${ base_path }'
-    log log_name='source path'          log_value='${ src_path }'
-    log log_name='test path'            log_value='${ test_path }'
-    log log_name='working path'         log_value='${ working_path }'
-    log log_name='bin path'             log_value='${ bin_path }'
-    log log_name='target path'          log_value='${ target_path }'
-    log log_name='build results path'   log_value='${ target_build_path }'
-    log log_name='test results path'    log_value='${ target_test_path }'
-    log log_name='nuget packages path'  log_value='${ target_package_path }'
-    log log_line='-'
-
-    log log_header='options'
-    log log_line='-'
-    log log_name='configuration' log_value='${ string.IsNullOrEmpty(configuration) ? "<All>" : configuration }'
-    log log_name='version' log_value='${ AssemblyInfo.AssemblyVersion }'
-    log log_name='date time (utc)' log_value='${ AssemblyInfo.BuildDateUtc }'
-    log log_name='quiet' log_value='${ Build.Log.Quiet }'
-    log log_line='-'
 
 #clean-bin description='Cleans the bin directory.' -Build.RemoveDirectory(bin_path);
 
@@ -127,16 +127,15 @@ default Coverage            = '${ false }'
     bower-install each='var bower_install_path in paths'
 
 #restore-gems description='Restores all gems specified in a Gemfile.'
-    var paths = '${ Build.GetPathsContaining(base_path, "Gemfile") }'
+    var paths = '${ Build.GetPathsContaining(base_path, "Gemfile").Union(Build.GetPathsContaining(base_path, "gemfile")) }'
     bundle-install each='var bundle_install_path in paths'
-    var lower = '${ Build.GetPathsContaining(base_path, "gemfile") }'
-    bundle-install each='var bundle_install_path in lower'
 
 #restore-tsd-definitions description='Restores TypeScript definitions.'
     var paths = '${ Build.GetPathsContaining(base_path, "tsd.json") }'
-    tsd tsd_args='install --resolve --overwrite --save' each='var tsd_path in paths'
-    tsd tsd_args='link' each='var tsd_path in paths'
-    tsd tsd_args='rebundle' each='var tsd_path in paths'
+    for each='var tsd_path in paths'
+        tsd tsd_args='install --resolve --overwrite --save'
+        tsd tsd_args='link'
+        tsd tsd_args='rebundle'
 
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
@@ -153,13 +152,8 @@ default Coverage            = '${ false }'
     grunt each='var grunt_path in paths'
 
 #initialize-gulp description='Initializes the project by executing the default gulp task. This will install the gulp node module if not already found on the system.'
-    var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js") }'
-    var babel = '${ Build.GetPathsContaining(base_path, "gulpfile.babel.js") }'
-    var typescript = '${ Build.GetPathsContaining(base_path, "gulpfile.ts") }'
-
+    var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js").Union(Build.GetPathsContaining(base_path, "gulpfile.babel.js")).Union(Build.GetPathsContaining(base_path, "gulpfile.ts")) }'
     gulp each='var gulp_path in paths'
-    gulp each='var gulp_path in babel'
-    gulp each='var gulp_path in typescript'
 
 #validate-info target='validate' description='Collects and validates assembly information used during the build.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'

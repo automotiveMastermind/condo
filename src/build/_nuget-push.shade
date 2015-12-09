@@ -53,18 +53,16 @@ default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 default nuget_root_config_path  = '${ Path.Combine(base_path, "nuget.config" }'
 default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.config") }'
 
-log log_header='nuget-push'
-log log_line='-'
-
-log log_name='api key'    log_value='${ nuget_push_apikey }'    log_secure='${ true }'
-log log_name='push feed'  log_value='${ nuget_push_feed }'
-log log_name='arguments'  log_value='${ nuget_push_args }'
-log log_name='options'    log_value='${ nuget_push_options }'
-log log_name='retries'    log_value='${ nuget_push_retries }'
-
-var nuget_push_pr               = '${ Build.PullRequest }' type='bool'
-
 @{
+    Build.Log.Header("nuget-push");
+    Build.Log.Argument("api key", nuget_push_apikey, true);
+    Build.Log.Argument("push feed", nuget_push_feed);
+    Build.Log.Argument("arguments", nuget_push_args);
+    Build.Log.Argument("options", nuget_push_options);
+    Build.Log.Argument("retries", nuget_push_retries);
+
+    var nuget_push_pr           = Build.PullRequest;
+
     if (File.Exists(nuget_config_path))
     {
         nuget_push_options = (nuget_push_options + " -ConfigFile " + nuget_config_path).Trim();
@@ -77,13 +75,11 @@ var nuget_push_pr               = '${ Build.PullRequest }' type='bool'
     {
         nuget_config_path = "";
     }
-}
 
-log log_name='config path'  log_value='${ nuget_config_path }'
-log log_name='root config path' log_value='${ nuget_root_config_path }'
-log log_line='-'
+    Build.Log.Argument("config path", nuget_config_path);
+    Build.Log.Argument("root config path", nuget_root_config_path);
+    Build.Log.Header();
 
-@{
     if (string.IsNullOrEmpty(nuget_push_args))
     {
         throw new ArgumentException("nuget-push: arguments must be specified.", "nuget_push_args");

@@ -1,11 +1,8 @@
 use import = 'Condo.Build'
 
 #default description='The default target, which is called if no other targets are indicated. By default, this will call the clean, test, and package targets.' @{
-    CallTarget("print-properties");
     CallTarget("verify");
 }
-
-#print-properties description='A target used to print build settings, environment variables, and options. Called by the default target at the beginning of the build.'
 
 #pre-clean description='A target called prior to calling the default clean target.'
 #clean .pre-clean description='The default clean target.' -CallTarget('post-clean');

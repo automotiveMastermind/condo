@@ -116,8 +116,9 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Condo can execute any managed executable, regardless of the platform. On OS X and Linux, the executable is
-passed to the mono bootstrapper, which obviously creates a dependency on mono.
+Condo can execute any managed executable, regardless of the platform. On OS X and Linux, the arguments are
+passed to the mono bootstrapper. We hope to remove this dependency in the future, but at the present time,
+condo itself relies on mono, so this dependency would always be available.
 
 {% highlight sh %}
 run run_args='nuget.exe'

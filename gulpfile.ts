@@ -16,6 +16,7 @@ import css = require('gulp-minify-css');
 import rename = require('gulp-rename');
 import babel = require('gulp-babel');
 import html = require('gulp-minify-html');
+import err = require('gulp-plumber');
 
 const sequence = require('run-sequence').use(gulp);
 const browser = sync.create();
@@ -42,13 +43,15 @@ gulp.task('styles:vnd', (done:any) => sequence([
 gulp.task('styles:compile', () => {
     return gulp
         .src('docs/assets/scss/docs.scss')
+        .pipe(err())
         .pipe(prod ? util.noop() : maps.init())
         .pipe(sass())
         .pipe(prod ? css() : util.noop())
         .pipe(prod ? rename({ suffix: '.min', extname: '.css' }) : util.noop())
         .pipe(prod ? util.noop() : maps.write('.'))
         .pipe(gulp.dest('.docs/assets/css'))
-        .pipe(prod ? util.noop() : browser.stream());
+        .pipe(prod ? util.noop() : browser.stream())
+        .pipe(err.stop());
 });
 
 gulp.task('scripts:vnd:jquery', () => {
@@ -113,12 +116,14 @@ gulp.task('scripts:compile', () => {
 
     return gulp
         .src(src)
+        .pipe(err())
         .pipe(prod ? util.noop() : maps.init())
         .pipe(prod ? js() : util.noop())
         .pipe(concat(prod ? 'docs.min.js' : 'docs.js'))
         .pipe(prod ? util.noop() : maps.write('.'))
         .pipe(gulp.dest('.docs/assets/js'))
-        .pipe(prod ? util.noop() : browser.stream());
+        .pipe(prod ? util.noop() : browser.stream())
+        .pipe(err.stop());
 });
 
 gulp.task('scripts:search', () => {
@@ -128,9 +133,11 @@ gulp.task('scripts:search', () => {
 
     return gulp
         .src(src)
+        .pipe(err())
         .pipe(prod ? js() : util.noop())
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('.docs/assets/js'));
+        .pipe(gulp.dest('.docs/assets/js'))
+        .pipe(err.stop());
 });
 
 gulp.task('fonts:vnd:font-awesome', () => {
@@ -146,8 +153,10 @@ gulp.task('html:build', shell.task('jekyll build'));
 gulp.task('html:compile', () => {
     return gulp
         .src('.docs_jekyll/**/*.html')
+        .pipe(err())
         .pipe(prod ? html({ cdata: true, conditionals: true }) : util.noop())
-        .pipe(gulp.dest('.docs'));
+        .pipe(gulp.dest('.docs'))
+        .pipe(err.stop());
 });
 
 gulp.task('html:static', () => {

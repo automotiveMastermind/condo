@@ -97,10 +97,9 @@ var cover_where_cmd                 = ''
 
 nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-install'
 
-log log_header='cover'
-log log_line='-'
-
 @{
+    Build.Log.Header("cover");
+
     if (string.IsNullOrEmpty(cover_target))
     {
         if (!string.IsNullOrEmpty(cover_dnx_runtime))
@@ -126,25 +125,29 @@ log log_line='-'
     }
 
     Build.MakeDirectory(Path.GetDirectoryName(cover_output_path));
+
+    Build.Log.Argument("target", cover_target);
+    Build.Log.Argument("arguments", cover_args);
+    Build.Log.Argument("options", cover_options);
+    Build.Log.Argument("excluded files", cover_exclude_files);
+    Build.Log.Argument("excluded attrs", cover_exclude_attributes);
+    Build.Log.Argument("filter", cover_filter);
+    Build.Log.Argument("target path", cover_path);
+    Build.Log.Argument("output path", cover_output_path);
+    Build.Log.Argument("pdb path", cover_pdb_path);
+    Build.Log.Argument("register", cover_register);
+    Build.Log.Argument("show unvisited", cover_show_unvisited);
+    Build.Log.Argument("skip auto-props", cover_skip_autoprops);
+    Build.Log.Argument("wait", cover_wait);
+    Build.Log.Argument("quiet", cover_quiet);
+    Build.Log.Header();
+
+    if (Build.Unix)
+    {
+        Build.Log.Warn("cover: code coverage analysis is only available on the Windows platform at the present time.");
+    }
 }
 
-log log_name='target'           log_value='${ cover_target }'
-log log_name='arguments'        log_value='${ cover_args }'
-log log_name='options'          log_value='${ cover_options }'
-log log_name='excluded files'   log_value='${ cover_exclude_files }'
-log log_name='excluded attrs'   log_value='${ cover_exclude_attributes }'
-log log_name='filter'           log_value='${ cover_filter }'
-log log_name='target path'      log_value='${ cover_path }'
-log log_name='output path'      log_value='${ cover_output_path }'
-log log_name='pdb path'         log_value='${ cover_pdb_path }'
-log log_name='register'         log_value='${ cover_register }'
-log log_name='show unvisited'   log_value='${ cover_show_unvisited }'
-log log_name='skip auto-props'  log_value='${ cover_skip_autoprops }'
-log log_name='wait'             log_value='${ cover_wait }'
-log log_name='quiet'            log_value='${ cover_quiet }'
-log log_line='-'
-
-log warn='cover: code coverage analysis is only available on the Windows platform at the present time.' if='Build.Unix'
 exec exec_cmd='${ cover_target }' exec_args='${ cover_args }' exec_path='${ cover_path }' if='Build.Unix'
 
 @{

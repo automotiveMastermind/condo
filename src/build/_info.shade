@@ -16,15 +16,13 @@ default info_path    = ''
 
 info-collect once='info-collect'
 
-log log_header='info'
-log log_line='-'
-
-log log_name='path' log_value='${ info_path }'
-log log_line='-'
-
 var info_asm_path    = '${ info_path }'
 
 @{
+    Build.Log.Header("info");
+    Build.Log.Argument("path", info_path);
+    Build.Log.Header();
+    
     if (!string.IsNullOrEmpty(info_asm_path) && !info_asm_path.EndsWith("AssemblyInfo.cs"))
     {
         info_asm_path = Path.Combine(info_asm_path, "Properties", "Condo.AssemblyInfo.cs");

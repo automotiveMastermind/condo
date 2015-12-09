@@ -5,14 +5,19 @@ dnvm-locate
 
 */}
 
-var dnvm_locate_where_cmd   = '${ Build.Unix ? "which" : "where" }'
-var dnvm_locate_cmd         = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
-var dnvm_locate_found       = '${ false }' type='bool'
-
-log log_header='dnvm-locate'
-log log_line='-'
-
 @{
+    var dnvm_locate_where_cmd = "which";
+    var dnvm_locate_cmd = "dnvm.sh";
+    var dnvm_locate_found = false;
+
+    if (!Build.Unix)
+    {
+        dnvm_locate_where_cmd = "where";
+        dnvm_locate_cmd = "dnvm.cmd";
+    }
+
+    Build.Log.Header("dnvm-locate");
+
     dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, dnvm_locate_cmd);
 
     if (!dnvm_locate_found)
@@ -21,7 +26,7 @@ log log_line='-'
     }
 
     Build.SetPath("dnvm", dnvm_locate_cmd, true);
-}
 
-log log_name='path' log_value='${ dnvm_locate_cmd }'
-log log_line='-'
+    Build.Log.Argument("path", dnvm_locate_cmd);
+    Build.Log.Header();
+}

@@ -41,10 +41,10 @@ default run_wait        = '${ true }'
 default run_quiet       = '${ Build.Log.Quiet }'
 default run_secure      = '${ false }' type='bool'
 default run_retries     = '${ 1 }' type='int'
-log log_header='run'
-log log_line='-'
 
 @{
+    Build.Log.Header("run");
+
     if (string.IsNullOrEmpty(run_args))
     {
         throw new ArgumentException("run: arguments must be specified.", "run_args");
@@ -56,15 +56,15 @@ log log_line='-'
     {
         run_options = run_options.Trim();
     }
-}
 
-log log_name='arguments'    log_value='${ run_args }'       log_secure='${ run_secure }'
-log log_name='options'      log_value='${ run_options }'    log_secure='${ run_secure }'
-log log_name='path'         log_value='${ run_path }'
-log log_name='wait'         log_value='${ run_wait }'
-log log_name='quiet'        log_value='${ run_quiet }'
-log log_name='retries'      log_value='${ run_retries }'
-log log_line='-'
+    Build.Log.Argument("arguments", run_args, run_secure);
+    Build.Log.Argument("options", run_options, run_secure);
+    Build.Log.Argument("path", run_path);
+    Build.Log.Argument("wait", run_wait);
+    Build.Log.Argument("quiet", run_quiet);
+    Build.Log.Argument("retries", run_retries);
+    Build.Log.Header();
+}
 
 exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' exec_redirect='${ false }' if='Build.Unix'
 exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' exec_redirect='${ false }' if='!Build.Unix'

@@ -17,20 +17,19 @@ use namespace = 'System.IO'
 default clean_project = ''
 default clean_path = ''
 
-log log_header='clean'
-log log_line='-'
-
-var final_clean_path = '${ !string.IsNullOrEmpty(clean_project) ? Path.GetDirectoryName(clean_project) : clean_path }'
-
 @{
+    Build.Log.Header("clean");
+
+    var final_clean_path = !string.IsNullOrEmpty(clean_project) ? Path.GetDirectoryName(clean_project) : clean_path;
+
     if (string.IsNullOrEmpty(final_clean_path))
     {
         throw new ArgumentException("clean: no project or path was specified.", "clean_path");
     }
-}
 
-log log_name='path' log_value='${ final_clean_path }'
-log log_line='-'
+    Build.Log.Argument("path", final_clean_path);
+    Build.Log.Header();
+}
 
 directory delete='${ Path.Combine(final_clean_path, "bin") }'
 directory delete='${ Path.Combine(final_clean_path, "obj") }'

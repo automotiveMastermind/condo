@@ -32,10 +32,9 @@ default gem_install_name        = ''
 default gem_install_options     = '${ Build.Get("GEM_INSTALL_OPTIONS") }'
 default gem_install_path        = '${ working_path }'
 
-log log_header='gem-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("gem-install");
+
     if (string.IsNullOrEmpty(gem_install_name))
     {
         throw new ArgumentException("gem-install: the name of the gem to install is required.", "gem_install_name");
@@ -44,11 +43,11 @@ log log_line='-'
     // trim the arguments
     gem_install_name = gem_install_name.Trim();
     gem_install_options = gem_install_options.Trim();
-}
 
-log log_name='gem name'     log_value = '${ gem_install_name }'
-log log_name='options'      log_value='${ gem_install_options }'
-log log_name='path'         log_value='${ gem_install_path }'
-log log_line='-'
+    Build.Log.Argument("gem name", gem_install_name);
+    Build.Log.Argument("options", gem_install_options);
+    Build.Log.Argument("path", gem_install_path);
+    Build.Log.Header();
+}
 
 gem gem_args='install ${ gem_install_name }' gem_options='${ gem_install_options }' gem_path='${ gem_install_path }'

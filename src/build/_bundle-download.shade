@@ -22,22 +22,21 @@ var bundle_install               = 'bundle'
 var bundle_version               = ''
 var bundle_installed             = '${ Build.TryExecute("bundle", out bundle_version, "--version") }' type='bool'
 
-gem-install gem_install_name='bundler' if='!bundle_installed'
-
-log log_header='bundle-download'
-log log_line='-'
+gem-install gem_install_name='bundler' if='!bundle_installed' once='bundler-install'
 
 @{
+    Build.Log.Header("bundle-download");
+
     // determine if bundler was already installed
     if (!bundle_installed)
     {
         // get the version
         bundle_installed = Build.TryExecute("bundle", out bundle_version, "--version");
     }
-}
 
-log log_name='path'     log_value='${ bundle_install }'
-log log_name='version'  log_value='${ bundle_version }'
-log log_line='-'
+    Build.Log.Argument("path", bundle_install);
+    Build.Log.Argument("version", bundle_version);
+    Build.Log.Header();
+}
 
 - Build.SetPath("bundle", bundle_install, true);

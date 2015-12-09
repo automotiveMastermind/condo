@@ -31,24 +31,23 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
-default base_path         = '${ Directory.GetCurrentDirectory() }'
-default working_path      = '${ base_path }'
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
 
-default bundle_args          = ''
-default bundle_options       = '${ Build.Get("BUNDLE_OPTIONS") }'
+default bundle_args         = ''
+default bundle_options      = '${ Build.Get("BUNDLE_OPTIONS") }'
 
-default bundle_path          = '${ working_path }'
-default bundle_wait          = '${ true }'
-default bundle_quiet         = '${ Build.Log.Quiet }'
+default bundle_path         = '${ working_path }'
+default bundle_wait         = '${ true }'
+default bundle_quiet        = '${ Build.Log.Quiet }'
 
 bundle-download once='bundle-download'
 
-log log_header='bundle'
-log log_line='-'
-
-var bundle_cmd               = '${ Build.GetPath("bundle").Path }'
-
 @{
+    Build.Log.Header("bundle");
+
+    var bundle_cmd          = Build.GetPath("bundle").Path;
+
     if (string.IsNullOrEmpty(bundle_args))
     {
         throw new ArgumentException("bundle: cannot execute without arguments.", "bundle_args");
@@ -57,14 +56,14 @@ var bundle_cmd               = '${ Build.GetPath("bundle").Path }'
     // trim the arguments
     bundle_args = bundle_args.Trim();
     bundle_options = bundle_options.Trim();
-}
 
-log log_name='cli'          log_value='${ bundle_cmd }'
-log log_name='arguments'    log_value='${ bundle_args }'
-log log_name='options'      log_value='${ bundle_options }'
-log log_name='path'         log_value='${ bundle_path }'
-log log_name='wait'         log_value='${ bundle_wait }'
-log log_name='quiet'        log_value='${ bundle_quiet }'
-log log_line='-'
+    Build.Log.Argument("cli", bundle_cmd);
+    Build.Log.Argument("arguments", bundle_args);
+    Build.Log.Argument("options", bundle_options);
+    Build.Log.Argument("path", bundle_path);
+    Build.Log.Argument("wait", bundle_wait);
+    Build.Log.Argument("quiet", bundle_quiet);
+    Build.Log.Header();
+}
 
 exec exec_cmd='${ bundle_cmd }' exec_args='${ bundle_args } ${ bundle_options }' exec_path='${ bundle_path }' exec_quiet='${ bundle_quiet }' exec_redirect='${ false }'

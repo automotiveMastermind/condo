@@ -28,15 +28,13 @@ var update_buildcmd_uri         = '${ update_self_base_uri + "condo.cmd" }'
 var update_buildps1_uri         = '${ update_self_base_uri + "condo.ps1" }'
 var update_buildsh_uri          = '${ update_self_base_uri + "condo.sh" }'
 
-log log_header='update-self'
-log log_line='-'
-
-log log_name='condo cmd path'   log_value='${ update_buildcmd_path }'
-log log_name='condo ps1 path'   log_value='${ update_buildps1_path }'
-log log_name='condo sh path'    log_value='${ update_buildsh_path }'
-log log_line='-'
-
 @{
+    Build.Log.Header("update-self");
+    Build.Log.Argument("condo cmd path", update_buildcmd_path);
+    Build.Log.Argument("condo ps1 path", update_buildps1_path);
+    Build.Log.Argument("condo sh path", update_buildsh_path);
+    Build.Log.Header();
+
     using(var client = new WebClient())
     {
         if (File.Exists(update_buildcmd_path))

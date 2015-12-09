@@ -8,6 +8,9 @@ use namespace = 'Sake.Engine.Logging'
 
 default Quiet = '${ false }'
 
+macro name='ExecuteRuby' args='string'
+    ruby ruby_args='${ args }'
+    
 @{
     // set the log instance on the helper class
     Build.Log = new QuietLog(this.Log, Quiet);
@@ -23,11 +26,12 @@ functions @{
 
         bool Secure { get; set; }
 
+        void Header(string value = null, string line = "-");
         void Info(object value, bool secure);
         void Warn(object value, bool secure);
         void Error(object value, bool secure);
         void Verbose(object value, bool secure);
-        void Argument(string name, object value, bool secure);
+        void Argument(string name, object value, bool secure = false);
     }
 
     public class QuietLog : IQuietLog
@@ -40,6 +44,16 @@ functions @{
         {
             this.Quiet = quiet;
             this.log = log;
+        }
+
+        public void Header(string name, string line)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.Info(name.ToUpper());
+            }
+
+            this.Verbose(string.Empty.PadLeft(105, line[0]));
         }
 
         public void Info(object value)
@@ -94,8 +108,13 @@ functions @{
             this.Verbose(this.Secure && secure ? "<secured>" : value);
         }
 
-        public void Argument(string name, object value, bool secure)
+        public void Argument(string name, object value, bool secure = false)
         {
+            if (string.IsNullOrEmpty(name) || value == null || string.IsNullOrEmpty(value.ToString()))
+            {
+                return;
+            }
+
             if (this.Secure && secure)
             {
                 value = "<secured>";

@@ -32,20 +32,17 @@ default bundle_install_frozen       = '${ true }' type='bool'
 default bundle_install_options      = '${ Build.Get("BUNDLE_INSTALL_OPTIONS") }'
 default bundle_install_path         = '${ working_path }'
 
-log log_header='bundle-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("bundle-install");
+
     // trim the arguments
     bundle_install_options = bundle_install_options.Trim();
-}
 
-log log_name='frozen'       log_value='${ bundle_install_frozen }'
-log log_name='options'      log_value='${ bundle_install_options }'
-log log_name='path'         log_value='${ bundle_install_path }'
-log log_line='-'
+    Build.Log.Argument("frozen", bundle_install_frozen);
+    Build.Log.Argument("options", bundle_install_options);
+    Build.Log.Argument("path", bundle_install_path);
+    Build.Log.Header();
 
-@{
     // determine if the gemfile.lock should be frozen
     if (bundle_install_frozen)
     {

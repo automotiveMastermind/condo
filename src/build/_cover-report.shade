@@ -66,29 +66,29 @@ var cover_report_install              = '${ Path.Combine(cover_report_install_pa
 
 nuget-install nuget_install_id='${ cover_report_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_report_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-report-install'
 
-log log_header='cover-report'
-log log_line='-'
-
 @{
+    Build.Log.Header("cover-report");
+
     if (string.IsNullOrEmpty(cover_report_target))
     {
         throw new ArgumentException("cover-report: a report target must be specified.", "cover_report_target");
     }
-}
 
-log log_name='target'           log_value='${ cover_report_target }'
-log log_name='type'             log_value='${ cover_report_type }'
-log log_name='source path'      log_value='${ cover_report_src_path }'
-log log_name='history path'     log_value='${ cover_report_history_path }'
-log log_name='assembly filter'  log_value='${ cover_report_assembly_filter }'
-log log_name='class filter'     log_value='${ cover_report_class_filter }'
-log log_name='wait'             log_value='${ cover_report_wait }'
-log log_name='quiet'            log_value='${ cover_report_quiet }'
-log log_line='-'
+    Build.Log.Argument("target", cover_report_target);
+    Build.Log.Argument("type", cover_report_type);
+    Build.Log.Argument("source path", cover_report_src_path);
+    Build.Log.Argument("history path", cover_report_history_path);
+    Build.Log.Argument("assembly filter", cover_report_assembly_filter);
+    Build.Log.Argument("class filter", cover_report_class_filter);
+    Build.Log.Argument("wait", cover_report_wait);
+    Build.Log.Argument("quiet", cover_report_quiet);
+    Build.Log.Header();
 
-log warn='cover-report: code coverage analysis is only available on the Windows platform at the present time.' if='Build.Unix'
+    if (Build.Unix)
+    {
+        Build.Log.Warn("cover-report: code coverage analysis is only available on the Windows platform at the present time.");
+    }
 
-@{
     var cover_report_args = string.Format(@"""-reports:{0}"" ""-targetdir:{1}""", cover_report_target, cover_report_output_path);
 
     if (!string.IsNullOrEmpty(cover_report_type))

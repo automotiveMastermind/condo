@@ -7,7 +7,7 @@ dnu_build_path='$(working_path)'
     Required. The path in which to execute the dnu command line tool.
 
 dnu_build_project=''
-    The project to build using the dnu command line tool.
+    A semi-colon (;) delimited list of projects to build using the dnu command line tool.
 
 dnu_build_framework=''
     A semi-colon (;) delimited list of target frameworks to build against.
@@ -53,14 +53,8 @@ default dnu_build_framework     = ''
 default dnu_build_configuration = '${ configuration }'
 default dnu_build_options       = '${ Build.Get("DNU_BUILD_OPTIONS") }'
 
-log log_header='dnu-build'
-log log_line='-'
-
 @{
-    if (string.IsNullOrEmpty(dnu_build_path))
-    {
-        throw new ArgumentException("dnu-build: project path must be specified.", "dnu_build_path");
-    }
+    Build.Log.Header("dnu-build");
 
     if (!string.IsNullOrEmpty(dnu_build_project))
     {
@@ -77,17 +71,17 @@ log log_line='-'
         : Path.GetFileName(dnu_build_path);
 
     dnu_build_output_path = Path.Combine(dnu_build_output_path, dnu_build_name);
-}
 
-log log_name='path'             log_value='${ dnu_build_path }'
-log log_name='project'          log_value='${ dnu_build_project }'
-log log_name='framework'        log_value='${ dnu_build_framework }'
-log log_name='configuration'    log_value='${ dnu_build_configuration }'
-log log_name='options'          log_value='${ dnu_build_options }'
-log log_name='output path'      log_value='${ dnu_build_output_path }'
-log log_line='-'
+    Build.Log.Argument("path", dnu_build_path);
+    Build.Log.Argument("project", dnu_build_project);
+    Build.Log.Argument("framework", dnu_build_framework);
+    Build.Log.Argument("configuration", dnu_build_configuration);
+    Build.Log.Argument("options", dnu_build_options);
+    Build.Log.Argument("output path", dnu_build_output_path);
+    Build.Log.Header();
 
-@{
+    dnu_build_project = dnu_build_project.Replace(';', ' ').Trim();
+
     if (!string.IsNullOrEmpty(dnu_build_output_path))
     {
         dnu_build_options += string.Format(@" --out ""{0}""", dnu_build_output_path);

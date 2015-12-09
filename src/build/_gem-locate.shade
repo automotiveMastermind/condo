@@ -5,15 +5,14 @@ gem-locate
 
 */}
 
-var gem_locate_where_cmd   = '${ Build.Unix ? "which" : "where" }'
-var gem_locate_cmd         = '${ "gem" }'
-var gem_locate_found       = '${ false }' type='bool'
-var gem_locate_version     = '' type='string'
-
-log log_header='gem-locate'
-log log_line='-'
-
 @{
+    var gem_locate_where_cmd = Build.Unix ? "which" : "where";
+    var gem_locate_cmd = "gem";
+    var gem_locate_found = false;
+    var gem_locate_version = string.Empty;
+
+    Build.Log.Header();
+
     gem_locate_found = Build.TryExecute(gem_locate_where_cmd, out gem_locate_cmd, gem_locate_cmd);
 
     if (!gem_locate_found)
@@ -23,8 +22,8 @@ log log_line='-'
 
     Build.SetPath("gem", gem_locate_cmd, true);
     Build.TryExecute(gem_locate_cmd, out gem_locate_version, "--version");
-}
 
-log log_name='path'     log_value='${ gem_locate_cmd }'
-log log_name='version'  log_value='${ gem_locate_version }'
-log log_line='-'
+    Build.Log.Argument("path", gem_locate_cmd);
+    Build.Log.Argument("version", gem_locate_version);
+    Build.Log.Header();
+}

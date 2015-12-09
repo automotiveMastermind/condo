@@ -42,10 +42,9 @@ default git_quiet       = '${ Build.Log.Quiet }'
 
 git-config once='git-config'
 
-log log_header='git'
-log log_line='-'
-
 @{
+    Build.Log.Header("git");
+
     if (string.IsNullOrEmpty(git_args))
     {
         throw new ArgumentException("git: arguments must be specified.", "git_args");
@@ -57,13 +56,13 @@ log log_line='-'
     {
         git_options = git_options.Trim();
     }
-}
 
-log log_name='arguments'    log_value='${ git_args }'
-log log_name='options'      log_value='${ git_options }'
-log log_name='path'         log_value='${ git_path }'
-log log_name='wait'         log_value='${ git_wait }'
-log log_name='quiet'        log_value='${ git_quiet }'
-log log_line='-'
+    Build.Log.Argument("arguments", git_args);
+    Build.Log.Argument("options", git_options);
+    Build.Log.Argument("path", git_path);
+    Build.Log.Argument("wait", git_wait);
+    Build.Log.Argument("quiet", git_quiet);
+    Build.Log.Header();
+}
 
 exec exec_cmd='git' exec_args='${ git_options } ${ git_args }' exec_path='${ git_path }' exec_wait='${ git_wait }' exec_quiet='${ git_quiet }' exec_redirect='${ false }'

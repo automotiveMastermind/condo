@@ -41,15 +41,13 @@ info-collect once='info-collect'
 default nuget_pack_version  = '${ AssemblyInfo.InformationalVersion }'
 default nuget_pack_options  = '${ Build.Get("NUGET_PACK_OPTIONS") }'
 
-log log_header='nuget-pack'
-log log_line='-'
-
-log log_name='options'  log_value='${ nuget_pack_options }'
-log log_name='path'     log_value='${ nuget_pack_path }'
-log log_name='version'  log_value='${ nuget_pack_version }'
-log log_line='-'
-
 @{
+    Build.Log.Header("nuget-pack");
+    Build.Log.Argument("options", nuget_pack_options);
+    Build.Log.Argument("path", nuget_pack_path);
+    Build.Log.Argument("version", nuget_pack_version);
+    Build.Log.Header();
+
     if (!string.IsNullOrEmpty(nuget_pack_version))
     {
         nuget_pack_options += " -Version " + nuget_pack_version;

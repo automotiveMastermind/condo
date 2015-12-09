@@ -26,6 +26,7 @@ use namespace = 'System'
 use namespace = 'System.IO'
 
 use import = 'Condo.Build'
+use import = 'Microsoft.Json'
 
 default dnx_run_project = ''
 default dnx_run_cmd     = ''
@@ -33,13 +34,12 @@ default dnx_run_runtime = ''
 default dnx_run_options = '${ Build.Get("DNX_RUN_OPTIONS") }'
 default dnx_run_quiet   = '${ Build.Log.Quiet }'
 
-log log_header='dnx-run'
-log log_line='-'
-
-var dnx_run_path = ''
-var dnx_run_exec_path = ''
-
 @{
+    Build.Log.Header("dnx-run");
+
+    var dnx_run_path        = string.Empty;
+    var dnx_run_exec_path   = string.Empty;
+
     // determine if a project is specified
     if (string.IsNullOrEmpty(dnx_run_project))
     {
@@ -71,31 +71,22 @@ var dnx_run_exec_path = ''
 
     // get the running path
     dnx_run_exec_path = Path.GetDirectoryName(dnx_run_path);
+
+    Build.Log.Argument("project", dnx_run_path);
+    Build.Log.Argument("command", dnx_run_cmd);
+    Build.Log.Argument("runtime", dnx_run_runtime);
+    Build.Log.Argument("options", dnx_run_options);
+    Build.Log.Argument("quiet", dnx_run_quiet);
+    Build.Log.Header();
+
+    var dnx_run_project_json = Json.Deserialize(dnx_run_path) as JsonObject;
+    var dnx_run_commands_json = dnx_run_project_json.ValueAsJsonObject("commands");
+    var dnx_run_exists = dnx_run_commands_json != null && dnx_run_commands_json.Keys.Contains(dnx_run_cmd);
+
+    if (!dnx_run_exists)
+    {
+        Build.Log.Warn(string.Format("dnx-run: command {0} does not exist for project {1}", dnx_run_cmd, dnx_run_project));
+    }
 }
 
-log log_name='project'  log_value='${ dnx_run_path }'
-log log_name='command'  log_value='${ dnx_run_cmd }'
-log log_name='runtime'  log_value='${ dnx_run_runtime }'
-log log_name='options'  log_value='${ dnx_run_options }'
-log log_name='quiet'    log_value='${ dnx_run_quiet }'
-log log_line='-'
-
-@{
-    var js = new JavaScriptSerializer();
-
-    var dnx_run_text = File.ReadAllText(dnx_run_path);
-    var dnx_run_json = js.DeserializeObject(dnx_run_text) as Dictionary<string, object>;
-
-    object dnx_run_cmds_obj;
-
-    var dnx_run_cmds = dnx_run_json.TryGetValue("commands", out dnx_run_cmds_obj)
-        ? dnx_run_cmds_obj as Dictionary<string, object>
-        : new Dictionary<string, object>();
-
-    object dnx_run_cmd_obj;
-
-    var dnx_run_cmd_exists = dnx_run_cmds.TryGetValue(dnx_run_cmd, out dnx_run_cmd_obj);
-}
-
-log warn='dnx-run: command ${ dnx_run_cmd } does not exist for project ${ dnx_run_project }' if='!dnx_run_cmd_exists'
-dnx dnx_args='${ dnx_run_cmd }' dnx_options='${ dnx_run_options }' dnx_path='${ dnx_run_exec_path }' dnx_runtime='${ dnx_run_runtime }' dnx_quiet='${ dnx_run_quiet }' dnx_wait='${ false }' if='dnx_run_cmd_exists'
+dnx dnx_args='${ dnx_run_cmd }' dnx_options='${ dnx_run_options }' dnx_path='${ dnx_run_exec_path }' dnx_runtime='${ dnx_run_runtime }' dnx_quiet='${ dnx_run_quiet }' dnx_wait='${ false }' if='dnx_run_exists'

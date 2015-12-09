@@ -70,21 +70,18 @@ default dnx_build_output_path   = '${ target_build_path }'
 default dnx_test_output_path    = '${ target_test_path }'
 default dnx_test_coverage       = '${ Coverage }'
 
-log log_header='dnx-test'
-log log_line='-'
-
 @{
+    Build.Log.Header("dnx-test");
+
     dnx_test_args = dnx_test_args.Trim();
     dnx_test_options = dnx_test_options.Trim();
-}
 
-log log_name='arguments'    log_value='${ dnx_test_args }'
-log log_name='options'      log_value='${ dnx_test_options }'
-log log_name='path'         log_value='${ dnx_test_path }'
-log log_name='output path'  log_value='${ dnx_test_output_path }'
-log log_line='-'
+    Build.Log.Argument("arguments", dnx_test_args);
+    Build.Log.Argument("options", dnx_test_options);
+    Build.Log.Argument("path", dnx_test_path);
+    Build.Log.Argument("output path", dnx_test_output_path);
+    Build.Log.Header();
 
-@{
     Build.MakeDirectory(dnx_test_output_path);
 
     var dnx_test_exclude = '**/bin/**/project.json';

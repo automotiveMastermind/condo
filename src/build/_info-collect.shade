@@ -26,10 +26,9 @@ default copyright               = ''
 default license                 = ''
 default licenseUri              = ''
 
-log log_header='info-collect'
-log log_line='-'
-
 @{
+    Build.Log.Header("info-collect");
+
     if (!string.IsNullOrEmpty(Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI")))
     {
         AssemblyInfo.AssemblyVersion    = Build.Get("BUILD_VERSION");
@@ -188,25 +187,25 @@ log log_line='-'
     }
 
     Build.Set("BUILD_BUILDNUMBER", AssemblyInfo.InformationalVersion);
-}
 
-log log_name='product'          log_value='${ AssemblyInfo.Product }'
-log log_name='company'          log_value='${ AssemblyInfo.Company }'
-log log_name='copyright'        log_value='${ AssemblyInfo.Copyright }'
-log log_name='version'          log_value='${ AssemblyInfo.AssemblyVersion }'
-log log_name='file version'     log_value='${ AssemblyInfo.FileVersion }'
-log log_name='prerelease tag'   log_value='${ AssemblyInfo.PrereleaseTag }'
-log log_name='semantic version' log_value='${ AssemblyInfo.InformationalVersion }'
-log log_name='build id'         log_value='${ AssemblyInfo.BuildId }'
-log log_name='commit id'        log_value='${ AssemblyInfo.CommitId }'
-log log_name='pull request id'  log_value='${ AssemblyInfo.PullRequestId }'
-log log_name='branch'           log_value='${ AssemblyInfo.Branch }'
-log log_name='repository uri'   log_value='${ AssemblyInfo.RepositoryUri }'
-log log_name='team uri'         log_value='${ AssemblyInfo.TeamUri }'
-log log_name='build uri'        log_value='${ AssemblyInfo.BuildUri }'
-log log_name='built by'         log_value='${ AssemblyInfo.BuiltBy }'
-log log_name='built on'         log_value='${ AssemblyInfo.BuiltOn }'
-log log_name='build date (utc)' log_value='${ AssemblyInfo.BuildDateUtc }'
-log log_name='license'          log_value='${ AssemblyInfo.License }'
-log log_name='license uri'      log_value='${ AssemblyInfo.LicenseUri }'
-log log_line='-'
+    Build.Log.Argument("product", AssemblyInfo.Product);
+    Build.Log.Argument("company", AssemblyInfo.Company);
+    Build.Log.Argument("copyright", AssemblyInfo.Copyright);
+    Build.Log.Argument("version", AssemblyInfo.AssemblyVersion);
+    Build.Log.Argument("file version", AssemblyInfo.FileVersion);
+    Build.Log.Argument("prerelease tag", AssemblyInfo.PrereleaseTag);
+    Build.Log.Argument("semantic version", AssemblyInfo.InformationalVersion);
+    Build.Log.Argument("build id", AssemblyInfo.BuildId);
+    Build.Log.Argument("commit id", AssemblyInfo.CommitId);
+    Build.Log.Argument("pull request id", AssemblyInfo.PullRequestId);
+    Build.Log.Argument("branch", AssemblyInfo.Branch);
+    Build.Log.Argument("repository uri", AssemblyInfo.RepositoryUri);
+    Build.Log.Argument("team uri", AssemblyInfo.TeamUri);
+    Build.Log.Argument("build uri", AssemblyInfo.BuildUri);
+    Build.Log.Argument("built by", AssemblyInfo.BuiltBy);
+    Build.Log.Argument("built on", AssemblyInfo.BuiltOn);
+    Build.Log.Argument("build date (utc)", AssemblyInfo.BuildDateUtc);
+    Build.Log.Argument("license", AssemblyInfo.License);
+    Build.Log.Argument("license uri", AssemblyInfo.LicenseUri);
+    Build.Log.Header();
+}

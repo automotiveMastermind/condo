@@ -43,12 +43,11 @@ default bower_quiet         = '${ Build.Log.Quiet }'
 
 bower-download once='bower-download'
 
-log log_header='bower'
-log log_line='-'
-
-var bower_cmd               = '${ Build.GetPath("bower") }'
-
 @{
+    Build.Log.Header("bower");
+
+    var bower_cmd               = Build.GetPath("bower");
+
     if (string.IsNullOrEmpty(bower_args))
     {
         throw new ArgumentException("bower: cannot execute without arguments.", "bower_args");
@@ -57,17 +56,16 @@ var bower_cmd               = '${ Build.GetPath("bower") }'
     // trim the arguments
     bower_args = bower_args.Trim();
     bower_options = bower_options.Trim();
+
+    Build.Log.Argument("cli", bower_cmd.Path);
+    Build.Log.Argument("arguments", bower_args);
+    Build.Log.Argument("path", bower_path);
+    Build.Log.Argument("wait", bower_wait);
+    Build.Log.Argument("quiet", bower_quiet);
+    Build.Log.Header();
+
+    bower_options = (bower_options + " --config.interactive=false").Trim();
 }
-
-log log_name='cli'          log_value='${ bower_cmd.Path }'
-log log_name='arguments'    log_value='${ bower_args }'
-log log_name='options'      log_value='${ bower_options }'
-log log_name='path'         log_value='${ bower_path }'
-log log_name='wait'         log_value='${ bower_wait }'
-log log_name='quiet'        log_value='${ bower_quiet }'
-log log_line='-'
-
-- bower_options = (bower_options + " --config.interactive=false").Trim();
 
 exec exec_cmd='${ bower_cmd.Path }' exec_args='${ bower_args } ${ bower_options }' exec_path='${ bower_path }' exec_quiet='${ bower_quiet }' if='bower_cmd.Global' exec_redirect='${ false }'
 node node_args='"${ bower_cmd.Path }" ${ bower_args } ${ bower_options }' node_path='${ bower_path }' node_wait='${ bower_wait }' node_quiet='${ bower_quiet }' if='!bower_cmd.Global'

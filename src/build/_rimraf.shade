@@ -23,21 +23,20 @@ default working_path 	    = '${ base_path }'
 
 rimraf-download once='rimraf-download'
 
-log log_header='rimraf'
-log log_line='-'
-
-var rimraf_cmd = '${ Build.GetPath("rimraf") }'
-
 @{
+    Build.Log.Header("rimraf");
+
+    var rimraf_cmd = Build.GetPath("rimraf");
+
     if (string.IsNullOrEmpty(rimraf_path))
     {
         throw new ArgumentException("rimraf: path must be specified in order to use the rimraf tool.", "rimraf_path");
     }
-}
 
-log log_name='cli'  log_value='${ rimraf_cmd.Path }'
-log log_name='path' log_value='${ rimraf_path }'
-log log_line='-'
+    Build.Log.Argument("cli", rimraf_cmd.Path);
+    Build.Log.Argument("path", rimraf_path);
+    Build.Log.Header();
+}
 
 exec exec_cmd='${ rimraf_cmd.Path }' exec_args='${ rimraf_path }' exec_path='${ working_path }' exec_redirect='${ false }' if='rimraf_cmd.Global'
 node node_args='"${ rimraf_cmd.Path }" ${ rimraf_path }' node_path='${ working_path }' if='!rimraf_cmd.Global'

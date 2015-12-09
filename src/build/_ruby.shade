@@ -35,23 +35,22 @@ default ruby_path       = '${ working_path }'
 default ruby_wait       = '${ true }'
 default ruby_quiet      = '${ Build.Log.Quiet }'
 
-log log_header='ruby'
-log log_line='-'
-
-var ruby_version        = ''
-var ruby_installed      = '${ Build.TryExecute("ruby", out ruby_version, "--version") }'
-
 @{
+    Build.Log.Header("ruby");
+
+    var ruby_version    = string.Empty;
+    var ruby_installed  = Build.TryExecute("ruby", out ruby_version, "--version");
+
     if (!ruby_installed)
     {
         throw new InvalidOperationException("ruby: ruby was not found on the system. Please install ruby and try again.");
     }
-}
 
-log log_name='arguments'    log_value='${ ruby_args }'
-log log_name='options'      log_value='${ ruby_options }'
-log log_name='path'         log_value='${ ruby_path }'
-log log_name='wait'         log_value='${ ruby_wait }'
-log log_name='quiet'        log_value='${ ruby_quiet }'
+    Build.Log.Argument("arguments", ruby_args);
+    Build.Log.Argument("options", ruby_options);
+    Build.Log.Argument("path", ruby_path);
+    Build.Log.Argument("wait", ruby_wait);
+    Build.Log.Argument("quiet", ruby_quiet);
+}
 
 exec exec_cmd='ruby' exec_args='${ ruby_options } "${ ruby_args }"' exec_path='${ ruby_path }' exec_redirect='${ false }'

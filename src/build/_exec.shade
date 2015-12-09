@@ -48,10 +48,9 @@ default exec_secure       = '${ false }' type='bool'
 
 default exec_output_path  = ''
 
-log log_header='exec'
-log log_line='-'
-
 @{
+    Build.Log.Header("exec");
+
     if (string.IsNullOrEmpty(exec_cmd))
     {
         throw new ArgumentException("A command must be specified in order for the command to execute.", "exec_cmd");
@@ -63,20 +62,18 @@ log log_line='-'
     {
         exec_args = exec_args.Trim();
     }
-}
 
-log log_name='command'      log_value='${ exec_cmd }'
-log log_name='arguments'    log_value='${ exec_args }'          log_secure='${ exec_secure }'
-log log_name='path'         log_value='${ exec_path }'
-log log_name='wait'         log_value='${ exec_wait }'
-log log_name='quiet'        log_value='${ exec_quiet }'
-log log_name='redirect'     log_value='${ exec_redirect }'
-log log_name='retries'      log_value='${ exec_retries }'
-log log_name='secure'       log_value='${ exec_secure }'
-log log_name='output path'  log_value='${ exec_output_path }'
-log log_line='-'
+    Build.Log.Argument("command", exec_cmd);
+    Build.Log.Argument("arguments", exec_args, exec_secure);
+    Build.Log.Argument("path", exec_path);
+    Build.Log.Argument("wait", exec_wait);
+    Build.Log.Argument("quiet", exec_quiet);
+    Build.Log.Argument("redirect", exec_redirect);
+    Build.Log.Argument("retries", exec_retries);
+    Build.Log.Argument("secure", exec_secure);
+    Build.Log.Argument("output path", exec_output_path);
+    Build.Log.Header();
 
-@{
     // define a variable to retain the exit code
     int code;
     string result;
@@ -94,6 +91,6 @@ log log_line='-'
         // write all text to the specified output path
         File.WriteAllText(exec_output_path, result);
     }
-}
 
-log log_line='-'
+    Build.Log.Header();
+}

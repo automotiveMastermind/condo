@@ -43,12 +43,11 @@ default tsd_quiet       = '${ Build.Log.Quiet }'
 
 tsd-download once='tsd-download'
 
-log log_header='tsd'
-log log_line='-'
-
-var tsd_cmd             = '${ Build.GetPath("tsd") }'
-
 @{
+    var tsd_cmd         = Build.GetPath("tsd");
+
+    Build.Log.Header("tsd");
+
     if (string.IsNullOrEmpty(tsd_args))
     {
         throw new ArgumentException("tsd: cannot execute without arguments.", "tsd_args");
@@ -57,15 +56,14 @@ var tsd_cmd             = '${ Build.GetPath("tsd") }'
     // trim the arguments
     tsd_args = tsd_args.Trim();
     tsd_options = tsd_options.Trim();
-}
 
-log log_name='cli'          log_value='${ tsd_cmd.Path }'
-log log_name='arguments'    log_value='${ tsd_args }'
-log log_name='options'      log_value='${ tsd_options }'
-log log_name='path'         log_value='${ tsd_path }'
-log log_name='wait'         log_value='${ tsd_wait }'
-log log_name='quiet'        log_value='${ tsd_quiet }'
-log log_line='-'
+    Build.Log.Argument("cli", tsd_cmd);
+    Build.Log.Argument("options", tsd_args);
+    Build.Log.Argument("path", tsd_path);
+    Build.Log.Argument("wait", tsd_wait);
+    Build.Log.Argument("quiet", tsd_quiet);
+    Build.Log.Header();
+}
 
 exec exec_cmd='${ tsd_cmd.Path }' exec_args='${ tsd_args } ${ tsd_options }' exec_path='${ tsd_path }' exec_quiet='${ tsd_quiet }' exec_redirect='${ false }' if='tsd_cmd.Global'
 node node_args='"${ tsd_cmd.Path }" ${ tsd_args } ${ tsd_options }' node_path='${ tsd_path }' node_wait='${ tsd_wait }' node_quiet='${ tsd_quiet }' if='!tsd_cmd.Global'

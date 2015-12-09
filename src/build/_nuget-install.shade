@@ -49,10 +49,9 @@ default nuget_root_config_path          = '${ Path.Combine(base_path, "nuget.con
 default nuget_config_path               = '${ Path.Combine(nuget_download_path, "nuget.config") }'
 default nuget_install_output_path       = '${ Path.Combine(base_path, "packages") }'
 
-log log_header='nuget-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("nuget-install");
+
     if (string.IsNullOrEmpty(nuget_install_id))
     {
         throw new ArgumentException("nuget-install: a package identifier must be specified.", "nuget_install_id");
@@ -62,16 +61,14 @@ log log_line='-'
     {
         nuget_install_options = nuget_install_options.Trim();
     }
-}
 
-log log_name='package id'       log_value='${ nuget_install_id }'
-log log_name='package version'  log_value='${ nuget_install_version }'
-log log_name='pre-release'      log_value='${ nuget_install_prerelease }'
-log log_name='exclude version'  log_value='${ nuget_install_exclude_version }'
-log log_name='output path'      log_value='${ nuget_install_output_path }'
-log log_name='options'          log_value='${ nuget_install_options }'
+    Build.Log.Argument("package id", nuget_install_id);
+    Build.Log.Argument("package version", nuget_install_version);
+    Build.Log.Argument("pre-release", nuget_install_prerelease);
+    Build.Log.Argument("exclude version", nuget_install_exclude_version);
+    Build.Log.Argument("output path", nuget_install_output_path);
+    Build.Log.Argument("options", nuget_install_options);
 
-@{
     if (File.Exists(nuget_config_path))
     {
         nuget_install_options = (nuget_install_options + " -ConfigFile " + nuget_config_path).Trim();
@@ -84,13 +81,11 @@ log log_name='options'          log_value='${ nuget_install_options }'
     {
         nuget_config_path = "";
     }
-}
 
-log log_name='config path'  log_value='${ nuget_config_path }'
-log log_name='root config path' log_value='${ nuget_root_config_path }'
-log log_line='-'
+    Build.Log.Argument("config path", nuget_config_path);
+    Build.Log.Argument("root config path", nuget_root_config_path);
+    Build.Log.Header();
 
-@{
     if (!string.IsNullOrEmpty(nuget_install_version))
     {
         nuget_install_options += " -Version " + nuget_install_version;
