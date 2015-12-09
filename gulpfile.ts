@@ -173,7 +173,8 @@ gulp.task('serve', () => {
     browser.init({
         server: {
             baseDir: '.docs'
-        }
+        },
+        browser: ['google chrome', 'internet explorer', 'safari', 'firefox']
     });
 });
 
