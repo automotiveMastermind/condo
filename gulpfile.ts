@@ -1,6 +1,5 @@
 import * as gulp from 'gulp';
 import * as del from 'del';
-import * as async from 'async';
 import * as maps from 'gulp-sourcemaps';
 import * as sass from 'gulp-sass';
 import * as concat from 'gulp-concat';
@@ -14,7 +13,6 @@ import * as sync from 'browser-sync';
 import pages = require('gulp-gh-pages');
 import css = require('gulp-minify-css');
 import rename = require('gulp-rename');
-import babel = require('gulp-babel');
 import html = require('gulp-minify-html');
 import err = require('gulp-plumber');
 
