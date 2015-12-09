@@ -19,6 +19,3 @@ use-condo-goals
     tsd tsd_args='link'
     tsd tsd_args='rebundle'
     gulp gulp_args='watch'
-
-#tomek
-    ruby ruby_options='-e' ruby_args='puts "hello world"'
