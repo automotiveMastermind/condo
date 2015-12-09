@@ -64,7 +64,7 @@ The following optional arguments are available within bower.
             <td>string</td>
             <td><code>$(Build.Log.Quiet)</code></td>
             <td>No</td>
-            <td>A value indicating whether or not to wait for exit.</td>
+            <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
     </tbody>
     </table>
