@@ -4,7 +4,7 @@ title: Bower
 group: shades
 ---
 
-Executes a bower package manager command
+Executes a bower package manager command.
 
 ## Contents
 

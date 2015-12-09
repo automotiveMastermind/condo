@@ -27,7 +27,6 @@
     "bootstrap": "v4",
     "anchor-js": "~2.0.0",
     "jquery": "~2.1.4",
-    "simple-jekyll-search": "~1.1.0",
     "font-awesome": "~4.5.0"
   },
   "dependencies": {
