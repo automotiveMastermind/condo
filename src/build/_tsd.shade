@@ -1,7 +1,7 @@
 @{/*
 
 tsd
-    Executes a tsd typings manager.
+    Executes a DefinitlyTyped typings manager.
 
 tsd_args=''
     Required. The arguments to pass to the tsd command line tool.
