@@ -46,7 +46,7 @@ bower-download once='bower-download'
 @{
     Build.Log.Header("bower");
 
-    var bower_cmd               = Build.GetPath("bower");
+    var bower_cmd           = Build.GetPath("bower");
 
     if (string.IsNullOrEmpty(bower_args))
     {

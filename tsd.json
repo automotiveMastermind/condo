@@ -85,6 +85,9 @@
     },
     "vinyl/vinyl.d.ts": {
       "commit": "220716d99a77df1654fb4f6cd760dc134ffa8e89"
+    },
+    "gulp-autoprefixer/gulp-autoprefixer.d.ts": {
+      "commit": "220716d99a77df1654fb4f6cd760dc134ffa8e89"
     }
   }
 }

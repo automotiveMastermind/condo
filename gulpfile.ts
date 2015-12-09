@@ -15,6 +15,7 @@ import css = require('gulp-minify-css');
 import rename = require('gulp-rename');
 import html = require('gulp-minify-html');
 import err = require('gulp-plumber');
+import prefix = require('gulp-autoprefixer');
 
 const sequence = require('run-sequence').use(gulp);
 const browser = sync.create();
@@ -43,7 +44,8 @@ gulp.task('styles:compile', () => {
         .src('docs/assets/scss/docs.scss')
         .pipe(err())
         .pipe(prod ? util.noop() : maps.init())
-        .pipe(sass())
+        .pipe(<any>sass().on('error', sass.logError))
+        .pipe(prefix({ browsers: ['> 5%', 'last 2 versions'] }))
         .pipe(prod ? css() : util.noop())
         .pipe(prod ? rename({ suffix: '.min', extname: '.css' }) : util.noop())
         .pipe(prod ? util.noop() : maps.write('.'))
@@ -189,7 +191,7 @@ gulp.task('docs', (done:any) => sequence('clean', 'html', ['styles', 'scripts', 
 gulp.task('sync', (done:any) => {
     gulp.watch('docs/assets/js/*.js', ['scripts:compile', 'scripts:search']).on('deleted', (event) => delete cache.caches['scripts'][event.path]);
     gulp.watch('docs/assets/scss/**/*.scss', ['styles:compile']);
-    gulp.watch(['docs/**/*.md', 'docs/**/*.rb', 'docs/**/*.yml'], ['reload']);
+    gulp.watch(['docs/**/*.*', '!docs/**/*.js', '!docs/**/*.scss'], ['reload']);
 });
 
 gulp.task('watch', (done:any) => sequence('dev', 'docs', 'serve', 'sync', done));

@@ -7,9 +7,11 @@
 {% for page in sorted_pages %}
     {% if page.title %}
         {
-            "id"    : {{ forloop.index }},
-            "title" : {{ page.title | jsonify }},
-            "url"   : "{{ site.baseurl }}{{ page.url }}"
+            "id"        : {{ forloop.index }},
+            "title"     : {{ page.title | jsonify }},
+            "url"       : "{{ site.baseurl }}{{ page.url }}",
+            "group"     : "{{ page.group }}" {% if page.tags %},
+            "tags"      : {{ page.tags | jsonify }} {% endif %}
         } {% unless forloop.last %},{% endunless %}
     {% endif %}
 {% endfor %}

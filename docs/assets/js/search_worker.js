@@ -2,7 +2,8 @@ importScripts('lunr.min.js');
 
 var lunr_index = lunr(function() {
       this.field('title', { boost: 10 });
-      this.field('body');
+      this.field('group');
+      this.field('tags');
       this.ref('id');
     }),
     entries;

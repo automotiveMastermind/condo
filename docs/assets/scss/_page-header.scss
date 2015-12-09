@@ -1,9 +1,9 @@
 .docs-pageheader {
   padding: 2rem ($grid-gutter-width / 2);
   margin-bottom: 1.5rem;
-  color: $docs-purple-light;
+  color: $docs-blue-light;
   text-align: center;
-  background-color: $docs-purple;
+  background-color: $docs-blue;
 
   .container {
     position: relative;
@@ -51,7 +51,7 @@
     .carbonad {
       position: absolute;
       top: 0;
-      right: .75rem; // offset from the .container's padding
+      right: .75rem;
       margin: 0 !important;
     }
   }

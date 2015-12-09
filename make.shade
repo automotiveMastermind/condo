@@ -15,7 +15,7 @@ use-condo-goals
     bundle-install
     npm-install
     bower-install
-    tsd tsd_args='install --resolve --overwrite --save'
+    tsd tsd_args='reinstall --clean --overwrite --save'
     tsd tsd_args='link'
     tsd tsd_args='rebundle'
     gulp gulp_args='watch'

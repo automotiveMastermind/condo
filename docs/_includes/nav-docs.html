@@ -1,9 +1,9 @@
 <div class="docs-sidebar">
 
-  <form class="docs-search hidden-sm-down">
-    <input type="text" class="form-control" id="search-input" placeholder="Search..." autocomplete="off">
+  <div id="search-container" class="docs-search hidden-sm-down">
+    <input type="text" class="form-control" id="search-input" placeholder="filter..." autocomplete="off">
     <div class="dropdown-menu docs-search-results" id="search-results"></div>
-  </form>
+  </div>
 
   <nav class="docs-links" id="docsNavbarContent">
     {% for group in site.data.nav %}

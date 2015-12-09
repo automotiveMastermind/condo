@@ -1,9 +1,9 @@
 @import "vnd/bootstrap/bootstrap";
 @import "vnd/font-awesome/font-awesome";
 
-$docs-purple:         #563d7c;
-$docs-purple-bright:  lighten(saturate($docs-purple, 5%), 15%);
-$docs-purple-light:   #cdbfe3;
+$docs-blue:           #335672;
+$docs-blue-bright:      lighten(saturate($docs-blue, 5%), 15%);
+$docs-blue-light:     #7AA2BF;
 $docs-graphite:       #2a2730;
 $docs-graphite-light: lighten($docs-graphite, 40%);
 $docs-yellow:         #ffe484;

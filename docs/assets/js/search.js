@@ -37,7 +37,7 @@ $(function() {
 
   function cancelSearch() {
     $("#search-input").val("");
-    $("#search-results").removeClass("active");
+    $("#search-container").removeClass("active");
   }
 
 
@@ -46,7 +46,7 @@ $(function() {
   }
 
   $("#search-input").on("input", function(e) {
-    $(this).val().length > 0 ? $("#search-results").addClass("active") : $("#search-results").removeClass("active");
+    $(this).val().length > 0 ? $("#search-container").addClass("active") : $("#search-container").removeClass("active");
 
     searchForString($(this).val());
   });
@@ -70,7 +70,7 @@ $(function() {
       e.preventDefault();
       goToSelectedSearchResult();
     }  else if (e.keyCode == 8 || e.keyCode == 46) {
-      $(this).val().length > 0 ? $("#search-results").addClass("active") : $("#search-results").removeClass("active");
+      $(this).val().length > 0 ? $("#search-container").addClass("active") : $("#search-container").removeClass("active");
 
       searchForString($(this).val());
     }
@@ -102,20 +102,20 @@ $(function() {
     $("#search-results").empty();
 
     if (searchHits.length < 1) {
-      $('<li class="placeholder">No results for <em></em></li>').appendTo("#search-results").find("em").text(searchString);
+      $('<a class="placeholder">No results for <em></em></a>').appendTo("#search-results").find("em").text(searchString);
       return;
     }
 
     for (var i = 0; i < Math.min(searchHits.length, 8); i++) {
       var page = searchHits[i];
 
-      $('<li class="result"><a href="' + page.url + '"><em>' + page.title + '</em></a></li>').appendTo("#search-results");
+      $('<a href="' + page.url + '"><em>' + page.title + '</em></a>').appendTo("#search-results");
     }
 
-    $("#search-results li:first-child").addClass("selected");
+    $("#search-results a:first-child").addClass("selected");
   }
 
-  $("#search-results").on("mouseenter", "li", function(e) {
+  $("#search-results").on("mouseenter", "a", function(e) {
     $(this).parent().find(".selected").removeClass("selected").end().end()
       .addClass("selected");
   });
@@ -139,7 +139,7 @@ $(function() {
   }
 
   function goToSelectedSearchResult() {
-    var href = $("#search-results .selected a").attr("href");
+    var href = $("#search-results .selected").attr("href");
     if (href)
       window.location.href = href;
   }

@@ -1,16 +1,16 @@
 .docs-masthead {
   position: relative;
   padding: 3rem ($grid-gutter-width / 2) 2rem;
-  color: $docs-purple-light;
+  color: $docs-blue-light;
   text-align: center;
-  background-image: -webkit-linear-gradient(135deg, darken($docs-purple, 20%), $docs-purple, lighten(saturate($docs-purple, 5%), 15%));
-  background-image:         linear-gradient(135deg, darken($docs-purple, 20%), $docs-purple, lighten(saturate($docs-purple, 5%), 15%));
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(darken($docs-purple, 20%))}', endColorstr='#{ie-hex-str(lighten(saturate($docs-purple, 5%), 15%))}', gradientType='1');   /* For IE9 */
+  background-image: -webkit-linear-gradient(135deg, darken($docs-blue, 20%), $docs-blue, lighten(saturate($docs-blue, 5%), 15%));
+  background-image:         linear-gradient(135deg, darken($docs-blue, 20%), $docs-blue, lighten(saturate($docs-blue, 5%), 15%));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(darken($docs-blue, 20%))}', endColorstr='#{ie-hex-str(lighten(saturate($docs-blue, 5%), 15%))}', gradientType='1');   /* For IE9 */
 
   .docs-booticon {
     margin: 0 auto 2rem;
-    color: $docs-purple-light;
-    border-color: $docs-purple-light;
+    color: $docs-blue-light;
+    border-color: $docs-blue-light;
   }
 
   h1 {
