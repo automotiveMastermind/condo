@@ -28,7 +28,7 @@ use import = 'Condo.Build'
 default base_path                   = '${ Directory.GetCurrentDirectory() }'
 default working_path                = '${ base_path }'
 
-default bundle_install_frozen       = '${ true }' type='bool'
+default bundle_install_frozen       = '${ false }' type='bool'
 default bundle_install_options      = '${ Build.Get("BUNDLE_INSTALL_OPTIONS") }'
 default bundle_install_path         = '${ working_path }'
 
