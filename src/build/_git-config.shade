@@ -40,6 +40,7 @@ default git_config_quiet    = '${ Build.Log.Quiet }'
 
     var git_version         = string.Empty;
     var git_installed       = Build.TryExecute("git", out git_version, "--version");
+    
     if (!git_installed)
     {
         throw new Exception("git: git must be manually installed in order to use the git cmd.");

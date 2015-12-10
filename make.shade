@@ -11,6 +11,8 @@ var test_path           = 'test'
 use-condo-lifecycle
 use-condo-goals
 
+var build_docs          = '${ string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", StringComparison.OrdinalIgnoreCase) }' type='bool'
+
 #docs-build
     bundle-install
     npm-install
@@ -26,4 +28,5 @@ use-condo-goals
     gulp gulp_tasks='serve'
 
 #docs-deploy .docs-build
-    gulp gulp_tasks='deploy' if='string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", StringComparison.OrdinalIgnoreCase)'
+    git-config if='build_docs'
+    gulp gulp_tasks='deploy' if='build_docs'
