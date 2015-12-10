@@ -14,9 +14,13 @@ use import = 'Condo.Build'
     var ruby_locate_path        = Build.Get("RUBY_INSTALL_PATH");
     var ruby_locate_where_cmd   = Build.Unix ? "which" : "where";
 
-    var ruby_locate_cmd         = "ruby";
-    var gem_locate_cmd          = Build.Unix ? "gem" : "gem.bat";
-    var bundle_locate_cmd       = "bundle";
+    var ruby_locate_name        = Build.Unix ? "ruby" : "ruby.exe";
+    var gem_locate_name         = Build.Unix ? "gem" : "gem.bat";
+    var bundle_locate_name      = Build.Unix ? "bundle" : "bundle.bat";
+
+    var ruby_locate_cmd         = ruby_locate_name;
+    var gem_locate_cmd          = gem_locate_name;
+    var bundle_locate_cmd       = bundle_locate_name;
 
     var ruby_locate_version     = string.Empty;
     var gem_locate_version      = string.Empty;
@@ -30,7 +34,7 @@ use import = 'Condo.Build'
 
     if (!string.IsNullOrEmpty(ruby_locate_path))
     {
-        ruby_locate_cmd = Path.Combine(ruby_locate_path, ruby_locate_cmd);
+        ruby_locate_cmd = Path.Combine(ruby_locate_path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), ruby_locate_name);
 
         ruby_locate_found = Build.TryExecute(ruby_locate_cmd, out ruby_locate_version, "--version");
 
@@ -42,7 +46,7 @@ use import = 'Condo.Build'
 
     if (!ruby_locate_found)
     {
-        ruby_locate_found = Build.TryExecute(ruby_locate_where_cmd, out ruby_locate_cmd, "ruby");
+        ruby_locate_found = Build.TryExecute(ruby_locate_where_cmd, out ruby_locate_cmd, ruby_locate_name);
 
         if (ruby_locate_found)
         {
@@ -56,7 +60,7 @@ use import = 'Condo.Build'
 
     if (!gem_locate_found)
     {
-        gem_locate_found = Build.TryExecute(ruby_locate_where_cmd, out gem_locate_cmd, Build.Unix ? "gem" : "gem.bat");
+        gem_locate_found = Build.TryExecute(ruby_locate_where_cmd, out gem_locate_cmd, gem_locate_name);
 
         if (gem_locate_found)
         {
@@ -70,7 +74,7 @@ use import = 'Condo.Build'
 
     if (!bundle_locate_found)
     {
-        bundle_locate_found = Build.TryExecute(ruby_locate_where_cmd, out bundle_locate_cmd, "bundle");
+        bundle_locate_found = Build.TryExecute(ruby_locate_where_cmd, out bundle_locate_cmd, bundle_locate_name);
 
         if (bundle_locate_found)
         {
