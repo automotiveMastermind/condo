@@ -92,10 +92,6 @@ gulp.task('scripts:vnd:lunr', () => {
         .pipe(gulp.dest('.docs/assets/js'));
 });
 
-gulp.task('clean', () => {
-    return del(['docs/assets/**/vnd', '.docs', '.docs_jekyll', 'docs/assets/**/docs*.js', 'docs/assets/**/docs*.css', 'docs/assets/**/docs*.map']);
-});
-
 gulp.task('scripts:vnd', (done:any) => sequence([
     'scripts:vnd:lunr',
     'scripts:vnd:jquery',
@@ -178,15 +174,25 @@ gulp.task('serve', () => {
     });
 });
 
-gulp.task('reload', ['html'], () => {
+gulp.task('img', () => {
+    return gulp
+        .src('docs/assets/img/**')
+        .pipe(gulp.dest('.docs/img'));
+});
+
+gulp.task('reload', ['html', 'img'], () => {
     return browser.reload();
+});
+
+gulp.task('clean', () => {
+    return del(['docs/assets/**/vnd', '.docs', '.docs_jekyll', 'docs/assets/**/docs*.js', 'docs/assets/**/docs*.css', 'docs/assets/**/docs*.map']);
 });
 
 gulp.task('styles', (done:any) => sequence('styles:vnd', 'styles:compile', done));
 gulp.task('scripts', (done:any) => sequence('scripts:vnd', ['scripts:compile', 'scripts:search'], done));
 gulp.task('fonts', (done:any) => sequence('fonts:vnd', done));
 gulp.task('html', (done:any) => sequence('html:build', ['html:compile', 'html:static'], done));
-gulp.task('docs', (done:any) => sequence('clean', 'html', ['styles', 'scripts', 'fonts'], done));
+gulp.task('docs', (done:any) => sequence('clean', 'html', ['styles', 'scripts', 'fonts', 'img'], done));
 
 gulp.task('sync', (done:any) => {
     gulp.watch('docs/assets/js/*.js', ['scripts:compile', 'scripts:search']).on('deleted', (event) => delete cache.caches['scripts'][event.path]);

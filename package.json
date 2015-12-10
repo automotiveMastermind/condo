@@ -6,7 +6,7 @@
     "doc": "docs"
   },
   "dependencies": {
-    "bower": "^1.6.9",
+    "bower": "^1.7.0",
     "gulp": "^3.9.0",
     "gulp-sass": "^2.1.0",
     "mocha": "^2.3.4"

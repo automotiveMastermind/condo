@@ -1,113 +1,100 @@
 ---
 layout: home
 title: PulseBridge &middot; Condo &middot; A build system for DNX-based projects.
+group: home
 ---
 
 <main class="docs-masthead" id="content" role="main">
   <div class="container">
-    <span class="docs-booticon outline">B</span>
-    <p class="lead">Bootstrap is the most popular HTML, CSS, and JS framework in the world for building responsive, mobile-first projects on the web.</p>
-    <p class="lead">
-      <a href="{{ site.baseurl }}/getting-started/download" class="btn btn-outline-inverse btn-lg" onclick="ga('send', 'event', 'Jumbotron actions', 'Download', 'Download {{ site.current_version }}');">Download Bootstrap</a>
-    </p>
+    <p class="lead">Condo is an open-source, cross-platform build system that makes it easier than ever to adopt continous integration.</p>
     <p class="version">Currently v{{ site.current_version }}</p>
   </div>
 </main>
 
 <div class="docs-featurette">
   <div class="container">
-    <h2 class="docs-featurette-title">Easy to get started.</h2>
-    <p class="lead">Quickly include Bootstrap's CSS and JS into any project. Use your favorite package manager, download the source, or use the Bootstrap CDN.</p>
+    <h2 class="docs-featurette-title">Hit the ground running.</h2>
+    <p class="lead">Easily include condo in any project (new or existing) by executing a snippet.</p>
 
     <div class="row">
       <div class="col-sm-6 m-b-lg">
-        <h4>Managed dependencies</h4>
-        <p>Include Bootstrap's source Sass and JavaScript files via Bower, Composer, Meteor, or npm. Package managed installs don't include documentation, but do include our Gruntfile and readme.</p>
-        <p>
-          <a class="btn btn-bs btn-outline" href="{{ site.baseurl }}/getting-started/download/#package-managers">View install methods</a>
-        </p>
+        <h3 class="text-xs-center">{% icon fa-apple fa-2x %} {% icon fa-linux fa-2x %}</h3>
+{% highlight ps %} code snippet here {% endhighlight %}
       </div>
       <div class="col-sm-6 m-b-lg">
-        <h4>Bootstrap CDN</h4>
-        <p>When you just need to include Bootstrap's compiled CSS and JS, use the Bootstrap CDN, free from the Max CDN folks.</p>
-{% highlight html %}
-<link rel="stylesheet" href="{{ site.cdn.css }}" integrity="{{ site.cdn.css_hash }}" crossorigin="anonymous">
-<script src="{{ site.cdn.js }}" integrity="{{ site.cdn.js_hash }}" crossorigin="anonymous"></script>
+        <h3 class="text-xs-center">{% icon fa-windows fa-2x %}</h3>
+{% highlight ps %} code snippet here {% endhighlight %}
+      </div>
+    </div>
+
+    <hr class="half-rule m-t-0">
+
+    <p><strong>Want to use condo everywhere?</strong> We also have a <a href="https://www.npmjs.com/package/generator-condo">generator</a>
+    for <a target="_blnak" href="http://www.yeoman.io">Yeoman</a> that makes it easy to apply Condo over and over again.</p>
+{% highlight sh %}
+npm install yo generator-condo -g
+yo condo
 {% endhighlight %}
-        <p class="text-muted">Not yet available, but hopefully soon!</p>
-      </div>
-    </div>
-
-    <hr class="half-rule m-t-0">
-
-    <p><strong>Looking for something simpler?</strong> Customized builds of Bootstrap's CSS and JS are also available.</p>
-    <a href="{{ site.baseurl }}/getting-started/download/#custom-builds" class="btn btn-bs btn-outline">More download options</a>
   </div>
 </div>
 
 <div class="docs-featurette">
   <div class="container">
-    <h2 class="docs-featurette-title">Designed for everyone, everywhere.</h2>
-    <p class="lead">Bootstrap makes front-end web development faster and easier. It's made for folks of all skill levels, devices of all shapes, and projects of all sizes.</p>
+    <h2 class="docs-featurette-title">See it in action.</h2>
+    <p class="lead">A picture is worth a thousand words, especially when it moves.</p>
+    <img class="img-fluid center-block" src="{{ site.baseurl }}/img/animated.gif">
+  </div>
+</div>
+
+<div class="docs-featurette">
+  <div class="container">
+    <h2 class="docs-featurette-title">Customize the experience.</h2>
+    <p class="lead">Condo can handle most projects automatically via the default goals and lifecycle, but the system is fully customizable.</p>
 
     <div class="row">
-      <div class="col-sm-4 m-b-lg">
-        <img src="assets/img/sass.png" alt="Sass support" class="img-fluid">
-        <h4>Preprocessor</h4>
-        <p>Bootstrap ships with vanilla CSS, but its source code utilizes <a href="http://sass-lang.com/">Sass</a>, a popular CSS preprocessor. Quickly get started with precompiled CSS or build on the source.</p>
+      <div class="col-sm-6 m-b-3">
+        <h4 class="text-xs-center">Explore the docs.</h4>
+        <p>
+        The lifecycle, goals, and shades (actions) are are thoroughly documented thanks to our
+        <a target="_blank" href="https://github.com/pulsebridge/condo/contributors">contributors</a>.
+        </p>
+        <a class="btn btn-docs btn-outline" href="{{ site.baseurl }}/start">Read the docs</a>
       </div>
-      <div class="col-sm-4 m-b-lg">
-        <img src="assets/img/devices.png" alt="Responsive across devices" class="img-fluid">
-        <h4>One framework, every device.</h4>
-        <p>Bootstrap easily and efficiently scales your websites and applications with a single code base, from phones to tablets to desktops with CSS media queries.</p>
-      </div>
-      <div class="col-sm-4 m-b-lg">
-        <img src="assets/img/components.png" alt="Components" class="img-fluid">
-        <h4>Full of features</h4>
-        <p>With Bootstrap, you get extensive and beautiful documentation for common HTML elements, dozens of custom HTML and CSS components, and awesome jQuery plugins.</p>
+      <div class="col-sm-6 m-b-3">
+        <h4 class="text-xs-center">Learn by example.</h4>
+        <p>
+            Our contributors have put together some real-world examples of some of what Condo has to offer.
+        </p>
+        <a class="btn btn-docs btn-outline" href="{{ site.baseurl }}/examples">See the examples</a>
       </div>
     </div>
-
-    <hr class="half-rule m-t-0">
-
-    <p><strong>Bootstrap is open source!</strong> It's hosted, developed, and maintained on GitHub by folks like you.</p>
-    <a href="{{ site.repo }}" class="btn btn-bs btn-outline">View the GitHub project</a>
   </div>
 </div>
 
 <div class="docs-featurette">
   <div class="container">
-    <h2 class="docs-featurette-title">Official Bootstrap Themes.</h2>
-    <p class="lead">
-      Take Bootstrap to the next level with official premium themes. Each theme is its own toolkit featuring all of Bootstrap, brand new components and plugins, full docs, build tools, and more.
-    </p>
+    <h2 class="docs-featurette-title">Give thanks.</h2>
+    <p class="lead">A special thank you to the following open source projects for making this site possible.</p>
 
-    <p class="lead">
-      <a href="{{ site.themes }}" class="btn btn-bs btn-outline">Browse themes</a>
-    </p>
-
-    <img class="img-fluid center-block" src="{{ site.baseurl }}/assets/img/bs-themes.png" alt="Bootstrap Themes" width="1024" height="388">
-  </div>
-</div>
-
-<div class="docs-featurette">
-  <div class="container">
-    <h2 class="docs-featurette-title">Built with Bootstrap.</h2>
-    <p class="lead">Millions of amazing sites across the web are being built with Bootstrap. Get started on your own with our growing <a href="../examples">collection of examples</a> or by exploring some of our favorites.</p>
-
-    <div class="row docs-featured-sites">
-    {% for showcase in site.data.showcase %}
-      <div class="col-xs-6 col-sm-3">
-        <a href="{{ showcase.expo_url }}" target="_blank" title="{{ showcase.name }}">
-          <img src="{{ site.baseurl }}/assets/img/expo-{{ showcase.img }}.jpg" alt="{{ showcase.name }}" class="img-fluid">
-        </a>
+    <div class="row">
+      <div class="col-sm-6 m-b-3">
+        <h4 class="text-xs-center">WE {% icon fa-heart icon-red %} <span class="bd-booticon inverse outline">B</span></h4>
+        <p class="text-justify">
+          This site is largely basd on the docs that the wonderful folks behind Bootstrap have provided. Please consider using them for all of
+          your project needs.
+        </p>
+        <a class="btn btn-docs btn-outline m-b-1" href="https://v4-alpha.getbootstrap.com">Visit Bootstrap</a>
+        <a class="btn btn-docs btn-outline m-b-1 pull-lg-right" target="_blank" href="https://twitter.com/intent/tweet?screen_name=getbootstrap&text=Thank%20you%20for%20supporting%20the%20community!">Thank <span class="bd-booticon inverse outline">B</span> on {% icon fa-twitter %}</a>
       </div>
-    {% endfor %}
+      <div class="col-sm-6 m-b-3">
+        <h4 class="text-xs-center">WE {% icon fa-heart icon-red %} {% icon fa-fort-awesome %}</h4>
+        <p class="text-justify">
+          All the amazing icons used throughout this site were graceously provided by Fort Awesome. Check them out the next time you need responsive
+          icons for your project.
+        </p>
+        <a class="btn btn-docs btn-outline m-b-1" target="_blank" href="https://fortawesome.github.io/Font-Awesome/">Visit Font Awesome</a>
+        <a class="btn btn-docs btn-outline m-b-1 pull-lg-right" target="_blank" href="https://twitter.com/intent/tweet?screen_name=fontawesome&text=Thank%20you%20for%20supporting%20the%20community!">Thank {% icon fa-fort-awesome %} on {% icon fa-twitter %}</a>
+      </div>
     </div>
-
-    <hr class="half-rule">
-
-    <p>We showcase dozens of inspiring projects built with Bootstrap on the Bootstrap Expo.</p>
-    <a href="{{ site.expo }}" class="btn btn-bs btn-outline">Explore the Expo</a>
   </div>
 </div>

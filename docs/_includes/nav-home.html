@@ -1,17 +1,20 @@
-<div class="container">
-  <header class="navbar navbar-light navbar-static-top docs-navbar" role="banner">
+<header class="navbar navbar-light navbar-static-top docs-navbar" role="banner">
+  <div class="container">
     <div class="clearfix">
       <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#docs-main-nav">
         &#9776;
       </button>
-      <a class="navbar-brand hidden-sm-up" href="{{ site.baseurl }}/">PulseBridge</a>
+      <a class="navbar-brand hidden-sm-up" href="{{ site.baseurl }}/">PB | Open</a>
     </div>
     <div class="collapse navbar-toggleable-xs" id="docs-main-nav">
       <nav class="nav navbar-nav">
-        <a class="nav-item nav-link {% if page.layout == "home" %}active{% endif %}" href="{{ site.baseurl }}/" onclick="appInsights.trackEvent("Navbar", {Area: "Community", Name: "Condo"});">Condo</a>
-        <a class="nav-item nav-link {% if page.layout == "docs" %}active{% endif %}" href="{{ site.baseurl }}/start/overview/" onclick="appInsights.trackEvent("Navbar", {Area: "Community", Name: "Documentation"});">Documentation</a>
-        <a class="nav-item nav-link {% if page.title == "Examples" %}active{% endif %}" href="{{ site.baseurl }}/examples/" onclick="appInsights.trackEvent("Navbar", {Area: "Community", Name: "Examples"});">Examples</a>
+        <a class="nav-item nav-link {% if page.layout == " home " %}active{% endif %}" href="{{ site.baseurl }}/" onclick="appInsights.trackEvent("
+        Navbar ", {Area: "Community ", Name: "Condo "});">Condo</a>
+        <a class="nav-item nav-link {% if page.layout == " docs " %}active{% endif %}" href="{{ site.baseurl }}/start/overview/"
+        onclick="appInsights.trackEvent(" Navbar ", {Area: "Community ", Name: "Documentation "});">Documentation</a>
+        <a class="nav-item nav-link {% if page.title == " Examples " %}active{% endif %}" href="{{ site.baseurl }}/examples/" onclick="appInsights.trackEvent("
+        Navbar ", {Area: "Community ", Name: "Examples "});">Examples</a>
       </nav>
     </div>
-  </header>
-</div>
+  </div>
+</header>

@@ -1,6 +1,9 @@
 @import "vnd/bootstrap/bootstrap";
 @import "vnd/font-awesome/font-awesome";
 
+$bd-purple:         #563d7c;
+$bd-purple-light:   #cdbfe3;
+
 $docs-blue:           #335672;
 $docs-blue-bright:      lighten(saturate($docs-blue, 5%), 15%);
 $docs-blue-light:     #7AA2BF;
@@ -27,3 +30,4 @@ $docs-info:           #5bc0de;
 
 @import "syntax";
 @import "anchor";
+@import "booticon";

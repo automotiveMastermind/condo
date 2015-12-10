@@ -24,7 +24,7 @@
     "tests"
   ],
   "devDependencies": {
-    "bootstrap": "v4",
+    "bootstrap": "~4.0.0-alpha.2",
     "anchor-js": "~2.0.0",
     "jquery": "~2.1.4",
     "font-awesome": "~4.5.0"

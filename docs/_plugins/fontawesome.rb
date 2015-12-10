@@ -36,9 +36,9 @@ eos
 
     def icon_tag(icon_class, icon_extra = nil)
       if icon_extra.empty?
-        "<i class=\"fa #{icon_class}\"></i>"
+        "<i class=\"fa fa-fw #{icon_class}\"></i>"
       else
-        "<i class=\"fa #{icon_class} #{icon_extra}\"></i>"
+        "<i class=\"fa fa-fw #{icon_class} #{icon_extra}\"></i>"
       end
     end
   end

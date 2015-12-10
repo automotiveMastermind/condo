@@ -3,9 +3,7 @@
   padding: 3rem ($grid-gutter-width / 2) 2rem;
   color: $docs-blue-light;
   text-align: center;
-  background-image: -webkit-linear-gradient(135deg, darken($docs-blue, 20%), $docs-blue, lighten(saturate($docs-blue, 5%), 15%));
-  background-image:         linear-gradient(135deg, darken($docs-blue, 20%), $docs-blue, lighten(saturate($docs-blue, 5%), 15%));
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str(darken($docs-blue, 20%))}', endColorstr='#{ie-hex-str(lighten(saturate($docs-blue, 5%), 15%))}', gradientType='1');   /* For IE9 */
+  @include gradient-horizontal($start-color: lighten(saturate($docs-blue, 5%), 15%), $end-color: darken($docs-blue, 20%));
 
   .docs-booticon {
     margin: 0 auto 2rem;
