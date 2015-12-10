@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Update self
+title: update-self
 group: shades
 ---
 

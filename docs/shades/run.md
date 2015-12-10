@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Run
+title: run
 group: shades
 ---
 

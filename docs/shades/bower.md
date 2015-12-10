@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Bower
+title: bower
 group: shades
 ---
 

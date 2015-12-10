@@ -18,4 +18,4 @@ group: about
   {% endfor %}
 </div>
 
-Get involved with Condo development by [opening an issue](https://github.com/pulsebridge/condo/issues/new) or submitting a pull request. Read our [contributing guidelines](https://github.com/pulsebridge/condo/blob/master/CONTRIBUTING) for information on how we work together.
+Get involved with Condo development by [opening an issue](https://github.com/pulsebridge/condo/issues/new) or submitting a pull request. Read our [contributing guidelines](https://github.com/pulsebridge/condo/blob/develop/CONTRIBUTING) for information on how we work together.
