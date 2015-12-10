@@ -7,7 +7,7 @@ gem-locate
 
 @{
     var gem_locate_where_cmd = Build.Unix ? "which" : "where";
-    var gem_locate_cmd = "gem";
+    var gem_locate_cmd = Build.Unix ? "gem" : "gem.bat";
     var gem_locate_found = false;
     var gem_locate_version = string.Empty;
 
