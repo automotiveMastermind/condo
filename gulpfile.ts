@@ -170,7 +170,7 @@ gulp.task('serve', () => {
         server: {
             baseDir: '.docs'
         },
-        browser: ['google chrome', 'internet explorer', 'safari', 'firefox']
+        browser: ['google chrome', 'internet explorer', 'safari', 'firefox', 'opera']
     });
 });
 
