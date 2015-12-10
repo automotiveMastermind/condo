@@ -208,7 +208,7 @@ gulp.task('sync', (done:any) => {
 
 gulp.task('deploy', ['docs'], () => {
     return gulp
-        .src(".docs/**")
+        .src(".docs/**/*")
         .pipe(pages());
 });
 

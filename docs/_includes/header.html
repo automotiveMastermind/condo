@@ -13,7 +13,7 @@
   {% endif %}
 </title>
 
-{% if site.github %}
+{% if jekyll.environment == "development" %}
 <link href="{{ site.baseurl }}/assets/css/docs.min.css" rel="stylesheet">
 {% else %}
 <link href="{{ site.baseurl }}/assets/css/docs.css" rel="stylesheet">
