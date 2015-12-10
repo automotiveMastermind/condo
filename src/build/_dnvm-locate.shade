@@ -5,20 +5,29 @@ dnvm-locate
 
 */}
 
-@{
-    var dnvm_locate_where_cmd = "which";
-    var dnvm_locate_cmd = "dnvm.sh";
-    var dnvm_locate_found = false;
+use namespace = 'System'
+use namespace = 'System.IO'
 
-    if (!Build.Unix)
-    {
-        dnvm_locate_where_cmd = "where";
-        dnvm_locate_cmd = "dnvm.cmd";
-    }
+@{
+    var dnvm_locate_where_cmd = Build.Unix ? "which" : "where";
+    var dnvm_locate_cmd = Build.Unix ? "dnvm.sh" : "dnvm.cmd";
+    var dnvm_locate_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dnx", "dnvm", dnvm_locate_cmd);
+    var dnvm_locate_found = false;
 
     Build.Log.Header("dnvm-locate");
 
     dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, dnvm_locate_cmd);
+
+    if (!dnvm_locate_found)
+    {
+        dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, "dnvm");
+    }
+
+    if (!dnvm_locate_found)
+    {
+        dnvm_locate_cmd = dnvm_locate_path;
+        dnvm_locate_found = File.Exists(dnvm_locate_cmd);
+    }
 
     if (!dnvm_locate_found)
     {
