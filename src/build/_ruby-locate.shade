@@ -82,17 +82,17 @@ use import = 'Condo.Build'
         }
     }
 
-    Build.SetPath("ruby", ruby_locate_cmd, ruby_locate_found);
-    Build.SetPath("gem", gem_locate_cmd, gem_locate_found);
-    Build.SetPath("bundle", bundle_locate_cmd, bundle_locate_found);
+    Build.SetPath("ruby", ruby_locate_cmd);
+    Build.SetPath("gem", gem_locate_cmd);
+    Build.SetPath("bundle", bundle_locate_cmd);
 
-    Build.Log.Argument("ruby path", ruby_locate_cmd, ruby_locate_found);
-    Build.Log.Argument("ruby version", ruby_locate_version, ruby_locate_found);
+    Build.Log.Argument("ruby path", ruby_locate_cmd);
+    Build.Log.Argument("ruby version", ruby_locate_version);
     Build.Log.Header();
-    Build.Log.Argument("gem path", gem_locate_cmd, gem_locate_found);
-    Build.Log.Argument("gem version", gem_locate_version, gem_locate_found);
+    Build.Log.Argument("gem path", gem_locate_cmd);
+    Build.Log.Argument("gem version", gem_locate_version);
     Build.Log.Header();
-    Build.Log.Argument("bundle path", bundle_locate_cmd, bundle_locate_found);
-    Build.Log.Argument("bundle version", bundle_locate_version, bundle_locate_found);
+    Build.Log.Argument("bundle path", bundle_locate_cmd);
+    Build.Log.Argument("bundle version", bundle_locate_version);
     Build.Log.Header();
 }
