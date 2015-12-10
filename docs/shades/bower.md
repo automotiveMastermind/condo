@@ -17,7 +17,7 @@ Executes a bower package manager command.
 
 ## Arguments
 
-The following optional arguments are available within bower.
+The following arguments are available within bower.
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">

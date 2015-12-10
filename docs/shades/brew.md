@@ -1,10 +1,10 @@
 ---
 layout: docs
-title: ruby
+title: brew
 group: shades
 ---
 
-Executes the ruby command line tool.
+Executes the brew package manager on OS X.
 
 ## Contents
 
@@ -13,11 +13,11 @@ Executes the ruby command line tool.
 
 ## Supported Operating Systems
 
-{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
+{% icon fa-apple fa-3x %}
 
 ## Arguments
 
-The following arguments are available within Ruby.
+The following arguments are available within brew.
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,37 +32,37 @@ The following arguments are available within Ruby.
     </thead>
     <tbody>
         <tr>
-            <td>ruby_args</td>
+            <td>brew_args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
-            <td>The arguments to pass to the ruby interpreter.</td>
+            <td>The arguments used to execute brew.</td>
         </tr>
         <tr>
-            <td>ruby_options</td>
+            <td>brew_options</td>
             <td>string</td>
-            <td><code>-e</code></td>
+            <td><code>${env:BREW_OPTIONS}</code></td>
             <td>No</td>
-            <td>The options to use with the Ruby interpreter.</td>
+            <td>Additional options to use when executing brew.</td>
         </tr>
         <tr>
-            <td>ruby_path</td>
+            <td>brew_path</td>
             <td>string</td>
-            <td><code>null</code></td>
+            <td><code>${global:working_path}</code></td>
             <td>No</td>
-            <td>The path in which to execute the Ruby interpreter.</td>
+            <td>The path in which to execute brew.</td>
         </tr>
         <tr>
-            <td>ruby_wait</td>
+            <td>brew_wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for exit.</td>
         </tr>
         <tr>
-            <td>ruby_quiet</td>
-            <td>string</td>
-            <td><code>$(Build.Log.Quiet)</code></td>
+            <td>brew_quiet</td>
+            <td>boolean</td>
+            <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
@@ -72,7 +72,7 @@ The following arguments are available within Ruby.
 
 ## Global Arguments
 
-The following global arguments are used by Ruby:
+The following global arguments are used by brew:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -97,20 +97,10 @@ The following global arguments are used by Ruby:
             <td><code>${global:base_path}</code></td>
             <td>The working path in which condo should execute shell commands.</td>
         </tr>
-        <tr>
-            <td>quiet</td>
-            <td>boolean</td>
-            <td><code>false</code></td>
-            <td>A value indicating whether or not to suppress output when executing condo.</td>
-        </tr>
     </tbody>
     </table>
 </div>
 
 ## Examples
 
-Execute Ruby with options and arguments
-
-{% highlight sh %}
-ruby ruby_options='-e' ruby_args='puts "hello world"'
-{% endhighlight %}
+## See Also
