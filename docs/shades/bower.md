@@ -135,7 +135,6 @@ Any processes created with a `false` wait argument are monitored. The default go
 `#wait` stage of the default lifecycle. You can also use the `Build` utilities to wait for processes to complete at any time:
 
 {% highlight sh %}
-#my-stage target='post-restore'
     - Build.Wait();
 {% endhighlight %}
 
