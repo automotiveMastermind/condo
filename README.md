@@ -76,9 +76,9 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
+&copy; PulseBridge, Inc. and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for details.
 
-[license-image]: https://img.shields.io/badge/license-APACHE%202.0-blue.svg
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
 [credits]: CREDITS
 
