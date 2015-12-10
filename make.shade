@@ -24,3 +24,6 @@ use-condo-goals
 
 #docs .docs-build
     gulp gulp_tasks='serve'
+
+#docs-deploy .docs-build
+    gulp gulp_tasks='deploy'

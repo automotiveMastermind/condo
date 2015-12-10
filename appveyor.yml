@@ -1,7 +1,29 @@
 init:
   - git config --global core.autocrlf true
+branches:
+  except:
+    - gh-pages
+pull_requests:
+  do_not_increment_build_number: true
+environment:
+  RUBY_INSTALL_PATH: C:\Ruby22-x64
+  NUGET_PUSH_FEED:
+    secure: bDDMNs4Db9yruHKBN9AHLkredI7oRY2j2hhqQpYp72iRCPnbYx6hJEh5ouQvFLxC
+  NUGET_PUSH_APIKEY:
+    secure: /BBmYv/HUU0lnVk7iypx0Nq5yeoD8N/LGxGA4xrUPYuqbeMsW0XuUiMSaM/GMwB3
 build_script:
-  - condo.cmd --secure default
+  - condo.cmd --secure --coverage push
 clone_depth: 1
 test: off
 deploy: off
+notifications:
+- provider: Webhook
+  url: https://webhooks.gitter.im/e/74ab780e7b8298a8d2b5
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
+- provider: Webhook
+  url: https://webhooks.gitter.im/e/959cc86b71d0d9463066
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true

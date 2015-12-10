@@ -29,23 +29,30 @@ ruby_quiet='$(Build.Log.Quiet)'
 default base_path       = '${ Directory.GetCurrentDirectory() }'
 default working_path    = '${ base_path }'
 
-default ruby_args       = ''
-default ruby_options    = ''
-default ruby_path       = '${ working_path }'
-default ruby_wait       = '${ true }'
-default ruby_quiet      = '${ Build.Log.Quiet }'
+default ruby_args           = ''
+default ruby_options        = ''
+default ruby_path           = '${ working_path }'
+default ruby_wait           = '${ true }'
+default ruby_quiet          = '${ Build.Log.Quiet }'
+default ruby_install_path   = '${ Build.Get("RUBY_INSTALL_PATH") }'
 
 @{
     Build.Log.Header("ruby");
 
+    var ruby_cmd = string.IsNullOrEmpty(ruby_install_path)
+        ? "ruby"
+        : Path.Combine(ruby_install_path, "ruby");
+
     var ruby_version    = string.Empty;
-    var ruby_installed  = Build.TryExecute("ruby", out ruby_version, "--version");
+    var ruby_installed  = Build.TryExecute(ruby_cmd, out ruby_version, "--version");
 
     if (!ruby_installed)
     {
         Build.Log.Warn("ruby: is not available on the system -- the command will not be executed.");
     }
 
+    Build.Log.Argument("ruby", ruby_cmd);
+    Build.Log.Argument("version", ruby_version);
     Build.Log.Argument("arguments", ruby_args);
     Build.Log.Argument("options", ruby_options);
     Build.Log.Argument("path", ruby_path, ruby_installed);
@@ -56,4 +63,4 @@ default ruby_quiet      = '${ Build.Log.Quiet }'
     ruby_args="'" + ruby_args + "'";
 }
 
-exec exec_cmd='ruby' exec_args='${ ruby_options } ${ ruby_args }' exec_path='${ ruby_path }' exec_redirect='${ false }' if='ruby_installed'
+exec exec_cmd='${ ruby_cmd }' exec_args='${ ruby_options } ${ ruby_args }' exec_path='${ ruby_path }' exec_redirect='${ false }' if='ruby_installed'

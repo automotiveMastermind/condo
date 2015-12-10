@@ -13,7 +13,7 @@ source:           docs
 destination:      .docs_jekyll
 host:             0.0.0.0
 port:             9001
-baseurl:          ""
+baseurl:          "/condo"
 url:              http://code.pulsebridge.com
 encoding:         UTF-8
 exclude:          [assets/]
