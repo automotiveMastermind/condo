@@ -22,6 +22,13 @@ const browser = sync.create();
 
 var prod:boolean = true;
 
+var server = {
+    server: {
+        baseDir: '.docs'
+    },
+    open: <any>'local'
+};
+
 gulp.task('styles:vnd:bootstrap', () => {
     return gulp
         .src('bower_components/bootstrap/scss/**/*.scss')
@@ -165,13 +172,12 @@ gulp.task('dev', () => {
     prod = false;
 });
 
-gulp.task('serve', () => {
-    browser.init({
-        server: {
-            baseDir: '.docs'
-        },
-        browser: ['google chrome', 'internet explorer', 'safari', 'firefox', 'opera']
-    });
+gulp.task('no-browse', () => {
+    server.open = false;
+});
+
+gulp.task('init', () => {
+    browser.init(server);
 });
 
 gulp.task('img', () => {
@@ -200,6 +206,11 @@ gulp.task('sync', (done:any) => {
     gulp.watch(['docs/**/*.*', '!docs/**/*.js', '!docs/**/*.scss'], ['reload']);
 });
 
-gulp.task('watch', (done:any) => sequence('dev', 'docs', 'serve', 'sync', done));
+gulp.task('deploy', ['docs'], () => {
+    return gulp
+        .src(".docs/**")
+        .pipe(pages());
+});
 
-gulp.task('default', ['docs']);
+gulp.task('watch', (done:any) => sequence('dev', 'docs', 'init', 'sync', done));
+gulp.task('serve', (done:any) => sequence('dev', 'docs', 'no-browse', 'init', done));

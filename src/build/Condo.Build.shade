@@ -10,7 +10,7 @@ default Quiet = '${ false }'
 
 macro name='ExecuteRuby' args='string'
     ruby ruby_args='${ args }'
-    
+
 @{
     // set the log instance on the helper class
     Build.Log = new QuietLog(this.Log, Quiet);
@@ -607,7 +607,7 @@ functions @{
                 var error = string.Empty;
 
                 process.OutputDataReceived += (sender, eventArgs) => {
-                    standard += eventArgs.Data;
+                    standard += eventArgs.Data + Environment.NewLine;
 
                     if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
                     {
@@ -616,7 +616,7 @@ functions @{
                 };
 
                 process.ErrorDataReceived += (sender, eventArgs) => {
-                    error += eventArgs.Data;
+                    error += eventArgs.Data + Environment.NewLine;
 
                     if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
                     {
@@ -643,14 +643,14 @@ functions @{
                     if (process.ExitCode == 0)
                     {
                         // set the result to the standard out
-                        result = standard;
+                        result = standard.TrimEnd(Environment.NewLine.ToCharArray());
 
                         // move on immediately
                         return 0;
                     }
 
                     // set the result to the standard error
-                    result = error;
+                    result = error.TrimEnd(Environment.NewLine.ToCharArray());
 
                     // set the exit code
                     exitCode = process.ExitCode;

@@ -11,11 +11,16 @@ var test_path           = 'test'
 use-condo-lifecycle
 use-condo-goals
 
-#docs
+#docs-build
     bundle-install
     npm-install
     bower-install
     tsd tsd_args='reinstall --clean --overwrite --save'
     tsd tsd_args='link'
     tsd tsd_args='rebundle'
-    gulp gulp_args='watch'
+
+#docs-watch .docs-build
+    gulp gulp_tasks='watch'
+
+#docs .docs-build
+    gulp gulp_tasks='serve'

@@ -31,7 +31,7 @@ use namespace = 'System.IO'
 
     if (!dnvm_locate_found)
     {
-        throw new NotSupportedException("dnvm-locate: could not find an instance of dnvm. The build process cannot continue");
+        throw new NotSupportedException("dnvm-locate: could not find an instance of dnvm -- the build process cannot continue.");
     }
 
     Build.SetPath("dnvm", dnvm_locate_cmd, true);

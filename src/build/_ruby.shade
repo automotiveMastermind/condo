@@ -43,16 +43,17 @@ default ruby_quiet      = '${ Build.Log.Quiet }'
 
     if (!ruby_installed)
     {
-        throw new InvalidOperationException("ruby: ruby was not found on the system. Please install ruby and try again.");
+        Build.Log.Warn("ruby: is not available on the system -- the command will not be executed.");
     }
 
     Build.Log.Argument("arguments", ruby_args);
     Build.Log.Argument("options", ruby_options);
-    Build.Log.Argument("path", ruby_path);
+    Build.Log.Argument("path", ruby_path, ruby_installed);
     Build.Log.Argument("wait", ruby_wait);
     Build.Log.Argument("quiet", ruby_quiet);
     Build.Log.Header();
+
     ruby_args="'" + ruby_args + "'";
 }
 
-exec exec_cmd='ruby' exec_args='${ ruby_options } ${ ruby_args }' exec_path='${ ruby_path }' exec_redirect='${ false }'
+exec exec_cmd='ruby' exec_args='${ ruby_options } ${ ruby_args }' exec_path='${ ruby_path }' exec_redirect='${ false }' if='ruby_installed'

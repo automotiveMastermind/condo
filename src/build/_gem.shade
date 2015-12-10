@@ -46,18 +46,23 @@ gem-locate once='gem-locate'
 @{
     Build.Log.Header("gem");
 
-    var gem_cmd = Build.GetPath("gem").Path;
-
     if (string.IsNullOrEmpty(gem_args))
     {
         throw new ArgumentException("gem: cannot execute without arguments.", "gem_args");
+    }
+
+    var gem_cmd = Build.GetPath("gem");
+
+    if (!gem_cmd.Global)
+    {
+        Build.Log.Warn("gem: is not available on the system -- the command will not be executed.");
     }
 
     // trim the arguments
     gem_args = gem_args.Trim();
     gem_options = gem_options.Trim();
 
-    Build.Log.Argument("cli", gem_cmd);
+    Build.Log.Argument("cli", gem_cmd.Path, gem_cmd.Global);
     Build.Log.Argument("arguments", gem_args);
     Build.Log.Argument("options", gem_options);
     Build.Log.Argument("path", gem_path);
@@ -66,4 +71,4 @@ gem-locate once='gem-locate'
     Build.Log.Header();
 }
 
-exec exec_cmd='${ gem_cmd }' exec_args='${ gem_args } ${ gem_options }' exec_path='${ gem_path }' exec_quiet='${ gem_quiet }' exec_redirect='${ false }'
+exec exec_cmd='${ gem_cmd.Path }' exec_args='${ gem_args } ${ gem_options }' exec_path='${ gem_path }' exec_quiet='${ gem_quiet }' exec_redirect='${ false }' if='gem_cmd.Global'
