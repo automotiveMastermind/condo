@@ -51,7 +51,11 @@ default Coverage            = '${ false }'
         // make the test path a fully qualified path
         test_path = Path.Combine(base_path, test_path);
     }
+}
 
+info-collect once='info-collect'
+
+@{
     Build.Log.Header();
     Build.Log.Header("paths");
     Build.Log.Argument("base path", base_path);

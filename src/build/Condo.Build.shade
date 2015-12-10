@@ -182,6 +182,14 @@ functions @{
             }
         }
 
+        public static bool CI
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("CI"));
+            }
+        }
+
         public static bool PullRequest { get; set; }
 
         /// <summary>

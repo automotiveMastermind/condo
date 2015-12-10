@@ -11,6 +11,8 @@ environment:
     secure: bDDMNs4Db9yruHKBN9AHLkredI7oRY2j2hhqQpYp72iRCPnbYx6hJEh5ouQvFLxC
   NUGET_PUSH_APIKEY:
     secure: /BBmYv/HUU0lnVk7iypx0Nq5yeoD8N/LGxGA4xrUPYuqbeMsW0XuUiMSaM/GMwB3
+  TSD_GITHUB_TOKEN:
+    secure: RLP1ex4ZKl8jbYfGzZyYHpngUZI0w6C5yUDa1uNkqYXv6TT3SABGEvyd3V36vzhX
 build_script:
   - condo.cmd --secure --coverage push
 clone_depth: 1

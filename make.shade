@@ -26,4 +26,4 @@ use-condo-goals
     gulp gulp_tasks='serve'
 
 #docs-deploy .docs-build
-    gulp gulp_tasks='deploy'
+    gulp gulp_tasks='deploy' if='string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", StringComparison.OrdinalIgnoreCase)'
