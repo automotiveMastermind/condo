@@ -7,26 +7,25 @@ bundle-download
 
 use import = 'Condo.Build'
 
-ruby-locate once='ruby-locate'
-
 var bundle_install               = '${ Build.GetPath("bundle") }'
-var bundle_installed             = '${ bundle_install.Global }' type='bool'
+
+var bundle_version               = ''
+var bundle_installed             = '${ Build.TryExecute("bundle", out bundle_version, "--version") }' type='bool'
 
 gem-install gem_install_name='bundler' if='!bundle_installed' once='bundler-install'
 
 @{
-    if (!bundle_installed)
+    if (!bundle_install.Global)
     {
         Build.Log.Header("bundle-download");
 
-        var bundle_version = default(string);
-
+        // get the version
         bundle_installed = Build.TryExecute("bundle", out bundle_version, "--version");
 
         Build.Log.Argument("path", bundle_install);
-        Build.Log.Argument("version", bundle_version, bundle_installed);
+        Build.Log.Argument("version", bundle_version);
         Build.Log.Header();
 
-        Build.SetPath("bundle", "bundle", true);
+        Build.SetPath("bundle", bundle_install, true);
     }
 }

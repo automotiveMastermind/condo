@@ -46,18 +46,21 @@ bundle-download once='bundle-download'
 @{
     Build.Log.Header("bundle");
 
-    var bundle_cmd          = Build.GetPath("bundle").Path;
-
     if (string.IsNullOrEmpty(bundle_args))
     {
         throw new ArgumentException("bundle: cannot execute without arguments.", "bundle_args");
     }
 
-    // trim the arguments
     bundle_args = bundle_args.Trim();
     bundle_options = bundle_options.Trim();
 
-    Build.Log.Argument("cli", bundle_cmd);
+    var bundle_cmd          = Build.GetPath("bundle");
+
+    if (!bundle_cmd.Global)
+    {
+        Build.Log.Warn("bundle: bundle not found on the system -- command will not be executed.");
+    }
+
     Build.Log.Argument("arguments", bundle_args);
     Build.Log.Argument("options", bundle_options);
     Build.Log.Argument("path", bundle_path);
@@ -66,4 +69,4 @@ bundle-download once='bundle-download'
     Build.Log.Header();
 }
 
-exec exec_cmd='${ bundle_cmd }' exec_args='${ bundle_args } ${ bundle_options }' exec_path='${ bundle_path }' exec_quiet='${ bundle_quiet }' exec_redirect='${ false }'
+exec exec_cmd='${ bundle_cmd.Path }' exec_args='${ bundle_args } ${ bundle_options }' exec_path='${ bundle_path }' exec_quiet='${ bundle_quiet }' exec_redirect='${ false }' if='bundle_cmd.Global'

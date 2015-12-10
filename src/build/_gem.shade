@@ -41,7 +41,9 @@ default gem_path          = '${ working_path }'
 default gem_wait          = '${ true }'
 default gem_quiet         = '${ Build.Log.Quiet }'
 
-gem-locate once='gem-locate'
+default ruby_install_path = '${ Build.Get("RUBY_INSTALL_PATH") }'
+
+ruby-locate once='ruby-locate'
 
 @{
     Build.Log.Header("gem");
