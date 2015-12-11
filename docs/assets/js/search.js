@@ -1,7 +1,9 @@
-$(function() {
+---
+---
+$(function () {
   var searchIndex,
       searchHits,
-      searchWorker = new Worker("/assets/js/search_worker.min.js");
+      searchWorker = new Worker("{{site.baseurl}}/assets/js/search_worker.min.js");
 
   if (localStorage['search']) {
     searchIndex = JSON.parse(localStorage['search']);

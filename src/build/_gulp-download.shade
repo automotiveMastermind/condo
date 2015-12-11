@@ -30,8 +30,9 @@ default gulp_download_path      = '${ base_path }'
     gulp_install = gulp_globally_installed ? "gulp" : gulp_install;
 
     Build.Log.Argument("path", gulp_install);
+
     Build.Log.Header();
-    
+
     if (gulp_globally_installed)
     {
         Build.Log.Argument("version", gulp_version);

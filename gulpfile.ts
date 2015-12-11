@@ -24,7 +24,10 @@ var prod:boolean = true;
 
 var server = {
     server: {
-        baseDir: '.docs'
+        baseDir: '.docs',
+        routes: <{ [x: string] }>{
+            "/condo" : ".docs"
+        }
     },
     open: <any>'local'
 };

@@ -14,7 +14,7 @@
     "integration"
   ],
   "moduleType": [],
-  "homepage": "http://code.pulsebridge.com",
+  "homepage": "http://open.pulsebridge.com",
   "private": true,
   "ignore": [
     "**/.*",
