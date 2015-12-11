@@ -19,7 +19,7 @@ addons:
 mono:
 - 4.2.1
 script:
-- "./condo.sh --secure default docs-deploy"
+- "./condo.sh --secure docs-deploy"
 env:
   global:
   - secure: rAD/rJwOlr9UPIKmb9QWooyEcM0ahdmFcNK2avGG/X6uawgKKP6Dhqkt3HMkV8siVrVyrZODl1V4NNQWMA8vMFKOaEDwM0QTFn6AiLZhk884LGQe/pHk63PKhzofXUgv/fsNI/JcUzdZPr1CY07LGdC1rtkBEw79qofUDbEQr9KuiroWT/Qj7EiJ0mIEIH3USaLxt4Bs3zCB0ZMBU+M4g1p76u8XW03cCo1LvdK6KR4BKTiLtj226W7hMRq1acQYo/TWk9Ri10uloRXVKg09TcNSpHGW+rs5+CPH79/LfvSGmlbHIyXC46KcdEPkfefcjfplhv7OkxRl3AYGPmB2MoFhFkMKRbmus9lqyAjdgm+sOLIOz8DNcpIaBBSAhTfijarem5+8aFuZrN1G6tHJKvW+Ifhy4SwUBWc4VVkz6POmnLtyb5h7KQUS/BL41bSz2dy48dAKxHpYk40vC+50pxZ6e0U4HgZE1QOSBnn2IvHWIcqsId58naFASTlmX3SsMJhgvIbLJfXHCvpUReaHBISZdvS6qvFo42Mg9oIayVnZ/kQHw3Ivb6MXk2+LwPdZDra+rboK/3++8YYxCdJjG9vMYPtQdbYIJ6vSuLCfWFpoMoGHmf5+vPNFQOE4XJTh2UtVK4UkE+T2fhHa4RzAOoAD20wwliBFT9zYGGKgZgU=

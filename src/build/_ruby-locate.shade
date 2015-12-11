@@ -34,7 +34,9 @@ use import = 'Condo.Build'
 
     if (!string.IsNullOrEmpty(ruby_locate_path))
     {
+        Build.Log.Verbose("ruby_locate_path: " + ruby_locate_path);
         ruby_locate_cmd = Path.Combine(ruby_locate_path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), ruby_locate_name);
+        Build.Log.Verbose("ruby_locate_path: " + ruby_locate_cmd);
 
         ruby_locate_found = Build.TryExecute(ruby_locate_cmd, out ruby_locate_version, "--version");
 
