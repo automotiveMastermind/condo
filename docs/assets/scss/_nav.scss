@@ -4,6 +4,8 @@
   .navbar-nav {
     .nav-link {
       color: $docs-graphite-light;
+      padding-top:    .715rem;
+      padding-bottom: .715rem;
 
       &.active,
       &:hover,

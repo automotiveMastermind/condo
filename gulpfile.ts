@@ -102,13 +102,22 @@ gulp.task('scripts:vnd:lunr', () => {
         .pipe(gulp.dest('.docs/assets/js'));
 });
 
+gulp.task('scripts:vnd:picturefill', () => {
+    return gulp
+        .src('bower_components/picturefill/dist/picturefill.min.js')
+        .pipe(gulp.dest('docs/assets/js/vnd/picturefill'))
+        .pipe(gulp.dest('.docs/assets/js'));
+});
+
+
 gulp.task('scripts:vnd', (done:any) => sequence([
     'scripts:vnd:lunr',
     'scripts:vnd:jquery',
     'scripts:vnd:bootstrap',
     'scripts:vnd:anchor-js',
     'scripts:vnd:clipboard',
-    'scripts:vnd:tether'
+    'scripts:vnd:tether',
+    'scripts:vnd:picturefill'
 ], done));
 
 gulp.task('scripts:compile', () => {
@@ -199,7 +208,7 @@ gulp.task('init', () => {
 gulp.task('img', () => {
     return gulp
         .src('docs/assets/img/**')
-        .pipe(gulp.dest('.docs/img'));
+        .pipe(gulp.dest('.docs/assets/img'));
 });
 
 gulp.task('reload', ['html', 'img'], () => {

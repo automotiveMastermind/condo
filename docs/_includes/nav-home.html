@@ -4,10 +4,21 @@
       <button class="navbar-toggler pull-xs-right hidden-sm-up" type="button" data-toggle="collapse" data-target="#docs-main-nav">
         &#9776;
       </button>
-      <a class="navbar-brand hidden-sm-up" href="{{ site.baseurl }}/">pb &middot; condo</a>
+      <a class="navbar-brand hidden-sm-up" href="{{ site.baseurl }}/">
+        <picture>
+          <source type="image/svg+xml" srcset="{{ site.baseurl }}/assets/img/open.svg">
+          <img src="{{ site.baseurl }}/assets/img/open.png" srcset="{{ site.baseurl }}/assets/img/open@2x.png 2x, {{ site.baseurl }}/assets/img/open@3x.png 3x">
+        </picture>
+      </a>
     </div>
     <div class="collapse navbar-toggleable-xs" id="docs-main-nav">
       <nav class="nav navbar-nav">
+        <a class="navbar-brand hidden-sm-down" href="{{ site.baseurl }}/">
+          <picture>
+            <source type="image/svg+xml" srcset="{{ site.baseurl }}/assets/img/open.svg">
+            <img src="{{ site.baseurl }}/assets/img/open.png" srcset="{{ site.baseurl }}/assets/img/open@2x.png 2x, {{ site.baseurl }}/assets/img/open@3x.png 3x">
+          </picture>
+        </a>
         <a class="nav-item nav-link {% if page.layout == " home " %}active{% endif %}" href="{{ site.baseurl }}/" onclick="appInsights.trackEvent("
         Navbar ", {Area: "Community ", Name: "Condo "});">Condo</a>
         <a class="nav-item nav-link {% if page.layout == " docs " %}active{% endif %}" href="{{ site.baseurl }}/start/overview/"
