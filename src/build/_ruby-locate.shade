@@ -52,6 +52,8 @@ use import = 'Condo.Build'
 
         if (ruby_locate_found)
         {
+            ruby_locate_cmd = ruby_locate_cmd.Split(new char[0])[0];
+
             Build.TryExecute(ruby_locate_cmd, out ruby_locate_version, "--version");
         }
         else
@@ -66,6 +68,8 @@ use import = 'Condo.Build'
 
         if (gem_locate_found)
         {
+            gem_locate_cmd = gem_locate_cmd.Split(new char[0])[0];
+
             Build.TryExecute(gem_locate_cmd, out gem_locate_version, "--version");
         }
         else
@@ -80,6 +84,8 @@ use import = 'Condo.Build'
 
         if (bundle_locate_found)
         {
+            bundle_locate_cmd = bundle_locate_cmd.Split(new char[0])[0];
+
             Build.TryExecute(bundle_locate_cmd, out bundle_locate_version, "--version");
         }
         else
