@@ -104,6 +104,11 @@ default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.c
 
         nuget_push_options += ' -Source \"' + nuget_push_feed + "\"";
     }
+
+    if (nuget_push_pr)
+    {
+        Build.Log.Warn("nuget-push: packages will not be pushed for pull requests.");
+    }
 }
 
 nuget nuget_args='setApiKey ${ nuget_push_apikey }' nuget_options='${ nuget_push_options }' nuget_path='${ nuget_push_path }' nuget_quiet='${ true }' nuget_secure='${ true }' nuget_retries='${ nuget_push_retries }' if='!string.IsNullOrEmpty(nuget_push_apikey) && !nuget_push_pr'
