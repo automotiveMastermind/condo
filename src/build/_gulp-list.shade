@@ -6,6 +6,9 @@ gulp-list
 gulp_list_path='$(base_path)'
     The path containing a gulpfile for which to list tasks.
 
+gulp_list_name='$(gulp_list_path)'
+    The name of the key used to cache the list of tasks.
+
 base_path='$(CurrentDirectory)'
     The base path containing a gulpfile for which to list tasks.
 
