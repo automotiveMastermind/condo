@@ -4,7 +4,7 @@ import * as maps from 'gulp-sourcemaps';
 import * as sass from 'gulp-sass';
 import * as concat from 'gulp-concat';
 import * as js from 'gulp-uglify';
-import * as shell from 'gulp-shell';
+import { exec } from 'child_process';
 import * as util from 'gulp-util';
 import * as cache from 'gulp-cached';
 import * as mem from 'gulp-remember';
@@ -151,7 +151,20 @@ gulp.task('fonts:vnd:font-awesome', () => {
 
 gulp.task('fonts:vnd', (done:any) => sequence('fonts:vnd:font-awesome', done));
 
-gulp.task('html:build', shell.task('jekyll build'));
+gulp.task('html:build', (done:any) => {
+    var jekyll = 'jekyll build';
+
+    if (!prod) {
+        jekyll += ' --config _config.yml,_config.dev.yml';
+    }
+
+    exec(jekyll, (err, stdout, stderr) => {
+        console.log(stdout);
+        console.log(stderr);
+
+        done(err);
+    });
+});
 
 gulp.task('html:compile', () => {
     return gulp

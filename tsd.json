@@ -56,9 +56,6 @@
     "gulp-minify-html/gulp-minify-html.d.ts": {
       "commit": "c3ab375b371b7b4204adee3b1209baecd81cec02"
     },
-    "gulp-shell/gulp-shell.d.ts": {
-      "commit": "c3ab375b371b7b4204adee3b1209baecd81cec02"
-    },
     "gulp-util/gulp-util.d.ts": {
       "commit": "c3ab375b371b7b4204adee3b1209baecd81cec02"
     },

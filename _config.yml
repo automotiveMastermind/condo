@@ -17,6 +17,7 @@ baseurl:          "/condo"
 url:              http://code.pulsebridge.com
 encoding:         UTF-8
 exclude:          [assets/]
+github:           true
 
 gems:
   - jekyll-redirect-from
