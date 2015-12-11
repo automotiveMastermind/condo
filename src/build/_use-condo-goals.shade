@@ -157,7 +157,7 @@ info-collect once='info-collect'
 
 #initialize-gulp description='Initializes the project by executing the default gulp task. This will install the gulp node module if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "gulpfile.js").Union(Build.GetPathsContaining(base_path, "gulpfile.babel.js")).Union(Build.GetPathsContaining(base_path, "gulpfile.ts")) }'
-    gulp each='var gulp_path in paths'
+    gulp-task each='var gulp_task_path in paths'
 
 #validate-info target='validate' description='Collects and validates assembly information used during the build.'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'

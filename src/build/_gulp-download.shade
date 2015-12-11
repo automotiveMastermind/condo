@@ -22,8 +22,8 @@ default gulp_download_path      = '${ base_path }'
 
     var gulp_install                = Path.Combine(gulp_download_path, "node_modules", "gulp", "bin", "gulp.js");
 
-    var gulp_locally_installed      = File.Exists(gulp_install);
     var gulp_version                = string.Empty;
+    var gulp_locally_installed      = File.Exists(gulp_install);
     var gulp_globally_installed     = !gulp_locally_installed && Build.TryExecute("gulp", out gulp_version, "--version");
     var gulp_installed              = gulp_locally_installed || gulp_globally_installed;
 
@@ -31,12 +31,12 @@ default gulp_download_path      = '${ base_path }'
 
     Build.Log.Argument("path", gulp_install);
 
-    Build.Log.Header();
-
     if (gulp_globally_installed)
     {
         Build.Log.Argument("version", gulp_version);
     }
+
+    Build.Log.Header();
 }
 
 npm-install npm_install_id='gulp' npm_install_prefix='${ gulp_download_path }' if='!gulp_installed'

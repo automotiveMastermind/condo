@@ -22,11 +22,11 @@ var build_docs          = '${ string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", 
     tsd tsd_args='rebundle'
 
 #docs-watch .docs-build
-    gulp gulp_tasks='watch'
+    gulp-task gulp_task_name='watch'
 
 #docs .docs-build
-    gulp gulp_tasks='serve'
+    gulp-task gulp_task_name='serve'
 
 #docs-deploy .docs-build
     git-config if='build_docs'
-    gulp gulp_tasks='deploy' if='build_docs'
+    gulp-task gulp_task_name='deploy' if='build_docs'
