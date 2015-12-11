@@ -30,6 +30,3 @@ var build_docs          = '${ string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", 
 #docs-deploy .docs-build
     git-config if='build_docs'
     gulp gulp_tasks='deploy' if='build_docs'
-
-#test-ruby
-    ruby-locate

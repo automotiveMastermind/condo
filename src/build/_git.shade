@@ -57,7 +57,7 @@ git-config once='git-config'
         git_options = git_options.Trim();
     }
 
-    Build.Log.Argument("arguments", git_args);
+    Build.Log.Argument("arguments", git_args, Build.Log.Secure);
     Build.Log.Argument("options", git_options);
     Build.Log.Argument("path", git_path);
     Build.Log.Argument("wait", git_wait);

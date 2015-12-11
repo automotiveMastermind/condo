@@ -14,7 +14,7 @@ environment:
   TSD_GITHUB_TOKEN:
     secure: RLP1ex4ZKl8jbYfGzZyYHpngUZI0w6C5yUDa1uNkqYXv6TT3SABGEvyd3V36vzhX
 build_script:
-  - condo.cmd test-ruby
+  - condo.cmd --secure push
 clone_depth: 1
 test: off
 deploy: off

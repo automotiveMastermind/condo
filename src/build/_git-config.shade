@@ -40,7 +40,7 @@ default git_config_quiet    = '${ Build.Log.Quiet }'
 
     var git_version         = string.Empty;
     var git_installed       = Build.TryExecute("git", out git_version, "--version");
-    
+
     if (!git_installed)
     {
         throw new Exception("git: git must be manually installed in order to use the git cmd.");
@@ -91,10 +91,10 @@ default git_config_quiet    = '${ Build.Log.Quiet }'
     }
 
     Build.Log.Argument("version", git_version);
-    Build.Log.Argument("user", git_config_user);
-    Build.Log.Argument("email", git_config_email);
+    Build.Log.Argument("user", git_config_user, Build.Log.Secure);
+    Build.Log.Argument("email", git_config_email, Build.Log.Secure);
     Build.Log.Header();
 }
 
-exec exec_cmd='git' exec_args='config user.name "${ git_config_user }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }'
-exec exec_cmd='git' exec_args='config user.email "${ git_config_email }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }'
+exec exec_cmd='git' exec_args='config user.name "${ git_config_user }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }' exec_secure='${ Build.Log.Secure }'
+exec exec_cmd='git' exec_args='config user.email "${ git_config_email }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }' exec_secure='${ Build.Log.Secure }'
