@@ -2,7 +2,7 @@
 @{/*
 
 nuget-push
-    Executes a nuget pushage manager command to push all available pushages.
+    Executes a nuget push manager command to push all available packages.
 
 nuget_push_args=''
     Required. The path to the nuget package that should be pushed to the feed.
