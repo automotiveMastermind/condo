@@ -4,75 +4,121 @@ title: bundle
 group: shades
 ---
 
-@{/*
+Executes the bundler command line utility.
 
-bundle
-    Executes the bundler command line utility.
+## Contents
 
-bundle_args=''
-    Required. The arguments to pass to the bundler command line tool.
+* Will be replaced with the table of contents
+{:toc}
 
-bundle_options='' (Environment Variable: BUNDLE_OPTIONS)
-    Additional options to use when executing the bundler command.
+## Supported Operating Systems
 
-bundle_path='$(base_path)'
-    The path in which to execute bundler.
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
 
-bundle_wait='true'
-    A value indicating whether or not to wait for exit.
+## Arguments
 
-bundle_quiet='$(Build.Log.Quiet)'
-    A value indicating whether or not to avoid printing output.
+The `bundle` shade accepts the following arguments:
 
-base_path='$(CurrentDirectory)'
-    The base path in which to execute bundler.
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:100px;">Name</th>
+            <th style="width:50px;">Type</th>
+            <th style="width:50px;">Default</th>
+            <th style="width:25px;">Required</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>bundle_args</td>
+            <td>string</td>
+            <td><code>null</code></td>
+            <td><strong>Yes</strong></td>
+            <td>The arguments to pass to the bundler command line tool.</td>
+        </tr>
+        <tr>
+            <td>bundle_options</td>
+            <td>string</td>
+            <td><code>${env:BUNDLE_OPTIONS}</code></td>
+            <td>No</td>
+            <td>Additional options to use when executing the bundler command.</td>
+        </tr>
+        <tr>
+            <td>bundle_path</td>
+            <td>string</td>
+            <td><code>${global:working_path}</code></td>
+            <td>No</td>
+            <td>The path in which to execute bundler.</td>
+        </tr>
+        <tr>
+            <td>bundle_wait</td>
+            <td>boolean</td>
+            <td><code>true</code></td>
+            <td>No</td>
+            <td>A value indicating whether or not to wait for the bundler command to exit.</td>
+        </tr>
+        <tr>
+            <td>bundle_quiet</td>
+            <td>boolean</td>
+            <td><code>${global:quiet}</code></td>
+            <td>No</td>
+            <td>A value indicating whether or not to suppress standard output when executing the bundler command.</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
 
-working_path='$(base_path)'
-    The working path in which to execute bundler.
+## Global Arguments
 
-*/}
+The following global arguments are used by `bundle`:
 
-use namespace = 'System'
-use namespace = 'System.IO'
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:100px;">Name</th>
+            <th style="width:50px;">Type</th>
+            <th style="width:50px;">Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>base_path</td>
+            <td>string</td>
+            <td><code>$PWD</code></td>
+            <td>The base path in which Condo was executed.</td>
+        </tr>
+        <tr>
+            <td>working_path</td>
+            <td>string</td>
+            <td><code>${global:base_path}</code></td>
+            <td>The working path in which Condo should execute shell commands.</td>
+        </tr>
+        <tr>
+            <td>quiet</td>
+            <td>boolean</td>
+            <td><code>false</code></td>
+            <td>A value indicating whether or not to suppress output when executing Condo.</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
 
-use import = 'Condo.Build'
+## Examples
 
-default base_path           = '${ Directory.GetCurrentDirectory() }'
-default working_path        = '${ base_path }'
+### Bundler
 
-default bundle_args         = ''
-default bundle_options      = '${ Build.Get("BUNDLE_OPTIONS") }'
+{% highlight sh %}
+bundle bundle_args='install'
+{% endhighlight %}
 
-default bundle_path         = '${ working_path }'
-default bundle_wait         = '${ true }'
-default bundle_quiet        = '${ Build.Log.Quiet }'
+Note: Use the `bundle-install` shade instead of calling `bundle` directly as illustrated in this example.
+This shade exists primarily to support more specialized shades.
 
-bundle-download once='bundle-download'
+## See Also
 
-@{
-    Build.Log.Header("bundle");
-
-    if (string.IsNullOrEmpty(bundle_args))
-    {
-        throw new ArgumentException("bundle: cannot execute without arguments.", "bundle_args");
-    }
-
-    bundle_args = bundle_args.Trim();
-    bundle_options = bundle_options.Trim();
-
-    var bundle_cmd          = Build.GetPath("bundle");
-
-    if (!bundle_cmd.Global)
-    {
-        Build.Log.Warn("bundle: bundle not found on the system -- command will not be executed.");
-    }
-
-    Build.Log.Argument("arguments", bundle_args);
-    Build.Log.Argument("options", bundle_options);
-    Build.Log.Argument("path", bundle_path);
-    Build.Log.Argument("wait", bundle_wait);
-    Build.Log.Argument("quiet", bundle_quiet);
-    Build.Log.Header();
-}
-
-exec exec_cmd='${ bundle_cmd.Path }' exec_args='${ bundle_args } ${ bundle_options }' exec_path='${ bundle_path }' exec_quiet='${ bundle_quiet }' exec_redirect='${ false }' if='bundle_cmd.Global'
+* [bundle-download]({{site.baseurl}}/shades/bundle-download)
+* [bundle-install]({{site.baseurl}}/shades/bundle-install)
