@@ -89,7 +89,7 @@ The following global arguments are used by `brew-install`:
 
 ## Examples
 
-Condo can install a formula using `brew`:
+### Install Formula
 
 {% highlight sh %}
 brew-install brew_install_formula='graphicsmagick'
