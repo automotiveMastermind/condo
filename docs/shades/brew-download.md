@@ -52,7 +52,7 @@ The following global arguments are used by `brew-download`:
 
 ## Examples
 
-Condo can download and install `brew` if it is not already available on the system.
+### Download Brew
 
 {% highlight sh %}
 brew-download
