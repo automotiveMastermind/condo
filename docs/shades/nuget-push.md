@@ -6,6 +6,8 @@ group: shades
 
 Executes a nuget pushage manager command to push all available pushages.
 
+Note: This shade will not push any packages to external feeds for pull-requests.
+
 ## Contents
 
 * Will be replaced with the table of contents
@@ -17,7 +19,7 @@ Executes a nuget pushage manager command to push all available pushages.
 
 ## Arguments
 
-The following arguments are available within bower.
+The `nuget-push` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,61 +34,58 @@ The following arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>nuget_push_args</td>
+            <td>package</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
-            <td>The path to the nuget package that should be pushed to the feed.</td>
+            <td>The path to the NuGet package that should be pushed to the feed.</td>
         </tr>
         <tr>
-            <td>nuget_push_feed</td>
+            <td>feed</td>
             <td>string</td>
             <td><code>${env:NUGET_PUSH_FEED}</code></td>
             <td>No</td>
-            <td>The feed to which nuget should push packages.</td>
+            <td>The feed to which NuGet should push packages.</td>
         </tr>
         <tr>
-            <td>nuget_push_apikey</td>
+            <td>apikey</td>
             <td>string</td>
-            <td><code>$(NUGET_PUSH_APIKEY)</code></td>
+            <td><code>${env:NUGET_PUSH_APIKEY}</code></td>
             <td>No</td>
             <td>The API key to use when pushing packages to the nuget feed.</td>
         </tr>
         <tr>
-            <td>nuget_push_options</td>
+            <td>options</td>
             <td>string</td>
-            <td><code>$(NUGET_PUSH_OPTIONS)</code></td>
+            <td><code>${env:NUGET_PUSH_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to include when executing the nuget command line tool for the push operation.</td>
         </tr>
         <tr>
-            <td>nuget_config_path</td>
+            <td>path</td>
             <td>string</td>
-            <td><code>$(nuget_download_path)/nuget.config</code></td>
-            <td>No</td>
-            <td>The path to the nuget configuration file to use when executing nuget commands.</td>
-        </tr>
-        <tr>
-            <td>nuget_push_path</td>
-            <td>string</td>
-            <td><code>$(working_path)</code></td>
+            <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute the nuget command line tool.</td>
         </tr>
         <tr>
-            <td>nuget_download_path</td>
-            <td>string</td>
-            <td><code>$(base_path)/.nuget</code></td>
+            <td>retries</td>
+            <td>int</td>
+            <td><code>3</code></td>
             <td>No</td>
-            <td>The path in which to install nuget.</td>
+            <td>The number of times to attempt to push the package before giving up.</td>
         </tr>
     </tbody>
-    </table>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>nuget_push_</code>.</td>
+        </tr>
+    </tfooter>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `nuget-push`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -117,13 +116,13 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Push package which is located in a specific directory
+### Push Packages
 
 {% highlight sh %}
 nuget-push nuget_push_args='/some/path'
 {% endhighlight %}
 
-Push package to server with a specific API key
+### Push Packages with API Key
 
 {% highlight sh %}
 nuget-push nuget_push_args='/some/path' nuget_push_apikey='2k34hkj23h4k2h34kh234'

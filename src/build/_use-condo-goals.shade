@@ -196,11 +196,11 @@ info-collect once='info-collect'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
-    nuget-push each='var nuget_push_args in pkgs'
+    nuget-push each='var nuget_push_package in pkgs'
 
 #push-dnx-packages target='push' description='Pushes DNX packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
-    nuget-push each='var nuget_push_args in pkgs'
+    nuget-push each='var nuget_push_package in pkgs'
 
 #run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
