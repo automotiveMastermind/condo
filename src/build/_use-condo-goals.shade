@@ -117,8 +117,8 @@ info-collect once='info-collect'
 #clean-artifacts target='clean' description='Cleans the artifacts directory from the working directory.' -Build.RemoveDirectory(target_path);
 
 #clean-build target='clean' description='Clean the build artifacts from each project within the working directory.'
-    var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
-    clean each='var clean_path in paths'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json").Union(Build.GetPathsContaining(test_path, "project.json")) }'
+    dotnet-clean each='var dotnet_clean_path in paths'
 
 #clean-all .clean-bower-components .clean-npm-modules .clean-bin .clean description='Clean everything in preparation for `git clean`.'
 

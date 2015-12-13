@@ -18,7 +18,6 @@
     - title: bundle
     - title: bundle-download
     - title: bundle-install
-    - title: clean
     - title: copy
     - title: cover
     - title: cover-report
@@ -32,6 +31,7 @@
     - title: dnx-test
     - title: dnx-watch
     - title: dnx-watch-download
+    - title: dotnet-clean
     - title: exec
     - title: gem
     - title: gem-install

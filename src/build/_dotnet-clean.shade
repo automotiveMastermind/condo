@@ -1,0 +1,35 @@
+@{/*
+
+dotnet_clean
+    Cleans a .NET 5 project.
+
+default dotnet_clean_project=''
+    Path to the project.json file to clean.
+
+default dotnet_clean_path=''
+    Path to the folder containing the project to clean.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+default dotnet_clean_project = ''
+default dotnet_clean_path = ''
+
+@{
+    Build.Log.Header("dotnet-clean");
+
+    var final_clean_path = !string.IsNullOrEmpty(dotnet_clean_project) ? Path.GetDirectoryName(dotnet_clean_project) : dotnet_clean_path;
+
+    if (string.IsNullOrEmpty(final_clean_path))
+    {
+        throw new ArgumentException("dotnet-clean: no project or path was specified.", "clean_path");
+    }
+
+    Build.Log.Argument("path", final_clean_path);
+    Build.Log.Header();
+}
+
+directory delete='${ Path.Combine(final_clean_path, "bin") }'
+directory delete='${ Path.Combine(final_clean_path, "obj") }'
