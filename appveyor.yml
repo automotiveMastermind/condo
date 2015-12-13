@@ -14,7 +14,7 @@ environment:
   TSD_GITHUB_TOKEN:
     secure: 7ecQLiys+JQy59R8T+Bp4nv/XS/J7yGfXUQy+0vfoK71tjJpYmW9dPIUf/KaitVg
 build_script:
-  - condo.cmd --secure push
+  - condo.cmd --coverage --secure push
 clone_depth: 1
 test: off
 deploy: off
