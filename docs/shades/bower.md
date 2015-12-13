@@ -111,7 +111,7 @@ The following global arguments are used by `bower`:
 
 ## Examples
 
-Condo can install all packages found within a `bower.json` file (on the working path):
+### Bower
 
 {% highlight sh %}
 bower bower_args='install'
