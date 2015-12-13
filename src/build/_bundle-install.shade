@@ -1,7 +1,7 @@
 @{/*
 
 bundle-install
-    Installs a package using the bundler command line utility for ruby.
+    Installs the packages from a Gemfile using the bundler command line utility for ruby.
 
 bundle_install_frozen='true'
     A value indicating whether or not to update the Gemfile.lock file after install.
