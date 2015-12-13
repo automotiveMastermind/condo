@@ -70,7 +70,7 @@ The following global arguments are used by `bower-download`:
 
 ## Examples
 
-Condo can download bower into the base path, which is used to execute other bower commands:
+### Download
 
 {% highlight sh %}
 bower-download
