@@ -2,6 +2,8 @@
 layout: docs
 title: bower
 group: shades
+redirect_from: "/shades/"
+slug: bower
 ---
 
 Executes a bower package manager command.
@@ -17,7 +19,7 @@ Executes a bower package manager command.
 
 ## Arguments
 
-The following arguments are available within bower.
+The `bower` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -72,7 +74,7 @@ The following arguments are available within bower.
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `bower`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -89,19 +91,19 @@ The following global arguments are used by bower:
             <td>base_path</td>
             <td>string</td>
             <td><code>$PWD</code></td>
-            <td>The base path in which condo was executed.</td>
+            <td>The base path in which Condo was executed.</td>
         </tr>
         <tr>
             <td>working_path</td>
             <td>string</td>
             <td><code>${global:base_path}</code></td>
-            <td>The working path in which condo should execute shell commands.</td>
+            <td>The working path in which Condo should execute shell commands.</td>
         </tr>
         <tr>
             <td>quiet</td>
             <td>boolean</td>
             <td><code>false</code></td>
-            <td>A value indicating whether or not to suppress output when executing condo.</td>
+            <td>A value indicating whether or not to suppress output when executing Condo.</td>
         </tr>
     </tbody>
     </table>
@@ -109,7 +111,7 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Condo can install all packages found within a bower.json file (on the working path):
+Condo can install all packages found within a `bower.json` file (on the working path):
 
 {% highlight sh %}
 bower bower_args='install'
@@ -135,12 +137,12 @@ Any processes created with a `false` wait argument are monitored. The default go
 `#wait` stage of the default lifecycle. You can also use the `Build` utilities to wait for processes to complete at any time:
 
 {% highlight sh %}
-    - Build.Wait();
+- Build.Wait();
 {% endhighlight %}
 
 A shade will be introduced in the future that will wrap this utility method.
 
 ## See Also
 
-* [bower-install](/shades/bower-install)
-* [bower-download](/shades/bower-download)
+* [bower-install]({{site.baseurl}}/shades/bower-install)
+* [bower-download]({{site.baseurl}}/shades/bower-download)

@@ -111,7 +111,7 @@ condopkg=$root/packages/PulseBridge.Condo
 includes=$condopkg/build
 condo=$condopkg/PulseBridge.Condo.nupkg
 
-make=make.shade
+make=condo.shade
 
 # determine if the feed was set from an environment variable
 if [ -z "$feedsrc" ]; then

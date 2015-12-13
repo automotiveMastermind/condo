@@ -63,7 +63,7 @@ SETLOCAL
     SET CONDOPKG=packages\PulseBridge.Condo
     SET CONDO=%CONDOPKG%\PulseBridge.Condo.nuspec
     SET INCLUDES=%CONDOPKG%\build
-    SET MAKE=make.shade
+    SET MAKE=condo.shade
 
     IF [%FEEDSRC%] == [] (
         SET FEEDSRC=https://api.nuget.org/v3/index.json

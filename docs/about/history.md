@@ -2,6 +2,8 @@
 layout: docs
 title: History
 group: about
+redirect_from: "/about/"
+slug: history
 ---
 
 Condo was born out of the frustration that all of us feel when trying to enable continous integration for projects across

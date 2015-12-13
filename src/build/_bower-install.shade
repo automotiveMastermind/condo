@@ -12,6 +12,9 @@ bower_install_options='' (Environment Variable: BOWER_INSTALL_OPTIONS)
 bower_install_path='$(working_path)'
     The path in which to execute the bower install command.
 
+bower_install_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
 base_path='$(CurrentDirectory)'
     The base path in which to execute the bower install command.
 
@@ -31,6 +34,7 @@ default working_path            = '${ base_path }'
 default bower_install_id        = ''
 default bower_install_options   = '${ Build.Get("BOWER_INSTALL_OPTIONS") }'
 default bower_install_path      = '${ working_path }'
+default bower_install_quiet     = '${ Build.Log.Quiet }'
 
 @{
     Build.Log.Header("bower-install");
@@ -45,4 +49,4 @@ default bower_install_path      = '${ working_path }'
     Build.Log.Header();
 }
 
-bower bower_args='install ${ bower_install_id }' bower_options='${ bower_install_options }' bower_path='${ bower_install_path }'
+bower bower_args='install ${ bower_install_id }' bower_options='${ bower_install_options }' bower_path='${ bower_install_path }' bower_quiet='${ bower_install_quiet }'

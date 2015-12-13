@@ -26,10 +26,10 @@
 
         <ul class="nav docs-sidenav">
           {% for doc in group.pages %}
-            {% assign slug = doc.title | downcase | replace: ' ', '-' | replace:'-&-','-' %}
+            {% assign slug = doc.title | downcase | replace: ' ', '-' | replace:'-&-','-' | append: '.md' %}
             {% assign active = nil %}
 
-            {% if page.url contains slug %}
+            {% if page.name contains slug %}
               {% assign active = 'active docs-sidenav-active' %}
             {% endif %}
 

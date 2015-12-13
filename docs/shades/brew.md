@@ -17,7 +17,7 @@ Executes the brew package manager on OS X.
 
 ## Arguments
 
-The following arguments are available within brew.
+The `brew` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -72,7 +72,7 @@ The following arguments are available within brew.
 
 ## Global Arguments
 
-The following global arguments are used by brew:
+The following global arguments are used by `brew`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -89,13 +89,13 @@ The following global arguments are used by brew:
             <td>base_path</td>
             <td>string</td>
             <td><code>$PWD</code></td>
-            <td>The base path in which condo was executed.</td>
+            <td>The base path in which Condo was executed.</td>
         </tr>
         <tr>
             <td>working_path</td>
             <td>string</td>
             <td><code>${global:base_path}</code></td>
-            <td>The working path in which condo should execute shell commands.</td>
+            <td>The working path in which Condo should execute shell commands.</td>
         </tr>
     </tbody>
     </table>
@@ -103,4 +103,15 @@ The following global arguments are used by brew:
 
 ## Examples
 
+Condo can install OS X specific packages using brew:
+
+{% highlight sh %}
+brew brew_args='install imagemagick'
+{% endhighlight %}
+
+Note: Use the `brew-install` shade instead of calling `brew` directly. This shade exists primarily to support more specialized shades.
+
 ## See Also
+
+* [brew-download]({{site.baseurl}}/shades/brew-download)
+* [brew-install]({{site.baseurl}}/shades/brew-install)

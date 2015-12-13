@@ -2,6 +2,7 @@
 layout: docs
 title: License
 group: about
+slug: license
 ---
 
 ## MIT

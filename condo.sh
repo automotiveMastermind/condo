@@ -109,7 +109,7 @@ sake=$sakepkg/tools/Sake.exe
 condopkg=$root/src
 includes=$condopkg/build
 
-make=make.shade
+make=condo.shade
 
 # determine if sake exists
 if ! test "$sake"; then

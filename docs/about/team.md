@@ -2,6 +2,7 @@
 layout: docs
 title: Team
 group: about
+slug: team
 ---
 
 > PulseBridge Condo is maintained by the PulseBridge team and its contributors.

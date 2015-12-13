@@ -5,7 +5,7 @@
     - title: Default Lifecycle
     - title: Default Goals
     - title: Best Practices
-    - title: Cross-Platform Support
+    - title: Semantic Versioning
 
 - title: Shades
   pages:
@@ -15,6 +15,9 @@
     - title: brew
     - title: brew-download
     - title: brew-install
+    - title: bundle
+    - title: bundle-download
+    - title: bundle-install
     - title: clean
     - title: copy
     - title: cover
@@ -40,6 +43,8 @@
     - title: grunt-download
     - title: gulp
     - title: gulp-download
+    - title: gulp-list
+    - title: gulp-task
     - title: info
     - title: info-collect
     - title: log
@@ -59,6 +64,7 @@
     - title: rimraf
     - title: rimraf-download
     - title: ruby
+    - title: ruby-locate
     - title: run
     - title: tsd
     - title: tsd-download
@@ -67,8 +73,8 @@
 
 - title: Utilities
   pages:
-    - title: Build
-    - title: AssemblyInfo
+    - title: Build Tools
+    - title: Assembly Info
 
 - title: About
   pages:

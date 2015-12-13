@@ -2,6 +2,7 @@
 layout: docs
 title: bower-download
 group: shades
+slug: bower-download
 ---
 
 Downloads and installs bower if it is not already installed.
@@ -17,7 +18,7 @@ Downloads and installs bower if it is not already installed.
 
 ## Arguments
 
-The following arguments are available within bower-download.
+The `bower-download` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -44,7 +45,7 @@ The following arguments are available within bower-download.
 
 ## Global Arguments
 
-The following global arguments are used by bower-download:
+The following global arguments are used by `bower-download`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -61,7 +62,7 @@ The following global arguments are used by bower-download:
             <td>base_path</td>
             <td>string</td>
             <td><code>$PWD</code></td>
-            <td>The base path in which condo was executed.</td>
+            <td>The base path in which Condo was executed.</td>
         </tr>
     </tbody>
     </table>
@@ -69,4 +70,13 @@ The following global arguments are used by bower-download:
 
 ## Examples
 
+Condo can download bower into the base path, which is used to execute other bower commands:
+
+{% highlight sh %}
+bower-download
+{% endhighlight %}
+
 ## See Also
+
+* [bower]({{site.baseurl}}/shades/bower)
+* [bower-install]({{site.baseurl}}/shades/bower-download)

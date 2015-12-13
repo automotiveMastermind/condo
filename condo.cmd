@@ -63,7 +63,7 @@ SETLOCAL
     SET CONDOPKG=src
     SET INCLUDES=%CONDOPKG%\build
 
-    SET MAKE=make.shade
+    SET MAKE=condo.shade
 
     IF EXIST "%SAKE%" (
 	      rd "%SAKEPKG%" /s /q
