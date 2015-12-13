@@ -103,7 +103,7 @@ The following global arguments are used by `brew`:
 
 ## Examples
 
-Condo can install OS X specific packages using brew:
+### Brew
 
 {% highlight sh %}
 brew brew_args='install imagemagick'
