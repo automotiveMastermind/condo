@@ -102,13 +102,13 @@ The following global arguments are used by `bower-install`:
 
 ## Examples
 
-Condo can install all packages found within a `bower.json` file located anywhere underneath the working path:
+### Install
 
 {% highlight sh %}
 bower install
 {% endhighlight %}
 
-### Bower Install with Options
+### Install with Options
 
 {% highlight sh %}
 bower-install bower_install_options='--save-dev'
