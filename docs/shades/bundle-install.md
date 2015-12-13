@@ -4,57 +4,98 @@ title: bundle-install
 group: shades
 ---
 
-@{/*
+Installs the packages from a Gemfile using the bundler command line utility for ruby.
 
+## Contents
+
+* Will be replaced with the table of contents
+{:toc}
+
+## Supported Operating Systems
+
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
+
+## Arguments
+
+The `bundle-install` shade accepts the following arguments:
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:100px;">Name</th>
+            <th style="width:50px;">Type</th>
+            <th style="width:50px;">Default</th>
+            <th style="width:25px;">Required</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>bundle_install_frozen</td>
+            <td>boolean</td>
+            <td><code>true</code></td>
+            <td><strong>No</strong></td>
+            <td>A value indicating whether or not to update the Gemfile.lock file after install.</td>
+        </tr>
+        <tr>
+            <td>bundle_install_options</td>
+            <td>string</td>
+            <td><code>${env:BUNDLE_INSTALL_OPTIONS}</code></td>
+            <td>No</td>
+            <td>Additional options to use when executing the bundle install command.</td>
+        </tr>
+        <tr>
+            <td>bundle_install_path</td>
+            <td>string</td>
+            <td><code>${global:working_path}</code></td>
+            <td>No</td>
+            <td>The path in which to execute the bundle install command.</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+
+## Global Arguments
+
+The following global arguments are used by `bundle-install`:
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:100px;">Name</th>
+            <th style="width:50px;">Type</th>
+            <th style="width:50px;">Default</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>base_path</td>
+            <td>string</td>
+            <td><code>$PWD</code></td>
+            <td>The base path in which Condo was executed.</td>
+        </tr>
+        <tr>
+            <td>working_path</td>
+            <td>string</td>
+            <td><code>${global:base_path}</code></td>
+            <td>The working path in which Condo should execute shell commands.</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+
+## Examples
+
+### Install
+
+{% highlight sh %}
 bundle-install
-    Installs a package using the bundler command line utility for ruby.
+{% endhighlight %}
 
-bundle_install_frozen='true'
-    A value indicating whether or not to update the Gemfile.lock file after install.
+## See Also
 
-bundle_install_options='' (Environment Variable: BUNDLE_INSTALL_OPTIONS)
-    Additional options to use when executing the bundle install command.
-
-bundle_install_path='$(working_path)'
-    The path in which to execute the bundle install command.
-
-base_path='$(CurrentDirectory)'
-    The base path in which to execute the bundle install command.
-
-working_path='$(base_path)'
-    The working path in which to execute the bundle install command.
-
-*/}
-
-use namespace = 'System'
-use namespace = 'System.IO'
-
-use import = 'Condo.Build'
-
-default base_path                   = '${ Directory.GetCurrentDirectory() }'
-default working_path                = '${ base_path }'
-
-default bundle_install_frozen       = '${ false }' type='bool'
-default bundle_install_options      = '${ Build.Get("BUNDLE_INSTALL_OPTIONS") }'
-default bundle_install_path         = '${ working_path }'
-
-@{
-    Build.Log.Header("bundle-install");
-
-    // trim the arguments
-    bundle_install_options = bundle_install_options.Trim();
-
-    Build.Log.Argument("frozen", bundle_install_frozen);
-    Build.Log.Argument("options", bundle_install_options);
-    Build.Log.Argument("path", bundle_install_path);
-    Build.Log.Header();
-
-    // determine if the gemfile.lock should be frozen
-    if (bundle_install_frozen)
-    {
-        // add the frozen option
-        bundle_install_options = (bundle_install_options + " --frozen").Trim();
-    }
-}
-
-bundle bundle_args='install' bundle_options='${ bundle_install_options }' bundle_path='${ bundle_install_path }'
+* [bundle]({{site.baseurl}}/shades/bundle)
+* [bundle-download]({{site.baseurl}}/shades/bundle-download)
