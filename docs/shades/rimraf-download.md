@@ -17,7 +17,7 @@ Downloads and installs rimraf if it is not already installed.
 
 ## Arguments
 
-The following arguments are available within bower.
+The `rimraf-download` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,19 +32,24 @@ The following arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>rimraf_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
-            <td>The path that should be recursively removed.</td>
+            <td>The path in which to download rimraf.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>rimraf_download</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `rimraf-download`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -58,16 +63,10 @@ The following global arguments are used by bower:
     </thead>
     <tbody>
         <tr>
-            <td>rimraf_download_path</td>
-            <td>string</td>
-            <td><code>null</code></td>
-            <td>The path in which to download rimraf.</td>
-        </tr>
-        <tr>
             <td>base_path</td>
             <td>string</td>
             <td><code>false</code></td>
-            <td>The base path in which to execute rimraf.</td>
+            <td>The base path in which Condo was executed.</td>
         </tr>
     </tbody>
     </table>
@@ -75,7 +74,7 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Download rimraf into specific directory
+### Download
 
 {% highlight sh %}
 rimraf-download rimraf_download_path='/some/path'

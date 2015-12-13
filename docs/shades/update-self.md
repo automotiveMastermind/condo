@@ -16,11 +16,11 @@ Updates the build scripts located at the root of the project structure.
 
 ## Arguments
 
-This uses no arguments.
+The `update-self` shade does not accept any arguments.
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `update-self`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -45,14 +45,20 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Condo can update itself by adding the following call within any target:
+### Update Self
 
 {% highlight sh %}
     update-self
 {% endhighlight %}
 
-The default lifecycle includes a target aptly named `#update-self` that calls this shade.
+The default lifecycle includes a target aptly named `update-self` that calls this shade. This target can be called by executing condo as follows:
 
-## See Also
+#### OS X, Linux
+{% highlight sh %}
+./condo.sh update-self
+{% endhighlight %}
 
-There are no related shades.
+#### Windows
+{% highlight cmd %}
+condo.cmd update-self
+{% endhighlight %}

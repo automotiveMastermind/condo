@@ -17,7 +17,7 @@ Executes rimraf against the specified path.
 
 ## Arguments
 
-The following arguments are available within bower.
+The `rimraf` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,19 +32,24 @@ The following arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>rimraf_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The path that should be recursively removed.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>rimraf_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `rimraf`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -69,19 +74,13 @@ The following global arguments are used by bower:
             <td><code>${global:base_path}</code></td>
             <td>The working path in which condo should execute shell commands.</td>
         </tr>
-        <tr>
-            <td>base_path</td>
-            <td>string</td>
-            <td><code>false</code></td>
-            <td>The base path in which to execute rimraf.</td>
-        </tr>
     </tbody>
     </table>
 </div>
 
 ## Examples
 
-Destroys that path and everything in it including all life in that path... and it destroys the path.
+### Recursively Delete Path
 
 {% highlight sh %}
 rimraf rimraf_path='/some/path'

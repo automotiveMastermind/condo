@@ -17,7 +17,7 @@ Executes the ruby command line tool.
 
 ## Arguments
 
-The following arguments are available within Ruby.
+The `ruby` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,47 +32,52 @@ The following arguments are available within Ruby.
     </thead>
     <tbody>
         <tr>
-            <td>ruby_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments to pass to the ruby interpreter.</td>
         </tr>
         <tr>
-            <td>ruby_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>-e</code></td>
             <td>No</td>
             <td>The options to use with the Ruby interpreter.</td>
         </tr>
         <tr>
-            <td>ruby_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td>No</td>
             <td>The path in which to execute the Ruby interpreter.</td>
         </tr>
         <tr>
-            <td>ruby_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for exit.</td>
         </tr>
         <tr>
-            <td>ruby_quiet</td>
+            <td>quiet</td>
             <td>string</td>
             <td><code>$(Build.Log.Quiet)</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>ruby_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by Ruby:
+The following global arguments are used by `ruby`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">

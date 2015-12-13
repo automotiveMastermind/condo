@@ -32,41 +32,46 @@ The `brew` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>brew_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments used to execute brew.</td>
         </tr>
         <tr>
-            <td>brew_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BREW_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing brew.</td>
         </tr>
         <tr>
-            <td>brew_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute brew.</td>
         </tr>
         <tr>
-            <td>brew_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for exit.</td>
         </tr>
         <tr>
-            <td>brew_quiet</td>
+            <td>quiet</td>
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>brew_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

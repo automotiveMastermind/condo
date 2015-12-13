@@ -32,27 +32,32 @@ The `brew-install` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>brew_install_formula</td>
+            <td>formula</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The name of the formula to install.</td>
         </tr>
         <tr>
-            <td>brew_install_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BREW_INSTALL_OPTIONS}</code></td>
             <td>No</td>
-            <td>Additional options to use when installing a formula using brew.</td>
+            <td>Additional options to use when installing a formula using brew-install.</td>
         </tr>
         <tr>
-            <td>brew_install_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
-            <td>The path in which to execute brew.</td>
+            <td>The path in which to execute brew-install.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>brew_install_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

@@ -4,7 +4,7 @@ title: ruby-locate
 group: shades
 ---
 
-Locates the ruby, gem and bundler command line utility available on the current path.
+Locates the ruby, gem and bundler command line utilities available on the current path.
 
 ## Contents
 
@@ -17,60 +17,28 @@ Locates the ruby, gem and bundler command line utility available on the current 
 
 ## Arguments
 
-The following arguments are available within Ruby.
-
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th style="width:100px;">Name</th>
-            <th style="width:50px;">Type</th>
-            <th style="width:50px;">Default</th>
-            <th style="width:25px;">Required</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>ruby_args</td>
-            <td>string</td>
-            <td><code>null</code></td>
-            <td><strong>Yes</strong></td>
-            <td>The arguments to pass to the ruby interpreter.</td>
-        </tr>
-    </tbody>
-    </table>
-</div>
+The `ruby-locate` shade does not accept any arguments.
 
 ## Global Arguments
 
-The following global arguments are used by Ruby:
-
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th style="width:100px;">Name</th>
-            <th style="width:50px;">Type</th>
-            <th style="width:50px;">Default</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>base_path</td>
-            <td>string</td>
-            <td><code>$PWD</code></td>
-            <td>The base path in which condo was executed.</td>
-        </tr>
-    </tbody>
-    </table>
-</div>
+The `ruby-locate` shade does not accept any global arguments. It will, however, attempt to find
+ruby on a path indicated by the environment variable `${env:RUBY_INSTALL_PATH}` before scanning the
+`${env:PATH}`. This is done to enable the use of specific versions of ruby where Ruby DevKit may be
+installed (such as on AppVeyor).
 
 ## Examples
 
-Locate the ruby, gem and bundler command line utility available on the current path.
+### Locate Ruby
 
 {% highlight sh %}
 ruby-locate
 {% endhighlight %}
+
+## See Also
+
+* [ruby]({{site.baseurl}}/shades/ruby)
+* [gem]({{site.baseurl}}/shades/gem)
+* [gem-install]({{site.baseurl}}/shades/gem-install)
+* [bundle]({{site.baseurl}}/shades/bundle)
+* [bundle-download]({{site.baseurl}}/shades/bundle-download)
+* [bundle-install]({{site.baseurl}}/shades/bundle-install)

@@ -17,7 +17,7 @@ Executes a DefinitlyTyped typings manager.
 
 ## Arguments
 
-The following optional arguments are available within bower.
+The `tsd` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,47 +32,52 @@ The following optional arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>tsd_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments to pass to the tsd command line tool.</td>
         </tr>
         <tr>
-            <td>tsd_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>-e</code></td>
             <td>No</td>
             <td>Additional options to use when executing the tsd command.</td>
         </tr>
         <tr>
-            <td>tsd_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td>No</td>
             <td>The path in which to execute tsd.</td>
         </tr>
         <tr>
-            <td>tsd_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for exit.</td>
         </tr>
         <tr>
-            <td>tsd_quiet</td>
+            <td>quiet</td>
             <td>string</td>
             <td><code>$(Build.Log.Quiet)</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>tsd_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by Ruby:
+The following global arguments are used by `tsd`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -109,8 +114,13 @@ The following global arguments are used by Ruby:
 
 ## Examples
 
-Execute
+### Install with Options
 
 {% highlight sh %}
-tsd tsd_options='-a' tsd_args='install'
+tsd tsd_args='install mocha' tsd_options='--save'
+{% endhighlight %}
+
+### Reinstall with Options
+{% highlight sh %}
+tsd tsd_args='reinstall' tsd_options='--clean --overwrite --save'
 {% endhighlight %}

@@ -31,20 +31,25 @@ The `dotnet-clean` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>dotnet_clean_project</td>
+            <td>project</td>
             <td>string</td>
             <td></td>
             <td>No</td>
             <td>Path to the `project.json` file to clean.</td>
         </tr>
         <tr>
-            <td>dotnet_clean_path</td>
+            <td>path</td>
             <td>string</td>
             <td></td>
             <td>No</td>
             <td>Path to the folder containing the `project.json` to clean.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>dotnet_clean_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

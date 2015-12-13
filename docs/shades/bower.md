@@ -34,41 +34,46 @@ The `bower` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>bower_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments to pass to the bower command line tool.</td>
         </tr>
         <tr>
-            <td>bower_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BOWER_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing the bower command line tool</td>
         </tr>
         <tr>
-            <td>bower_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The base path in which to execute bower.</td>
         </tr>
         <tr>
-            <td>bower_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for bower to exit before continuing.</td>
         </tr>
         <tr>
-            <td>bower_quiet</td>
+            <td>quiet</td>
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to suppress standard output when executing the bower command line tool.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>bower_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

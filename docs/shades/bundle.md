@@ -32,41 +32,46 @@ The `bundle` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>bundle_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments to pass to the bundler command line tool.</td>
         </tr>
         <tr>
-            <td>bundle_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BUNDLE_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing the bundler command.</td>
         </tr>
         <tr>
-            <td>bundle_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute bundler.</td>
         </tr>
         <tr>
-            <td>bundle_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for the bundler command to exit.</td>
         </tr>
         <tr>
-            <td>bundle_quiet</td>
+            <td>quiet</td>
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to suppress standard output when executing the bundler command.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>bundle_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

@@ -32,27 +32,32 @@ The `bundle-install` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>bundle_install_frozen</td>
+            <td>frozen</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td><strong>No</strong></td>
             <td>A value indicating whether or not to update the Gemfile.lock file after install.</td>
         </tr>
         <tr>
-            <td>bundle_install_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BUNDLE_INSTALL_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing the bundle install command.</td>
         </tr>
         <tr>
-            <td>bundle_install_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute the bundle install command.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>bundle_install_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

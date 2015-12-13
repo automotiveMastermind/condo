@@ -33,13 +33,18 @@ The `bower-download` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>bower_download_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:base_path}</code></td>
             <td>No</td>
             <td>The path in which to download bower.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>bower_download_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

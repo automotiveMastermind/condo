@@ -32,34 +32,39 @@ The `bower-install` shade accepts the following arguments:
     </thead>
     <tbody>
         <tr>
-            <td>bower_install_id</td>
+            <td>id</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The identifier of the package to install using bower.</td>
         </tr>
         <tr>
-            <td>bower_install_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:BOWER_INSTALL_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing the bower command.</td>
         </tr>
         <tr>
-            <td>bower_install_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute the bower install command.</td>
         </tr>
         <tr>
-            <td>bower_quiet</td>
+            <td>quiet</td>
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to suppress standard output when executing the bower-install command.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>bower_install_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 

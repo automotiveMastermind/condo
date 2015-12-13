@@ -4,7 +4,7 @@ title: nuget-restore
 group: shades
 ---
 
-Executes a nuget package manager command to restore all available packages.
+Executes a nuget package manager command to restore all available packages defined in `package.config` file.
 
 ## Contents
 
@@ -17,7 +17,7 @@ Executes a nuget package manager command to restore all available packages.
 
 ## Arguments
 
-The following arguments are available within bower.
+The `nuget-restore` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,47 +32,38 @@ The following arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>nuget_restore_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>No</strong></td>
-            <td>The arguments to pass to the nuget command line tool (in addition to restore).</td>
+            <td>The arguments to pass to the nuget restore command.</td>
         </tr>
         <tr>
-            <td>nuget_restore_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:NUGET_RESTORE_OPTIONS}</code></td>
             <td>No</td>
-            <td>Additional options to include when executing the nuget command line tool for the restore operation.</td>
+            <td>Additional options to include when executing the nuget restore command.</td>
         </tr>
         <tr>
-            <td>nuget_restore_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>$(working_path)</code></td>
             <td>No</td>
-            <td>The path in which to execute the nuget command line tool.</td>
-        </tr>
-        <tr>
-            <td>nuget_config_path</td>
-            <td>string</td>
-            <td><code>$(nuget_download_path)/nuget.config</code></td>
-            <td>No</td>
-            <td>The path to the nuget configuration file to use when executing nuget commands.</td>
-        </tr>
-        <tr>
-            <td>nuget_download_path</td>
-            <td>boolean</td>
-            <td><code>$(base_path)/.nuget</code></td>
-            <td>No</td>
-            <td>The path in which to install nuget.</td>
+            <td>The path in which to execute the nuget restore command.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>nuget_restore_</code>.</td>
+        </tr>
+    </tfooter>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `nuget-restore`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -109,15 +100,14 @@ The following global arguments are used by bower:
 
 ## Examples
 
-Execute packages.config file in specified folder to restore packages:
+### Restore Packages
 
 {% highlight sh %}
 nuget-restore nuget_restore_path='/some/path'
 {% endhighlight %}
 
-Execute packages.config file in specified folder to restore packages while bypassing cache:
+#### Restore Packages with Options
 
 {% highlight sh %}
-nuget-restore nuget_restore_path='/some/path' nuget_restore_args='-NoCache'
+nuget-restore nuget_restore_path='/some/path' nuget_restore_options='-NoCache'
 {% endhighlight %}
-

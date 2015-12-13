@@ -4,7 +4,7 @@ title: run
 group: shades
 ---
 
-Executes the run command line tool.
+Executes an executable using the CLR (Mono on OS X and Linux).
 
 ## Contents
 
@@ -17,7 +17,7 @@ Executes the run command line tool.
 
 ## Arguments
 
-The following optional arguments are available within bower.
+The `run` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -32,54 +32,60 @@ The following optional arguments are available within bower.
     </thead>
     <tbody>
         <tr>
-            <td>run_args</td>
+            <td>args</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
             <td>The arguments for the run command.</td>
         </tr>
         <tr>
-            <td>run_options</td>
+            <td>options</td>
             <td>string</td>
             <td><code>${env:RUN_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to use when executing the run command.</td>
         </tr>
         <tr>
-            <td>run_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
             <td>The path in which to execute run.</td>
         </tr>
         <tr>
-            <td>run_wait</td>
+            <td>wait</td>
             <td>boolean</td>
             <td><code>true</code></td>
             <td>No</td>
             <td>A value indicating whether or not to wait for exit.</td>
         </tr>
         <tr>
-            <td>run_quiet</td>
+            <td>quiet</td>
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing output.</td>
         </tr>
         <tr>
-            <td>run_secure</td>
+            <td>secure</td>
             <td>boolean</td>
             <td><code>false</code></td>
             <td>No</td>
             <td>A value indicating whether or not to avoid printing secure information for public builds.</td>
         </tr>
     </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>run_</code>.</td>
+        </tr>
+    </tfooter>
+    </table>
     </table>
 </div>
 
 ## Global Arguments
 
-The following global arguments are used by bower:
+The following global arguments are used by `run`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
