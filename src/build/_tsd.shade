@@ -57,7 +57,6 @@ tsd-download once='tsd-download'
     tsd_args = tsd_args.Trim();
     tsd_options = tsd_options.Trim();
 
-    Build.Log.Argument("cli", tsd_cmd);
     Build.Log.Argument("options", tsd_args);
     Build.Log.Argument("path", tsd_path);
     Build.Log.Argument("wait", tsd_wait);
