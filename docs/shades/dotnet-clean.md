@@ -16,7 +16,7 @@ Cleans a .NET 5 project referenced the a `project.json` file.
 
 ## Arguments
 
-The `dotnet_clean` shade accepts the following arguments:
+The `dotnet-clean` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -52,18 +52,18 @@ Note: Either the `dotnet_clean_project` or `dotnet_clean_path` must be specified
 
 ## Global Arguments
 
-The `dotnet_clean` shade does not use any global arguments.
+The `dotnet-clean` shade does not use any global arguments.
 
 ## Examples
 
 ### Clean Path
 
 {% highlight sh %}
-dotnet_clean dotnet_clean_path='src/myproject'
+dotnet-clean dotnet_clean_path='src/myproject'
 {% endhighlight %}
 
 ### Clean Project
 
 {% highlight sh %}
-dotnet_clean dotnet_clean_path='src/myproject/project.json'
+dotnet-clean dotnet_clean_path='src/myproject/project.json'
 {% endhighlight %}
