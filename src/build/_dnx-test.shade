@@ -174,4 +174,4 @@ default dnx_test_coverage       = '${ Coverage }'
 
 macro name='ExecuteTests' args='string' options='string' path='string' pdb='string' output='string' runtime='string' coverage='bool' Quiet='bool'
     dnx dnx_args='${ args }' dnx_options='${ options }' dnx_path='${ path }' dnx_runtime='${ runtime }' if='!coverage'
-    cover cover_args='${ args } ${ options }' cover_output_path='${ output }' cover_path='${ path }' cover_pdb_path='${ pdb }' cover_dnx_runtime='${ runtime }' if='coverage'
+    dotnet-cover dotnet_cover_args='${ args } ${ options }' dotnet_cover_output_path='${ output }' dotnet_cover_path='${ path }' dotnet_cover_pdb_path='${ pdb }' dotnet_cover_runtime='${ runtime }' if='coverage'

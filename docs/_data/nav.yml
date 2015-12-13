@@ -19,7 +19,6 @@
     - title: bundle-download
     - title: bundle-install
     - title: copy
-    - title: cover
     - title: cover-report
     - title: dnu
     - title: dnu-build
@@ -32,6 +31,7 @@
     - title: dnx-watch
     - title: dnx-watch-download
     - title: dotnet-clean
+    - title: dotnet-cover
     - title: exec
     - title: gem
     - title: gem-install
