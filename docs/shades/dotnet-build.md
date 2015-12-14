@@ -69,7 +69,7 @@ The `dotnet-build` shade accepts the following arguments:
         <tr>
             <td>options</td>
             <td>string</td>
-            <td><code>null</code></td>
+            <td><code>${env:DOTNET_BUILD_OPTIONS}</code></td>
             <td>No</td>
             <td>Additional options to include when executing the dotnet command line tool for build operations.</td>
         </tr>
