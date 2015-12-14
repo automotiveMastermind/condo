@@ -4,86 +4,104 @@ title: copy
 group: shades
 ---
 
-@{/*
+Copies one or more files from the source path to the destination path.
 
-copy
-    Copies one or more files from the source path to the destination path.
+## Contents
 
-copy_src_path=''
-    Required. The path from which to copy files.
+* Will be replaced with the table of contents
+{:toc}
 
-copy_dst_path=''
-    Required. The path to which to copy files.
+## Supported Operating Systems
 
-copy_include='**&#47;*.*'
-    Optional. The filter used to include files within the specified source path.
+{% icon fa-apple fa-3x %} {% icon fa-windows fa-3x %} {% icon fa-linux fa-3x %}
 
-copy_exclude=''
-    Optional. The filter used to exclude files within the specified source path.
+## Arguments
 
-copy_overwrite='false'
-    Optional. A value indicating whether or not to overwrite existing files.
+The `copy` shade accepts the following arguments:
 
-*/}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:100px;">Name</th>
+            <th style="width:50px;">Type</th>
+            <th style="width:50px;">Default</th>
+            <th style="width:25px;">Required</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>src_path</td>
+            <td>string</td>
+            <td><code>null</code></td>
+            <td><strong>Yes</strong></td>
+            <td>The path from which to copy files.</td>
+        </tr>
+        <tr>
+            <td>dst_path</td>
+            <td>string</td>
+            <td><code>null</code></td>
+            <td><strong>Yes</strong></td>
+            <td>The path to which to copy files.</td>
+        </tr>
+        <tr>
+            <td>include</td>
+            <td>string</td>
+            <td><code>**/*.*</code></td>
+            <td>No</td>
+            <td>The filter used to include files within the specified source path.</td>
+        </tr>
+        <tr>
+            <td>exclude</td>
+            <td>string</td>
+            <td><code>null</code></td>
+            <td>No</td>
+            <td>The filter used to exclude files within the specified source path.</td>
+        </tr>
+        <tr>
+            <td>overwrite</td>
+            <td>boolean</td>
+            <td><code>false</code></td>
+            <td>No</td>
+            <td>A value indicating whether or not to overwrite existing files.</td>
+        </tr>
+        <tr>
+            <td>flatten</td>
+            <td>boolean</td>
+            <td><code>false</code></td>
+            <td>No</td>
+            <td>A value indicating whether or not to flatten the included files when writing to the destination path.</td>
+        </tr>
+    </tbody>
+    <tfooter>
+        <tr>
+            <td colspan="5">All arguments are prefixed by <code>copy_</code>.</td>
+        </tr>
+    </tfooter>
+    </table>
+</div>
 
-use namespace = 'System'
-use namespace = 'System.IO'
+## Global Arguments
 
-use import = 'Files'
+The `copy` shade does not use any global arguments.
 
-default copy_src_path   = ''
-default copy_dst_path   = ''
-default copy_include    = '**/*.*'
-default copy_exclude    = ''
-default copy_overwrite  = '${ false }'
-default copy_flatten    = '${ false }'
+## Examples
 
-@{
-    Build.Log.Header("copy");
+### Copy All Files
 
-    if (string.IsNullOrEmpty(copy_src_path))
-    {
-        throw new ArgumentException("copy: the source path must be specified.", "copy_src_path");
-    }
+{% highlight sh %}
+copy copy_src_path='/examples' copy_dst_path='dist/examples'
+{% endhighlight %}
 
-    if (string.IsNullOrEmpty(copy_dst_path))
-    {
-        throw new ArgumentException("copy: the destination path must be specified.", "copy_dst_path");
-    }
+### Copy with Filter
 
-    if (File.Exists(copy_src_path))
-    {
-        copy_include = Path.GetFileName(copy_src_path);
-        copy_src_path = Path.GetDirectoryName(Path.GetFullPath(copy_src_path));
-    }
+{% highlight sh %}
+copy copy_src_path='/examples' copy_dst_path='dist/examples' copy_include='**/*.examples.cs'
+{% endhighlight %}
 
-    Build.Log.Argument("source", copy_src_path);
-    Build.Log.Argument("destination", copy_dst_path);
-    Build.Log.Argument("include", copy_include);
-    Build.Log.Argument("exclude", copy_exclude);
-    Build.Log.Argument("overwrite", copy_overwrite);
-    Build.Log.Argument("flatten", copy_flatten);
-    Build.Log.Header();
+### Copy, Flatten, and Overwrite
 
-    var copy_files = Files.BasePath(copy_src_path);
-
-    if (!string.IsNullOrEmpty(copy_include))
-    {
-        copy_files = copy_files.Include(copy_include);
-    }
-
-    if (!string.IsNullOrEmpty(copy_exclude))
-    {
-        copy_files = copy_files.Exclude(copy_exclude);
-    }
-
-    foreach(var copy_file in copy_files)
-    {
-        var copy_src_file = Path.Combine(copy_src_path, copy_file);
-        var copy_dst_file = Path.Combine(copy_dst_path, copy_flatten ? Path.GetFileName(copy_file) : copy_file);
-
-        Directory.CreateDirectory(Path.GetDirectoryName(copy_dst_file));
-
-        File.Copy(copy_src_file, copy_dst_file, copy_overwrite);
-    }
-}
+{% highlight sh %}
+copy copy_src_path='/examples' copy_dst_path='dist/examples' copy_overwrite='${ true }' copy_flatten='${ true }'
+{% endhighlight %}
