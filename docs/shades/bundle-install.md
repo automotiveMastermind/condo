@@ -35,7 +35,7 @@ The `bundle-install` shade accepts the following arguments:
             <td>frozen</td>
             <td>boolean</td>
             <td><code>true</code></td>
-            <td><strong>No</strong></td>
+            <td>No</td>
             <td>A value indicating whether or not to update the Gemfile.lock file after install.</td>
         </tr>
         <tr>
