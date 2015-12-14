@@ -4,7 +4,7 @@ title: dotnet-build
 group: shades
 ---
 
-Executes the dotnet command line too to build a project.
+Executes the dotnet command line tool to build a project.
 
 ## Contents
 
