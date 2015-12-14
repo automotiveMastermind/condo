@@ -234,7 +234,10 @@ gulp.task('sync', (done:any) => {
 gulp.task('deploy', ['docs'], () => {
     return gulp
         .src(".docs/**/*")
-        .pipe(pages());
+        .pipe(pages({
+            remoteUrl: 'https://' + process.env.GH_TOKEN + '@github.com/pulsebridge/condo.git',
+            branch: 'gh-pages'
+        }));
 });
 
 gulp.task('watch', (done:any) => sequence('dev', 'docs', 'init', 'sync', done));
