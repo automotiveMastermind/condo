@@ -167,7 +167,7 @@ info-collect once='info-collect'
 
 #compile-dnx target='compile' description='Compiles and packages all dnx-based projects found within the source directory.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
-    dnu-pack dnu_pack_output_path='${ target_build_path }' each='var dnu_pack_path in paths'
+    dotnet-pack dotnet_pack_output_path='${ target_build_path }' each='var dotnet_pack_path in paths'
 
 #test-dnx target='test' description='Executes unit tests for all dnx-based projects found within the test directory.'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
