@@ -39,7 +39,7 @@ The `dotnet-build` shade accepts the following arguments:
             <td>The fully-qualified path of the project to build (`project.json`).</td>
         </tr>
         <tr>
-            <td>build_path</td>
+            <td>path</td>
             <td>string</td>
             <td><code>${global:working_path}</code></td>
             <td>No</td>
