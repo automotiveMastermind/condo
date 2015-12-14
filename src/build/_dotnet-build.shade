@@ -1,0 +1,103 @@
+@{/*
+
+dotnet-build
+    Executes a dotnet package manager command to build all available projects.
+
+dotnet_build_path='$(working_path)'
+    Required. The path in which to execute the dotnet command line tool.
+
+dotnet_build_project=''
+    A semi-colon (;) delimited list of projects to build using the dotnet command line tool.
+
+dotnet_build_framework=''
+    A semi-colon (;) delimited list of target frameworks to build against.
+
+dotnet_build_configuration='$(configuration)'
+    A semi-colon (;) delimited list of configurations to build.
+
+dotnet_build_options='' (Environment Variable: dotnet_BUILD_OPTIONS)
+    Additional options to include when executing the dotnet command line tool for build operations.
+
+dotnet_build_output_path='$(target_path)/build'
+    The path in which to store the resulting packages.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the dotnet command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the dotnet command line tool.
+
+target_path='$(working_path)/artifacts'
+    The target path for build artifacts.
+
+configuration=''
+    The default configurations to use if no configurations are specified.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+default configuration               = '${ Build.Get("CONFIGURATION", "Debug") }'
+
+default base_path                   = '${ Directory.GetCurrentDirectory() }'
+default working_path                = '${ base_path }'
+default target_path                 = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
+
+default dotnet_build_path           = '${ working_path }'
+default dotnet_build_output_path    = '${ Path.Combine(target_path, "build") }'
+default dotnet_build_project        = ''
+default dotnet_build_framework      = ''
+default dotnet_build_configuration  = '${ configuration }'
+default dotnet_build_options        = '${ Build.Get("dotnet_BUILD_OPTIONS") }'
+
+@{
+    Build.Log.Header("dotnet-build");
+
+    if (!string.IsNullOrEmpty(dotnet_build_project))
+    {
+        dotnet_build_project = dotnet_build_project.Trim();
+    }
+
+    if (!string.IsNullOrEmpty(dotnet_build_options))
+    {
+        dotnet_build_options = dotnet_build_options.Trim();
+    }
+
+    var dotnet_build_name = File.Exists(dotnet_build_path)
+        ? Path.GetDirectoryName(dotnet_build_path)
+        : Path.GetFileName(dotnet_build_path);
+
+    dotnet_build_output_path = Path.Combine(dotnet_build_output_path, dotnet_build_name);
+
+    Build.Log.Argument("path", dotnet_build_path);
+    Build.Log.Argument("project", dotnet_build_project);
+    Build.Log.Argument("framework", dotnet_build_framework);
+    Build.Log.Argument("configuration", dotnet_build_configuration);
+    Build.Log.Argument("options", dotnet_build_options);
+    Build.Log.Argument("output path", dotnet_build_output_path);
+    Build.Log.Header();
+
+    dotnet_build_project = dotnet_build_project.Replace(';', ' ').Trim();
+
+    if (!string.IsNullOrEmpty(dotnet_build_output_path))
+    {
+        dotnet_build_options += string.Format(@" --out ""{0}""", dotnet_build_output_path);
+    }
+
+    if (!string.IsNullOrEmpty(dotnet_build_framework))
+    {
+        dotnet_build_options += string.Format(@" --framework ""{0}""", dotnet_build_framework);
+    }
+
+    if (!string.IsNullOrEmpty(dotnet_build_configuration))
+    {
+        dotnet_build_options += string.Format(@" --configuration ""{0}""", dotnet_build_configuration);
+    }
+
+    dotnet_build_options = dotnet_build_options.Trim();
+}
+
+dnu dnu_args='build ${ dotnet_build_project }' dnu_options='${ dotnet_build_options }' dnu_runtime='default -r ${ Build.Unix ? "mono" : "clr" }' dnu_path='${ dotnet_build_path }'

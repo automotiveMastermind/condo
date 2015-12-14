@@ -20,7 +20,6 @@
     - title: bundle-install
     - title: copy
     - title: dnu
-    - title: dnu-build
     - title: dnu-pack
     - title: dnu-restore
     - title: dnvm-locate
@@ -29,6 +28,7 @@
     - title: dnx-test
     - title: dnx-watch
     - title: dnx-watch-download
+    - title: dotnet-build
     - title: dotnet-clean
     - title: dotnet-cover
     - title: dotnet-cover-report
