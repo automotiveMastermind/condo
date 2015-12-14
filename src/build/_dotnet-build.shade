@@ -15,7 +15,7 @@ dotnet_build_framework=''
 dotnet_build_configuration='$(configuration)'
     A semi-colon (;) delimited list of configurations to build.
 
-dotnet_build_options='' (Environment Variable: dotnet_BUILD_OPTIONS)
+dotnet_build_options='' (Environment Variable: DOTNET_BUILD_OPTIONS)
     Additional options to include when executing the dotnet command line tool for build operations.
 
 dotnet_build_output_path='$(target_path)/build'
@@ -51,7 +51,7 @@ default dotnet_build_output_path    = '${ Path.Combine(target_path, "build") }'
 default dotnet_build_project        = ''
 default dotnet_build_framework      = ''
 default dotnet_build_configuration  = '${ configuration }'
-default dotnet_build_options        = '${ Build.Get("dotnet_BUILD_OPTIONS") }'
+default dotnet_build_options        = '${ Build.Get("DOTNET_BUILD_OPTIONS") }'
 
 @{
     Build.Log.Header("dotnet-build");
