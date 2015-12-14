@@ -1,10 +1,10 @@
 ---
 layout: docs
-title: dotnet-cover
+title: dotnet-cover-report
 group: shades
 ---
 
-Analyzes .NET 5 executions for code coverage results.
+Generates a human-readable report for code coverage results.
 
 ## Contents
 
@@ -17,7 +17,7 @@ Analyzes .NET 5 executions for code coverage results.
 
 ## Arguments
 
-The `dotnet-cover` shade accepts the following arguments:
+The `dotnet-cover-report` shade accepts the following arguments:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -34,79 +34,51 @@ The `dotnet-cover` shade accepts the following arguments:
         <tr>
             <td>target</td>
             <td>string</td>
-            <td><code>null</code></td>
-            <td><strong>Yes</strong></td>
-            <td>The target process for which to collect code coverage results.</td>
+            <td><code>${global:target_test_path}/*-coverage.xml</code></td>
+            <td>No</td>
+            <td>The path containing the code coverage results that should be parsed.</td>
         </tr>
         <tr>
-            <td>pdb_path</td>
+            <td>output_path</td>
+            <td>string</td>
+            <td><code>${global:target_test_path}</code></td>
+            <td>No</td>
+            <td>The path where the report will be emitted.</td>
+        </tr>
+        <tr>
+            <td>type</td>
             <td>string</td>
             <td><code>null</code></td>
             <td><strong>Yes</strong></td>
-            <td>The path which contains the PDBs for the assemblies for which code coverage results should be processed.</td>
+            <td>The type of the reports to generate.</td>
         </tr>
         <tr>
-            <td>runtime</td>
-            <td>string</td>
-            <td><code>null</code></td>
-            <td><strong>Yes</strong></td>
-            <td>The version of the runtime to use when executing the test process.</td>
-        </tr>
-        <tr>
-            <td>args</td>
+            <td>src_path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td>No</td>
-            <td>The arguments to pass to the code coverage target.</td>
+            <td>The path(s) containing source files for reference.</td>
         </tr>
         <tr>
-            <td>options</td>
-            <td>string</td>
-            <td><code>-nodefaultfilters -hideskipped:All -threshold:1</code></td>
-            <td>No</td>
-            <td>Additional options to pass to the code coverage process.</td>
-        </tr>
-        <tr>
-            <td>exclude_files</td>
+            <td>history_path</td>
             <td>string</td>
             <td><code>null</code></td>
             <td>No</td>
-            <td>A semi-colon (;) delimited list of file name globbing patterns that will be excluded from code coverage results.</td>
+            <td>The path where historical coverage reports should be retained.</td>
         </tr>
         <tr>
-            <td>exclude_attributes</td>
+            <td>assembly_filter</td>
             <td>string</td>
-            <td><code>*.ExcludeFromCodeCoverage*</code></td>
+            <td><code>null</code></td>
             <td>No</td>
-            <td>A semi-colon (;) delimited list of attribute name globbing patterns that will be excluded from code coverage results.</td>
+            <td>The filter(s) used to remove specific assemblies from the report.</td>
         </tr>
         <tr>
-            <td>filter</td>
+            <td>class_filter</td>
             <td>string</td>
-            <td><code>+[*]* -[Xunit]* -[Xunit.*]* -[xunit]* -[xunit.*]*</code></td>
+            <td><code>null</code></td>
             <td>No</td>
-            <td>A semi-colon (;) delimited list of file name globbing patterns that will be excluded from code coverage results.</td>
-        </tr>
-        <tr>
-            <td>register</td>
-            <td>string</td>
-            <td><code>user</code></td>
-            <td>No</td>
-            <td>Determines the level of registration of the code coverage profiler..</td>
-        </tr>
-        <tr>
-            <td>show_unvisited</td>
-            <td>boolean</td>
-            <td><code>false</code></td>
-            <td>No</td>
-            <td>A value indicating whether or not to list unvisted methods and classes once the coverage analysis is complete.</td>
-        </tr>
-        <tr>
-            <td>skip_autoprops</td>
-            <td>boolean</td>
-            <td><code>true</code></td>
-            <td>No</td>
-            <td>A value indicating whether or not to skip code coverage of automatic properties.</td>
+            <td>The filter(s) used to remove specific classes from the report.</td>
         </tr>
         <tr>
             <td>wait</td>
@@ -120,12 +92,12 @@ The `dotnet-cover` shade accepts the following arguments:
             <td>boolean</td>
             <td><code>${global:quiet}</code></td>
             <td>No</td>
-            <td>A value indicating whether or not to suppress standard output when analyzing code coverage.</td>
+            <td>A value indicating whether or not to suppress standard output when generate code coverage report.</td>
         </tr>
     </tbody>
     <tfooter>
         <tr>
-            <td colspan="5">All arguments are prefixed by <code>dotnet_cover_</code>.</td>
+            <td colspan="5">All arguments are prefixed by <code>dotnet_cover_report_</code>.</td>
         </tr>
     </tfooter>
     </table>
@@ -133,7 +105,7 @@ The `dotnet-cover` shade accepts the following arguments:
 
 ## Global Arguments
 
-The following global arguments are used by `dotnet-cover`:
+The following global arguments are used by `dotnet-cover-report`:
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
@@ -182,12 +154,19 @@ The following global arguments are used by `dotnet-cover`:
 
 ## Examples
 
-### Coverage with CoreCLR
+### Generate Report from Default Path
 
 {% highlight sh %}
-dotnet-cover dotnet_cover_target='dnx' dotnet_cover_runtime='default -r coreclr' dotnet_cover_args='test -xml "artifacts/test/myproject.test-dnxcore50.xml"'
+dotnet-cover-report
+{% endhighlight %}
+
+### Generate Report from Path
+
+{% highlight sh %}
+dotnet-cover-report dotnet_cover_report_target='/temp/*-coverage.xml'
 {% endhighlight %}
 
 ## See Also
 
-* [dotnet-cover-report]({{site.baseurl}}/shades/dotnet-cover-report)
+* [dotnet-cover]({{site.baseurl}}/shades/dotnet-cover)
+* [dotnet-test]({{site.baseurl}}/shades/dotnet-test)

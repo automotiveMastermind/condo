@@ -182,7 +182,7 @@ info-collect once='info-collect'
     dnu-build dnu_build_output_path='${ target_test_path }' each='var dnu_build_path in paths'
 
 #test-coverage-dnx target='test-coverage' description='Generates a code coverage report for DNX-based projects'
-    cover-report if='Coverage'
+    dotnet-cover-report if='Coverage'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
     var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
