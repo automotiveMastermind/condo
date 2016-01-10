@@ -143,7 +143,7 @@ info-collect once='info-collect'
 
 #restore-project-packages description='Restores all NuGet packages (project.json).'
     var paths = '${ Build.GetPathsContaining(base_path, "project.json") }'
-    dnu-restore each='var dnu_restore_path in paths'
+    dotnet-restore each='var dotnet_restore_path in paths'
 
 #restore-nuget-packages description='Restores all NuGet packages (packages.config).'
     var paths = '${ Build.GetPathsContaining(src_path, "packages.config").Union(Build.GetPathsContaining(test_path, "packages.config")) }'

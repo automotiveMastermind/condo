@@ -20,7 +20,6 @@
     - title: bundle-install
     - title: copy
     - title: dnu
-    - title: dnu-restore
     - title: dnvm-locate
     - title: dnx
     - title: dnx-run
@@ -32,6 +31,7 @@
     - title: dotnet-cover
     - title: dotnet-cover-report
     - title: dotnet-pack
+    - title: dotnet-restore
     - title: exec
     - title: gem
     - title: gem-install

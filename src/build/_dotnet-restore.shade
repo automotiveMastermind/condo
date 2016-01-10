@@ -1,0 +1,54 @@
+@{/*
+
+dotnet-restore
+    Executes a dotnet package manager command to restore all available packages.
+
+dotnet_restore_args=''
+    The arguments to pass to the dotnet command line tool (in addition to restore)
+
+dotnet_restore_options='' (Environment Variable: DOTNET_RESTORE_OPTIONS)
+    Additional options to include when executing the dotnet command line tool for the restore operation.
+
+dotnet_restore_path='$(working_path)'
+    The path in which to execute the dotnet command line tool.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the dotnet command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the dotnet command line tool.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+
+default dotnet_restore_path     = '${ working_path }'
+default dotnet_restore_args     = ''
+default dotnet_restore_options  = '${ Build.Get("DOTNET_RESTORE_OPTIONS") }'
+
+@{
+    Build.Log.Header("dotnet-restore");
+
+    if (!string.IsNullOrEmpty(dotnet_restore_args))
+    {
+        dotnet_restore_args = dotnet_restore_args.Trim();
+    }
+
+    if (!string.IsNullOrEmpty(dotnet_restore_options))
+    {
+        dotnet_restore_options = dotnet_restore_options.Trim();
+    }
+
+    Build.Log.Argument("arguments", dotnet_restore_args);
+    Build.Log.Argument("options", dotnet_restore_options);
+    Build.Log.Argument("path", dotnet_restore_path);
+    Build.Log.Header();
+}
+
+dnu dnu_args='restore ${ dotnet_restore_args }' dnu_options='${ dotnet_restore_options }' dnu_runtime='default -r coreclr' dnu_path='${ dotnet_restore_path }'
