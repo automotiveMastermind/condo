@@ -18,7 +18,7 @@ $(function () {
   }
 
   function loadSearchIndex() {
-    $.getJSON('/search.json', function(data) {
+    $.getJSON('/condo/search.json', function(data) {
       data.type = { index: true };
       searchWorker.postMessage(data);
       searchIndex = data;
