@@ -137,15 +137,15 @@ default licenseUri              = ''
     {
         var prerelease = "alpha";
 
-        if (AssemblyInfo.Branch.Contains(@"/dev"))
+        if (AssemblyInfo.Branch.EndsWith("dev"))
         {
             prerelease = "beta";
         }
-        else if (AssemblyInfo.Branch.Contains(@"/release"))
+        else if (AssemblyInfo.Branch.Contains(@"release/"))
         {
             prerelease = "rc";
         }
-        else if (AssemblyInfo.Branch.Contains(@"/master"))
+        else if (AssemblyInfo.Branch.EndsWith("master"))
         {
             prerelease = null;
         }
