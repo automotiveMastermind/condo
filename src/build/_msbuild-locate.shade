@@ -19,11 +19,17 @@ use import = 'Condo.Build'
     }
     else
     {
-        var tools_registry_path = @"\SOFTWARE\Microsoft\MSBuild\ToolsVersions";
+        var tools_registry_path = @"SOFTWARE\Microsoft\MSBuild\ToolsVersions";
         var msbuild_path_name = "msbuild_";
         var msbuild_path_key_name = "MSBuildToolsPath";
 
         var tools_registry_key = Registry.LocalMachine.OpenSubKey(tools_registry_path);
+
+        if (tools_registry_key == null)
+        {
+            throw new NotSupportedException("msbuild-locate: could not find an instance of msbuild -- the build process cannot continue.");
+        }
+
         var version_registry_keys = tools_registry_key.GetSubKeyNames();
 
         var found = false;
