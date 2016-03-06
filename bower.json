@@ -1,6 +1,6 @@
 {
   "name": "condo",
-  "description": "A build system for DNX projects.",
+  "description": "A cross-platform continuous integration build system for <any> projects.",
   "main": "",
   "authors": [
     "PulseBridge"
@@ -8,6 +8,7 @@
   "license": "MIT",
   "keywords": [
     "dnx",
+    "dotnet",
     "condo",
     "build",
     "continuous",

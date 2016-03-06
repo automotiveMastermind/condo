@@ -1,0 +1,125 @@
+@{/*
+
+dnx-run
+    Executes the command for a project based on the current platform and watches for changes.
+
+dotnet_watch_project=''
+    Required. The project.json or the path containing the project.json that should be executed.
+
+dotnet_watch_cmd=''
+    The command that should be executed.
+
+    NOTE: this is automatically discovered based on the current platform if not specified.
+
+dotnet_watch_runtime='default -r coreclr'
+    The runtime to use when executing dotnet-cli. This argument is passed in the raw to 'dnvm use.'
+
+dotnet_watch_options='' (Environment Variable: DOTNET_WATCH_OPTIONS)
+    Additional options to pass to dotnet-cli when executing the specified command.
+
+dotnet_watch_quiet='Build.Log.Quiet'
+    A value indicating whether or not to avoid printing output.
+
+*/}
+
+use namespace = 'System'
+
+use import = 'Condo.Build'
+
+dotnet-watch-download once='dotnet-watch-download'
+
+default dotnet_watch_project     = ''
+default dotnet_watch_cmd         = ''
+default dotnet_watch_runtime     = 'default -r coreclr'
+default dotnet_watch_options     = '${ Build.Get("DOTNET_WATCH_OPTIONS") }'
+default dotnet_watch_quiet       = '${ Build.Log.Quiet }'
+
+@{
+    Build.Log.Header("dotnet-watch");
+
+    var dotnet_watch_args        = dotnet_watch_project;
+    var dotnet_watch_dnvm_path   = Build.GetPath("dnvm").Path;
+    var dotnet_watch_path        = Build.GetPath("dotnet-watch").Path;
+    var dotnet_watch_exec_path   = string.Empty;
+
+    // determine if a project is specified
+    if (string.IsNullOrEmpty(dotnet_watch_args))
+    {
+        // throw an exception
+        throw new ArgumentException("dotnet-watch: a project must be specified.", "dotnet_watch_project");
+    }
+
+    dotnet_watch_args = File.Exists(dotnet_watch_args) ? dotnet_watch_args : Path.Combine(dotnet_watch_args, "project.json");
+
+    // determine if the file still does not exist
+    if (!File.Exists(dotnet_watch_args))
+    {
+        // throw an argument exception
+        throw new ArgumentException("dotnet-watch: the specified project does not exist.", "dotnet_watch_project");
+    }
+
+    // determine if the command is specified
+    if (string.IsNullOrEmpty(dotnet_watch_cmd))
+    {
+        // always use web for now
+        dotnet_watch_cmd = "web";
+    }
+
+    // trim the arguments
+    dotnet_watch_args = dotnet_watch_args.Trim();
+    dotnet_watch_cmd = dotnet_watch_cmd.Trim();
+    dotnet_watch_runtime = dotnet_watch_runtime.Trim();
+    dotnet_watch_options = dotnet_watch_options.Trim();
+
+    // get the exec path
+    dotnet_watch_exec_path = Path.GetDirectoryName(dotnet_watch_args);
+
+    Build.Log.Argument("project", dotnet_watch_args);
+    Build.Log.Argument("command", dotnet_watch_cmd);
+    Build.Log.Argument("runtime", dotnet_watch_runtime);
+    Build.Log.Argument("options", dotnet_watch_options);
+    Build.Log.Argument("quiet", dotnet_watch_quiet);
+    Build.Log.Header();
+
+    var js = new JavaScriptSerializer();
+
+    var dotnet_watch_text = File.ReadAllText(dotnet_watch_args);
+    var dotnet_watch_json = js.DeserializeObject(dotnet_watch_text) as Dictionary<string, object>;
+
+    object dotnet_watch_cmds_obj;
+
+    var dotnet_watch_cmds = dotnet_watch_json.TryGetValue("commands", out dotnet_watch_cmds_obj)
+        ? dotnet_watch_cmds_obj as Dictionary<string, object>
+        : new Dictionary<string, object>();
+
+    object dotnet_watch_cmd_obj;
+
+    var dotnet_watch_cmd_exists = dotnet_watch_cmds.TryGetValue(dotnet_watch_cmd, out dotnet_watch_cmd_obj);
+
+    if (dotnet_watch_cmd_exists)
+    {
+        // define the arguments
+        dotnet_watch_args = string.Format(@"--dnx-args {0} {1}", dotnet_watch_cmd, dotnet_watch_options).Trim();
+
+        if (!string.IsNullOrEmpty(dotnet_watch_runtime))
+        {
+            if (Build.Unix)
+            {
+                dotnet_watch_args = string.Format(@"bash -c 'source ""{0}"" && dnvm use {1} && {2} {3}'", dotnet_watch_dnvm_path, dotnet_watch_runtime, dotnet_watch_path, dotnet_watch_args);
+                dotnet_watch_path = "/usr/bin/env";
+            }
+            else
+            {
+                dotnet_watch_args = string.Format(@"use {0} && {1} {2}", dotnet_watch_runtime, dotnet_watch_path, dotnet_watch_args);
+                dotnet_watch_path = dotnet_watch_dnvm_path;
+            }
+        }
+    }
+
+    if (!dotnet_watch_cmd_exists)
+    {
+        Build.Log.Warn(string.Format("dotnet-watch: command {0} does not exist for project {1}", dotnet_watch_cmd, dotnet_watch_project));
+    }
+}
+
+exec exec_cmd='${ dotnet_watch_path }' exec_args='${ dotnet_watch_args }' exec_path='${ dotnet_watch_exec_path }' exec_wait='${ false }' exec_quiet='${ dotnet_watch_quiet }' if='dotnet_watch_cmd_exists'

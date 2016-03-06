@@ -3,8 +3,8 @@
 nuget
     Executes the nuget package manager command.
 
-nuget_args=''
-    Required. The arguments to pass to the nuget package manager command line tool.
+nuget_args='restore'
+    The arguments to pass to the nuget package manager command line tool.
 
 nuget_options='' (Environment Variable: NUGET_OPTIONS)
     Additional options to include when executuing the nuget package manager command line tool.

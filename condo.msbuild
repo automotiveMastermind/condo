@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- get the paths used to locate solutions and projects to build -->
+        <SolutionRoot Condition=" '$(SolutionRoot)'  == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))</SolutionRoot>
+        <ProjectRoot Condition=" '$(ProjectRoot)'  == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'src'))</ProjectRoot>
+    </PropertyGroup>
+
+    <!-- get the solutions to build -->
+    <ItemGroup Condition=" '$(SolutionsToBuild)' == '' ">
+        <SolutionsToBuild Include="$(SolutionRoot)*.sln">
+            <BuildInParallel>$(BuildInParallel)</BuildInParallel>
+        </SolutionsToBuild>
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(ProjectsToBuild)' == '' ">
+        <ProjectsToBuild Include='$(ProjectsRoot)**\*.csproj"'>
+            <BuildInParallel>$(BuildInParallel)</BuildInParallel>
+        </ProjectsToBuild>
+    </ItemGroup>
+
+    <!-- build the solutions -->
+    <Target Name="BuildSolutions" DependsOnTargets="$(BuildDependsOn)">
+        <!-- build each solution in the item group -->
+        <MSBuild Projects="%(SolutionsToBuild.Identity)"
+                 BuildInParallel="%(SolutionsToBuild.BuildInParallel)"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+
+    <!-- build the projects -->
+    <Target Name="BuildProjects" DependsOnTargets="$(BuildDependsOn)">
+        <!-- build each project in the item group -->
+        <MSBuild Projects="%(ProjectsToBuild.Identity)"
+                 BuildInParallel="%(ProjectsToBuild.BuildInParallel)"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+
+    <!-- depend on building solutions -->
+    <Target Name="Build" DependsOnTargets="BuildSolutions" />
+</Project>

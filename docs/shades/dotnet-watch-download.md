@@ -1,5 +1,5 @@
 ---
 layout: docs
-title: dnx
+title: dotnet-watch-download
 group: shades
 ---

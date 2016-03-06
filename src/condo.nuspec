@@ -11,7 +11,7 @@
     <projectUrl>http://open.pulsebridge.com/condo</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/pulsebridge/condo/develop/logo.png</iconUrl>
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
-    <tags>build asp.net dnx xplat</tags>
+    <tags>build asp.net dotnet-cli dnx dotnet xplat ci</tags>
     <copyright>©. PulseBridge, Inc. and contributors. All Rights Reserved.</copyright>
   </metadata>
   <files>

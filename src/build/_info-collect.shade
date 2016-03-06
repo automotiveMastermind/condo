@@ -29,7 +29,7 @@ default licenseUri              = ''
 @{
     Build.Log.Header("info-collect");
 
-    if (!string.IsNullOrEmpty(Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI")))
+    if (Build.TFS)
     {
         AssemblyInfo.AssemblyVersion    = Build.Get("BUILD_VERSION");
         AssemblyInfo.Branch             = Build.Get("BUILD_SOURCEBRANCH");
@@ -52,7 +52,7 @@ default licenseUri              = ''
         AssemblyInfo.BuildUri           = Build.Get("BUILD_BUILDURI");
     }
 
-    else if (!string.IsNullOrEmpty(Build.Get("APPVEYOR")))
+    else if (Build.AppVeyor)
     {
         AssemblyInfo.Branch             = Build.Get("APPVEYOR_REPO_BRANCH");
         AssemblyInfo.CommitId           = Build.Get("APPVEYOR_REPO_COMMIT");
@@ -74,7 +74,7 @@ default licenseUri              = ''
         }
     }
 
-    else if (!string.IsNullOrEmpty(Build.Get("TRAVIS")))
+    else if (Build.Travis)
     {
         AssemblyInfo.Branch             = Build.Get("TRAVIS_BRANCH");
         AssemblyInfo.CommitId           = Build.Get("TRAVIS_COMMIT");
@@ -187,6 +187,14 @@ default licenseUri              = ''
     }
 
     Build.Set("BUILD_BUILDNUMBER", AssemblyInfo.InformationalVersion);
+
+    if (Build.TFSAgent)
+    {
+        Build.Log.Header();
+        Console.WriteLine("##vso[build.updatebuildnumber]" + AssemblyInfo.InformationalVersion);
+        Console.WriteLine("##vso[build.addbuildtag]" + AssemblyInfo.InformationalVersion);
+        Build.Log.Header();
+    }
 
     Build.Log.Argument("product", AssemblyInfo.Product);
     Build.Log.Argument("company", AssemblyInfo.Company);

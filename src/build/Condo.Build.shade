@@ -190,6 +190,38 @@ functions @{
             }
         }
 
+        public static bool TFS
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"));
+            }
+        }
+
+        public static bool TFSAgent
+        {
+            get
+            {
+                return TFS && !string.IsNullOrEmpty(Build.Get("AGENT_ID"));
+            }
+        }
+
+        public static bool Travis
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("TRAVIS"));
+            }
+        }
+
+        public static bool AppVeyor
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("APPVEYOR"));
+            }
+        }
+
         public static bool PullRequest { get; set; }
 
         /// <summary>

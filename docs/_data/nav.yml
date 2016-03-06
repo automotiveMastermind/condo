@@ -22,10 +22,10 @@
     - title: dnu
     - title: dnvm-locate
     - title: dnx
-    - title: dnx-run
-    - title: dnx-test
-    - title: dnx-watch
-    - title: dnx-watch-download
+    - title: dotnet-run
+    - title: dotnet-test
+    - title: dotnet-watch
+    - title: dotnet-watch-download
     - title: dotnet-build
     - title: dotnet-clean
     - title: dotnet-cover

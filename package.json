@@ -1,7 +1,7 @@
 {
   "name": "condo",
   "version": "1.0.0",
-  "description": "A build system for DNX projects.",
+  "description": "A continous integration build system for <any> project.",
   "directories": {
     "doc": "docs"
   },
@@ -17,6 +17,8 @@
   },
   "keywords": [
     "dnx",
+    "dotnet-cli",
+    "dotnet",
     "condo",
     "build",
     "continuous integration"

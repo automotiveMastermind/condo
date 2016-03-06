@@ -22,6 +22,7 @@ default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
 default configuration       = '${ Build.Get("CONFIGURATION", "Debug") }'
+default platform            = '${ Build.Get("PLATFORM", "AnyCPU") }'
 
 default Coverage            = '${ false }'
 
@@ -54,6 +55,7 @@ default Coverage            = '${ false }'
 }
 
 info-collect once='info-collect'
+environment once='environment'
 
 @{
     Build.Log.Header();
@@ -165,23 +167,27 @@ info-collect once='info-collect'
 
 #initialize-all .initialize-grunt .initialize-gulp target='initialize' description='Initializes all initialization targets.'
 
-#compile-dnx target='compile' description='Compiles and packages all dnx-based projects found within the source directory.'
+#compile-dotnet target='compile' description='Compiles and packages all dotnet-based projects found within the source directory.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
     dotnet-pack dotnet_pack_output_path='${ target_build_path }' each='var dotnet_pack_path in paths'
 
-#test-dnx target='test' description='Executes unit tests for all dnx-based projects found within the test directory.'
+#compile-msbuild target='compile' description='Compiles and packages all msbuild-based projects found within the source directory.'
+    var paths = '${ Build.GetPaths(working_path, "condo.msbuild") }'
+    msbuild each='var msbuild_project in paths'
+
+#test-dotnet target='test' description='Executes unit tests for all dotnet-based projects found within the test directory.'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
-    dnx-test dnx_test_output_path='${ target_test_path }' each='var dnx_test_path in paths'
+    dotnet-test dotnet_test_output_path='${ target_test_path }' each='var dotnet_test_path in paths'
 
 #test-mocha target='test' description='Executes client-side tests using mocha'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json").Where(path => { var test = Path.Combine(path, "test"); return Directory.Exists(test) && Directory.GetFiles(test, "*.js").Any(); }) }'
     mocha mocha_output_path='${ target_test_path }' each='var mocha_path in paths'
 
-#test-compile-dnx target='compile' description='Compiles dnx-based projects found within the test directory.'
+#test-compile-dotnet target='compile' description='Compiles dotnet-based projects found within the test directory.'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
     dotnet-build dotnet_build_output_path='${ target_test_path }' each='var dotnet_build_path in paths'
 
-#test-coverage-dnx target='test-coverage' description='Generates a code coverage report for DNX-based projects'
+#test-coverage-dotnet target='test-coverage' description='Generates a code coverage report for dotnet-based projects'
     dotnet-cover-report if='Coverage'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
@@ -191,21 +197,21 @@ info-collect once='info-collect'
 #push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.' if='Directory.Exists(target_package_path)'
     copy copy_src_path='${ target_package_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
-#push-dnx-packages-local target='post-package' description='Pushes DNX packages to the local feed for development purposes.' if='Directory.Exists(target_build_path)'
+#push-dotnet-packages-local target='post-package' description='Pushes dotnet packages to the local feed for development purposes.' if='Directory.Exists(target_build_path)'
     copy copy_src_path='${ target_build_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
     nuget-push each='var nuget_push_package in pkgs'
 
-#push-dnx-packages target='push' description='Pushes DNX packages to a NuGet feed.'
+#push-dotnet-packages target='push' description='Pushes dotnet packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
     nuget-push each='var nuget_push_package in pkgs'
 
-#run-dnx target='run' description='Runs any DNX projects that contain a command for execution based on the platform.'
+#run-dotnet target='run' description='Runs any dotnet projects that contain a command for execution based on the platform.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
-    dnx-run each='var dnx_run_project in paths'
+    dotnet-run each='var dotnet_run_project in paths'
 
-#watch-dnx target='watch' description='Runs and watches any DNX projects that contain a command for execution based on the platform.'
+#watch-dotnet target='watch' description='Runs and watches any dotnet projects that contain a command for execution based on the platform.'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json") }'
-    dnx-watch each='var dnx_watch_project in paths'
+    dotnet-watch each='var dotnet_watch_project in paths'

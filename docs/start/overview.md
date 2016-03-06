@@ -5,7 +5,7 @@ group: start
 redirect_from: "/start/"
 ---
 
-Condo is a cross-platform continuous integration system for building, testing, publishing, and deploying DNX-based projects. It is
+Condo is a cross-platform continuous integration system for building, testing, publishing, and deploying *any* project. It is
 built from the ground up to quickly enable continous integration in just about any environment.
 
 ## Contents
