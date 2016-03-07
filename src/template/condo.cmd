@@ -1,9 +1,32 @@
-@echo off
-cd %~dp0
+@ECHO OFF
+PUSHD %~dp0
 
 ECHO.
 
 SETLOCAL
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+    IF NOT DEFINED VisualStudioVersion (
+        IF DEFINED VS140COMNTOOLS (
+            CALL "%VS140COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2015 TOOLS
+            GOTO :EnvironmentReady
+        )
+
+        IF DEFINED VS120COMNTOOLS (
+            CALL "%VS120COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2013 TOOLS
+            GOTO :EnvironmentReady
+        )
+
+        IF DEFINED VS110COMNTOOLS (
+            CALL "%VS110COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2012 TOOLS
+            GOTO :EnvironmentReady
+        )
+    )
+
+    :EnvironmentReady
     SET DNXPATH=%USERPROFILE%\.dnx
     SET DNVMPATH=%DNXPATH%\dnvm
     SET DNVMCMD=%DNVMPATH%\dnvm.cmd
@@ -13,7 +36,7 @@ SETLOCAL
     SET DNVMPS1URI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.ps1"
 
     IF NOT EXIST "%DNVMPATH%" (
-        mkdir "%DNVMPATH%"
+        MKDIR "%DNVMPATH%"
     )
 
     IF NOT EXIST "%DNVMPS1%" (
@@ -36,7 +59,7 @@ SETLOCAL
     SET NUGETURI="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
     IF NOT EXIST "%NUGETPATH%" (
-        mkdir "%NUGETPATH%"
+        MKDIR "%NUGETPATH%"
     )
 
     IF NOT EXIST "%NUGETCMD%" (
@@ -47,11 +70,11 @@ SETLOCAL
     SET NUGET=%NUGETROOT%\nuget.exe
 
     IF NOT EXIST "%NUGETROOT%" (
-        mkdir "%NUGETROOT%"
+        MKDIR "%NUGETROOT%"
     )
 
     IF NOT EXIST "%NUGET%" (
-        copy "%NUGETCMD%" "%NUGET%"
+        COPY "%NUGETCMD%" "%NUGET%"
     )
 
     CALL "%DNVMCMD%" install latest -r coreclr -a x86 -nonative -alias default
@@ -79,5 +102,8 @@ SETLOCAL
 
     ECHO.
 
-    "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
+    "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*ENDLOCAL
 ENDLOCAL
+
+POPD
+ECHO.
