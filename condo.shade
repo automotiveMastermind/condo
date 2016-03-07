@@ -31,5 +31,5 @@ var build_docs          = '${ string.Equals(Build.Get("TRAVIS_OS_NAME"), "osx", 
     git-config if='build_docs'
     gulp-task gulp_task_name='deploy' if='build_docs'
 
-#msbuild
-    msbuild-locate
+#testing
+    vstest vstest_test_path='test.dll'

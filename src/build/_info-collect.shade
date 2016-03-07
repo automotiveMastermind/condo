@@ -47,9 +47,11 @@ default licenseUri              = ''
         AssemblyInfo.BuiltOn            = Build.Get("AGENT_NAME");
 
         AssemblyInfo.RepositoryProvider = Build.Get("BUILD_REPOSITORY_PROVIDER");
-        AssemblyInfo.TeamUri            = Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+        AssemblyInfo.TeamProject        = Build.Get("SYSTEM_TEAMPROJECT") ?? Build.Get("TF_BUILD_TEAMPROJECT");
+        AssemblyInfo.TeamUri            = Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI") ?? Build.Get("TF_BUILD_COLLECTIONURI");
         AssemblyInfo.RepositoryUri      = Build.Get("BUILD_REPOSITORY_URI");
-        AssemblyInfo.BuildUri           = Build.Get("BUILD_BUILDURI");
+        AssemblyInfo.BuildUri           = Build.Get("BUILD_BUILDURI") ?? Build.Get("TF_BUILD_BUILDURI");
+        AssemblyInfo.BuildName          = Build.Get("BUILD_BUILDNUMBER") ?? Build.Get("TF_BUILD_BUILDNUMBER");
     }
 
     else if (Build.AppVeyor)

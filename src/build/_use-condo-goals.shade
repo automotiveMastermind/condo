@@ -22,7 +22,7 @@ default target_package_path = '${ Path.Combine(target_path, "packages") }'
 
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
 default configuration       = '${ Build.Get("CONFIGURATION", "Debug") }'
-default platform            = '${ Build.Get("PLATFORM", "AnyCPU") }'
+default platform            = '${ Build.Get("PLATFORM", "Any CPU") }'
 
 default Coverage            = '${ false }'
 
@@ -178,6 +178,11 @@ environment once='environment'
 #test-dotnet target='test' description='Executes unit tests for all dotnet-based projects found within the test directory.'
     var paths = '${ Build.GetPathsContaining(test_path, "project.json") }'
     dotnet-test dotnet_test_output_path='${ target_test_path }' each='var dotnet_test_path in paths'
+
+#test-msbuild target='test' description='Executes unit tests for all msbuild-based projects found within the build target directory.'
+    var paths = '${ Build.GetPaths(target_build_path, "*.test.dll") }'
+    var tests = '${ string.Join("\" \"", paths) }'
+    vstest vstest_test_path='${ tests }' if='!string.IsNullOrEmpty(tests)'
 
 #test-mocha target='test' description='Executes client-side tests using mocha'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json").Where(path => { var test = Path.Combine(path, "test"); return Directory.Exists(test) && Directory.GetFiles(test, "*.js").Any(); }) }'

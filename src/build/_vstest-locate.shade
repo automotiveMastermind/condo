@@ -1,0 +1,55 @@
+@{/*
+
+vstest-locate
+    Locates the vstest command line utility available on the current path.
+
+*/}
+
+use namespace = 'System'
+
+use import = 'Condo.Build'
+
+@{
+    var vstest_locate_path      = Build.Get("VSTEST_INSTALL_PATH");
+    var vstest_locate_where_cmd = "where";
+    var vstest_locate_name      = "vstest.console.exe";
+
+    var vstest_locate_cmd       = vstest_locate_name;
+    var vstest_locate_found     = false;
+
+    var vstest_locate_ignored   = string.Empty;
+
+    Build.Log.Header("vstest-locate");
+
+    if (Build.Unix)
+    {
+        Build.Log.Warn("vstest-locate: vstest is only available on the Windows platform.");
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(vstest_locate_path))
+        {
+            vstest_locate_cmd = Path.Combine(vstest_locate_path.TrimEnd(Path.DirectorySeparatorChar), vstest_locate_name);
+            vstest_locate_found = Build.TryExecute(vstest_locate_cmd, out vstest_locate_ignored, "/?");
+        }
+
+        if (!vstest_locate_found)
+        {
+            vstest_locate_found = Build.TryExecute(vstest_locate_where_cmd, out vstest_locate_cmd, vstest_locate_name);
+        }
+
+        if (vstest_locate_found)
+        {
+            var vstest_multiple_paths = vstest_locate_cmd.Split(Environment.NewLine.ToArray());
+            vstest_locate_cmd = vstest_multiple_paths[vstest_multiple_paths.Length-1];
+        }
+        else
+        {
+            vstest_locate_cmd = string.Empty;
+        }
+    }
+
+    Build.SetPath("vstest", vstest_locate_cmd, vstest_locate_found);
+    Build.Log.Argument("path", vstest_locate_cmd);
+    Build.Log.Header();
+}

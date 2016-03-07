@@ -35,17 +35,12 @@ target_build_path='$(base_path)/build'
 target_test_path='$(base_path)/test'
     The path in which to locate test projects.
 
-dotnet_test_wait='true'
-    A value indicating whether or not to wait for exit.
-
-dotnet_test_quiet='$(Build.Log.Quiet)'
-    A value indicating whether or not to execute the command quietly.
-
 */}
 
 use assembly = 'System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'
 
 use namespace = 'System'
+use namespace = 'System.IO'
 use namespace = 'System.Web.Script.Serialization'
 
 use import = 'Condo.Build'
