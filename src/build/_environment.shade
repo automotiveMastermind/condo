@@ -39,6 +39,6 @@ use import = 'Condo.Build'
 
     foreach (DictionaryEntry env_variable in Environment.GetEnvironmentVariables())
     {
-        Build.Log.Argument(env_variable.Key.ToString(), env_variable.Value.ToString());
+        Build.Log.Argument(env_variable.Key.ToString(), env_variable.Value.ToString(), true);
     }
 }
