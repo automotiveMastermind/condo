@@ -158,11 +158,11 @@ default licenseUri              = ''
     if (!string.IsNullOrEmpty(AssemblyInfo.PrereleaseTag))
     {
         AssemblyInfo.PrereleaseTag += "-" + AssemblyInfo.BuildId.PadLeft(5, "0"[0]);
-    }
 
-    if (string.IsNullOrEmpty(Build.Get("BUILD_BUILDNUMBER")) && string.IsNullOrEmpty(Build.Get("BUILD_SERVER")))
-    {
-        AssemblyInfo.PrereleaseTag += "-" + commit.PadLeft(4, "0"[0]);
+        if (!Build.CI)
+        {
+            AssemblyInfo.PrereleaseTag += "-" + commit.PadLeft(4, "0"[0]);
+        }
     }
 
     if (string.IsNullOrEmpty(AssemblyInfo.BuiltOn))
