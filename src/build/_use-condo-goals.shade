@@ -52,12 +52,17 @@ default Coverage            = '${ false }'
         // make the test path a fully qualified path
         test_path = Path.Combine(base_path, test_path);
     }
+
+    // set secure logging if build is CI
+    Build.Log.Secure = Build.CI;
 }
 
 info-collect once='info-collect'
 environment once='environment'
 
 @{
+    Build.Log.Secure = false;
+
     Build.Log.Header();
     Build.Log.Header("paths");
     Build.Log.Argument("base path", base_path);

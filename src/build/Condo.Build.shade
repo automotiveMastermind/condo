@@ -124,7 +124,7 @@ functions @{
         }
 
         public bool Quiet { get; set; }
-        public bool Secure {get; set; }
+        public bool Secure { get; set; }
     }
 
     public class InstallPath
