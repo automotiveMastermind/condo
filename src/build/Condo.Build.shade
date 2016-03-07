@@ -194,7 +194,7 @@ functions @{
         {
             get
             {
-                return !string.IsNullOrEmpty(Build.Get("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"));
+                return !string.IsNullOrEmpty(Build.Get("SYSTEM_DEFINITIONID")) && !string.IsNullOrEmpty(Build.Get("TF_BUILD"));
             }
         }
 
