@@ -41,5 +41,4 @@ use import = 'Condo.Build'
     {
         Build.Log.Argument(env_variable.Key.ToString(), env_variable.Value.ToString());
     }
-    Build.Log.Header();
 }

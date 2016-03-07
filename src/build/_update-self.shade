@@ -17,6 +17,7 @@ var update_self_base_uri        = 'https://raw.githubusercontent.com/pulsebridge
 var update_buildcmd_path        = '${ Path.Combine(base_path, "condo.cmd") }'
 var update_buildps1_path        = '${ Path.Combine(base_path, "condo.ps1") }'
 var update_buildsh_path         = '${ Path.Combine(base_path, "condo.sh") }'
+var update_msbuild_path         = '${ Path.Combine(base_path, "condo.msbuild") }'
 
 var update_buildtmp_path        = '${ Path.Combine(base_path, "condo.tmp") }'
 
@@ -27,6 +28,7 @@ var update_condo_path           = '${ Path.Combine(update_package_path, "PulseBr
 var update_buildcmd_uri         = '${ update_self_base_uri + "condo.cmd" }'
 var update_buildps1_uri         = '${ update_self_base_uri + "condo.ps1" }'
 var update_buildsh_uri          = '${ update_self_base_uri + "condo.sh" }'
+var update_msbuild_uri          = '${ update_self_base_uri + "condo.msbuild" }'
 
 @{
     Build.Log.Header("update-self");
@@ -82,6 +84,20 @@ var update_buildsh_uri          = '${ update_self_base_uri + "condo.sh" }'
             }
         }
 
+        if (File.Exists(update_msbuild_path))
+        {
+            Log.Verbose("update-self: updating condo.msbuild from " + update_msbuild_uri);
+
+            try
+            {
+                client.DownloadFile(update_msbuild_uri, update_buildtmp_path);
+                File.Replace(update_buildtmp_path, update_msbuild_path, null, true);
+            }
+            catch
+            {
+                Log.Warn("update-self: could not download condo.msbuild. Please try again later.");
+            }
+        }
         if (File.Exists(update_buildtmp_path))
         {
             Log.Info("update-self: removing temporary file - " + update_buildtmp_path);

@@ -25,6 +25,9 @@ msbuild_args=''
     The command line arguments used to execute msbuild. Note: The project, targets, configuration, platform, and properties
     variables will be automatically included in the arguments. Do not specify them multiple times.
 
+,sbio;d_output_path='$(target_path)/build'
+    The path in which to store the resulting builds.
+
 msbuild_path='$(working_path)'
     The path in which to execute the msbuild.
 
@@ -34,6 +37,9 @@ base_path='$(CurrentDirectory)'
 working_path='$(base_path)'
     The working path in which to execute msbuild.
 
+target_path='$(working_path)/artifacts'
+    The target path for build artifacts.
+
 */}
 
 use namespace = 'System'
@@ -41,22 +47,26 @@ use namespace = 'System.IO'
 
 use import = 'Condo.Build'
 
+default configuration               = '${ Build.Get("CONFIGURATION", "Debug") }'
+
 msbuild-locate once='msbuild-locate'
 
-default msbuild_project         = ''
-default msbuild_targets         = 'build'
-default msbuild_configuration   = '${ configuration }'
-default msbuild_platform        = '${ platform }'
-default msbuild_properties      = ''
-default msbuild_version         = 'latest'
-default msbuild_args            = ''
+default base_path                   = '${ Directory.GetCurrentDirectory() }'
+default working_path                = '${ base_path }'
+default target_path                 = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
+default msbuild_output_path         = '${ Path.Combine(target_path, "build") }'
 
-default base_path               = '${ Directory.GetCurrentDirectory() }'
-default working_path            = '${ base_path }'
+default msbuild_project             = ''
+default msbuild_targets             = 'build'
+default msbuild_configuration       = '${ configuration }'
+default msbuild_platform            = '${ platform }'
+default msbuild_properties          = ''
+default msbuild_version             = 'latest'
+default msbuild_args                = ''
 
-default msbuild_path            = '${ working_path }'
+default msbuild_path                = '${ working_path }'
 
-default msbuild_cmd             = '${ Build.GetPath("msbuild_" + msbuild_version) }'
+default msbuild_cmd                 = '${ Build.GetPath("msbuild_" + msbuild_version) }'
 
 @{
     Build.Log.Header("msbuild");
@@ -103,6 +113,11 @@ default msbuild_cmd             = '${ Build.GetPath("msbuild_" + msbuild_version
     if (!string.IsNullOrEmpty(msbuild_targets))
     {
         msbuild_args += " /t:" + msbuild_targets.TrimEnd(";"[0]);
+    }
+
+    if (!string.IsNullOrEmpty(msbuild_output_path))
+    {
+        msbuild_properties += "BaseOutputPath='" + msbuild_output_path + "';";
     }
 
     if (!string.IsNullOrEmpty(msbuild_configuration))
