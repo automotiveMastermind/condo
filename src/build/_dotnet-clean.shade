@@ -1,10 +1,10 @@
 @{/*
 
-dotnet_clean
-    Cleans a .NET 5 project.
+dotnet-clean
+    Cleans a .NET project.
 
 default dotnet_clean_project=''
-    Path to the project.json file to clean.
+    Path to the project.json or msbuild project file to clean.
 
 default dotnet_clean_path=''
     Path to the folder containing the project to clean.
@@ -13,6 +13,8 @@ default dotnet_clean_path=''
 
 use namespace = 'System'
 use namespace = 'System.IO'
+
+use import = 'Condo.Build'
 
 default dotnet_clean_project = ''
 default dotnet_clean_path = ''
@@ -26,10 +28,23 @@ default dotnet_clean_path = ''
     {
         throw new ArgumentException("dotnet-clean: no project or path was specified.", "clean_path");
     }
+    
+    var dotnet_clean_bin_path = Path.Combine(final_clean_path, "bin");
+    var dotnet_clean_obj_path = Path.Combine(final_clean_path, "obj");
 
     Build.Log.Argument("path", final_clean_path);
+
+    if (Directory.Exists(dotnet_clean_bin_path))
+    {
+        Build.Log.Argument("bin path", dotnet_clean_bin_path);
+        Build.RemoveDirectory(dotnet_clean_bin_path);
+    }
+    
+    if (Directory.Exists(dotnet_clean_obj_path))
+    {
+        Build.Log.Argument("obj path", dotnet_clean_obj_path);
+        Build.RemoveDirectory(dotnet_clean_obj_path);
+    }
+    
     Build.Log.Header();
 }
-
-directory delete='${ Path.Combine(final_clean_path, "bin") }'
-directory delete='${ Path.Combine(final_clean_path, "obj") }'

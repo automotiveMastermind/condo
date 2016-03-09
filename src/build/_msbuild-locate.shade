@@ -42,7 +42,7 @@ use import = 'Condo.Build'
             var version_registry_path = tools_registry_path + "\\" + version_registry_key;
             var current_registry_key = Registry.LocalMachine.OpenSubKey(version_registry_path);
 
-            var msbuild_version_name = "msbuild_" + version_registry_key;
+            var msbuild_version_name = msbuild_path_name + version_registry_key;
             var msbuild_version_path = current_registry_key.GetValue(msbuild_path_key_name) as string;
 
             if (!string.IsNullOrEmpty(msbuild_version_path))
@@ -66,7 +66,7 @@ use import = 'Condo.Build'
             throw new NotSupportedException("msbuild-locate: could not find an instance of msbuild -- the build process cannot continue.");
         }
 
-        Build.SetPath("msbuild_latest", msbuild_max_version_path, true);
+        Build.SetPath(msbuild_path_name + "latest", msbuild_max_version_path, true);
 
         Build.Log.Argument("version", msbuild_max_version);
         Build.Log.Argument("path", msbuild_max_version_path);

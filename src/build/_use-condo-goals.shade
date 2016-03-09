@@ -101,33 +101,86 @@ environment once='environment'
 
 #clean-bin description='Cleans the bin directory.' -Build.RemoveDirectory(bin_path);
 
+#clean-nuget-packages description='Cleans NuGet package directory.' @{
+    Build.Log.Header("clean-nuget-packages");
+    
+    var path = Path.Combine(base_path, "packages");
+    
+    if (Directory.Exists(path))
+    {
+        Build.Log.Argument("path", path);
+        
+        var packages = Directory.GetDirectories(path)
+            .Where(p => !p.EndsWith("PulseBridge.Condo"))
+            .Where(p => !p.EndsWith("Sake"));
+        
+        foreach (var package in packages)
+        {
+            Build.Log.Argument("package path", package);
+            Build.RemoveDirectory(package);            
+        }
+    }
+    
+    Build.Log.Header();
+}
+
 #clean-npm-modules description='Cleans any installed NPM modules.' @{
-    var paths = Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "node_modules")).Where(p => Directory.Exists(p));
+    Build.Log.Header("clean-npm-modules");
+    
+    var paths = Build.GetPathsContaining(base_path, "package.json")
+        .Select(p => Path.Combine(p, "node_modules"))
+        .Where(p => Directory.Exists(p));
 
     foreach (var path in paths)
     {
+        Build.Log.Argument("path", path);
         Build.RemoveDirectory(path);
     }
 
-    Build.RemoveDirectory(Path.Combine(base_path, "node_modules"));
+    var node_path = Path.Combine(base_path, "node_modules");
+    
+    if (Directory.Exists(node_path))
+    {
+        Build.Log.Argument("path", node_path);
+        Build.RemoveDirectory(node_path);
+    }
+    
+    Build.Log.Header();
 }
 
 #clean-bower-components description='Cleans any installed bower components.' @{
-    var paths = Build.GetPathsContaining(base_path, "package.json").Select(p => Path.Combine(p, "bower_components")).Where(p => Directory.Exists(p));
+    Build.Log.Header("clean-bower-components");
+    
+    var paths = Build.GetPathsContaining(base_path, "bower.json")
+        .Select(p => Path.Combine(p, "bower_components")).Where(p => Directory.Exists(p));
 
     foreach (var path in paths)
     {
+        Build.Log.Argument("path", path);
         Build.RemoveDirectory(path);
     }
+    
+    var bower_path = Path.Combine(base_path, "bower_components");
+    
+    if (Directory.Exists(bower_path))
+    {
+        Build.Log.Argument("path", bower_path);
+        Build.RemoveDirectory(bower_path);
+    }
+    
+    Build.Log.Header();
 }
 
 #clean-artifacts target='clean' description='Cleans the artifacts directory from the working directory.' -Build.RemoveDirectory(target_path);
 
 #clean-build target='clean' description='Clean the build artifacts from each project within the working directory.'
-    var paths = '${ Build.GetPathsContaining(src_path, "project.json").Union(Build.GetPathsContaining(test_path, "project.json")) }'
+    var paths = '${ Build.GetPathsContaining(src_path, "project.json")
+        .Union(Build.GetPathsContaining(test_path, "project.json"))
+        .Union(Build.GetPathsContaining(src_path, "*.csproj"))
+        .Union(Build.GetPathsContaining(test_path, "*.csproj")) }'
     dotnet-clean each='var dotnet_clean_path in paths'
 
-#clean-all .clean-bower-components .clean-npm-modules .clean-bin .clean description='Clean everything in preparation for `git clean`.'
+#clean-all .clean-bower-components .clean-npm-modules .clean-bin .clean-nuget-packages .clean description='Clean everything in preparation for `git clean`.'
 
 #restore-npm-modules description='Restores all NPM modules. This will install NodeJS and NPM if not already found on the system.'
     var paths = '${ Build.GetPathsContaining(base_path, "package.json") }'
@@ -187,7 +240,7 @@ environment once='environment'
 #test-msbuild target='test' description='Executes unit tests for all msbuild-based projects found within the build target directory.'
     var paths = '${ Build.GetPaths(target_build_path, "*.test.dll") }'
     var tests = '${ string.Join("\" \"", paths) }'
-    vstest vstest_test_path='${ tests }' if='!string.IsNullOrEmpty(tests)'
+    vstest vstest_test_path='"${ tests }"' if='!string.IsNullOrEmpty(tests)'
 
 #test-mocha target='test' description='Executes client-side tests using mocha'
     var paths = '${ Build.GetPathsContaining(src_path, "project.json").Where(path => { var test = Path.Combine(path, "test"); return Directory.Exists(test) && Directory.GetFiles(test, "*.js").Any(); }) }'
@@ -201,7 +254,7 @@ environment once='environment'
     dotnet-cover-report if='Coverage'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
-    var specs = '${ Build.GetPaths(src_path, "*.nuspec") }'
+    var specs = '${ Build.GetPathsContaining(src_path, "*.nuspec") }'
     nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
 
 #push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.' if='Directory.Exists(target_package_path)'

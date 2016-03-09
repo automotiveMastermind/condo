@@ -167,6 +167,8 @@ var vstest_cmd                  = '${ Build.GetPath("vstest") }'
     Build.Log.Argument("architecture", vstest_architecture);
     Build.Log.Argument("filter", vstest_filter);
     Build.Log.Header();
+    
+    Build.MakeDirectory(target_test_path);
 }
 
 exec exec_cmd='${ vstest_cmd.Path }' exec_args='${ vstest_args }' exec_path='${ target_test_path }'

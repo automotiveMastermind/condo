@@ -618,7 +618,7 @@ functions @{
             {
                 command = "\"" + command + "\"";
             }
-
+            
             // determine process start information based on whether or not the CLI is executing on unix/linux or windows
             var info = Build.Unix
                 ? new ProcessStartInfo { FileName = command, Arguments = args }
@@ -812,15 +812,22 @@ functions @{
                 return;
             }
 
-            var dir = new DirectoryInfo(path);
-            dir.Attributes &= ~FileAttributes.ReadOnly;
-
-            foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            try
             {
-                info.Attributes &= ~FileAttributes.ReadOnly;
-            }
+                var dir = new DirectoryInfo(path);
+                dir.Attributes &= ~FileAttributes.ReadOnly;
 
-            dir.Delete(true);
+                foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                {
+                    info.Attributes &= ~FileAttributes.ReadOnly;
+                }
+
+                dir.Delete(true);
+            }
+            catch (Exception netEx)
+            {
+                Build.Log.Warn("remove directory: " + netEx.Message);
+            }
         }
 
         public static bool TryGetRepositoryRoot(ref string root)

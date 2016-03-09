@@ -27,7 +27,6 @@ default log_name = ''
 default log_value = ''
 default log_line = ''
 default log_header = ''
-default log_quiet = '${ false }'
 default log_secure = '${ false }'
 
 @{
