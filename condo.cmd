@@ -88,15 +88,20 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
     SET MAKE=condo.shade
 
-    IF EXIST "%SAKE%" (
-        RD "%SAKEPKG%" /s /q
+    IF NOT EXIST "%SAKE%" (
+        "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
     )
-
-    "%NUGET%" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 
     ECHO.
 
+    IF ["%1"] == ["update-self"] (
+        RMDIR /S /Q "%SAKEPKG%" 1>NUL 2>&1
+        GOTO :EXIT
+    )
+
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
+
+    :EXIT
 ENDLOCAL
 
 POPD

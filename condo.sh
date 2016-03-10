@@ -112,16 +112,25 @@ includes=$condopkg/build
 make=condo.shade
 
 # determine if sake exists
-if ! test "$sake"; then
-  # remove the sake directory
-  rm -rRf "$sake"
+if ! test -f "$sake"; then
+    # install sake using nuget (so we have additional options not supported by DNU)
+    mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 fi
-
-# install sake using nuget (so we have additional options not supported by DNU)
-mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 
 # write a newline for separation
 echo
+
+# determine if this is a call to update self
+if test $1 == "update-self"; then
+    # remove the sake package
+    rm -rRf "%sakepkg" 1>&- 2>&-
+
+    # change to the original path
+    cd $path
+
+    # exit
+    exit 0
+fi
 
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
