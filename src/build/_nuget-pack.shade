@@ -44,6 +44,8 @@ default nuget_pack_options  = '${ Build.Get("NUGET_PACK_OPTIONS") }'
 
 default configuration       = '${ Build.Get("CONFIGURATION", "Debug") }'
 default platform            = '${ Build.Get("PLATFORM", "Any CPU") }'
+default product             = ''
+default company             = ''
 
 @{
     Build.Log.Header("nuget-pack");
@@ -63,28 +65,39 @@ default platform            = '${ Build.Get("PLATFORM", "Any CPU") }'
 
         Directory.CreateDirectory(target_package_path);
     }
-    
+
     if (Directory.Exists(nuget_pack_path))
     {
         var nuget_pack_projs = Directory.EnumerateFiles(nuget_pack_path, "*.??proj")
             .Where(p => File.Exists(Path.ChangeExtension(p, ".nuspec")));
-            
+
+        var nuget_pack_deploys = Directory.EnumerateFiles(nuget_pack_path, "*.??proj")
+            .Select(p => Path.ChangeExtension(p, ".deploy.nuspec"))
+            .Where(p => File.Exists(p));
+
         var nuget_pack_specs = Directory.EnumerateFiles(nuget_pack_path, "*.nuspec")
             .Where(p => !File.Exists(Path.ChangeExtension(p, ".csproj")))
-            .Where(p => !File.Exists(Path.ChangeExtension(p, ".vbproj")));
-        
+            .Where(p => !File.Exists(Path.ChangeExtension(p, ".vbproj")))
+            .Except(nuget_pack_deploys);
+
         try
         {
             Parallel.ForEach
                 (
                     nuget_pack_projs,
-                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.Combine(target_build_path, Path.GetFileNameWithoutExtension(path)), Build.Log.Quiet, configuration, platform)
+                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.Combine(target_build_path, Path.GetFileNameWithoutExtension(path)), Build.Log.Quiet, configuration, platform, product, company)
+                );
+
+            Parallel.ForEach
+                (
+                    nuget_pack_deploys,
+                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.Combine(target_build_path, Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(path))), Build.Log.Quiet, configuration, platform, product, company)
                 );
 
             Parallel.ForEach
                 (
                     nuget_pack_specs,
-                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Build.Log.Quiet, configuration, platform)
+                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Build.Log.Quiet, configuration, platform, product, company)
                 );
         }
         catch (AggregateException agEx)
@@ -104,15 +117,29 @@ default platform            = '${ Build.Get("PLATFORM", "Any CPU") }'
             throw new ArgumentException("nuget-pack: the specified path for the specification or project was not found.", "nuget_pack_path");
         }
 
-        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Build.Log.Quiet, configuration, platform);
+        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, Path.GetDirectoryName(nuget_pack_path), Build.Log.Quiet, configuration, platform, product, company);
     }
 }
 
-macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' nuget_quiet='bool' configuration='string' platform='string'
+macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' nuget_quiet='bool' configuration='string' platform='string' product='string' company='string'
     @{
+        nuget_options += " -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path;
+
         if(nuget_args.EndsWith("proj\""))
         {
-            nuget_options += " -Symbols -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path + "\"";
+            nuget_options += "\" -Symbols";
+        }
+        else if(nuget_args.EndsWith("deploy.nuspec\""))
+        {
+            var nuget_pack_temp_path = nuget_path.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var nuget_pack_temp_parts = nuget_pack_temp_path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var nuget_pack_id = nuget_pack_temp_parts[nuget_pack_temp_parts.Length-1];
+
+            nuget_options += ";id=" + nuget_pack_id + ";author=" + company + "\" -NoPackageAnalysis";
+        }
+        else
+        {
+            nuget_options += ";id=" + product + ";author=" + company + "\"";
         }
     }
     nuget

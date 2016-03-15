@@ -103,30 +103,30 @@ environment once='environment'
 
 #clean-nuget-packages description='Cleans NuGet package directory.' @{
     Build.Log.Header("clean-nuget-packages");
-    
+
     var path = Path.Combine(base_path, "packages");
-    
+
     if (Directory.Exists(path))
     {
         Build.Log.Argument("path", path);
-        
+
         var packages = Directory.GetDirectories(path)
             .Where(p => !p.EndsWith("PulseBridge.Condo"))
             .Where(p => !p.EndsWith("Sake"));
-        
+
         foreach (var package in packages)
         {
             Build.Log.Argument("package path", package);
-            Build.RemoveDirectory(package);            
+            Build.RemoveDirectory(package);
         }
     }
-    
+
     Build.Log.Header();
 }
 
 #clean-npm-modules description='Cleans any installed NPM modules.' @{
     Build.Log.Header("clean-npm-modules");
-    
+
     var paths = Build.GetPathsContaining(base_path, "package.json")
         .Select(p => Path.Combine(p, "node_modules"))
         .Where(p => Directory.Exists(p));
@@ -138,19 +138,19 @@ environment once='environment'
     }
 
     var node_path = Path.Combine(base_path, "node_modules");
-    
+
     if (Directory.Exists(node_path))
     {
         Build.Log.Argument("path", node_path);
         Build.RemoveDirectory(node_path);
     }
-    
+
     Build.Log.Header();
 }
 
 #clean-bower-components description='Cleans any installed bower components.' @{
     Build.Log.Header("clean-bower-components");
-    
+
     var paths = Build.GetPathsContaining(base_path, "bower.json")
         .Select(p => Path.Combine(p, "bower_components")).Where(p => Directory.Exists(p));
 
@@ -159,15 +159,15 @@ environment once='environment'
         Build.Log.Argument("path", path);
         Build.RemoveDirectory(path);
     }
-    
+
     var bower_path = Path.Combine(base_path, "bower_components");
-    
+
     if (Directory.Exists(bower_path))
     {
         Build.Log.Argument("path", bower_path);
         Build.RemoveDirectory(bower_path);
     }
-    
+
     Build.Log.Header();
 }
 
@@ -264,11 +264,15 @@ environment once='environment'
     copy copy_src_path='${ target_build_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to a NuGet feed.'
-    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg") && !pkg.EndsWith(".deploy.nupkg")) }'
     nuget-push each='var nuget_push_package in pkgs'
 
+#push-deploy-packages target='push' description='Pushes NuGet packages for Octopus Deploy to a NuGet feed.'
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.deploy.nupkg") }'
+    nuget-push each='var nuget_deploy_package in pkgs'
+
 #push-dotnet-packages target='push' description='Pushes dotnet packages to a NuGet feed.'
-    var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg")) }'
+    var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg") && !pkg.EndsWith(".deploy.nupkg")) }'
     nuget-push each='var nuget_push_package in pkgs'
 
 #run-dotnet target='run' description='Runs any dotnet projects that contain a command for execution based on the platform.'
