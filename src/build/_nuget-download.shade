@@ -29,7 +29,7 @@ default nuget_version           = '3.2.0'
     Build.Log.Header("nuget-download");
 
     var nuget_exe       = "nuget.exe";
-    var nuget_dist      = "https://dist.nuget.org/win-x86-commandline/latest/";
+    var nuget_dist      = "https://dist.nuget.org/win-x86-commandline/latest";
     var nuget_url       = nuget_dist + "/" + nuget_exe;
     var nuget_download  = Path.Combine(nuget_download_path, nuget_exe);
 

@@ -267,9 +267,13 @@ environment once='environment'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg") && !pkg.EndsWith(".deploy.nupkg")) }'
     nuget-push each='var nuget_push_package in pkgs'
 
-#push-deploy-packages target='push' description='Pushes NuGet packages for Octopus Deploy to a NuGet feed.'
+#push-nuget-symbols target='push' description='Pushes NuGet symbol packages to a NuGet feed.'
+    var pkgs = '${ Build.GetPaths(target_package_path, "*.symbols.nupkg") }'
+    nuget-push-symbols each='var nuget_push_package in pkgs'
+
+#push-deploy-packages target='deploy' description='Pushes NuGet packages for Octopus Deploy to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.deploy.nupkg") }'
-    nuget-push each='var nuget_deploy_package in pkgs'
+    nuget-push-deploy each='var nuget_deploy_package in pkgs'
 
 #push-dotnet-packages target='push' description='Pushes dotnet packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_build_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg") && !pkg.EndsWith(".deploy.nupkg")) }'

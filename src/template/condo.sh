@@ -136,11 +136,22 @@ echo
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
 
-# determine if the argument is for updating self
-if test $1 == "update-self"; then
-    # remove the sake and condo package folders
-    rm -rRf "$sakepkg" 1>&- 2>&-
-    rmdir -rRf "$condopkg" 1>&- 2>&-
+# determine if this is a call to update self
+if test "$1" == "update-self"; then
+    # remove the sake package
+    rm -rRf "%sakepkg" 1>&- 2>&-
+
+    # remove local nuget
+    rm -rf "$nuget"
+
+    # remove cache nuget
+    rm -rf "$nugetcmd"
+
+    # change to the original path
+    cd $path
+
+    # exit
+    exit 0
 fi
 
 # write a newline for separation

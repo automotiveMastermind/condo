@@ -84,7 +84,7 @@ fi
 
 # define the path for nuget
 nugetpath=$root/.nuget
-nuget=$root/.nuget/nuget.exe
+nuget=$nugetpath/nuget.exe
 
 # determine if the .nuget directory exists
 if ! test -f "$nugetpath"; then
@@ -120,10 +120,19 @@ fi
 # write a newline for separation
 echo
 
+# execute the build with sake
+mono "$sake" -I "$includes" -f "$make" "$@"
+
 # determine if this is a call to update self
-if test $1 == "update-self"; then
+if test "$1" == "update-self"; then
     # remove the sake package
     rm -rRf "%sakepkg" 1>&- 2>&-
+
+    # remove local nuget
+    rm -rf "$nuget"
+
+    # remove cache nuget
+    rm -rf "$nugetcmd"
 
     # change to the original path
     cd $path
@@ -132,8 +141,8 @@ if test $1 == "update-self"; then
     exit 0
 fi
 
-# execute the build with sake
-mono "$sake" -I "$includes" -f "$make" "$@"
+# write a newline for separation
+echo
 
 # change to the original path
 cd $path

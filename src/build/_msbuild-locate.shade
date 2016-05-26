@@ -70,7 +70,7 @@ use import = 'Condo.Build'
 
         Build.Log.Argument("version", msbuild_max_version);
         Build.Log.Argument("path", msbuild_max_version_path);
-
-        Build.Log.Header();
     }
+
+    Build.Log.Header();
 }

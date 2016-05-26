@@ -67,6 +67,7 @@ default msbuild_args                = ''
 default msbuild_path                = '${ working_path }'
 
 default msbuild_cmd                 = '${ Build.GetPath("msbuild_" + msbuild_version) }'
+default msbuild_cmd_path            = ''
 
 @{
     Build.Log.Header("msbuild");
@@ -75,68 +76,71 @@ default msbuild_cmd                 = '${ Build.GetPath("msbuild_" + msbuild_ver
     {
         Build.Log.Warn("msbuild: msbuild is currently only supported on Windows.");
     }
-
-    if (string.IsNullOrEmpty(msbuild_project))
+    else
     {
-        throw new ArgumentException("msbuild: msbuild_project must be specified.");
-    }
-
-    if (msbuild_cmd == null)
-    {
-        throw new ArgumentException("msbuild: msbuild executable could not be found for the specified version.");
-    }
-
-    var msbuild_cmd_path = msbuild_cmd.Path;
-
-    if (!msbuild_cmd_path.EndsWith("msbuild.exe", StringComparison.OrdinalIgnoreCase))
-    {
-        if (!msbuild_cmd_path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+        if (string.IsNullOrEmpty(msbuild_project))
         {
-            msbuild_cmd_path += Path.DirectorySeparatorChar;
+            throw new ArgumentException("msbuild: msbuild_project must be specified.");
         }
 
-        msbuild_cmd_path += "msbuild.exe";
+        if (msbuild_cmd == null)
+        {
+            throw new ArgumentException("msbuild: msbuild executable could not be found for the specified version.");
+        }
+
+        msbuild_cmd_path = msbuild_cmd.Path;
+
+        if (!msbuild_cmd_path.EndsWith("msbuild.exe", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!msbuild_cmd_path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                msbuild_cmd_path += Path.DirectorySeparatorChar;
+            }
+
+            msbuild_cmd_path += "msbuild.exe";
+        }
+
+        Build.Log.Argument("path", msbuild_cmd_path);
+        Build.Log.Argument("version", msbuild_version);
+        Build.Log.Argument("project", msbuild_project);
+        Build.Log.Argument("targets", msbuild_targets);
+        Build.Log.Argument("configuration", msbuild_configuration);
+        Build.Log.Argument("platform", msbuild_platform);
+        Build.Log.Argument("properties", msbuild_properties);
+        Build.Log.Argument("arguments", msbuild_args);
+
+        msbuild_args = (msbuild_project + " " + msbuild_args).Trim();
+
+        if (!string.IsNullOrEmpty(msbuild_targets))
+        {
+            msbuild_args += " /t:" + msbuild_targets.TrimEnd(";"[0]);
+        }
+
+        if (!string.IsNullOrEmpty(msbuild_output_path))
+        {
+            msbuild_properties += "GenerateProjectSpecificOutputFolder=true;";
+            msbuild_properties += "OutDir=\"" + msbuild_output_path + "\";";
+        }
+
+        if (!string.IsNullOrEmpty(msbuild_configuration))
+        {
+            msbuild_properties += "Configuration=\"" + msbuild_configuration + "\";";
+        }
+
+        if (!string.IsNullOrEmpty(msbuild_platform))
+        {
+            msbuild_properties += "Platform=\"" + msbuild_platform + "\";";
+        }
+
+        if (!string.IsNullOrEmpty(msbuild_properties))
+        {
+            msbuild_args += " /p:" + msbuild_properties.TrimEnd(";"[0]);
+        }
+
+        msbuild_args = msbuild_args.Trim();
     }
 
-    Build.Log.Argument("path", msbuild_cmd_path);
-    Build.Log.Argument("version", msbuild_version);
-    Build.Log.Argument("project", msbuild_project);
-    Build.Log.Argument("targets", msbuild_targets);
-    Build.Log.Argument("configuration", msbuild_configuration);
-    Build.Log.Argument("platform", msbuild_platform);
-    Build.Log.Argument("properties", msbuild_properties);
-    Build.Log.Argument("arguments", msbuild_args);
     Build.Log.Header();
-
-    msbuild_args = (msbuild_project + " " + msbuild_args).Trim();
-
-    if (!string.IsNullOrEmpty(msbuild_targets))
-    {
-        msbuild_args += " /t:" + msbuild_targets.TrimEnd(";"[0]);
-    }
-
-    if (!string.IsNullOrEmpty(msbuild_output_path))
-    {
-        msbuild_properties += "GenerateProjectSpecificOutputFolder=true;";
-        msbuild_properties += "OutDir=\"" + msbuild_output_path + "\";";
-    }
-
-    if (!string.IsNullOrEmpty(msbuild_configuration))
-    {
-        msbuild_properties += "Configuration=\"" + msbuild_configuration + "\";";
-    }
-
-    if (!string.IsNullOrEmpty(msbuild_platform))
-    {
-        msbuild_properties += "Platform=\"" + msbuild_platform + "\";";
-    }
-
-    if (!string.IsNullOrEmpty(msbuild_properties))
-    {
-        msbuild_args += " /p:" + msbuild_properties.TrimEnd(";"[0]);
-    }
-
-    msbuild_args = msbuild_args.Trim();
 }
 
 exec exec_cmd='${ msbuild_cmd_path }' exec_args='${ msbuild_args }' if='!Build.Unix'

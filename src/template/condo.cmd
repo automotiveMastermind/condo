@@ -107,6 +107,8 @@ SETLOCAL ENABLEDELAYEDEXPANSION
     IF ["%1"] == ["update-self"] (
         RMDIR /S /Q "%SAKEPKG%" 1>NUL 2>&1
         RMDIR /S /Q "%CONDOPKG%" 1>NUL 2>&1
+        DEL /Q "%NUGETCMD%"
+        DEL /Q "%NUGET%"
     )
 ENDLOCAL
 

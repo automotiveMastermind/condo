@@ -11,7 +11,6 @@ use namespace = 'System.IO'
 @{
     var dnvm_locate_where_cmd = Build.Unix ? "which" : "where";
     var dnvm_locate_cmd = Build.Get("DNVMCMD");
-    var dnvm_locate_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dnx", "dnvm", dnvm_locate_cmd);
     var dnvm_locate_found = false;
 
     if (string.IsNullOrEmpty(dnvm_locate_cmd))
@@ -19,6 +18,8 @@ use namespace = 'System.IO'
         dnvm_locate_cmd = Build.Unix ? "dnvm.sh" : "dnvm.cmd";
         dnvm_locate_found = false;
     }
+
+    var dnvm_locate_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dnx", "dnvm", dnvm_locate_cmd);
 
     Build.Log.Header("dnvm-locate");
 
