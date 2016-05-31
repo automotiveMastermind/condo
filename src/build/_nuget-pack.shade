@@ -127,7 +127,7 @@ macro name='Pack' nuget_args='string' nuget_options='string' nuget_project_name=
         nuget_path = Path.Combine(nuget_path, nuget_project_name);
         nuget_sites_path = Path.Combine(nuget_sites_path, nuget_project_name);
 
-        nuget_options += " -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path + ";WebProjectOutputDir=" + nuget_sites_path;
+        nuget_options += " -IncludeReferencedProjects -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path;
 
         if(nuget_args.EndsWith("proj\""))
         {

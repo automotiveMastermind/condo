@@ -16,6 +16,8 @@ default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
 default appdata_path        = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)) }'
 
+default nuget_cache_path    = '${ Path.Combine(appdata_path, "nuget", "packages") }'
+
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
@@ -259,10 +261,10 @@ environment once='environment'
     nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
 
 #push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.' if='Directory.Exists(target_package_path)'
-    copy copy_src_path='${ target_package_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
+    copy copy_src_path='${ target_package_path }' copy_dst_path='${ nuget_cache_path }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
 #push-dotnet-packages-local target='post-package' description='Pushes dotnet packages to the local feed for development purposes.' if='Directory.Exists(target_build_path)'
-    copy copy_src_path='${ target_build_path }' copy_dst_path='${ Path.Combine(appdata_path, "NuGet", "packages") }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
+    copy copy_src_path='${ target_build_path }' copy_dst_path='${ nuget_cache_path }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
 
 #push-nuget-packages target='push' description='Pushes NuGet packages to a NuGet feed.'
     var pkgs = '${ Build.GetPaths(target_package_path, "*.nupkg").Where(pkg => !pkg.EndsWith(".symbols.nupkg") && !pkg.EndsWith(".deploy.nupkg")) }'
