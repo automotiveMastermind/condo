@@ -54,7 +54,11 @@ msbuild-locate once='msbuild-locate'
 default base_path                   = '${ Directory.GetCurrentDirectory() }'
 default working_path                = '${ base_path }'
 default target_path                 = '${ Build.Get("BUILD_BINARIESDIRECTORY", Path.Combine(base_path, "artifacts")) }'
-default msbuild_output_path         = '${ Path.Combine(target_path, "build") }'
+default target_build_path           = '${ Path.Combine(target_path, "build") }'
+default target_sites_path           = '${ Path.Combine(target_path, "sites") }'
+
+default msbuild_output_path         = '${ target_build_path }'
+default msbuild_sites_path          = '${ target_sites_path }'
 
 default msbuild_project             = ''
 default msbuild_targets             = 'build'
@@ -120,6 +124,11 @@ default msbuild_cmd_path            = ''
         {
             msbuild_properties += "GenerateProjectSpecificOutputFolder=true;";
             msbuild_properties += "OutDir=\"" + msbuild_output_path + "\";";
+        }
+
+        if (!string.IsNullOrEmpty(msbuild_sites_path))
+        {
+            msbuild_properties += "WebProjectOutputDir=\"" + msbuild_sites_path + "$(MSBuildProjectName)\";";
         }
 
         if (!string.IsNullOrEmpty(msbuild_configuration))

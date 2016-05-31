@@ -64,8 +64,6 @@ default nuget_version           = '3.2.0'
     {
         Build.MakeDirectory(Path.GetDirectoryName(nuget_download));
 
-        Log.Verbose("nuget-download: downloading the latest version of nuget.exe");
-
         var client = new WebClient();
 
         client.DownloadFile(nuget_url, nuget_download);

@@ -19,6 +19,7 @@ default appdata_path        = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
+default target_sites_path   = '${ Path.Combine(target_path, "sites") }'
 
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
 default configuration       = '${ Build.Get("CONFIGURATION", "Debug") }'
