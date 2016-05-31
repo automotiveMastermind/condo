@@ -123,7 +123,7 @@ default company             = ''
 
 macro name='Pack' nuget_args='string' nuget_options='string' nuget_path='string' nuget_quiet='bool' configuration='string' platform='string' product='string' company='string'
     @{
-        nuget_options += " -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path;
+        nuget_options += " -IncludeReferencedProjects -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path;
 
         if(nuget_args.EndsWith("proj\""))
         {
