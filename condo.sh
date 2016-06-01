@@ -67,8 +67,7 @@ fi
 
 # set the URL to nuget
 nugeturi=https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-appdata=~/.config
-nugetpath=$appdata/NuGet
+nugetpath=$HOME/.nuget
 nugetcmd=$nugetpath/nuget.exe
 
 # determine if the nuget directory exists

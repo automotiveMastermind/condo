@@ -14,9 +14,9 @@ default bin_path            = '${ Path.Combine(base_path, "bin") }'
 default src_path            = '${ Path.Combine(base_path, "src") }'
 default test_path           = '${ Path.Combine(base_path, "test") }'
 default working_path        = '${ base_path }'
-default appdata_path        = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)) }'
+default home_path           = '${ Build.Get("AGENT_BUILDDIRECTORY", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)) }'
 
-default nuget_cache_path    = '${ Path.Combine(appdata_path, "nuget", "packages") }'
+default nuget_cache_path    = '${ Path.Combine(home_path, ".nuget", "local-cache") }'
 
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
