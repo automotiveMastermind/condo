@@ -117,3 +117,6 @@ vnd/
 
 # hidden folders
 .*/
+
+# condo files
+Condo.AssemblyInfo.cs

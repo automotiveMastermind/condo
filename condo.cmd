@@ -94,14 +94,13 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
     ECHO.
 
-    IF ["%1"] == ["update-self"] (
-        RMDIR /S /Q "%SAKEPKG%" 1>NUL 2>&1
-        GOTO :EXIT
-    )
-
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
 
-    :EXIT
+    IF ["%1"] == ["update-self"] (
+        RMDIR /S /Q "%SAKEPKG%" 1>NUL 2>&1
+        DEL /Q "%NUGETCMD%"
+        DEL /Q "%NUGET%"
+    )
 ENDLOCAL
 
 POPD

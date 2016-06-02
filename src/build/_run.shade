@@ -67,4 +67,4 @@ default run_retries     = '${ 1 }' type='int'
 }
 
 exec exec_cmd='mono' exec_args='${ run_args } ${ run_options }' exec_path='${ run_path }' exec_wait='${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' exec_redirect='${ false }' if='Build.Unix'
-exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' exec_redirect='${ false }' if='!Build.Unix'
+exec exec_cmd='${ run_args }' exec_args='${ run_options }' exec_path='${ run_path }' exec_wait = '${ run_wait }' exec_quiet='${ run_quiet }' exec_secure='${ run_secure }' exec_retries='${ run_retries }' exec_redirect='${ false }' if='Build.Windows'

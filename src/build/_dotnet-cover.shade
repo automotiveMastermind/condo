@@ -95,7 +95,7 @@ var cover_install                           = '${ Path.Combine(dotnet_cover_inst
 var cover_exec_cmd                          = ''
 var cover_where_cmd                         = ''
 
-nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='cover-install'
+nuget-install nuget_install_id='${ cover_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(cover_install) && Build.Windows' nuget_install_prerelease='${ true }' once='cover-install'
 
 @{
     Build.Log.Header("dotnet-cover");
@@ -207,4 +207,4 @@ exec exec_cmd='${ dotnet_cover_target }' exec_args='${ dotnet_cover_args }' exec
     dotnet_cover_options = dotnet_cover_options.Trim();
 }
 
-exec exec_cmd='${ cover_install }' exec_args='${ dotnet_cover_options }' exec_path='${ dotnet_cover_path }' exec_wait='${ dotnet_cover_wait }' exec_quiet='${ dotnet_cover_quiet }' if='!Build.Unix'
+exec exec_cmd='${ cover_install }' exec_args='${ dotnet_cover_options }' exec_path='${ dotnet_cover_path }' exec_wait='${ dotnet_cover_wait }' exec_quiet='${ dotnet_cover_quiet }' if='Build.Windows'

@@ -64,7 +64,7 @@ var dotnet_cover_report_id                   = 'ReportGenerator'
 var dotnet_cover_report_exe                  = 'ReportGenerator.exe'
 var dotnet_cover_report_install              = '${ Path.Combine(dotnet_cover_report_install_path, dotnet_cover_report_id, "tools", dotnet_cover_report_exe) }'
 
-nuget-install nuget_install_id='${ dotnet_cover_report_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(dotnet_cover_report_install) && !Build.Unix' nuget_install_prerelease='${ true }' once='dotnet-cover-report-install'
+nuget-install nuget_install_id='${ dotnet_cover_report_id }' nuget_install_exclude_version='${ true }' if='!File.Exists(dotnet_cover_report_install) && Build.Windows' nuget_install_prerelease='${ true }' once='dotnet-cover-report-install'
 
 @{
     Build.Log.Header("dotnet-cover-report");
@@ -119,4 +119,4 @@ nuget-install nuget_install_id='${ dotnet_cover_report_id }' nuget_install_exclu
     dotnet_cover_report_args = dotnet_cover_report_args.Trim();
 }
 
-exec exec_cmd='${ dotnet_cover_report_install }' exec_args='${ dotnet_cover_report_args }' exec_wait='${ dotnet_cover_report_wait }' exec_quiet='${ dotnet_cover_report_quiet }' if='!Build.Unix'
+exec exec_cmd='${ dotnet_cover_report_install }' exec_args='${ dotnet_cover_report_args }' exec_wait='${ dotnet_cover_report_wait }' exec_quiet='${ dotnet_cover_report_quiet }' if='Build.Windows'

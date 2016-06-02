@@ -76,17 +76,13 @@ default msbuild_cmd_path            = ''
 @{
     Build.Log.Header("msbuild");
 
-    if (Build.Unix)
+    if (string.IsNullOrEmpty(msbuild_project))
     {
-        Build.Log.Warn("msbuild: msbuild is currently only supported on Windows.");
+        throw new ArgumentException("msbuild: msbuild_project must be specified.");
     }
-    else
-    {
-        if (string.IsNullOrEmpty(msbuild_project))
-        {
-            throw new ArgumentException("msbuild: msbuild_project must be specified.");
-        }
 
+    if (Build.Windows)
+    {
         if (msbuild_cmd == null)
         {
             throw new ArgumentException("msbuild: msbuild executable could not be found for the specified version.");
@@ -103,53 +99,62 @@ default msbuild_cmd_path            = ''
 
             msbuild_cmd_path += "msbuild.exe";
         }
-
-        Build.Log.Argument("path", msbuild_cmd_path);
-        Build.Log.Argument("version", msbuild_version);
-        Build.Log.Argument("project", msbuild_project);
-        Build.Log.Argument("targets", msbuild_targets);
-        Build.Log.Argument("configuration", msbuild_configuration);
-        Build.Log.Argument("platform", msbuild_platform);
-        Build.Log.Argument("properties", msbuild_properties);
-        Build.Log.Argument("arguments", msbuild_args);
-
-        msbuild_args = (msbuild_project + " " + msbuild_args).Trim();
-
-        if (!string.IsNullOrEmpty(msbuild_targets))
-        {
-            msbuild_args += " /t:" + msbuild_targets.TrimEnd(";"[0]);
-        }
-
-        if (!string.IsNullOrEmpty(msbuild_output_path))
-        {
-            msbuild_properties += "GenerateProjectSpecificOutputFolder=true;";
-            msbuild_properties += "OutDir=\"" + msbuild_output_path + "\";";
-        }
-
-        if (!string.IsNullOrEmpty(msbuild_sites_path))
-        {
-            msbuild_properties += "WebProjectOutputDir=\"" + msbuild_sites_path + "$(MSBuildProjectName)\";";
-        }
-
-        if (!string.IsNullOrEmpty(msbuild_configuration))
-        {
-            msbuild_properties += "Configuration=\"" + msbuild_configuration + "\";";
-        }
-
-        if (!string.IsNullOrEmpty(msbuild_platform))
-        {
-            msbuild_properties += "Platform=\"" + msbuild_platform + "\";";
-        }
-
-        if (!string.IsNullOrEmpty(msbuild_properties))
-        {
-            msbuild_args += " /p:" + msbuild_properties.TrimEnd(";"[0]);
-        }
-
-        msbuild_args = msbuild_args.Trim();
     }
 
+    Build.Log.Argument("path", msbuild_cmd_path);
+    Build.Log.Argument("version", msbuild_version);
+    Build.Log.Argument("project", msbuild_project);
+    Build.Log.Argument("targets", msbuild_targets);
+    Build.Log.Argument("configuration", msbuild_configuration);
+    Build.Log.Argument("platform", msbuild_platform);
+    Build.Log.Argument("properties", msbuild_properties);
+    Build.Log.Argument("arguments", msbuild_args);
+    Build.Log.Argument("output path", msbuild_output_path);
+    Build.Log.Argument("sites path", msbuild_sites_path);
+
+    msbuild_args = (msbuild_project + " " + msbuild_args).Trim();
+
+    if (!string.IsNullOrEmpty(msbuild_targets))
+    {
+        msbuild_args += " /t:" + msbuild_targets.TrimEnd(";"[0]);
+    }
+
+    if (!string.IsNullOrEmpty(msbuild_output_path))
+    {
+        msbuild_properties += "GenerateProjectSpecificOutputFolder=true;";
+        msbuild_properties += "OutDir=\"" + msbuild_output_path + "\";";
+    }
+
+    if (!string.IsNullOrEmpty(msbuild_sites_path))
+    {
+        msbuild_properties += "SitesRoot=\"" + msbuild_sites_path + "\";";
+    }
+
+    Build.Log.Argument("properties", msbuild_properties);
+
+    if (!string.IsNullOrEmpty(msbuild_configuration))
+    {
+        msbuild_properties += "Configuration=\"" + msbuild_configuration + "\";";
+    }
+
+    if (!string.IsNullOrEmpty(msbuild_platform))
+    {
+        msbuild_properties += "Platform=\"" + msbuild_platform + "\";";
+    }
+
+    if (!string.IsNullOrEmpty(msbuild_properties))
+    {
+        msbuild_args += " /p:" + msbuild_properties.TrimEnd(";"[0]);
+    }
+
+    msbuild_args = msbuild_args.Trim();
+
     Build.Log.Header();
+
+    if (Build.Unix)
+    {
+        Build.Log.Warn("msbuild-locate: msbuild is only available on the Windows platform at the present time.");
+    }
 }
 
-exec exec_cmd='${ msbuild_cmd_path }' exec_args='${ msbuild_args }' if='!Build.Unix'
+exec exec_cmd='${ msbuild_cmd_path }' exec_args='${ msbuild_args }' if='Build.Windows'

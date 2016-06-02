@@ -233,6 +233,9 @@ environment once='environment'
     dotnet-pack dotnet_pack_output_path='${ target_build_path }' each='var dotnet_pack_path in paths'
 
 #compile-msbuild target='compile' description='Compiles and packages all msbuild-based projects found within the source directory.'
+    var info_paths = '${ Build.GetPathsContaining(working_path, "condo.msbuild") }'
+    info each='var info_path in info_paths'
+
     var paths = '${ Build.GetPaths(working_path, "condo.msbuild") }'
     msbuild each='var msbuild_project in paths'
 

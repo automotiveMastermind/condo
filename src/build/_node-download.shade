@@ -95,7 +95,7 @@ default node_hash               = '628FFD6C3577068C00CEC9F6F897F0EC8F5212D9'
     Build.SetPath("npm", npm_cmd_install, node_globally_installed);
 }
 
-verify-hash verify_assembly='${ node_install }' verify_hash='${ node_hash }' if='!node_installed && !Build.Unix'
+verify-hash verify_assembly='${ node_install }' verify_hash='${ node_hash }' if='!node_installed && Build.Windows'
 brew-install brew_install_formula='node' if='!node_installed && Build.OSX'
 
 @{

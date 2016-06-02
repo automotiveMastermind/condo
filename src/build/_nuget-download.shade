@@ -47,6 +47,8 @@ default nuget_version           = '3.2.0'
     {
         var nuget_download_version = FileVersionInfo.GetVersionInfo(nuget_download);
 
+        Build.Log.Info(nuget_download_version.ToString());
+
         Version nuget_download_current;
 
         if (nuget_download_version == null || nuget_download_version.ProductVersion == null || !Version.TryParse(nuget_download_version.ProductVersion, out nuget_download_current))

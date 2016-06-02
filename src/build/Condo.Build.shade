@@ -182,6 +182,14 @@ functions @{
             }
         }
 
+        public static bool Windows
+        {
+            get
+            {
+                return !Build.Unix;
+            }
+        }
+
         public static bool CI
         {
             get
@@ -618,7 +626,7 @@ functions @{
             {
                 command = "\"" + command + "\"";
             }
-            
+
             // determine process start information based on whether or not the CLI is executing on unix/linux or windows
             var info = Build.Unix
                 ? new ProcessStartInfo { FileName = command, Arguments = args }
