@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <!-- get the paths used to locate solutions and projects to build -->
-        <SolutionRoot Condition=" '$(SolutionRoot)'  == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))</SolutionRoot>
-        <SrcRoot Condition=" '$(SrcRoot)'  == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'src'))</SrcRoot>
-        <TestRoot Condition=" '$(TestRoot)'  == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'test'))</TestRoot>
-        <ArtifactsRoot Condition=" '$(ArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'artifacts'))</ArtifactsRoot>
-        <BuildRoot Condition=" '$(BuildRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildRoot>
-        <SiteRoot Condition=" '$(SiteRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteRoot>
+        <SolutionRoot       Condition=" '$(SolutionRoot)'       == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))$(DirectorySeparatorChar)</SolutionRoot>
+        <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'src'))$(DirectorySeparatorChar)</SrcRoot>
+        <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'test'))$(DirectorySeparatorChar)</TestRoot>
+        <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'artifacts'))$(DirectorySeparatorChar)</ArtifactsRoot>
 
-        <OutDir Condition=" '$(OutDir)' == '' ">$(BuildRoot)</OutDir>
+        <BuildArtifactsRoot Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))$(DirectorySeparatorChar)</BuildArtifactsRoot>
+        <TestArtifactsRoot  Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))$(DirectorySeparatorChar)</TestArtifactsRoot>
+        <SiteArtifactsRoot  Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))$(DirectorySeparatorChar)</SiteArtifactsRoot>
+
+        <OutDir Condition=" '$(OutDir)' == '' ">$(BuildArtifactsRoot)</OutDir>
         <GenerateProjectSpecificOutputFolder Condition=" '$(GenerateProjectSpecificOutputFolder)' == '' ">True</GenerateProjectSpecificOutputFolder>
 
         <BuildInParallel Condition=" '$(BuildInParallel)' == '' ">True</BuildInParallel>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(MSBuildProjectFile)' != '$(MSBuildThisFile)' ">
-        <WebProjectOutputDir Condition=" '$(WebProjectOutputDir)' == '' ">$([System.IO.Path]::Combine('$(SiteRoot)', '$(MSBuildProjectName)'))</WebProjectOutputDir>
-    </PropertyGroup>
-
-    <ItemGroup Condition=" '$(MSBuildProjectFile)' != '$(MSBuildThisFile)' ">
-        <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Condition=" Exists('$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs') " />
-        <Compile Include="$(MSBuildThisFileDirectory)Condo.AssemblyInfo.cs" Condition=" Exists('$(MSBuildThisFileDirectory)Condo.AssemblyInfo.cs') " />
-    </ItemGroup>
 
     <!-- get the solutions to build -->
     <ItemGroup Condition=" '$(SolutionsToBuild)' == '' ">
@@ -52,8 +44,9 @@
                     SrcRoot=$(SrcRoot);
                     TestRoot=$(TestRoot);
                     ArtifactsRoot=$(ArtifactsRoot);
-                    BuildRoot=$(BuildRoot);
-                    SiteRoot=$(SiteRoot);
+                    BuildArtifactsRoot=$(BuildArtifactsRoot);
+                    TestArtifactsRoot=$(TestArtifactsRoot);
+                    SiteArtifactsRoot=$(SiteArtifactsRoot);
 
                     OutDir=$(OutDir);
                     GenerateProjectSpecificOutputFolder=$(GenerateProjectSpecificOutputFolder);
