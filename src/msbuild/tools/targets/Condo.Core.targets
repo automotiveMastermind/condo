@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- import solution specific props -->
+    <Import Project="$(ProjectRoot)condo.targets" Condition=" Exists('$(ProjectRoot)condo.targets') "/>
+    <Import Project="$(SrcRoot)condo.targets" Condition=" Exists('$(SrcRoot)condo.targets') And '$(TestProject)' == '' "/>
+    <Import Project="$(TestRoot)condo.targets" Condition=" Exists('$(TestRoot)condo.targets') And '$(TestProject)' == 'true' "/>
+    <Import Project="$(BuildRoot)condo.targets" Condition=" Exists('$(BuildRoot)condo.targets') "/>
+    <Import Project="$(SolutionRoot)condo.targets" Condition=" Exists('$(SolutionRoot)condo.targets') "/>
+
+    <!-- print all of the properties that were used to perform the build -->
+    <Target Name="PrintProperties">
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Properties" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Project Name       : $(ProjectName)" />
+        <Message Importance="high" Text="Build Properties   : $(BuildProperties)" Condition=" '$(BuildProperties)' != '' " />
+        <Message Importance="high" Text="Output Path        : $(OutputPath)" />
+        <Message Importance="high" Text="Output Directory   : $(OutDir)" />
+        <Message Importance="high" Text="Version            : $(Version)" />
+        <Message Importance="high" Text="Configuration      : $(Configuration)|$(Platform)" />
+        <Message Importance="high" Text="Test Project       : $(TestProject)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+    </Target>
+
+     <!-- print all of the paths used to create the build -->
+    <Target Name="PrintPaths">
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Paths" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Solution Root      : $(SolutionRoot)" />
+        <Message Importance="high" Text="Source Projects    : $(SrcRoot)" />
+        <Message Importance="high" Text="Test Projects      : $(TestRoot)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Project            : $(ProjectRoot)" />
+        <Message Importance="high" Text="Output             : $(OutputRoot)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Artifacts          : $(ArtifactsRoot)" />
+        <Message Importance="high" Text="Artifacts (Build)  : $(BuildArtifactsRoot)" />
+        <Message Importance="high" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
+        <Message Importance="high" Text="Artifacts (Sites)  : $(SiteArtifactsRoot)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Tools              : $(ToolsRoot)" />
+        <Message Importance="high" Text="Build              : $(BuildRoot)" />
+        <Message Importance="high" Text="Settings           : $(SettingsRoot)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Condo Root         : $(RootPath)" />
+        <Message Importance="high" Text="Condo Tools        : $(ToolsPath)" />
+        <Message Importance="high" Text="Condo Build        : $(BuildPath)" />
+        <Message Importance="high" Text="Condo Props        : $(PropsPath)" />
+        <Message Importance="high" Text="Condo Targets      : $(TargetsPath)" />
+        <Message Importance="high" Text="Condo Tasks        : $(TasksPath)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+        <Message Importance="high" Text="Global Assembly Info       : $(GlobalAssemblyInfoPath)" />
+        <Message Importance="high" Text="Condo Assembly Info        : $(CondoAssemblyInfoPath)" />
+        <Message Importance="high" Text="Code Analysis Dictionary   : $(CodeAnalysisDictionaryPath)" />
+        <Message Importance="high" Text="Code Analysis Rule Set     : $(CodeAnalysisRuleSetPath)" />
+        <Message Importance="high" Text="StyleCop Settings          : $(StyleCopSettingsPath)" />
+        <Message Importance="high" Text="---------------------------------------------------------------------------------------------------------------------" />
+    </Target>
+
+    <PropertyGroup>
+        <BuildDependsOn>;PrintPaths;PrintProperties;$(BuildDependsOn);</BuildDependsOn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- force rebuild if this file changes -->
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+</Project>

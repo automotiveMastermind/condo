@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- import solution specific props -->
+    <Import Project="$(ProjectRoot)condo.props" Condition=" Exists('$(ProjectRoot)condo.props') "/>
+    <Import Project="$(SrcRoot)condo.props" Condition=" Exists('$(SrcRoot)condo.props') And '$(TestProject)' == 'false' "/>
+    <Import Project="$(TestRoot)condo.props" Condition=" Exists('$(TestRoot)condo.props') And '$(TestProject)' == 'true' "/>
     <Import Project="$(BuildRoot)condo.props" Condition=" Exists('$(BuildRoot)condo.props') "/>
     <Import Project="$(SolutionRoot)condo.props" Condition=" Exists('$(SolutionRoot)condo.props') "/>
 
     <PropertyGroup>
         <!-- enable code analysis by default -->
         <CodeAnalysis Condition=" '$(CodeAnalysis)' == '' ">true</CodeAnalysis>
+
+        <!-- determine if we are a test project -->
+        <TestProject>false</TestProject>
+        <TestProject Condition=" $(MSBuildProjectDirectory.StartsWith($(TestRoot), System.StringComparison.OrdinalIgnoreCase)) ">true</TestProject>
 
         <!-- treat warnings as errors by default -->
         <WarningsAsErrors Condition=" '$(WarningsAsErrors)' == '' ">true</WarningsAsErrors>
@@ -25,6 +32,10 @@
 
         <!-- include the imports after the microsoft common targets -->
         <CustomAfterMicrosoftCSharpTargets>$(PropsPath)Condo.Imports.props</CustomAfterMicrosoftCSharpTargets>
+
+        <!-- set the output path -->
+        <OutputPath Condition=" '$(OutputRoot)' != '' ">$(OutputRoot)</OutputPath>
+
     </PropertyGroup>
 
     <!-- defaults for debug configuration -->
@@ -82,5 +93,10 @@
 
     <!--defaults for x64 -->
     <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- force rebuild if this file changes -->
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 </Project>

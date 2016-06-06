@@ -1,7 +1,7 @@
 .docs-masthead {
   position: relative;
   padding: 3rem ($grid-gutter-width / 2) 2rem;
-  color: $docs-blue-light;
+  color: red;
   text-align: center;
   @include gradient-horizontal($start-color: lighten(saturate($docs-blue, 5%), 15%), $end-color: darken($docs-blue, 20%));
 

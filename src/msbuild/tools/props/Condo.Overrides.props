@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- disable documentation requirements for unit test projects -->
-    <PropertyGroup Condition=" '$(TestProjectType)' != '' Or $(ProjectTypeGuids.IndexOf('{3AC096D0-A1C2-E12C-1390-A8335801FDAB}', 0, $(ProjectTypeGuids.Length), System.StringComparison.OrdinalIgnoreCase)) != -1 ">
+    <PropertyGroup Condition=" '$(TestProject)' == 'true'' ">
         <DocumentationFile></DocumentationFile>
         <NoWarn>1591,$(NoWarn)</NoWarn>
         <CodeAnalysis>false</CodeAnalysis>
         <RunCodeAnalysis>false</RunCodeAnalysis>
         <TestProject>true</TestProject>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- force rebuild if this file changes -->
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>
 </Project>
