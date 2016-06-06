@@ -18,19 +18,13 @@
 
     <!-- get the solutions to build -->
     <ItemGroup Condition=" '$(SolutionsToBuild)' == '' ">
-        <SolutionsToBuild Include="$(SolutionRoot)*.sln">
-            <BuildInParallel>$(BuildInParallel)</BuildInParallel>
-        </SolutionsToBuild>
+        <SolutionsToBuild Include="$(SolutionRoot)*.sln" />
     </ItemGroup>
 
+    <!-- get the projects to build -->
     <ItemGroup Condition=" '$(ProjectsToBuild)' == '' ">
-        <ProjectsToBuild Include="$(SrcRoot)**\*.csproj">
-            <BuildInParallel>$(BuildInParallel)</BuildInParallel>
-        </ProjectsToBuild>
-
-        <ProjectsToBuild Include="$(TestRoot)**\*.csproj">
-            <BuildInParallel>$(BuildInParallel)</BuildInParallel>
-        </ProjectsToBuild>
+        <ProjectsToBuild Include="$(SrcRoot)**$(DirectorySeparatorChar)*.csproj" />
+        <ProjectsToBuild Include="$(TestRoot)**$(DirectorySeparatorChar)*.csproj" />
     </ItemGroup>
 
     <!-- build the solutions -->
@@ -49,9 +43,7 @@
                     SiteArtifactsRoot=$(SiteArtifactsRoot);
 
                     OutDir=$(OutDir);
-                    GenerateProjectSpecificOutputFolder=$(GenerateProjectSpecificOutputFolder);
-
-                    CustomBeforeMicrosoftCommonTargets=$(MSBuildThisFileFullPath);">
+                    GenerateProjectSpecificOutputFolder=$(GenerateProjectSpecificOutputFolder);">
             <Output TaskParameter="TargetOutputs" ItemName="CollectedOutput" />
         </MSBuild>
     </Target>
@@ -67,13 +59,12 @@
                     SrcRoot=$(SrcRoot);
                     TestRoot=$(TestRoot);
                     ArtifactsRoot=$(ArtifactsRoot);
-                    BuildRoot=$(BuildRoot);
-                    SiteRoot=$(SiteRoot);
+                    BuildArtifactsRoot=$(BuildArtifactsRoot);
+                    TestArtifactsRoot=$(TestArtifactsRoot);
+                    SiteArtifactsRoot=$(SiteArtifactsRoot);
 
                     OutDir=$(OutDir);
-                    GenerateProjectSpecificOutputFolder=$(GenerateProjectSpecificOutputFolder);
-
-                    CustomBeforeMicrosoftCommonTargets=$(MSBuildThisFileFullPath);">
+                    GenerateProjectSpecificOutputFolder=$(GenerateProjectSpecificOutputFolder);">
             <Output TaskParameter="TargetOutputs" ItemName="CollectedOutput" />
         </MSBuild>
     </Target>
