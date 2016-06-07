@@ -13,6 +13,7 @@
     <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
     <tags>build dotnet-cli msbuild dotnet xplat ci</tags>
     <copyright>©. PulseBridge, Inc. and contributors. All Rights Reserved.</copyright>
+    <developmentDependency>true</developmentDependency>
   </metadata>
 
   <files>
