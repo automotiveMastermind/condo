@@ -18,9 +18,6 @@
         <!-- treat warnings as errors by default -->
         <AllowWarningsAsErrors Condition=" '$(AllowWarningsAsErrors)' == '' ">true</AllowWarningsAsErrors>
 
-        <!-- set the documentation path to always output the xml by default -->
-        <DocumentationFile Condition=" '$(DocumentationFile)' == '' ">$(OutputPath)$(ProjectName).xml</DocumentationFile>
-
         <!-- always set the test results output path -->
         <TestResultsOutputPath>$(TestArtifactsRoot)</TestResultsOutputPath>
 
@@ -35,6 +32,9 @@
 
         <!-- set the output path -->
         <OutputPath Condition=" '$(OutputRoot)' != '' ">$(OutputRoot)</OutputPath>
+
+        <!-- set the documentation path to always output the xml by default -->
+        <DocumentationFile Condition=" '$(DocumentationFile)' == '' ">$(OutputPath)$(ProjectName).xml</DocumentationFile>
 
         <!-- always emit debug symbols -->
         <DebugSymbols>true</DebugSymbols>
