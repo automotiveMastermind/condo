@@ -16,7 +16,7 @@
         <TestProject Condition=" $(MSBuildProjectDirectory.StartsWith($(TestRoot), System.StringComparison.OrdinalIgnoreCase)) ">true</TestProject>
 
         <!-- treat warnings as errors by default -->
-        <WarningsAsErrors Condition=" '$(WarningsAsErrors)' == '' ">true</WarningsAsErrors>
+        <AllowWarningsAsErrors Condition=" '$(AllowWarningsAsErrors)' == '' ">true</AllowWarningsAsErrors>
 
         <!-- set the documentation path to always output the xml by default -->
         <DocumentationFile Condition=" '$(DocumentationFile)' == '' ">$(OutputPath)$(ProjectName).xml</DocumentationFile>
@@ -36,11 +36,12 @@
         <!-- set the output path -->
         <OutputPath Condition=" '$(OutputRoot)' != '' ">$(OutputRoot)</OutputPath>
 
+        <!-- always emit debug symbols -->
+        <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
 
     <!-- defaults for debug configuration -->
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -48,6 +49,7 @@
         <WarningLevel>4</WarningLevel>
         <RunCodeAnalysis>false</RunCodeAnalysis>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
     </PropertyGroup>
 
     <!-- defaults for release configuration -->
@@ -58,7 +60,7 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <RunCodeAnalysis>false</RunCodeAnalysis>
-        <TreatWarningsAsErrors>$(WarningsAsErrors)</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>$(AllowWarningsAsErrors)</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <!-- defaults for analysis configuration -->
@@ -69,7 +71,8 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <RunCodeAnalysis>$(CodeAnalysis)</RunCodeAnalysis>
-        <TreatWarningsAsErrors>$(WarningsAsErrors)</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>$(AllowWarningsAsErrors)</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>$(AllowWarningsAsErrors)</CodeAnalysisTreatWarningsAsErrors>
     </PropertyGroup>
 
     <!-- defaults for documentation configuration -->
@@ -81,6 +84,7 @@
         <WarningLevel>4</WarningLevel>
         <RunCodeAnalysis>$(CodeAnalysis)</RunCodeAnalysis>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
     </PropertyGroup>
 
     <!--defaults for any cpu -->

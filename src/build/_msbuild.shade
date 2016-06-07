@@ -127,7 +127,7 @@ default msbuild_cmd_path            = ''
 
     if (!string.IsNullOrEmpty(msbuild_sites_path))
     {
-        msbuild_properties += "SitesArtifactsRoot=\"" + msbuild_sites_path + "\";";
+        msbuild_properties += "SiteArtifactsRoot=\"" + msbuild_sites_path + "\";";
     }
 
     Build.Log.Argument("properties", msbuild_properties);
