@@ -21,6 +21,7 @@ default nuget_cache_path    = '${ Path.Combine(home_path, ".nuget", "local-cache
 default target_build_path   = '${ Path.Combine(target_path, "build") }'
 default target_test_path    = '${ Build.Get("COMMON_TESTRESULTSDIRECTORY", Path.Combine(target_path, "test")) }'
 default target_package_path = '${ Path.Combine(target_path, "packages") }'
+default target_deploy_path  = '${ Path.Combine(target_path, "deploy") }'
 default target_sites_path   = '${ Path.Combine(target_path, "sites") }'
 
 default version             = '${ Build.Get("BUILD_VERSION", "1.0.0") }'
@@ -261,7 +262,7 @@ environment once='environment'
 
 #pack-nuget-packages target='package' description='Packages NuGet specifications found within the source directory.'
     var specs = '${ Build.GetPathsContaining(src_path, "*.nuspec") }'
-    nuget-pack nuget_pack_output_path='${ target_package_path }' each='var nuget_pack_path in specs'
+    nuget-pack each='var nuget_pack_path in specs'
 
 #push-nuget-packages-local target='post-package' description='Pushes NuGet packages to the local feed for development purposes.' if='Directory.Exists(target_package_path)'
     copy copy_src_path='${ target_package_path }' copy_dst_path='${ nuget_cache_path }' copy_include="**/*.nupkg" copy_exclude="**/*.symbols.nupkg" copy_overwrite='${ true }' copy_flatten='${ true }'
@@ -278,7 +279,7 @@ environment once='environment'
     nuget-push-symbols each='var nuget_push_package in pkgs'
 
 #push-deploy-packages target='deploy' description='Pushes NuGet packages for Octopus Deploy to a NuGet feed.'
-    var pkgs = '${ Build.GetPaths(target_package_path, "*.deploy.nupkg") }'
+    var pkgs = '${ Build.GetPaths(target_deploy_path, "*.deploy.nupkg") }'
     nuget-push-deploy each='var nuget_deploy_package in pkgs'
 
 #push-dotnet-packages target='push' description='Pushes dotnet packages to a NuGet feed.'

@@ -34,6 +34,7 @@ default working_path            = '${ base_path }'
 default target_path             = '${ Path.Combine(base_path, "artifacts") }'
 default target_build_path       = '${ Path.Combine(target_path, "build") }'
 default target_package_path     = '${ Path.Combine(target_path, "packages") }'
+default target_deploy_path      = '${ Path.Combine(target_path, "deploy") }'
 default target_sites_path       = '${ Path.Combine(target_path, "sites") }'
 
 default nuget_pack_path         = '${ working_path }'
@@ -60,21 +61,12 @@ default company                 = ''
         nuget_pack_options += " -Version " + nuget_pack_version;
     }
 
-    if (!string.IsNullOrEmpty(target_package_path))
-    {
-        nuget_pack_options += " -OutputDirectory \"" + target_package_path + "\"";
-
-        Directory.CreateDirectory(target_package_path);
-    }
-
     if (Directory.Exists(nuget_pack_path))
     {
         var nuget_pack_projs = Directory.EnumerateFiles(nuget_pack_path, "*.??proj")
             .Where(p => File.Exists(Path.ChangeExtension(p, ".nuspec")));
 
-        var nuget_pack_deploys = Directory.EnumerateFiles(nuget_pack_path, "*.??proj")
-            .Select(p => Path.ChangeExtension(p, ".deploy.nuspec"))
-            .Where(p => File.Exists(p));
+        var nuget_pack_deploys = Directory.EnumerateFiles(nuget_pack_path, "*.deploy.nuspec");
 
         var nuget_pack_specs = Directory.EnumerateFiles(nuget_pack_path, "*.nuspec")
             .Where(p => !File.Exists(Path.ChangeExtension(p, ".csproj")))
@@ -86,19 +78,19 @@ default company                 = ''
             Parallel.ForEach
                 (
                     nuget_pack_projs,
-                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetFileNameWithoutExtension(path), target_build_path, target_sites_path, Build.Log.Quiet, configuration, platform, product, company)
+                    path => Pack(path, nuget_pack_options, Path.GetFileNameWithoutExtension(path), target_build_path, target_sites_path, target_package_path, Build.Log.Quiet, configuration, platform, product, company)
                 );
 
             Parallel.ForEach
                 (
                     nuget_pack_deploys,
-                    path => Pack("pack \"" + path + "\"", nuget_pack_options, Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(path)), target_build_path, target_sites_path, Build.Log.Quiet, configuration, platform, product, company)
+                    path => Pack(path, nuget_pack_options, Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(path)), target_build_path, target_sites_path, target_deploy_path, Build.Log.Quiet, configuration, platform, product, company)
                 );
 
             Parallel.ForEach
                 (
                     nuget_pack_specs,
-                    path => Pack("pack \"" + path + "\"", nuget_pack_options, string.Empty, Path.GetDirectoryName(nuget_pack_path), target_sites_path, Build.Log.Quiet, configuration, platform, product, company)
+                    path => Pack(path, nuget_pack_options, Path.GetFileNameWithoutExtension(path), target_build_path, target_sites_path, target_package_path, Build.Log.Quiet, configuration, platform, product, company)
                 );
         }
         catch (AggregateException agEx)
@@ -118,32 +110,32 @@ default company                 = ''
             throw new ArgumentException("nuget-pack: the specified path for the specification or project was not found.", "nuget_pack_path");
         }
 
-        Pack("pack \"" + nuget_pack_path + "\"", nuget_pack_options, string.Empty, Path.GetDirectoryName(nuget_pack_path), target_sites_path, Build.Log.Quiet, configuration, platform, product, company);
+        Pack(nuget_pack_path, nuget_pack_options, string.Empty, Path.GetDirectoryName(nuget_pack_path), string.Empty, string.Empty, Build.Log.Quiet, configuration, platform, product, company);
     }
 }
 
-macro name='Pack' nuget_args='string' nuget_options='string' nuget_project_name='string' nuget_path='string' nuget_sites_path='string' nuget_quiet='bool' configuration='string' platform='string' product='string' company='string'
+macro name='Pack' nuget_target_path='string' nuget_options='string' nuget_project_name='string' nuget_buid_path='string' nuget_sites_path='string' nuget_output_path='string' nuget_quiet='bool' configuration='string' platform='string' product='string' company='string'
     @{
-        nuget_path = Path.Combine(nuget_path, nuget_project_name);
+        if (!string.IsNullOrEmpty(nuget_output_path))
+        {
+            nuget_options += " -OutputDirectory \"" + nuget_output_path + "\"";
+
+            Directory.CreateDirectory(nuget_output_path);
+        }
+
+        nuget_buid_path = Path.Combine(nuget_buid_path, nuget_project_name);
         nuget_sites_path = Path.Combine(nuget_sites_path, nuget_project_name);
 
-        nuget_options += " -IncludeReferencedProjects -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";OutDir=" + nuget_path;
+        nuget_options += " -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";Product=" + product + ";Company=" + company;
 
-        if(nuget_args.EndsWith("proj\""))
+        if (nuget_target_path.EndsWith("proj\""))
         {
-            nuget_options += "\" -Symbols";
-        }
-        else if(nuget_args.EndsWith("deploy.nuspec\""))
-        {
-            var nuget_pack_temp_path = nuget_path.Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            var nuget_pack_temp_parts = nuget_pack_temp_path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            var nuget_pack_id = nuget_pack_temp_parts[nuget_pack_temp_parts.Length-1];
-
-            nuget_options += ";id=" + nuget_pack_id + ";author=" + company + "\" -NoPackageAnalysis";
+            nuget_options += ";OutDir=" + nuget_buid_path + "\" -IncludeReferencedProjects -Symbols";
         }
         else
         {
-            nuget_options += ";id=" + product + ";author=" + company + "\"";
+            nuget_options += ";OutputPath=" + nuget_buid_path + ";SitePath=" + nuget_sites_path + ";id=" + nuget_project_name + ";author=" + company + "\" -NoPackageAnalysis";
         }
     }
-    nuget
+
+    nuget nuget_args='pack "${ nuget_target_path }"'
