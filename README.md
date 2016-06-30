@@ -98,7 +98,7 @@ For more information, please refer to the [official documentation][docs-url].
 [yo-url]: //www.npmjs.com/package/generator-condo
 
 [dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
-[docs-url]: http://open.pulsebridge.com/condo
+[docs-url]: https://pulsebridge.github.io/condo
 
 [gitter-url]: //gitter.im/pulsebridge/condo
 [gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg
