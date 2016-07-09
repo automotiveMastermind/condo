@@ -10,6 +10,9 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <!-- disable warnings about assembly versions -->
+        <NoWarn>2243,$(NoWarn)</NoWarn>
+
         <!-- force rebuild if this file changes -->
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     </PropertyGroup>

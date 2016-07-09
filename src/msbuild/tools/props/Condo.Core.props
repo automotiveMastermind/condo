@@ -22,7 +22,7 @@
         <TestResultsOutputPath>$(TestArtifactsRoot)</TestResultsOutputPath>
 
         <!-- set the web project output path -->
-        <WebProjectOutputDir Condition=" '$(WebProjectOutputDir)' == '' ">$([System.IO.Path]::Combine('$(SiteRoot)', '$(MSBuildProjectName)'))</WebProjectOutputDir>
+        <WebProjectOutputDir Condition=" '$(WebProjectOutputDir)' == '' ">$([System.IO.Path]::Combine('$(SiteArtifactsRoot)', '$(MSBuildProjectName)'))</WebProjectOutputDir>
 
         <!-- include the overrides before the microsoft common targets -->
         <CustomBeforeMicrosoftCSharpTargets>$(PropsPath)Condo.Overrides.props</CustomBeforeMicrosoftCSharpTargets>

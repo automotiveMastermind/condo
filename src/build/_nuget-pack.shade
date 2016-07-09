@@ -125,16 +125,19 @@ macro name='Pack' nuget_target_path='string' nuget_options='string' nuget_projec
 
         nuget_buid_path = Path.Combine(nuget_buid_path, nuget_project_name);
         nuget_sites_path = Path.Combine(nuget_sites_path, nuget_project_name);
+        var nuget_project_path = Path.GetDirectoryName(nuget_target_path);
 
         nuget_options += " -Properties \"Configuration=" + configuration + ";Platform=" + platform + ";Product=" + product + ";Company=" + company;
 
-        if (nuget_target_path.EndsWith("proj\""))
+        Build.Log.Argument("nuget_target_path", nuget_target_path);
+
+        if (nuget_target_path.EndsWith("proj"))
         {
             nuget_options += ";OutDir=" + nuget_buid_path + "\" -IncludeReferencedProjects -Symbols";
         }
         else
         {
-            nuget_options += ";OutputPath=" + nuget_buid_path + ";SitePath=" + nuget_sites_path + ";id=" + nuget_project_name + ";author=" + company + "\" -NoPackageAnalysis";
+            nuget_options += ";OutputPath=" + nuget_buid_path + ";id=" + nuget_project_name + ";author=" + company + ";SitePath=" + nuget_sites_path + ";ProjectPath=" + nuget_project_path + "\" -NoPackageAnalysis";
         }
     }
 
