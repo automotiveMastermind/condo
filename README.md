@@ -1,6 +1,6 @@
 # condo
 
-> A build system for <any> project.
+> A build system for \<any\> project.
 
 ## Vitals
 
@@ -8,7 +8,6 @@ Info          | Badges
 --------------|--------------
 Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nuget-v-image]][nuget-url]
 License       | [![License][license-image]][license]
-Downloads     | [![NuGet Downloads][nuget-d-image]][nuget-url]
 Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 
