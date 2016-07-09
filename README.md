@@ -1,6 +1,6 @@
 # condo
 
-> A build system for [DNX][dnx-url] projects.
+> A build system for <any> project.
 
 ## Vitals
 
