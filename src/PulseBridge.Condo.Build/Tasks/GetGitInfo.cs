@@ -201,6 +201,17 @@ namespace PulseBridge.Condo.Build.Tasks
             return null;
         }
 
+        /// <summary>
+        /// Attempt to find the git repository root by scanning the specified
+        /// <paramref cref="root"/> path and walking upward.
+        /// </summary>
+        /// <param name="root">
+        /// The starting path that is believed to be the root path.
+        /// </param>
+        /// <returns>
+        /// The path that is the repository root path, or <see langword="null"/> if no root
+        /// path could be found.
+        /// </returns>
         private static string GetRepositoryRoot(string root)
         {
             // determine if the directory exists
@@ -214,6 +225,17 @@ namespace PulseBridge.Condo.Build.Tasks
             return GetGitInfo.GetRepositoryRoot(new DirectoryInfo(root));
         }
 
+        /// <summary>
+        /// Attempt to find the git repository root by scanning the specified
+        /// <paramref cref="root"/> path and walking upward.
+        /// </summary>
+        /// <param name="root">
+        /// The starting path that is believed to be the root path.
+        /// </param>
+        /// <returns>
+        /// The path that is the repository root path, or <see langword="null"/> if no root
+        /// path could be found.
+        /// </returns>
         private static string GetRepositoryRoot(DirectoryInfo root)
         {
             // determine if the starting directory exists

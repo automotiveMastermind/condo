@@ -15,6 +15,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
+        [Priority(2)]
         public void Execute_WhenRepositoryRootNull_Fails()
         {
             // arrange
@@ -33,6 +34,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
+        [Priority(2)]
         public void Execute_WhenRepositoryRootDoesNotExist_Fails()
         {
             // arrange
@@ -51,6 +53,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
+        [Priority(2)]
         public void Execute_WhenRepositoryRootNotRepository_Fails()
         {
             // arrange
@@ -73,8 +76,27 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
+        [Priority(2)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
         {
+            // arrange
+            var root = Directory.GetCurrentDirectory();
+
+            var expected = new {
+                RepositoryRoot = root
+            };
+
+            var actual = new GetGitInfo
+            {
+                RepositoryRoot = root
+            };
+
+            // act
+            var result = actual.Execute();
+
+            // assert
+            Assert.True(result);
+            Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
         }
     }
 }
