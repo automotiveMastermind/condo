@@ -1,5 +1,6 @@
 {
-    "editor.tabSize": "auto",
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,
     "editor.insertSpaces": true,
 
     "files.encoding": "utf8",
