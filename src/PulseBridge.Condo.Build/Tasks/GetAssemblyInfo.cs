@@ -13,20 +13,30 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Gets or sets the semantic version of the product.
         /// </summary>
-        [Output]
-        public string SemanticVersion { get; set; } = "1.0.0";
+        [Required]
+        public string SemanticVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the branch used to determine the pre-release tag.
+        /// </summary>
+        public string Branch { get; set; } = "<unknown>";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the build is a CI build.
+        /// </summary>
+        public bool CI { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the assembly version.
         /// </summary>
         [Output]
-        public string AssemblyVersion { get; set; }
+        public string AssemblyVersion { get; private set; }
 
         /// <summary>
         /// Gets or sets the file version.
         /// </summary>
         [Output]
-        public string FileVersion { get; set; }
+        public string FileVersion { get; private set; }
 
         /// <summary>
         /// Gets or sets the pre-release tag.
@@ -38,13 +48,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets or sets the informational version.
         /// </summary>
         [Output]
-        public string InformationalVersion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the branch used to determine the pre-release tag.
-        /// </summary>
-        [Output]
-        public string Branch { get; set; } = "<unknown>";
+        public string InformationalVersion { get; private set; }
 
         /// <summary>
         /// Gets or sets the build ID used to determine the version.
@@ -62,92 +66,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Sets the date and time used to determine the version.
         /// </summary>
         [Output]
-        public DateTime UtcDateTime { private get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Gets or sets the name of the user or agent that requested the build.
-        /// </summary>
-        [Output]
-        public string BuiltBy { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the machine that is executing the build.
-        /// </summary>
-        [Output]
-        public string BuiltOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI of the team responsible for the build.
-        /// </summary>
-        [Output]
-        public string TeamUri { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the project associated with the build.
-        /// </summary>
-        [Output]
-        public string TeamProject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the build on the continuous integration server.
-        /// </summary>
-        [Output]
-        public string BuildName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI of the repository containing the code that represents the build.
-        /// </summary>
-        [Output]
-        public string RepositoryUri { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI for the build on a continuous integration server.
-        /// </summary>
-        /// <returns></returns>
-        [Output]
-        public string BuildUri { get; set; }
-
-        /// <summary>
-        /// Gets or sets the surrogate identifier of the pull request that is associated with the build.
-        /// </summary>
-        [Output]
-        public string PullRequestId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the provider hosting the repository.
-        /// </summary>
-        [Output]
-        public string RepositoryProvider { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the product associated with the build.
-        /// </summary>
-        [Output]
-        public string Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the company that owns the product.
-        /// </summary>
-        [Output]
-        public string Company { get; set; }
-
-        /// <summary>
-        /// Gets or sets the copyright notice for the build.
-        /// </summary>
-        [Output]
-        public string Copyright { get; set; }
-
-        /// <summary>
-        /// Gets or sets the SPL of the license associated with the build.
-        /// </summary>
-        [Output]
-        public string License { get; set; }
-
-        /// <summary>
-        /// Gets or sets the URI for the license of the build.
-        /// </summary>
-        [Output]
-        public string LicenseUri { get; set; }
+        public DateTime DateTimeUtc { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Executes the <see cref="GetVersionInfo"/> task.
@@ -157,34 +76,95 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
-            if (string.IsNullOrEmpty(this.AssemblyVersion))
-            {
-                // set the assembly version to the semantic version
-                this.AssemblyVersion = this.SemanticVersion;
-            }
-
+            // define a variable to retain the version
             Version version;
 
+            // attempt to parse the version
             if (!Version.TryParse(this.SemanticVersion, out version))
             {
+                // emit an error if the version is not parsable
                 this.Log.LogError("Could not parse version {0} -- it is not in the expected format.", this.SemanticVersion);
 
+                // move on immediately
                 return false;
             }
 
+            // set the assembly version to the semantic version
+            this.AssemblyVersion = version.ToString();
+
+            // determine if the commit id is not already set
             if (string.IsNullOrEmpty(this.CommitId))
             {
-                this.CommitId = this.UtcDateTime.ToString("HHmm");
+                // set the commit id
+                this.CommitId = this.DateTimeUtc.ToString("HHmm");
             }
 
+            // determine if the build id is not already set
             if (string.IsNullOrEmpty(this.BuildId))
             {
-                this.BuildId = this.UtcDateTime.ToString("yyddMM");
+                // set the build id
+                this.BuildId = this.DateTimeUtc.ToString("yyddMM");
             }
 
             // set the file version
             this.FileVersion = $"{version.Major}.{version.Minor}.{this.BuildId}.{this.CommitId}";
 
+            // determine if the prerelease tag is not already set
+            if (string.IsNullOrEmpty(this.PreReleaseTag))
+            {
+                // set the prelrease tag to alpha by default
+                this.PreReleaseTag = "alpha";
+
+                // only allow the prerelease tag to be set to anything other than alpha
+                // on CI servers
+                if (this.CI)
+                {
+                    // determine if the branch is a dev branch
+                    if (this.Branch.StartsWith("dev", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the prerelease tag to beta
+                        this.PreReleaseTag = "beta";
+                    }
+
+                    // determine if this is a release branch
+                    else if (this.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase)
+                        || this.Branch.StartsWith("hotfix", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the prerelease tag as a release candidate
+                        this.PreReleaseTag = "rc";
+                    }
+
+                    // determine if the branch is master or main
+                    else if (this.Branch.StartsWith("master", StringComparison.OrdinalIgnoreCase)
+                        || this.Branch.StartsWith("main", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // this should not have a prerelease tag
+                        this.PreReleaseTag = null;
+                    }
+                }
+            }
+
+            // set the informational version to the semantic version
+            this.InformationalVersion = this.SemanticVersion;
+
+            // determine if the prerelease tag is now set
+            if (!string.IsNullOrEmpty(this.PreReleaseTag))
+            {
+                // append the build id
+                this.PreReleaseTag += $"-{this.BuildId}";
+
+                // determine if this is not a CI build
+                if (!this.CI)
+                {
+                    // append the commit id
+                    this.PreReleaseTag += $"-{this.CommitId}";
+                }
+
+                // set the informational version
+                this.InformationalVersion += $"-{this.PreReleaseTag}";
+            }
+
+            // we are successful
             return true;
         }
     }
