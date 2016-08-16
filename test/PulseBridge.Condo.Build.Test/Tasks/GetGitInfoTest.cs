@@ -87,6 +87,8 @@ namespace PulseBridge.Condo.Build.Tasks
             // assert
             Assert.True(result);
             Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
+            Assert.NotEqual("<unknown>", actual.Branch);
+            Assert.NotNull(actual.RepositoryUri);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace PulseBridge.Condo.Build.Tasks
             var head = File.ReadAllText(node);
 
             // create the regular expression for matching the branch
-            var match = Regex.Match(head, "^ref: (?<branch>refs/heads/.*)$");
+            var match = Regex.Match(head, "^ref: (?<head>refs/heads/)(?<branch>.*)$");
 
             // determine if their was a match
             if (match.Success)
@@ -77,8 +77,10 @@ namespace PulseBridge.Condo.Build.Tasks
                 // get the branch
                 this.Branch = match.Groups["branch"].Value;
 
+                var path = match.Groups["head"].Value + this.Branch;
+
                 // get the branch node marker path
-                node = Path.Combine(root, ".git", this.Branch.Replace("/", Path.DirectorySeparatorChar.ToString()));
+                node = Path.Combine(root, ".git", path.Replace("/", Path.DirectorySeparatorChar.ToString()));
 
                 // determine if the node exists
                 if (File.Exists(node))
@@ -109,34 +111,38 @@ namespace PulseBridge.Condo.Build.Tasks
                 return false;
             }
 
-            // attempt to read the git config path
-            using (var stream = new StringReader(node))
+            // open a file stream
+            using (var file = new FileStream(node, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan))
             {
-                // define a variable to retain the line number
-                string line;
-
-                // find the line for the origin remote
-                while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
-
-                // determine if the line exists
-                if (!string.IsNullOrEmpty(line))
+                // attempt to read the git config path
+                using (var stream = new StreamReader(file))
                 {
-                    // attempt to find the
-                    match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
+                    // define a variable to retain the line number
+                    string line;
 
-                    // determine if a match was found
-                    if (match.Success)
+                    // find the line for the origin remote
+                    while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
+
+                    // determine if the line exists
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        // get the match for the uri
-                        this.RepositoryUri = match.Groups["url"].Value;
+                        // attempt to find the
+                        match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
 
-                        // determine if the match ends with '.git'
-                        if (this.RepositoryUri.EndsWith(".git"))
+                        // determine if a match was found
+                        if (match.Success)
                         {
-                            // strip the '.git' from the uri
-                            // tricky: this is done to support browsing to the repository from
-                            // a browser rather than just cloning directly for github
-                            this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
+                            // get the match for the uri
+                            this.RepositoryUri = match.Groups["url"].Value;
+
+                            // determine if the match ends with '.git'
+                            if (this.RepositoryUri.EndsWith(".git"))
+                            {
+                                // strip the '.git' from the uri
+                                // tricky: this is done to support browsing to the repository from
+                                // a browser rather than just cloning directly for github
+                                this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
+                            }
                         }
                     }
                 }
