@@ -3,17 +3,9 @@ namespace PulseBridge.Condo.Build.Tasks
     using System.IO;
 
     using Xunit;
-    using Xunit.Abstractions;
 
     public class GetGitInfoTest
     {
-        private ITestOutputHelper output;
-
-        public GetGitInfoTest(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
         [Fact]
         [Priority(2)]
         public void Execute_WhenRepositoryRootNull_Fails()
@@ -57,11 +49,9 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenRepositoryRootNotRepository_Fails()
         {
             // arrange
-            var name = nameof(Execute_WhenRepositoryRootNotRepository_Fails);
             var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             Directory.CreateDirectory(root);
-            this.output.WriteLine($"{name}: creating directory {root}...");
 
             var actual = new GetGitInfo
             {
