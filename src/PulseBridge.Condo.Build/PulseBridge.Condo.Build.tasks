@@ -1,5 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <!-- include the individual tasks included in condo -->
-    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetProjectInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetAssemblyInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetGitInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetPlatformInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetServerTime" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.LogItemMetdata" />
 </Project>

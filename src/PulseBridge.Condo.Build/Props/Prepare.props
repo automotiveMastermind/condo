@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <RestoreDependsOn>
+      RestoreNpm;
+      RestoreBower;
+      RestoreDotNet;
+    </RestoreDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RestorePaths Include="$(SourceRoot)" Condition=" Exists('$(SourceRoot)') " />
+    <RestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
+  </ItemGroup>
+
+</Project>
