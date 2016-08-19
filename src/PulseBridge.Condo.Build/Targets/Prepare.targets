@@ -2,13 +2,16 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" BeforeTargets="Prepare" />
 
-  <Target Name="RestoreDotNet" Condition=" '$(RestoreDotNet)' != 'skip' ">
+  <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' ">
     <Exec Command="dotnet restore @(RestorePaths, ' ') $(DOTNET_RESTORE_OPTIONS)"
           WorkingDirectory="$(WorkingPath)" />
   </Target>
 
-  <Target Name="RestoreNpm" Condition=" '$(RestoreNpm)' != 'skip' ">
+  <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' ">
     <Exec Command="npm install $(NPM_INSTALL_OPTIONS)"
           WorkingDirectory="%(">
+  </Target>
+
+  <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' ">
   </Target>
 </Project>

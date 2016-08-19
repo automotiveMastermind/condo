@@ -3,15 +3,23 @@
 
   <PropertyGroup>
     <RestoreDependsOn>
-      RestoreNpm;
-      RestoreBower;
-      RestoreDotNet;
+      NpmInstall;
+      BowerInstall;
+      DotNetRestore;
     </RestoreDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
-    <RestorePaths Include="$(SourceRoot)" Condition=" Exists('$(SourceRoot)') " />
-    <RestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
+    <DotNetRestorePaths Include="$(SrcRoot)" Condition=" Exists('$(SrcRoot)') " />
+    <DotNetRestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
+
+    <NpmInstallPaths Include="$(RepositoryRoot)/**/package.json" />
+    <BowerInstallPaths Include="$(RepositoryRoot)/**/bower.json" />
+    <GulpPaths Include="$(RepositoryRoot)/**/gulpfile.*" />
+    <GruntPaths Include="$(RepositoryRoot/**/gruntfile.*" />
+
+    <DotNetPaths Include="$(SrcRoot)/**/project.json" />
+    <DotNetPaths Include="$(TestRoot)/**/project.json" />
   </ItemGroup>
 
 </Project>

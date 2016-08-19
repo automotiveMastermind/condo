@@ -8,29 +8,19 @@
         <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
 
         <!-- get the solution and package root paths -->
-        <SolutionRoot       Condition=" '$(SolutionRoot)'       == '' ">$(MSBuildStartupDirectory)</SolutionRoot>
-        <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'src'))$(DirectorySeparatorChar)</SrcRoot>
-        <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'test'))$(DirectorySeparatorChar)</TestRoot>
-        <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(SolutionRoot)', 'artifacts'))$(DirectorySeparatorChar)</ArtifactsRoot>
+        <RepositoryRoot     Condition=" '$(RepositoryRoot)'     == '' ">$(MSBuildStartupDirectory)</RepositoryRoot>
+        <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'src'))</SrcRoot>
+        <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'test'))</TestRoot>
+        <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'artifacts'))</ArtifactsRoot>
 
 
-        <BuildArtifactsRoot Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))$(DirectorySeparatorChar)</BuildArtifactsRoot>
-        <TestArtifactsRoot  Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))$(DirectorySeparatorChar)</TestArtifactsRoot>
-        <SiteArtifactsRoot  Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))$(DirectorySeparatorChar)</SiteArtifactsRoot>
+        <BuildArtifactsRoot Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
+        <TestArtifactsRoot  Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
+        <SiteArtifactsRoot  Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
 
-        <ToolsRoot          Condition=" '$(ToolsRoot)'          == '' ">$(SolutionRoot)tools$(DirectorySeparatorChar)</ToolsRoot>
-        <BuildRoot          Condition=" '$(BuildRoot)'          == '' ">$(ToolsRoot)build$(DirectorySeparatorChar)</BuildRoot>
-        <SettingsRoot       Condition=" '$(SettingsRoot)'       == '' ">$(ToolsRoot)settings$(DirectorySeparatorChar)</SettingsRoot>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <!-- define some basic reference paths for the build tools -->
-        <RootPath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..$(DirectorySeparatorChar)'))</RootPath>
-        <ToolsPath>$(RootPath)tools$(DirectorySeparatorChar)</ToolsPath>
-        <BuildPath>$(ToolsPath)build$(DirectorySeparatorChar)</BuildPath>
-        <PropsPath>$(ToolsPath)props$(DirectorySeparatorChar)</PropsPath>
-        <TargetsPath>$(ToolsPath)targets$(DirectorySeparatorChar)</TargetsPath>
-        <TasksPath>$(ToolsPath)tasks$(DirectorySeparatorChar)</TasksPath>
+        <ToolsRoot          Condition=" '$(ToolsRoot)'          == '' ">$(RepositoryRoot)tools</ToolsRoot>
+        <BuildRoot          Condition=" '$(BuildRoot)'          == '' ">$(ToolsRoot)build</BuildRoot>
+        <SettingsRoot       Condition=" '$(SettingsRoot)'       == '' ">$(ToolsRoot)settings</SettingsRoot>
     </PropertyGroup>
 
     <PropertyGroup>

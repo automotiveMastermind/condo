@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 # get the current path
 CURRENT_PATH=$(pwd)
@@ -35,8 +35,12 @@ while test $# > 0; do
             CONDO_BRANCH=$2
             shift
             ;;
-        --condo-path)
+        -p|--condo-path)
             CONDO_SOURCE=$2
+            shift
+            ;;
+        -l|--condo-local)
+            CONDO_LOCAL=true
             shift
             ;;
         --)
@@ -50,8 +54,7 @@ while test $# > 0; do
     shift
 done
 
-CONDO_PATH="$ROOT_PATH/.build"
-CONDO_ROOT="$CONDO_PATH/condo"
+CONDO_ROOT="$ROOT_PATH/.condo"
 CONDO_SHELL="$CONDO_ROOT/src/scripts/condo.sh"
 
 if test -z "$CONDO_BRANCH"; then
@@ -62,19 +65,26 @@ if test -z "$CONDO_URI"; then
     CONDO_URI="https://github.com/pulsebridge/condo/tarball/$CONDO_BRANCH"
 fi
 
-if test -d $CONDO_PATH && test $CONDO_RESET = "1"; then
+if test -d $CONDO_ROOT && test $CONDO_RESET = "1"; then
     echo -e "Resetting condo build system..."
-    rm -Rf "$CONDO_PATH"
+    rm -Rf "$CONDO_ROOT"
 fi
 
-if ! test -d $CONDO_PATH; then
-    mkdir -p $CONDO_PATH
+if ! test -z $CONDO_LOCAL; then
+    echo -e "Using local condo build system..."
+    CONDO_ROOT="$ROOT_PATH"
+    CONDO_SHELL="$CONDO_ROOT/src/PulseBridge.Condo.Build/scripts/condo.sh"
+fi
+
+if ! test -d $CONDO_ROOT; then
+    echo -e "Creating path for condo at $CONDO_ROOT..."
+    mkdir -p $CONDO_ROOT
 
     if ! test -z $CONDO_SOURCE; then
-        echo -e "Using local condo build system from $CONDO_SOURCE"
+        echo -e "Using condo build system from $CONDO_SOURCE..."
         cp -R "$CONDO_SOURCE" "$CONDO_ROOT"
     else
-        echo -e "Using condo build system from $CONDO_URI"
+        echo -e "Using condo build system from $CONDO_URI..."
 
         CONDO_TEMP=`mktemp -d`
         CONDO_TAR="$CONDO_TEMP/condo.tar.gz"
