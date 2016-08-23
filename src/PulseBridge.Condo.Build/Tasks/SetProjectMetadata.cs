@@ -82,15 +82,20 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
+            var group = Path.GetFileName(Path.GetDirectoryName(directory));
 
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+
+            // set the project group
+            project.SetMetadata("ProjectGroup", group);
 
             // set the name of the project (using the directory name by convention)
             // todo: parse the name from the project.json file
             project.SetMetadata("Name", Path.GetFileName(directory));
 
             // set the shared sources directory
+            // todo: parse this from the project.json file
             project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
 
             // set the condo assembly info path

@@ -1,8 +1,10 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
-    using Xunit;
-    using Moq;
     using Microsoft.Build.Framework;
+
+    using Moq;
+
+    using Xunit;
 
     public class GetServerTimeTest
     {
@@ -17,7 +19,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 BuildEngine = engine
             };
 
-            // actual
+            // act
             actual.Execute();
 
             // assert
