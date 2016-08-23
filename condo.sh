@@ -7,7 +7,10 @@ CURRENT_PATH=$(pwd)
 ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # change to the root path
-cd $ROOT_PATH
+cd "$ROOT_PATH"
 
 # run condo using local build
 ./template/condo.sh --condo-local
+
+# change back to the current directory
+cd "$CURRENT_PATH"
