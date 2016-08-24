@@ -9,8 +9,20 @@ ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # change to the root path
 cd "$ROOT_PATH"
 
+# determine if condo.sh already exists
+if [ -f condo-local.sh ]; then
+    # delete it
+    rm -f condo-local.sh
+fi
+
+# copy the template to the local path
+cp template/condo.sh condo-local.sh
+
 # run condo using local build
-./template/condo.sh --condo-local
+./condo-local.sh --local --reset
+
+# remove the local condo file
+rm -f condo-local.sh
 
 # change back to the current directory
 cd "$CURRENT_PATH"

@@ -4,14 +4,16 @@
 
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' ">
     <Exec Command="dotnet restore @(RestorePaths, ' ') $(DOTNET_RESTORE_OPTIONS)"
-          WorkingDirectory="$(WorkingPath)" />
+          WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 
   <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' ">
     <Exec Command="npm install $(NPM_INSTALL_OPTIONS)"
-          WorkingDirectory="%(">
+          WorkingDirectory="">
   </Target>
 
   <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' ">
+    <Exec Command="bower install $(BOWER_INSTALL_OPTIONS)"
+          WorkingDirectory="">
   </Target>
 </Project>

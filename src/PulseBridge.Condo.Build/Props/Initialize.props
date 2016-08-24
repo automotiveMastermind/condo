@@ -13,14 +13,10 @@
         <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'test'))</TestRoot>
         <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'artifacts'))</ArtifactsRoot>
 
-
-        <BuildArtifactsRoot Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
-        <TestArtifactsRoot  Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
-        <SiteArtifactsRoot  Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
-
-        <ToolsRoot          Condition=" '$(ToolsRoot)'          == '' ">$(RepositoryRoot)tools</ToolsRoot>
-        <BuildRoot          Condition=" '$(BuildRoot)'          == '' ">$(ToolsRoot)build</BuildRoot>
-        <SettingsRoot       Condition=" '$(SettingsRoot)'       == '' ">$(ToolsRoot)settings</SettingsRoot>
+        <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
+        <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
+        <SiteArtifactsRoot      Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
+        <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
     </PropertyGroup>
 
     <PropertyGroup>
