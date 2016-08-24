@@ -84,7 +84,7 @@ install_dotnet() {
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL IS SET)..."
     else
-        DOTNET_TEMP=$(mktemp -d)
+        DOTNET_TEMP=$(mktemp -d -t dotnet)
         DOTNET_INSTALL="$DOTNET_TEMP/dotnet-install.sh"
 
         retries=5
