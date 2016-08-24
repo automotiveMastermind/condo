@@ -8,15 +8,31 @@ namespace PulseBridge.Condo.Build.Tasks
     using Microsoft.Build.Utilities;
 
     /// <summary>
-    /// Represents a Microsoft Build task that gets information about a git repository.
+    /// Represents a Microsoft Build task that gets the current time from a Network Time Protocol (NTP) compliant
+    /// server.
     /// </summary>
+    /// <remarks>
+    /// The default implementation will use the time server provided by the National Institute of Standards and
+    /// Technology (NIST) within the United States.
+    /// </remarks>
     public class GetServerTime : Task
     {
         /// <summary>
         /// Gets an accurate server time from NIST represented in UTC.
         /// </summary>
         [Output]
-        public DateTime UtcTime { get; private set; }
+        public DateTime? UtcTime { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the URI of the time server used to get the server time.
+        /// </summary>
+        public string Uri { get; set; } = "time.nist.gov";
+
+        /// <summary>
+        /// Gets or sets the port of the time server used to get the server time.
+        /// </summary>
+        /// <returns></returns>
+        public int Port { get; set; } = 123;
 
         /// <summary>
         /// Executes the <see cref="GetServerTime"/> task.
@@ -26,17 +42,13 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
-            // define the server and port used to connect to the time server
-            var server = "time.nist.gov";
-            var port = 123;
-
             try
             {
                 // get the current address of the time server from DNS
-                var addresses = Dns.GetHostEntryAsync(server).Result.AddressList;
+                var addresses = Dns.GetHostEntryAsync(this.Uri).Result.AddressList;
 
                 // create the endpoint using the first address in the response
-                var endpoint = new IPEndPoint(addresses[0], port);
+                var endpoint = new IPEndPoint(addresses[0], this.Port);
 
                 // create a byte array to retain the request/response from the socket
                 var data = new byte[48];
@@ -74,7 +86,7 @@ namespace PulseBridge.Condo.Build.Tasks
             catch (Exception)
             {
                 // log a warning
-                this.Log.LogError("Unable to retrieve time from the time server {0} on port {1}, reverting to local time.", server, port);
+                this.Log.LogWarning($"Unable to retrieve time from the time server {this.Uri} on port {this.Port}, reverting to local time.");
 
                 // use local time
                 this.UtcTime = DateTime.UtcNow;
