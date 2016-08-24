@@ -1,4 +1,4 @@
-namespace Microsoft.AspNetCore.Build.Tasks
+namespace PulseBridge.Condo.Build.Tasks
 {
     using System.Linq;
     using Microsoft.Build.Framework;
