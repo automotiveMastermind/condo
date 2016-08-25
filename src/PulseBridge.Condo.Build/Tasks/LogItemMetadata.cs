@@ -30,7 +30,7 @@ namespace PulseBridge.Condo.Build.Tasks
             foreach (var item in this.Items)
             {
                 // log the item specification
-                Log.LogMessage(item.ItemSpec);
+                Log.LogMessage(MessageImportance.High, "{0,-19}: {1}", "Item", item.ItemSpec);
 
                 // iterate over each metdata name
                 foreach (var name in item.MetadataNames.Cast<string>())
@@ -39,7 +39,7 @@ namespace PulseBridge.Condo.Build.Tasks
                     var value = item.GetMetadata(name);
 
                     // log the name of the metdata and its associated value
-                    Log.LogMessage($" {name}: {value}");
+                    Log.LogMessage(MessageImportance.Low, "  {0,-17}: {1}", name, value);
                 }
             }
 

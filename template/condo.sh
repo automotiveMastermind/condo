@@ -63,7 +63,6 @@ while [[ $# > 0 ]]; do
             ;;
         --verbosity)
             CONDO_VERBOSITY=$2
-            shift
             break
             ;;
         --no-color)

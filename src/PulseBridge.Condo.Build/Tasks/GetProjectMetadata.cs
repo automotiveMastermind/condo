@@ -36,7 +36,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 SetMetadata(project);
 
                 // log a message
-                Log.LogMessage($"Updated project metadata for project: {project.GetMetadata("Name")}");
+                Log.LogMessage(MessageImportance.Low, $"Updated project metadata for project: {project.GetMetadata("Name")}");
             }
 
             // assume its always true

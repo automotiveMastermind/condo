@@ -18,7 +18,7 @@
 
         <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)'     == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
         <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
-        <SiteArtifactsRoot      Condition=" '$(SiteArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
+        <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'publish'))</PublishArtifactsRoot>
         <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
         <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
     </PropertyGroup>
@@ -154,7 +154,9 @@
         <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
         <Message Importance="High" Text="Version            : $(InformationalVersion)" />
         <Message Importance="High" Text="File Version       : $(FileVersion)" />
+    </Target>
 
+    <Target Name="PrintProjects">
         <LogItemMetadata Items="@(Projects)" />
     </Target>
 
@@ -184,8 +186,8 @@
         <Message Importance="High" Text="Artifacts          : $(ArtifactsRoot)" />
         <Message Importance="High" Text="Artifacts (Build)  : $(BuildArtifactsRoot)" />
         <Message Importance="High" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
-        <Message Importance="High" Text="Artifacts (Sites)  : $(SiteArtifactsRoot)" />
-        <Message Importance="High" Text="Artifacts (Pkgs)   : $(PackageArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Publish): $(PublishArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Package): $(PackageArtifactsRoot)" />
         <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
     </Target>
 
@@ -199,6 +201,7 @@
             GetAssemblyInfo;
             PrintProperties;
             PrintRepositoryInfo;
+            PrintProjects;
             PrintBuildInfo;
             PrintPaths;
         </InitializeDependsOn>

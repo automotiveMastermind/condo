@@ -61,8 +61,8 @@ namespace PulseBridge.Condo.Build.Tasks
                     // connect to the endpoint
                     socket.Connect(endpoint);
 
-                    // wait no more than 3 seconds for the time to be received
-                    socket.ReceiveTimeout = 3000;
+                    // wait no more than 5 seconds for the time to be received
+                    socket.ReceiveTimeout = 5000;
 
                     // send the request
                     socket.Send(data);
