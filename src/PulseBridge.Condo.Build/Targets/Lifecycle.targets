@@ -6,52 +6,32 @@
   </Target>
 
   <!-- initialize dynamic properties -->
-  <Target Name="Initialize" DependsOnTargets="Debugging">
-    <Message Text="*** Completed Initialize Phase ***" />
-  </Target>
+  <Target Name="Initialize" DependsOnTargets="Debugging" />
 
   <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
-  <Target Name="Prepare" DependsOnTargets="Initialize">
-    <Message Text="*** Completed Prepare Phase ***" />
-  </Target>
+  <Target Name="Prepare" DependsOnTargets="Initialize" />
 
   <!-- compile the project -->
-  <Target Name="Compile" DependsOnTargets="Prepare">
-    <Message Text="*** Completed Compile Phase ***" />
-  </Target>
+  <Target Name="Compile" DependsOnTargets="Prepare" />
 
   <!-- execute tests for the project -->
-  <Target Name="Test" DependsOnTargets="Compile">
-    <Message Text="*** Completed Test Phase ***" />
-  </Target>
+  <Target Name="Test" DependsOnTargets="Compile" />
 
   <!-- perform post test packaging of the project -->
-  <Target Name="Package" DependsOnTargets="Test">
-    <Message Text="*** Completed Package Phase ***" />
-  </Target>
+  <Target Name="Package" DependsOnTargets="Test" />
 
   <!-- verify build output and test results -->
-  <Target Name="Verify" DependsOnTargets="Package">
-    <Message Text="*** Completed Verify Phase ***" />
-  </Target>
+  <Target Name="Verify" DependsOnTargets="Package" />
 
   <!-- publish final build artifacts -->
-  <Target Name="Publish" DependsOnTargets="Verify">
-    <Message Text="*** Completed Publish Phase ***" />
-  </Target>
+  <Target Name="Publish" DependsOnTargets="Verify" />
 
   <!-- the default target for build -->
-  <Target Name="Build" DependsOnTargets="Package">
-    <Message Text="*** Completed Build Phase ***" />
-  </Target>
+  <Target Name="Build" DependsOnTargets="Package" />
 
   <!-- the default target for clean -->
-  <Target Name="Clean" DependsOnTargets="Initialize">
-    <Message Text="*** Completed Clean Phase ***" />
-  </Target>
+  <Target Name="Clean" DependsOnTargets="Initialize" />
 
   <!-- the default target for continuous integration -->
-  <Target Name="CI" DependsOnTargets="Clean;Verify">
-    <Message Text="*** Completed CI Phase ***" />
-  </Target>
+  <Target Name="CI" DependsOnTargets="Clean;Verify" />
 </Project>
