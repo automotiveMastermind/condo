@@ -8,19 +8,19 @@ namespace PulseBridge.Condo.Build.Tasks
     using Microsoft.Build.Utilities;
 
     /// <summary>
-    /// Represents a Microsoft Build task that gets information about a git repository.
+    /// Represents a Microsoft Build task that gets information about a repository.
     /// </summary>
-    public class GetGitInfo : Task
+    public class GetRepositoryInfo : Task
     {
         /// <summary>
-        /// Gets or sets the root of the git repository.
+        /// Gets or sets the root of the repository.
         /// </summary>
         [Output]
         [Required]
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets the URI of the repository that is identified as the 'origin' remote.
+        /// Gets the URI of the repository that is identified by the source control server.
         /// </summary>
         [Output]
         public string RepositoryUri { get; set; }
@@ -32,13 +32,13 @@ namespace PulseBridge.Condo.Build.Tasks
         public string Branch { get; private set; }
 
         /// <summary>
-        /// Gets the commit hash of the HEAD used to build the repository.
+        /// Gets the commit hash or checkin number used to build the repository.
         /// </summary>
         [Output]
-        public string Commit { get; private set; }
+        public string CommitId { get; private set; }
 
         /// <summary>
-        /// Executes the <see cref="GetGitInfo"/> task.
+        /// Executes the <see cref="GetRepositoryInfo"/> task.
         /// </summary>
         /// <returns>
         /// A value indicating whether or not the task executed successfully.
@@ -46,7 +46,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public override bool Execute()
         {
             // attempt to get the repository root (walking the parent until we find it)
-            var root = GetGitInfo.GetRepositoryRoot(this.RepositoryRoot);
+            var root = GetRepositoryInfo.GetRoot(this.RepositoryRoot);
 
             // determine if the root could be found
             if (string.IsNullOrEmpty(root))
@@ -86,13 +86,13 @@ namespace PulseBridge.Condo.Build.Tasks
                 if (File.Exists(node))
                 {
                     // set the commit id
-                    this.Commit = File.ReadAllText(node).Trim();
+                    this.CommitId = File.ReadAllText(node).Trim();
                 }
             }
             else
             {
                 // set the commit id to the data from the head
-                this.Commit = head.Trim();
+                this.CommitId = head.Trim();
 
                 // attempt to get the head of the origin remote
                 node = Path.Combine(root, @".git\refs\remotes\origin");
@@ -182,7 +182,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 var head = File.ReadAllText(branch).Trim();
 
                 // see if the commit matches the head
-                if (string.Equals(this.Commit, head))
+                if (string.Equals(this.CommitId, head))
                 {
                     // assume we found the right branch
                     return Path.GetFileName(branch).Trim();
@@ -218,7 +218,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// The path that is the repository root path, or <see langword="null"/> if no root
         /// path could be found.
         /// </returns>
-        private static string GetRepositoryRoot(string root)
+        private static string GetRoot(string root)
         {
             // determine if the directory exists
             if (string.IsNullOrEmpty(root) || !Directory.Exists(root))
@@ -228,7 +228,7 @@ namespace PulseBridge.Condo.Build.Tasks
             }
 
             // use the overload using a directory info
-            return GetGitInfo.GetRepositoryRoot(new DirectoryInfo(root));
+            return GetRepositoryInfo.GetRoot(new DirectoryInfo(root));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// The path that is the repository root path, or <see langword="null"/> if no root
         /// path could be found.
         /// </returns>
-        private static string GetRepositoryRoot(DirectoryInfo root)
+        private static string GetRoot(DirectoryInfo root)
         {
             // determine if the starting directory exists
             if (root == null)
@@ -261,7 +261,7 @@ namespace PulseBridge.Condo.Build.Tasks
             }
 
             // walk the tree to the parent
-            return GetGitInfo.GetRepositoryRoot(root.Parent);
+            return GetRepositoryInfo.GetRoot(root.Parent);
         }
     }
 }

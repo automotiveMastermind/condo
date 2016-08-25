@@ -1,6 +1,7 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
     using System;
+    using System.Globalization;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -66,7 +67,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Sets the date and time used to determine the version.
         /// </summary>
         [Output]
-        public DateTime DateTimeUtc { get; set; } = DateTime.UtcNow;
+        public string DateTimeUtc { get; set; }
 
         /// <summary>
         /// Executes the <see cref="GetVersionInfo"/> task.
@@ -76,6 +77,23 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
+            // determine if the date and time is set
+            if (string.IsNullOrEmpty(this.DateTimeUtc))
+            {
+                // set the date and time to the current time
+                this.DateTimeUtc = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
+            }
+
+            // define a variable to retain the date
+            DateTime date;
+
+            // attempt to parse the date
+            if (!DateTime.TryParse(this.DateTimeUtc, out date))
+            {
+                // could not parse; move on immediately
+                return false;
+            }
+
             // define a variable to retain the version
             Version version;
 
@@ -96,14 +114,14 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(this.CommitId))
             {
                 // set the commit id
-                this.CommitId = this.DateTimeUtc.ToString("HHmm");
+                this.CommitId = date.ToString("HHmm");
             }
 
             // determine if the build id is not already set
             if (string.IsNullOrEmpty(this.BuildId))
             {
                 // set the build id
-                this.BuildId = this.DateTimeUtc.ToString("yyddMM");
+                this.BuildId = date.ToString("yyddMM");
             }
 
             // set the file version

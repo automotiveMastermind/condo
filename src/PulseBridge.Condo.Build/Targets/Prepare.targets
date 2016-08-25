@@ -9,33 +9,20 @@
         </RestoreDependsOn>
     </PropertyGroup>
 
-    <ItemGroup>
-        <DotNetRestorePaths Include="$(SrcRoot)" Condition=" Exists('$(SrcRoot)') " />
-        <DotNetRestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
-
-        <NpmInstallPaths Include="$(RepositoryRoot)/**/package.json" />
-        <BowerInstallPaths Include="$(RepositoryRoot)/**/bower.json" />
-        <GulpPaths Include="$(RepositoryRoot)/**/gulpfile.*" />
-        <GruntPaths Include="$(RepositoryRoot)/**/gruntfile.*" />
-
-        <DotNetPaths Include="$(SrcRoot)/**/project.json" />
-        <DotNetPaths Include="$(TestRoot)/**/project.json" />
-    </ItemGroup>
-
     <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" BeforeTargets="Prepare" />
 
-    <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' ">
+    <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
       <Exec Command="dotnet restore @(RestorePaths, ' ') $(DOTNET_RESTORE_OPTIONS)"
             WorkingDirectory="%(DotNetRestorePaths.RootDir)%(DotNetRestorePaths.Directory)" />
     </Target>
 
-    <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' ">
+    <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' And '@(NpmInstallPaths->Count())' != '0' ">
       <Exec Command="npm install $(NPM_INSTALL_OPTIONS)"
             WorkingDirectory="%(NpmInstallPaths.RootDir)%(NpmInstallPaths.Directory)" />
     </Target>
 
-    <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' ">
+    <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' And '@(BowerInstallPaths->Count())' != '0' ">
       <Exec Command="bower install $(BOWER_INSTALL_OPTIONS)"
-            WorkingDirectory="%(NpmInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
+            WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
     </Target>
 </Project>

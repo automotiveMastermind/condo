@@ -26,7 +26,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Never);
-            Assert.NotNull(actual.UtcTime);
+            Assert.NotNull(actual.DateTimeUtc);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
-            Assert.NotNull(actual.UtcTime);
+            Assert.NotNull(actual.DateTimeUtc);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
-            Assert.NotNull(actual.UtcTime);
+            Assert.NotNull(actual.DateTimeUtc);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
-            Assert.NotNull(actual.UtcTime);
+            Assert.NotNull(actual.DateTimeUtc);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
-            Assert.NotNull(actual.UtcTime);
+            Assert.NotNull(actual.DateTimeUtc);
         }
     }
 }

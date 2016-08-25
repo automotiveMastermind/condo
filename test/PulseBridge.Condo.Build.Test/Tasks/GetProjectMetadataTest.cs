@@ -9,7 +9,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using Xunit;
 
-    public class SetProjectMetadataTest
+    public class GetProjectMetadataTest
     {
         [Fact]
         [Priority(2)]
@@ -55,7 +55,7 @@ namespace PulseBridge.Condo.Build.Tasks
             item.Setup(mock => mock.GetMetadata(It.IsAny<string>()))
                 .Returns<string>(key => actual[key]);
 
-            var instance = new SetProjectMetadata
+            var instance = new GetProjectMetadata
             {
                 BuildEngine = engine,
                 Projects = new[] { item.Object }

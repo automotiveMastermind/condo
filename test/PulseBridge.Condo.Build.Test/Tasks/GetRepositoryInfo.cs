@@ -4,7 +4,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using Xunit;
 
-    public class GetGitInfoTest
+    public class GetRepositoryInfoTest
     {
         [Fact]
         [Priority(2)]
@@ -13,7 +13,7 @@ namespace PulseBridge.Condo.Build.Tasks
             // arrange
             var root = default(string);
 
-            var actual = new GetGitInfo
+            var actual = new GetRepositoryInfo
             {
                 RepositoryRoot = root
             };
@@ -32,7 +32,7 @@ namespace PulseBridge.Condo.Build.Tasks
             // arrange
             var root = "/nowhere";
 
-            var actual = new GetGitInfo
+            var actual = new GetRepositoryInfo
             {
                 RepositoryRoot = root
             };
@@ -53,7 +53,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             Directory.CreateDirectory(root);
 
-            var actual = new GetGitInfo
+            var actual = new GetRepositoryInfo
             {
                 RepositoryRoot = root
             };
@@ -76,7 +76,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 RepositoryRoot = root
             };
 
-            var actual = new GetGitInfo
+            var actual = new GetRepositoryInfo
             {
                 RepositoryRoot = root
             };

@@ -15,7 +15,6 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(3)]
         public void Execute_WithValidItem_Succeeds()
         {
-
             // arrange
             var engine = new Mock<IBuildEngine>();
             var messages = new List<string>();

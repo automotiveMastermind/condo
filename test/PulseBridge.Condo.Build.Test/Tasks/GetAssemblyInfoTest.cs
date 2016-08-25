@@ -1,6 +1,7 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
     using System;
+    using System.Globalization;
 
     using Xunit;
     using Xunit.Abstractions;
@@ -19,7 +20,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenNotCI_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var ci = false;
@@ -68,7 +69,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenNotCIAndBranchSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "master";
@@ -121,7 +122,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenCI_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var ci = true;
@@ -170,7 +171,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenCommitSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = "98";
             var ci = true;
@@ -219,7 +220,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenBuildSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = "99";
             var commitId = default(string);
             var ci = true;
@@ -268,7 +269,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenDevelopBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "develop";
@@ -321,7 +322,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenFeatureBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "feature/01-test";
@@ -374,7 +375,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenReleaseBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "release/1.0.0";
@@ -427,7 +428,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenMasterBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "master";
@@ -480,7 +481,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenMainBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "main";
@@ -533,7 +534,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenHotfixBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "hotfix/1.0.0";

@@ -12,7 +12,7 @@ namespace PulseBridge.Condo.Build.Tasks
     /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the project.json
     /// format.
     /// </summary>
-    public class SetProjectMetadata : Task
+    public class GetProjectMetadata : Task
     {
         /// <summary>
         /// Gets or sets the list of projects for which to set additional metadata.
@@ -22,7 +22,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public ITaskItem[] Projects { get; set; }
 
         /// <summary>
-        /// Executes the <see cref="SetProjectMetadata"/> task.
+        /// Executes the <see cref="GetProjectMetadata"/> task.
         /// </summary>
         /// <returns>
         /// A value indicating whether or not the task was successfully executed.

@@ -197,13 +197,11 @@ if [ ! -e "$CONDO_PROJ" ]; then
     CONDO_PROJ="$CONDO_TARGETS/condo.build"
 fi
 
-echo 'yay'
-
 cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 -nologo
 "$CONDO_PROJ"
--p:CondoTargetsPath="$CONDO_TARGETS"
--p:CondoTasksPath="$CONDO_PUBLISH"
+-p:CondoTargetsPath="$CONDO_TARGETS/"
+-p:CondoTasksPath="$CONDO_PUBLISH/"
 -fl
 -flp:LogFile="$MSBUILD_LOG";Verbosity=diagnostic;Encoding=UTF-8
 END_MSBUILD_RSP

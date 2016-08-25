@@ -1,6 +1,7 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
     using System;
+    using System.Globalization;
     using System.Net;
     using System.Net.Sockets;
 
@@ -21,7 +22,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets an accurate server time from NIST represented in UTC.
         /// </summary>
         [Output]
-        public DateTime? UtcTime { get; private set; }
+        public string DateTimeUtc { get; private set; }
+
+        public string Format { get; set; } = "s";
 
         /// <summary>
         /// Gets or sets the URI of the time server used to get the server time.
@@ -78,7 +81,9 @@ namespace PulseBridge.Condo.Build.Tasks
                 var ms = (seconds * 1000) + ((fraction * 1000) / 0x100000000L);
 
                 // generate the utc time stamp from the response received via NTP
-                this.UtcTime = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
+                var date = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
+
+                this.DateTimeUtc = date.ToString(this.Format, CultureInfo.InvariantCulture);
 
                 // return the server time
                 return true;
@@ -89,7 +94,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 this.Log.LogWarning($"Unable to retrieve time from the time server {this.Uri} on port {this.Port}, reverting to local time.");
 
                 // use local time
-                this.UtcTime = DateTime.UtcNow;
+                this.DateTimeUtc = DateTime.UtcNow.ToString(this.Format, CultureInfo.InvariantCulture);
 
                 // return true
                 return true;
