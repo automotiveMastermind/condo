@@ -26,7 +26,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets the name of the operating system platform.
         /// </summary>
         [Output]
-        public string PlatformName { get; private set; }
+        public string Platform { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether or not the platform is Windows.
@@ -45,21 +45,21 @@ namespace PulseBridge.Condo.Build.Tasks
             // detect the windows platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                this.PlatformName = "Windows";
+                this.Platform = "Windows";
                 return this.Windows = true;
             }
 
             // detect the macos platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                PlatformName = "macOS";
+                Platform = "macOS";
                 return this.MacOS = true;
             }
 
             // detect the linux platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                PlatformName = "Linux";
+                Platform = "Linux";
                 return this.Linux = true;
             }
 

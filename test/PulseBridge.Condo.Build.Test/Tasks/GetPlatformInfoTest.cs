@@ -28,7 +28,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.Linux, actual.Linux);
             Assert.Equal(expected.Windows, actual.Windows);
             Assert.Equal(expected.MacOS, actual.MacOS);
-            Assert.Equal(expected.PlatformName, actual.PlatformName);
+            Assert.Equal(expected.PlatformName, actual.Platform);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.Linux, actual.Linux);
             Assert.Equal(expected.Windows, actual.Windows);
             Assert.Equal(expected.MacOS, actual.MacOS);
-            Assert.Equal(expected.PlatformName, actual.PlatformName);
+            Assert.Equal(expected.PlatformName, actual.Platform);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.Linux, actual.Linux);
             Assert.Equal(expected.Windows, actual.Windows);
             Assert.Equal(expected.MacOS, actual.MacOS);
-            Assert.Equal(expected.PlatformName, actual.PlatformName);
+            Assert.Equal(expected.PlatformName, actual.Platform);
         }
     }
 }

@@ -8,26 +8,7 @@ CLR_FAILURE='\033[1;31m'    # BRIGHT RED
 CLR_SUCCESS="\033[1;32m"    # BRIGHT GREEN
 CLR_CLEAR="\033[0m"         # DEFAULT COLOR
 
-ARTIFACTS_ROOT="$WORKING_PATH/artifacts"
-BUILD_ROOT="$WORKING_PATH/.build"
-
-MSBUILD_PATH="$BUILD_ROOT/msbuild-cli"
-MSBUILD_PROJ="$MSBUILD_PATH/project.json"
-MSBUILD_PUBLISH="$MSBUILD_PATH/bin/publish"
-MSBUILD_LOG="$BUILD_ROOT/condo.msbuild.log"
-MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
-
-CONDO_PATH="$BUILD_ROOT/condo"
-CONDO_PUBLISH=$MSBUILD_PUBLISH
-CONDO_LOG="$BUILD_ROOT/condo.log"
-
-# create the artifacts root path if it does not already exist
-[ ! -d "$ARTIFACTS_ROOT" ] && mkdir -p $ARTIFACTS_ROOT
-
-# delete the log paths if they exist
-[ -e "$CONDO_LOG" ] && rm -f $CONDO_LOG
-[ -e "$MSBUILD_LOG" ] && rm -f $MSBUILD_LOG
-[ -e "$MSBUILD_RSP" ] && rm -f $MSBUILD_RSP
+CONDO_VERBOSITY="normal"
 
 success() {
     echo -e "${CLR_SUCCESS}$@${CLR_CLEAR}"
@@ -40,8 +21,10 @@ failure() {
 }
 
 info() {
-    echo -e "${CLR_INFO}$@${CLR_CLEAR}"
-    echo "log  : $@" >> $CONDO_LOG
+    if [[ "$CONDO_VERBOSITY" != "quiet" && "$CONDO_VERBOSITY" != "minimal" ]]; then
+        echo -e "${CLR_INFO}$@${CLR_CLEAR}"
+        echo "log  : $@" >> $CONDO_LOG
+    fi
 }
 
 safe-exit() {
@@ -78,31 +61,10 @@ safe-exec() {
 }
 
 safe-join() {
-    local JOIN="$1"
-    shift
-    echo "$*"
+     local IFS="$1"
+     shift
+     echo "$*"
 }
-
-# set the dotnet install path
-DOTNET_PATH=~/.dotnet
-
-# determine if the dotnet install url is not already set
-if [ -z "$DOTNET_INSTALL_URL" ]; then
-    # set the dotnet install url to the 1.0.0 release
-    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.0/scripts/obtain/dotnet-install.sh"
-fi
-
-# determine if the dotnet install channel is not already set
-if [ -z "$DOTNET_CHANNEL" ]; then
-    # set the dotnet channel
-    DOTNET_CHANNEL="rel-1.0.0"
-fi
-
-# determine if the dotnet version is not already set
-if [ -z "$DOTNET_VERSION" ]; then
-    # set the dotnet version
-    DOTNET_VERSION="1.0.0-preview2-003121"
-fi
 
 # download dotnet
 install_dotnet() {
@@ -135,9 +97,6 @@ install_dotnet() {
     export PATH="$DOTNET_INSTALL_DIR:$PATH"
     success "dotnet-cli was installed..."
 }
-
-# capture the msbuild arguments
-MSBUILD_ARGS=("$@")
 
 # restore and publish msbuild
 install_msbuild() {
@@ -187,6 +146,69 @@ install_msbuild() {
     fi
 }
 
+# continue testing for arguments
+while [[ $# > 0 ]]; do
+    case $1 in
+        --verbosity)
+            CONDO_VERBOSITY=$2
+            shift
+            ;;
+        --no-color)
+            CLR_INFO=
+            CLR_SUCCESS=
+            CLR_FAILURE=
+            CLR_CLEAR=
+            MSBUILD_DISABLE_COLOR="DisableConsoleColor"
+            ;;
+        *)
+            break
+            ;;
+    esac
+    shift
+done
+
+ARTIFACTS_ROOT="$WORKING_PATH/artifacts"
+BUILD_ROOT="$WORKING_PATH/.build"
+
+MSBUILD_PATH="$BUILD_ROOT/msbuild-cli"
+MSBUILD_PROJ="$MSBUILD_PATH/project.json"
+MSBUILD_PUBLISH="$MSBUILD_PATH/bin/publish"
+MSBUILD_LOG="$BUILD_ROOT/condo.msbuild.log"
+MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
+
+CONDO_PATH="$BUILD_ROOT/condo"
+CONDO_PUBLISH=$MSBUILD_PUBLISH
+CONDO_LOG="$BUILD_ROOT/condo.log"
+
+# create the artifacts root path if it does not already exist
+[ ! -d "$ARTIFACTS_ROOT" ] && mkdir -p $ARTIFACTS_ROOT
+
+# delete the log paths if they exist
+[ -e "$CONDO_LOG" ] && rm -f $CONDO_LOG
+[ -e "$MSBUILD_LOG" ] && rm -f $MSBUILD_LOG
+[ -e "$MSBUILD_RSP" ] && rm -f $MSBUILD_RSP
+
+# set the dotnet install path
+DOTNET_PATH=~/.dotnet
+
+# determine if the dotnet install url is not already set
+if [ -z "$DOTNET_INSTALL_URL" ]; then
+    # set the dotnet install url to the 1.0.0 release
+    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.0/scripts/obtain/dotnet-install.sh"
+fi
+
+# determine if the dotnet install channel is not already set
+if [ -z "$DOTNET_CHANNEL" ]; then
+    # set the dotnet channel
+    DOTNET_CHANNEL="rel-1.0.0"
+fi
+
+# determine if the dotnet version is not already set
+if [ -z "$DOTNET_VERSION" ]; then
+    # set the dotnet version
+    DOTNET_VERSION="1.0.0-preview2-003121"
+fi
+
 install_dotnet
 install_msbuild
 
@@ -203,10 +225,12 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
 -fl
--flp:LogFile="$MSBUILD_LOG";Verbosity=diagnostic;Encoding=UTF-8
+-flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
+-clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY
 END_MSBUILD_RSP
 
-safe-join $'\n' $MSBUILD_ARGS >> $MSBUILD_RSP
+# write out msbuild arguments to the rsp
+safe-join $'\n' "$@" >> $MSBUILD_RSP
 
 info "Starting build..."
 info "msbuild '$CONDO_PROJ' $MSBUILD_ARGS"

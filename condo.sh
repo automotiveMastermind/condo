@@ -7,7 +7,7 @@ CURRENT_PATH=$(pwd)
 ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # change to the root path
-cd "$ROOT_PATH"
+cd $ROOT_PATH
 
 # determine if condo.sh already exists
 if [ -f condo-local.sh ]; then
@@ -19,10 +19,10 @@ fi
 cp template/condo.sh condo-local.sh
 
 # run condo using local build
-./condo-local.sh --local --reset
+./condo-local.sh --reset --local $@
 
 # remove the local condo file
 rm -f condo-local.sh
 
 # change back to the current directory
-cd "$CURRENT_PATH"
+cd $CURRENT_PATH

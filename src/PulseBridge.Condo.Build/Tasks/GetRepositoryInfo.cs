@@ -29,13 +29,13 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets the name of the branch used to build the repository.
         /// </summary>
         [Output]
-        public string Branch { get; private set; }
+        public string Branch { get; set; }
 
         /// <summary>
         /// Gets the commit hash or checkin number used to build the repository.
         /// </summary>
         [Output]
-        public string CommitId { get; private set; }
+        public string CommitId { get; set; }
 
         /// <summary>
         /// Executes the <see cref="GetRepositoryInfo"/> task.
@@ -52,8 +52,11 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(root))
             {
                 // move on immediately
-                return false;
+                return true;
             }
+
+            // update the repository root
+            this.RepositoryRoot = root;
 
             // create the path to the head node marker
             var node = Path.Combine(root, ".git", "HEAD");
@@ -62,28 +65,33 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!File.Exists(node))
             {
                 // move on immediately
-                return false;
+                return true;
             }
 
             // read the data from the head node
             var head = File.ReadAllText(node);
 
             // create the regular expression for matching the branch
-            var match = Regex.Match(head, "^ref: (?<head>refs/heads/)(?<branch>.*)$");
+            var match = Regex.Match(head, "^ref: (?<branch>refs/heads/.*)$");
 
             // determine if their was a match
             if (match.Success)
             {
                 // get the branch
-                this.Branch = match.Groups["branch"].Value;
+                var branch = match.Groups["branch"].Value;
 
-                var path = match.Groups["head"].Value + this.Branch;
+                // determine if the branch is not already set
+                if (string.IsNullOrEmpty(this.Branch))
+                {
+                    // get the branch
+                    this.Branch = branch;
+                }
 
                 // get the branch node marker path
-                node = Path.Combine(root, ".git", path.Replace("/", Path.DirectorySeparatorChar.ToString()));
+                node = Path.Combine(root, ".git", branch.Replace("/", Path.DirectorySeparatorChar.ToString()));
 
-                // determine if the node exists
-                if (File.Exists(node))
+                // determine if the commit id is not already set and the node exists
+                if (string.IsNullOrEmpty(this.CommitId) && File.Exists(node))
                 {
                     // set the commit id
                     this.CommitId = File.ReadAllText(node).Trim();
@@ -91,24 +99,32 @@ namespace PulseBridge.Condo.Build.Tasks
             }
             else
             {
-                // set the commit id to the data from the head
-                this.CommitId = head.Trim();
+                // determine if the commit id is already set
+                if (string.IsNullOrEmpty(this.CommitId))
+                {
+                    // set the commit id to the data from the head
+                    this.CommitId = head.Trim();
+                }
 
-                // attempt to get the head of the origin remote
-                node = Path.Combine(root, @".git\refs\remotes\origin");
+                // determine if the branch is already set
+                if (string.IsNullOrEmpty(this.Branch))
+                {
+                    // attempt to get the head of the origin remote
+                    node = Path.Combine(root, @".git\refs\remotes\origin");
 
-                // attempt to find the branch
-                this.Branch = this.FindBranch(node) ?? "<unknown>";
+                    // attempt to find the branch
+                    this.Branch = this.FindBranch(node) ?? "<unknown>";
+                }
             }
 
             // find the git config marker
             node = Path.Combine(root, ".git", "config");
 
-            // determine if the file exists
-            if (!File.Exists(node))
+            // determine if the repository uri is already set or the file exists
+            if (!string.IsNullOrEmpty(this.RepositoryUri) || !File.Exists(node))
             {
                 // move on immediately
-                return false;
+                return true;
             }
 
             // open a file stream

@@ -12,7 +12,7 @@ CURRENT_PATH=$(pwd)
 ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # change to the root path
-cd "$ROOT_PATH"
+cd $ROOT_PATH
 
 # write a newline for separation
 echo
@@ -26,7 +26,9 @@ failure() {
 }
 
 info() {
-    echo -e "${CLR_INFO}$@${CLR_CLEAR}"
+    if [[ "$CONDO_VERBOSITY" != "quiet" && "$CONDO_VERBOSITY" != "minimal" ]]; then
+        echo -e "${CLR_INFO}$@${CLR_CLEAR}"
+    fi
 }
 
 # function used to print help information for condo
@@ -59,6 +61,18 @@ while [[ $# > 0 ]]; do
             CONDO_SOURCE=$2
             shift
             ;;
+        --verbosity)
+            CONDO_VERBOSITY=$2
+            shift
+            break
+            ;;
+        --no-color)
+            CLR_INFO=
+            CLR_SUCCESS=
+            CLR_FAILURE=
+            CLR_CLEAR=
+            break
+            ;;
         --)
             shift
             break
@@ -84,7 +98,7 @@ fi
 
 if [[ -d "$BUILD_ROOT" && "$CONDO_RESET" = "1" ]]; then
     info "Resetting condo build system..."
-    rm -Rf "$BUILD_ROOT"
+    rm -rf "$BUILD_ROOT"
 fi
 
 if [ "$CONDO_LOCAL" = "1" ]; then
@@ -93,11 +107,11 @@ fi
 
 if [ ! -d "$CONDO_ROOT" ]; then
     info "Creating path for condo at $CONDO_ROOT..."
-    mkdir -p "$CONDO_ROOT"
+    mkdir -p $CONDO_ROOT
 
     if [ ! -z $CONDO_SOURCE ]; then
         info "Using condo build system from $CONDO_SOURCE..."
-        cp -R $CONDO_SOURCE/* "$CONDO_ROOT"
+        cp -R $CONDO_SOURCE/* $CONDO_ROOT
     else
         info "Using condo build system from $CONDO_URI..."
 
@@ -106,7 +120,7 @@ if [ ! -d "$CONDO_ROOT" ]; then
 
         retries=5
 
-        until (wget -O "$CONDO_TAR" "$CONDO_URI" 2>/dev/null || curl -o "$CONDO_TAR" --location "$CONDO_URI" 2>/dev/null); do
+        until (wget -O $CONDO_TAR $CONDO_URI 2>/dev/null || curl -o $CONDO_TAR --location $CONDO_URI 2>/dev/null); do
             failure "Unable to retrieve condo: '$CONDO_TAR'"
 
             if [ "$retries" -le 0 ]; then
@@ -118,19 +132,19 @@ if [ ! -d "$CONDO_ROOT" ]; then
             sleep 10s
         done
 
-        tar xf "$CONDO_TAR" --strip-components 1 --directory "$CONDO_ROOT"
-        rm -Rf "$CONDO_TEMP"
+        tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_ROOT
+        rm -Rf $CONDO_TEMP
     fi
 fi
 
 # ensure that the condo shell is executable
-chmod a+x "$CONDO_SHELL"
+chmod a+x $CONDO_SHELL
 
 # execute condo shell with the arguments
-"$CONDO_SHELL" "$@"
+$CONDO_SHELL $@
 
 # write a newline for separation
 echo
 
 # change to the original path
-cd "$CURRENT_PATH"
+cd $CURRENT_PATH

@@ -3,7 +3,7 @@
          InitialTargets="Initialize" DefaultTargets="Build">
     <PropertyGroup>
         <Product>PulseBridge.Condo</Product>
-        <SemanticVersion>1.0.0</SemanticVersion>
+        <SemanticVersion>2.0.0</SemanticVersion>
         <Authors>PulseBridge, Inc.</Authors>
     </PropertyGroup>
 
