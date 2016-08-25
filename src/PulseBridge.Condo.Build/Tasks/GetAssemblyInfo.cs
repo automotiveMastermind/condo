@@ -28,6 +28,12 @@ namespace PulseBridge.Condo.Build.Tasks
         public bool CI { get; set; } = false;
 
         /// <summary>
+        /// Gets the pre-release tag (semantic version suffix) used by dotnet projects.
+        /// </summary>
+        [Output]
+        public string PreReleaseTag { get; private set; }
+
+        /// <summary>
         /// Gets or sets the assembly version.
         /// </summary>
         [Output]
@@ -168,21 +174,24 @@ namespace PulseBridge.Condo.Build.Tasks
                 }
             }
 
-            // set the informational version to the semantic version
+            // get the semantic version
             this.InformationalVersion = this.SemanticVersion;
 
             // determine if the prerelease tag is now set
             if (!string.IsNullOrEmpty(this.BuildQuality))
             {
                 // append the build id
-                this.InformationalVersion += $"-{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}";
+                this.PreReleaseTag = $"{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}";
 
                 // determine if this is not a CI build
                 if (!this.CI)
                 {
                     // append the commit id
-                    this.InformationalVersion += $"-{commit.PadLeft(4, '0')}";
+                    this.PreReleaseTag += $"-{commit.PadLeft(4, '0')}";
                 }
+
+                // append the prerelease tag to the informational version
+                this.InformationalVersion += $"-{this.PreReleaseTag}";
             }
 
             // we are successful

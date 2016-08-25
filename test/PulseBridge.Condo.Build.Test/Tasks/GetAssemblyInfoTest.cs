@@ -31,6 +31,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201-0304",
+                PreReleaseTag = "alpha-160201-0304",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -57,6 +58,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -81,6 +83,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201-0304",
+                PreReleaseTag = "alpha-160201-0304",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -109,6 +112,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -133,6 +137,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
+                PreReleaseTag = "alpha-160201",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -159,6 +164,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -182,6 +188,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
+                PreReleaseTag = "alpha-160201",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -208,6 +215,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -231,6 +239,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.99.0304",
                 InformationalVersion = "1.0.0-alpha-00099",
+                PreReleaseTag = "alpha-00099",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -257,6 +266,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -281,6 +291,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-beta-160201",
+                PreReleaseTag = "beta-160201",
                 BuildQuality = "beta",
                 DateTimeUtc = date,
                 CI = ci,
@@ -309,6 +320,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -334,6 +346,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
+                PreReleaseTag = "alpha-160201",
                 BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
@@ -362,6 +375,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -387,6 +401,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-rc-160201",
+                PreReleaseTag = "rc-160201",
                 BuildQuality = "rc",
                 DateTimeUtc = date,
                 CI = ci,
@@ -415,6 +430,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -440,6 +456,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0",
+                PreReleaseTag = default(string),
                 BuildQuality = default(string),
                 DateTimeUtc = date,
                 CI = ci,
@@ -468,6 +485,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -493,6 +511,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0",
+                PreReleaseTag = default(string),
                 BuildQuality = default(string),
                 DateTimeUtc = date,
                 CI = ci,
@@ -521,6 +540,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
@@ -546,6 +566,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-rc-160201",
+                PreReleaseTag = "rc-160201",
                 BuildQuality = "rc",
                 DateTimeUtc = date,
                 CI = ci,
@@ -574,6 +595,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
             Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);

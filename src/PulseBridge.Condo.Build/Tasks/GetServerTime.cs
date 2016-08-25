@@ -30,6 +30,14 @@ namespace PulseBridge.Condo.Build.Tasks
         public string Uri { get; set; } = "time.nist.gov";
 
         /// <summary>
+        /// Gets or sets the timeout for server time (in milliseconds).
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 10 seconds (10000 ms).
+        /// </remarks>
+        public int Timeout { get; set; } = 10000;
+
+        /// <summary>
         /// Gets or sets the port of the time server used to get the server time.
         /// </summary>
         /// <returns></returns>
@@ -62,7 +70,7 @@ namespace PulseBridge.Condo.Build.Tasks
                     socket.Connect(endpoint);
 
                     // wait no more than 5 seconds for the time to be received
-                    socket.ReceiveTimeout = 5000;
+                    socket.ReceiveTimeout = this.Timeout;
 
                     // send the request
                     socket.Send(data);

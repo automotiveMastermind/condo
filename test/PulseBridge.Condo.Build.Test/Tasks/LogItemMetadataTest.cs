@@ -18,7 +18,7 @@ namespace PulseBridge.Condo.Build.Tasks
             // arrange
             var engine = new Mock<IBuildEngine>();
             var messages = new List<string>();
-            var spec = "test";
+            var spec = "this.is.a.test";
 
             engine.Setup(mock => mock.LogMessageEvent(It.IsAny<BuildMessageEventArgs>()))
                 .Callback<BuildMessageEventArgs>(args => messages.Add(args.Message))
@@ -46,12 +46,12 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.True(result, "task did not execute successfully");
             engine.Verify(mock => mock.LogMessageEvent(It.IsAny<BuildMessageEventArgs>()), Times.AtLeast(4));
 
-            Assert.Equal(spec, messages[0]);
+            Assert.Contains(spec, messages[0]);
 
             foreach (var property in metadata)
             {
                 Assert.True
-                    (messages.Contains($" {property.Key}: {property.Value}"), $"message for {property.Key} not found.");
+                    (messages.Contains($"  {property.Key,-17}: {property.Value}"), $"message for {property.Key} not found.");
             }
         }
     }

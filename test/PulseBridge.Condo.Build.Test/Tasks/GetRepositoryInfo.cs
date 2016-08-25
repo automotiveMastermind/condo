@@ -8,7 +8,7 @@ namespace PulseBridge.Condo.Build.Tasks
     {
         [Fact]
         [Priority(2)]
-        public void Execute_WhenRepositoryRootNull_Fails()
+        public void Execute_WhenRepositoryRootNull_Succeeds()
         {
             // arrange
             var root = default(string);
@@ -22,7 +22,8 @@ namespace PulseBridge.Condo.Build.Tasks
             var result = actual.Execute();
 
             // assert
-            Assert.False(result);
+            Assert.True(result);
+            Assert.Equal(root, actual.RepositoryRoot);
         }
 
         [Fact]
@@ -41,7 +42,8 @@ namespace PulseBridge.Condo.Build.Tasks
             var result = actual.Execute();
 
             // assert
-            Assert.False(result);
+            Assert.True(result);
+            Assert.Equal(root, actual.RepositoryRoot);
         }
 
         [Fact]
@@ -62,7 +64,8 @@ namespace PulseBridge.Condo.Build.Tasks
             var result = actual.Execute();
 
             // assert
-            Assert.False(result);
+            Assert.True(result);
+            Assert.Equal(root, actual.RepositoryRoot);
         }
 
         [Fact]

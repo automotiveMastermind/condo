@@ -125,6 +125,7 @@
             <Output TaskParameter="BuildId" PropertyName="BuildId" />
             <Output TaskParameter="CommitId" PropertyName="CommitId" />
             <Output TaskParameter="DateTimeUtc" PropertyName="DateTimeUtc" />
+            <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
         </GetAssemblyInfo>
     </Target>
 
@@ -152,7 +153,8 @@
         <Message Importance="High" Text="Authors            : $(Authors)" />
         <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
         <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
-        <Message Importance="High" Text="Version            : $(InformationalVersion)" />
+        <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
+        <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
         <Message Importance="High" Text="File Version       : $(FileVersion)" />
     </Target>
 
