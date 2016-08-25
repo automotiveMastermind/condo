@@ -84,7 +84,7 @@
             DateTimeUtc="$(DateTimeUtc)">
             <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
             <Output TaskParameter="FileVersion" PropertyName="FileVersion" />
-            <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
+            <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
             <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion" />
             <Output TaskParameter="BuildId" PropertyName="BuildId" />
             <Output TaskParameter="CommitId" PropertyName="CommitId" />
@@ -110,18 +110,18 @@
     <Target Name="PrintProperties">
         <Message Importance="High" Text="Product Name       : $(Product)" />
         <Message Importance="High" Text="Date Time (UTC)    : $(DateTimeUtc)" />
-        <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
         <Message Importance="High" Text="Configuration      : $(Configuration)|$(PlatformName)" />
         <Message Importance="High" Text="Authors            : $(Authors)" />
+        <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
+        <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
+        <Message Importance="High" Text="Version            : $(InformationalVersion)" />
+        <Message Importance="High" Text="File Version       : $(FileVersion)" />
     </Target>
 
     <!-- print repository information -->
     <Target Name="PrintRepositoryInfo">
         <Message Importance="High" Text="Repository Root    : $(RepositoryRoot)" />
         <Message Importance="High" Text="Repository URI     : $(RepositoryUri)" />
-        <Message Importance="High" Text="Version            : $(InformationalVersion)" />
-        <Message Importance="High" Text="File Version       : $(FileVersion)" />
-        <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
         <Message Importance="High" Text="Branch             : $(Branch)" />
         <Message Importance="High" Text="Build ID           : $(BuildId)" />
         <Message Importance="High" Text="Commit ID          : $(CommitId)" />

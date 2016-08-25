@@ -43,7 +43,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets or sets the pre-release tag.
         /// </summary>
         [Output]
-        public string PreReleaseTag { get; set; }
+        public string BuildQuality { get; set; }
 
         /// <summary>
         /// Gets or sets the informational version.
@@ -81,18 +81,21 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(this.DateTimeUtc))
             {
                 // set the date and time to the current time
-                this.DateTimeUtc = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
+                this.DateTimeUtc = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
             }
 
             // define a variable to retain the date
             DateTime date;
 
             // attempt to parse the date
-            if (!DateTime.TryParse(this.DateTimeUtc, out date))
+            if (!DateTime.TryParse(this.DateTimeUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out date))
             {
                 // could not parse; move on immediately
                 return false;
             }
+
+            // ensure that the date is always universal time
+            date = date.ToUniversalTime();
 
             // define a variable to retain the version
             Version version;
@@ -110,28 +113,31 @@ namespace PulseBridge.Condo.Build.Tasks
             // set the assembly version to the semantic version
             this.AssemblyVersion = version.ToString();
 
+            var build = date.ToString("yyddMM", CultureInfo.InvariantCulture);
+            var commit = date.ToString("HHmm", CultureInfo.InvariantCulture);
+
             // determine if the commit id is not already set
             if (string.IsNullOrEmpty(this.CommitId))
             {
                 // set the commit id
-                this.CommitId = date.ToString("HHmm");
+                this.CommitId = commit;
             }
 
             // determine if the build id is not already set
             if (string.IsNullOrEmpty(this.BuildId))
             {
                 // set the build id
-                this.BuildId = date.ToString("yyddMM");
+                this.BuildId = build;
             }
 
             // set the file version
-            this.FileVersion = $"{version.Major}.{version.Minor}.{this.BuildId}.{this.CommitId}";
+            this.FileVersion = $"{version.Major}.{version.Minor}.{this.BuildId}.{commit}";
 
             // determine if the prerelease tag is not already set
-            if (string.IsNullOrEmpty(this.PreReleaseTag))
+            if (string.IsNullOrEmpty(this.BuildQuality))
             {
                 // set the prelrease tag to alpha by default
-                this.PreReleaseTag = "alpha";
+                this.BuildQuality = "alpha";
 
                 // only allow the prerelease tag to be set to anything other than alpha
                 // on CI servers
@@ -141,7 +147,7 @@ namespace PulseBridge.Condo.Build.Tasks
                     if (this.Branch.StartsWith("dev", StringComparison.OrdinalIgnoreCase))
                     {
                         // set the prerelease tag to beta
-                        this.PreReleaseTag = "beta";
+                        this.BuildQuality = "beta";
                     }
 
                     // determine if this is a release branch
@@ -149,7 +155,7 @@ namespace PulseBridge.Condo.Build.Tasks
                         || this.Branch.StartsWith("hotfix", StringComparison.OrdinalIgnoreCase))
                     {
                         // set the prerelease tag as a release candidate
-                        this.PreReleaseTag = "rc";
+                        this.BuildQuality = "rc";
                     }
 
                     // determine if the branch is master or main
@@ -157,7 +163,7 @@ namespace PulseBridge.Condo.Build.Tasks
                         || this.Branch.StartsWith("main", StringComparison.OrdinalIgnoreCase))
                     {
                         // this should not have a prerelease tag
-                        this.PreReleaseTag = null;
+                        this.BuildQuality = null;
                     }
                 }
             }
@@ -166,20 +172,17 @@ namespace PulseBridge.Condo.Build.Tasks
             this.InformationalVersion = this.SemanticVersion;
 
             // determine if the prerelease tag is now set
-            if (!string.IsNullOrEmpty(this.PreReleaseTag))
+            if (!string.IsNullOrEmpty(this.BuildQuality))
             {
                 // append the build id
-                this.PreReleaseTag += $"-{this.BuildId}";
+                this.InformationalVersion += $"-{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}";
 
                 // determine if this is not a CI build
                 if (!this.CI)
                 {
                     // append the commit id
-                    this.PreReleaseTag += $"-{this.CommitId}";
+                    this.InformationalVersion += $"-{commit.PadLeft(4, '0')}";
                 }
-
-                // set the informational version
-                this.InformationalVersion += $"-{this.PreReleaseTag}";
             }
 
             // we are successful

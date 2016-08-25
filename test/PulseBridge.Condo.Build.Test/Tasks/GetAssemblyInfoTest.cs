@@ -20,7 +20,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenNotCI_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var ci = false;
@@ -31,7 +31,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201-0304",
-                PreReleaseTag = "alpha-160201-0304",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
 
@@ -57,7 +57,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
             Assert.Equal(expected.CommitId, actual.CommitId);
@@ -69,7 +69,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenNotCIAndBranchSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "master";
@@ -81,7 +81,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201-0304",
-                PreReleaseTag = "alpha-160201-0304",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -109,7 +109,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -122,7 +122,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenCI_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var ci = true;
@@ -133,7 +133,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
-                PreReleaseTag = "alpha-160201",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
 
@@ -159,7 +159,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
             Assert.Equal(expected.CommitId, actual.CommitId);
@@ -171,7 +171,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenCommitSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = "98";
             var ci = true;
@@ -180,9 +180,9 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.160201.98",
+                FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
-                PreReleaseTag = "alpha-160201",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
 
@@ -208,7 +208,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
             Assert.Equal(expected.CommitId, actual.CommitId);
@@ -220,7 +220,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenBuildSet_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = "99";
             var commitId = default(string);
             var ci = true;
@@ -230,8 +230,8 @@ namespace PulseBridge.Condo.Build.Tasks
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.99.0304",
-                InformationalVersion = "1.0.0-alpha-99",
-                PreReleaseTag = "alpha-99",
+                InformationalVersion = "1.0.0-alpha-00099",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
 
@@ -257,7 +257,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.BuildId, actual.BuildId);
             Assert.Equal(expected.CommitId, actual.CommitId);
@@ -269,7 +269,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenDevelopBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "develop";
@@ -281,7 +281,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-beta-160201",
-                PreReleaseTag = "beta-160201",
+                BuildQuality = "beta",
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -309,7 +309,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -322,7 +322,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenFeatureBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "feature/01-test";
@@ -334,7 +334,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-alpha-160201",
-                PreReleaseTag = "alpha-160201",
+                BuildQuality = "alpha",
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -362,7 +362,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -375,7 +375,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenReleaseBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "release/1.0.0";
@@ -387,7 +387,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-rc-160201",
-                PreReleaseTag = "rc-160201",
+                BuildQuality = "rc",
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -415,7 +415,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -428,7 +428,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenMasterBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "master";
@@ -440,7 +440,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0",
-                PreReleaseTag = default(string),
+                BuildQuality = default(string),
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -468,7 +468,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -481,7 +481,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenMainBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "main";
@@ -493,7 +493,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0",
-                PreReleaseTag = default(string),
+                BuildQuality = default(string),
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -521,7 +521,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
@@ -534,7 +534,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WhenHotfixBranch_Succeeds()
         {
             // arrange
-            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("s", CultureInfo.InvariantCulture);
+            var date = new DateTime(2016, 1, 2, 3, 4, 0).ToString("o", CultureInfo.InvariantCulture);
             var buildId = default(string);
             var commitId = default(string);
             var branch = "hotfix/1.0.0";
@@ -546,7 +546,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.160201.0304",
                 InformationalVersion = "1.0.0-rc-160201",
-                PreReleaseTag = "rc-160201",
+                BuildQuality = "rc",
                 DateTimeUtc = date,
                 CI = ci,
                 Branch = branch,
@@ -574,7 +574,7 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
-            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
             Assert.Equal(expected.DateTimeUtc, actual.DateTimeUtc);
             Assert.Equal(expected.Branch, actual.Branch);
             Assert.Equal(expected.BuildId, actual.BuildId);
