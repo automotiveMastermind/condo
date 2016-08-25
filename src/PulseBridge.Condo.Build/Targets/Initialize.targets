@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-        <!-- default to visual studio 2015 -->
-        <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">14.0</VisualStudioVersion>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- default to visual studio "15" -->
+        <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">15.0</VisualStudioVersion>
 
         <DirectorySeparatorChar>$([System.IO.Path]::DirectorySeparatorChar)</DirectorySeparatorChar>
 
+        <!-- define the default project name -->
         <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
 
         <!-- get the solution and package root paths -->
@@ -13,10 +15,10 @@
         <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'test'))</TestRoot>
         <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'artifacts'))</ArtifactsRoot>
 
-        <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
-        <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
-        <SiteArtifactsRoot      Condition=" '$(SiteArtifactsRoot)'  == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
-        <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)' == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
+        <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)'     == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
+        <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
+        <SiteArtifactsRoot      Condition=" '$(SiteArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'sites'))</SiteArtifactsRoot>
+        <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
     </PropertyGroup>
 
     <PropertyGroup>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Debugging">
+    <!-- allow debugging of targets -->
+    <WaitForDebugger Condition=" '$(Debug)' == 'true' " />
+  </Target>
+
+  <!-- initialize dynamic properties -->
+  <Target Name="Initialize" DependsOnTargets="Debugging">
+    <Message Text="*** Completed Initialize Phase ***" />
+  </Target>
+
+  <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
+  <Target Name="Prepare" DependsOnTargets="Initialize">
+    <Message Text="*** Completed Prepare Phase ***" />
+  </Target>
+
+  <!-- compile the project -->
+  <Target Name="Compile" DependsOnTargets="Prepare">
+    <Message Text="*** Completed Compile Phase ***" />
+  </Target>
+
+  <!-- execute tests for the project -->
+  <Target Name="Test" DependsOnTargets="Compile">
+    <Message Text="*** Completed Test Phase ***" />
+  </Target>
+
+  <!-- perform post test packaging of the project -->
+  <Target Name="Package" DependsOnTargets="Test">
+    <Message Text="*** Completed Package Phase ***" />
+  </Target>
+
+  <!-- verify build output and test results -->
+  <Target Name="Verify" DependsOnTargets="Package">
+    <Message Text="*** Completed Verify Phase ***" />
+  </Target>
+
+  <!-- publish final build artifacts -->
+  <Target Name="Publish" DependsOnTargets="Verify">
+    <Message Text="*** Completed Publish Phase ***" />
+  </Target>
+
+  <!-- the default target for build -->
+  <Target Name="Build" DependsOnTargets="Package">
+    <Message Text="*** Completed Build Phase ***" />
+  </Target>
+
+  <!-- the default target for clean -->
+  <Target Name="Clean" DependsOnTargets="Initialize">
+    <Message Text="*** Completed Clean Phase ***" />
+  </Target>
+
+  <!-- the default target for continuous integration -->
+  <Target Name="CI" DependsOnTargets="Clean;Verify">
+    <Message Text="*** Completed CI Phase ***" />
+  </Target>
+</Project>

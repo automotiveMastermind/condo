@@ -11,51 +11,76 @@ CLR_CLEAR="\033[0m"         # DEFAULT COLOR
 ARTIFACTS_ROOT="$WORKING_PATH/artifacts"
 BUILD_ROOT="$WORKING_PATH/.build"
 
-CONDO_PATH="$BUILD_ROOT/condo"
-CONDO_PUBLISH="$CONDO_PATH/bin/publish"
-
 MSBUILD_PATH="$BUILD_ROOT/msbuild-cli"
 MSBUILD_PROJ="$MSBUILD_PATH/project.json"
 MSBUILD_PUBLISH="$MSBUILD_PATH/bin/publish"
+MSBUILD_LOG="$BUILD_ROOT/condo.msbuild.log"
+MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
 
-if [ ! -d "$ARTIFACTS_ROOT" ]; then
-    mkdir -p $ARTIFACTS_ROOT
-fi
+CONDO_PATH="$BUILD_ROOT/condo"
+CONDO_PUBLISH=$MSBUILD_PUBLISH
+CONDO_LOG="$BUILD_ROOT/condo.log"
 
-CONDO_LOG="$ARTIFACTS_ROOT/condo.log"
+# create the artifacts root path if it does not already exist
+[ ! -d "$ARTIFACTS_ROOT" ] && mkdir -p $ARTIFACTS_ROOT
 
-if [ -e "$CONDO_LOG" ]; then
-    rm -f "$CONDO_LOG"
-fi
+# delete the log paths if they exist
+[ -e "$CONDO_LOG" ] && rm -f $CONDO_LOG
+[ -e "$MSBUILD_LOG" ] && rm -f $MSBUILD_LOG
+[ -e "$MSBUILD_RSP" ] && rm -f $MSBUILD_RSP
 
 success() {
     echo -e "${CLR_SUCCESS}$@${CLR_CLEAR}"
-    echo "SUCCESS: $@" >> "$CONDO_LOG"
+    echo "log  : $@" >> $CONDO_LOG
 }
 
 failure() {
     echo -e "${CLR_FAILURE}$@${CLR_CLEAR}"
-    echo "FAILURE: $@" >> "$CONDO_LOG"
+    echo "err  : $@" >> $CONDO_LOG
 }
 
 info() {
     echo -e "${CLR_INFO}$@${CLR_CLEAR}"
-    echo "INFO   : $@" >> "$CONDO_LOG"
+    echo "log  : $@" >> $CONDO_LOG
 }
 
-exec() {
-    local cmd=$1
+safe-exit() {
+    local EXIT_CODE=$1
+
+    if [ $EXIT_CODE -eq 0 ]; then
+        success "exiting with exit code: $EXIT_CODE"
+    else
+        failure "exiting with exit code: $EXIT_CODE"
+    fi
+
+    cp $MSBUILD_LOG $CONDO_LOG $MSBUILD_RSP $ARTIFACTS_ROOT 1>/dev/null 2>&1
+
+    [ -e "$MSBUILD_LOG" ] && rm -f $MSBUILD_LOG
+    [ -e "$MSBUILD_RSP" ] && rm -f $MSBUILD_RSP
+    [ -e "$CONDO_LOG" ] && rm -f $CONDO_LOG
+
+    exit $EXIT_CODE
+}
+
+safe-exec() {
+    local CMD=$1
     shift
 
-    local cmdname=$(basename $cmd)
-    $cmd "$@" 2>&1 >> $CONDO_LOG
+    local CMD_NAME=$(basename $CMD)
+    $CMD "$@" 2>&1 >> $CONDO_LOG
 
-    local exitCode=$?
-    if [ $exitCode -ne 0 ]; then
-        failure "$cmdname $@ failed with exit code $exitCode"
+    local EXIT_CODE=$?
+
+    if [ $EXIT_CODE -ne 0 ]; then
         echo -e "${CLR_FAILURE}check '$CONDO_LOG' for additional information...${CLR_CLEAR}" 1>&2
-        # __end $exitCode
+        safe-exit $EXIT_CODE
     fi
+}
+
+safe-join() {
+    local JOIN="$1"
+    shift
+    echo "$*"
 }
 
 # set the dotnet install path
@@ -89,11 +114,11 @@ install_dotnet() {
 
         retries=5
 
-        until (wget -O "$DOTNET_INSTALL" "$DOTNET_INSTALL_URL" 2>/dev/null || curl -o "$DOTNET_INSTALL" -L "$DOTNET_INSTALL_URL" 2>/dev/null); do
+        until (wget -O $DOTNET_INSTALL $DOTNET_INSTALL_URL 2>/dev/null || curl -o $DOTNET_INSTALL -L $DOTNET_INSTALL_URL 2>/dev/null); do
             failure "Unable to retrieve dotnet-install: '$DOTNET_INSTALL_URL'"
 
             if [ "$retries" -le 0 ]; then
-                exit 1
+                safe-exit 1
             fi
 
             retries=$((retries - 1))
@@ -102,9 +127,9 @@ install_dotnet() {
         done
 
         export DOTNET_INSTALL_DIR=$DOTNET_PATH
-        chmod +x "$DOTNET_INSTALL"
+        chmod +x $DOTNET_INSTALL
 
-        exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
+        safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
     fi
 
     export PATH="$DOTNET_INSTALL_DIR:$PATH"
@@ -114,47 +139,48 @@ install_dotnet() {
 # capture the msbuild arguments
 MSBUILD_ARGS=("$@")
 
-# get the msbuild log
-MSBUILD_LOG="$ARTIFACTS_ROOT/condo.msbuild.log"
-
-# determine if the log file already exists
-if [ -e "$MSBUILD_LOG" ]; then
-    # delete the old log
-    rm -f "$MSBUILD_LOG"
-fi
-
 # restore and publish msbuild
 install_msbuild() {
     if [ ! -d "$MSBUILD_PATH" ]; then
         # create the msbuild path
-        mkdir -p "$MSBUILD_PUBLISH"
-        mkdir -p "$CONDO_PUBLISH"
+        mkdir -p $MSBUILD_PUBLISH
+        mkdir -p $CONDO_PUBLISH
 
         # get the current runtime
         RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
+        # TRICKY, HACK, TODO: this is a hack to resolve the runtime for macos sierra, which is not yet officially
+        # supported with native runtime libraries
+        if [ "$RUNTIME" = "osx.10.12-x64" ]; then
+            # set the runtime to el capitan
+            RUNTIME="osx.10.11-x64"
+        fi
+
         # get the msbuild project file and replace the RUNTIME marker with the current runtime, then emit to the
         # msbuild path... NOTE: this has been removed as not all runtimes are supported currently
-        cat "$CONDO_PATH/scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > "$MSBUILD_PROJ"
+        cat "$CONDO_PATH/scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > $MSBUILD_PROJ
+
+        # copy the nuget config to the build root
+        cp "$CONDO_PATH/scripts/nuget.config" $BUILD_ROOT
 
         # restore msbuild
         info "msbuild: restoring msbuild packages..."
-        exec dotnet restore "$MSBUILD_PATH" -v Minimal
+        safe-exec dotnet restore $MSBUILD_PATH --verbosity minimal
         success "msbuild: restore complete"
 
         # publish msbuild
         info "msbuild: publishing msbuild system..."
-        exec dotnet publish "$MSBUILD_PATH" -o "$MSBUILD_PUBLISH"
+        safe-exec dotnet publish $MSBUILD_PATH --output $MSBUILD_PUBLISH --runtime $RUNTIME
         success "msbuild: publish complete"
 
         # restore condo
         info "condo: restoring condo packages..."
-        exec dotnet restore "$CONDO_PATH" -v Minimal
+        safe-exec dotnet restore $CONDO_PATH --verbosity minimal
         success "condo: restore complete"
 
         # publish condo
         info "condo: publishing condo tasks..."
-        exec dotnet publish "$CONDO_PATH" -o "$CONDO_PUBLISH"
+        safe-exec dotnet publish $CONDO_PATH --output $CONDO_PUBLISH --runtime $RUNTIME
         success "condo: publish complete"
     else
         info "condo was already built: use --update or --reset to get the latest version."
@@ -163,3 +189,29 @@ install_msbuild() {
 
 install_dotnet
 install_msbuild
+
+CONDO_TARGETS="$CONDO_PATH/targets"
+CONDO_PROJ="$WORKING_PATH/condo.build"
+
+if [ ! -e "$CONDO_PROJ" ]; then
+    CONDO_PROJ="$CONDO_TARGETS/condo.build"
+fi
+
+echo 'yay'
+
+cat > $MSBUILD_RSP <<END_MSBUILD_RSP
+-nologo
+"$CONDO_PROJ"
+-p:CondoTargetsPath="$CONDO_TARGETS"
+-p:CondoTasksPath="$CONDO_PUBLISH"
+-fl
+-flp:LogFile="$MSBUILD_LOG";Verbosity=diagnostic;Encoding=UTF-8
+END_MSBUILD_RSP
+
+safe-join $'\n' $MSBUILD_ARGS >> $MSBUILD_RSP
+
+info "Starting build..."
+info "msbuild '$CONDO_PROJ' $MSBUILD_ARGS"
+
+"$MSBUILD_PUBLISH/corerun" "$MSBUILD_PUBLISH/MSBuild.exe" @"$MSBUILD_RSP"
+safe-exit $?
