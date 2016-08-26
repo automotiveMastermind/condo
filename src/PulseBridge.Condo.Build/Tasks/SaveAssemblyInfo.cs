@@ -8,6 +8,9 @@ namespace PulseBridge.Condo.Build.Tasks
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
+    /// <summary>
+    /// Represents a Microsoft Build task used to save assembly info attributes to a specified path.
+    /// </summary>
     public class SaveAssemblyInfo : Task
     {
         #region CONSTANTS
@@ -155,6 +158,12 @@ namespace PulseBridge.Condo.Build.Tasks
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Executes the <see cref="SaveAssemblyInfo"/> task.
+        /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the task was successfully executed.
+        /// </returns>
         public override bool Execute()
         {
             // capture the path
