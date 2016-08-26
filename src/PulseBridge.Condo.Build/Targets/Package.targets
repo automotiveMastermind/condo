@@ -4,15 +4,15 @@
         <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
     </PropertyGroup>
 
-    <Target Name="DotNetPack" BeforeTargets="Package">
+    <Target Name="DotNetPack">
         <Exec
             Command="dotnet pack --version-suffix &quot;$(PreReleaseTag)&quot; -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(BuildProjects.FullPath)&quot;"
             Condition="'%(BuildProjects.ProjectGroup)' == 'src'"
             WorkingDirectory="$(RepositoryRoot)" />
 
         <ItemGroup>
-            <Packages Include="$(PackageArtifactsRoot)/*.nupkg" Exclude="$(PackageArtifactsRoot)/*.symbols.nupkg" />
-            <Symbols Include="$(PackageArtifactsRoot)/*.symbols.nupkg" />
+            <Packages Include="$(PackageArtifactsRoot)$(slash)*.nupkg" Exclude="$(PackageArtifactsRoot)$(slash)*.symbols.nupkg" />
+            <Symbols Include="$(PackageArtifactsRoot)$(slash)*.symbols.nupkg" />
         </ItemGroup>
     </Target>
 
@@ -21,4 +21,6 @@
             DotNetPack;
         </PackDependsOn>
     </PropertyGroup>
+
+    <Target Name="Packaging" DependsOnTargets="$(PackDependsOn)" BeforeTargets="Package" />
 </Project>

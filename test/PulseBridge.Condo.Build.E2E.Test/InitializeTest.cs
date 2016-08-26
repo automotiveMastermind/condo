@@ -91,7 +91,7 @@ namespace PulseBridge.Condo.Build.E2E
             Assert.Contains($"Build ID           : {buildId}", actual);
             Assert.Contains($"Build Name         : {buildName}", actual);
             Assert.Contains($"Pull Request ID    : {prId}", actual);
-            Assert.Contains($"Build Agent        : {agent}", actual);
+            Assert.Contains($"Build On (Agent)   : {agent}", actual);
             Assert.Contains($"Build For          : {buildFor}", actual);
             Assert.Contains($"Configuration      : {configuration}", actual);
         }

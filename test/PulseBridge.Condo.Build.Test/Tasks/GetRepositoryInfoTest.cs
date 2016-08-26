@@ -75,6 +75,11 @@ namespace PulseBridge.Condo.Build.Tasks
             // arrange
             var root = Directory.GetCurrentDirectory();
 
+            while (!File.Exists(Path.Combine(root, "condo.sh")))
+            {
+                root = Directory.GetParent(root).FullName;
+            }
+
             var expected = new {
                 RepositoryRoot = root
             };

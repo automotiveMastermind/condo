@@ -139,7 +139,7 @@
 
         <ItemGroup>
             <SourceProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'src' "/>
-            <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test ' "/>
+            <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
             <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>
             <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
         </ItemGroup>
