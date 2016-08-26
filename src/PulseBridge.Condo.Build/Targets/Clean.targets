@@ -5,6 +5,7 @@
         <ItemGroup>
             <Artifacts Include="$(ArtifactsRoot)" />
         </ItemGroup>
+
         <RemoveDir Directories="@(Artifacts)" />
     </Target>
 
@@ -12,7 +13,11 @@
         <ItemGroup>
             <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" />
             <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" />
+
+            <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" />
         </ItemGroup>
+
         <RemoveDir Directories="@(IntermediateArtifacts)" />
+        <Delete Files="%(IntermediateFiles)" Condition=" Exists('%(IntermediateFiles)') " />
     </Target>
 </Project>

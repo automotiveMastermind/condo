@@ -19,7 +19,8 @@ fi
 cp template/condo.sh condo-local.sh
 
 # run condo using local build
-./condo-local.sh --reset --local $@
+CONDO_SHELL="$ROOT_PATH/condo-local.sh"
+$CONDO_SHELL --reset --local $@
 
 # remove the local condo file
 rm -f condo-local.sh
