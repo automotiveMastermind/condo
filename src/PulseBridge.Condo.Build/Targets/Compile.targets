@@ -14,6 +14,18 @@
             WorkingDirectory="$(RepositoryRoot)" />
     </Target>
 
+    <Target Name="CopyDotNetBuild" AfterTargets="DotNetBuild">
+        <ItemGroup>
+            <_CopyDotNetBuild Include="%(BuildProjects.ProjectDir)bin$(Slash)**">
+                <ProjectName>%(BuildProjects.ProjectName)</ProjectName>
+            </_CopyDotNetBuild>
+        </ItemGroup>
+
+        <Copy
+            SourceFiles="@(_CopyDotNetBuild)"
+            DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(Slash)%(ProjectName)$(Slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
     <PropertyGroup>
         <CompileDependsOn>
             DotNetBuild;

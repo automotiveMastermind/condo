@@ -3,7 +3,7 @@
 
     <Target Name="CleanArtifacts" BeforeTargets="Clean">
         <ItemGroup>
-            <Artifacts Include="$(ArtifactsRoot)" />
+            <Artifacts Include="$(ArtifactsRoot)" Condition=" Exists('$(ArtifactsRoot)') " />
         </ItemGroup>
 
         <RemoveDir Directories="@(Artifacts)" />
@@ -11,13 +11,13 @@
 
     <Target Name="CleanIntermediateArtifacts" BeforeTargets="Clean">
         <ItemGroup>
-            <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" />
-            <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" />
+            <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" Condition=" Exists('%(Projects.ProjectDir)bin') " />
+            <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" Condition=" Exists('%(Projects.ProjectDir)obj') " />
 
-            <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" />
+            <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" Condition=" Exists('%(Projects.CondoAssemblyInfo)') " />
         </ItemGroup>
 
         <RemoveDir Directories="@(IntermediateArtifacts)" />
-        <Delete Files="%(IntermediateFiles)" Condition=" Exists('%(IntermediateFiles)') " />
+        <Delete Files="@(IntermediateFiles)" />
     </Target>
 </Project>

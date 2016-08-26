@@ -30,7 +30,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             var expected = new Dictionary<string, string>
             {
-                { "Name", name },
+                { "ProjectName", name },
                 { "ProjectGroup", group },
                 { "FullPath", path },
                 { "ProjectDir", directory + Path.DirectorySeparatorChar },

@@ -39,7 +39,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 SetMetadata(project);
 
                 // log a message
-                Log.LogMessage(MessageImportance.Low, $"Updated project metadata for project: {project.GetMetadata("Name")}");
+                Log.LogMessage(MessageImportance.Low, $"Updated project metadata for project: {project.GetMetadata("ProjectName")}");
             }
 
             // assume its always true
@@ -95,7 +95,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // set the name of the project (using the directory name by convention)
             // todo: parse the name from the project.json file
-            project.SetMetadata("Name", Path.GetFileName(directory));
+            project.SetMetadata("ProjectName", Path.GetFileName(directory));
 
             // set the shared sources directory
             // todo: parse this from the project.json file

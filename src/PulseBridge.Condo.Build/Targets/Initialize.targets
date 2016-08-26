@@ -5,7 +5,7 @@
         <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">15.0</VisualStudioVersion>
 
         <!-- get the directory separator character for the current platform used to keep paths consistent -->
-        <DirectorySeparatorChar>$([System.IO.Path]::DirectorySeparatorChar)</DirectorySeparatorChar>
+        <Slash>$([System.IO.Path]::DirectorySeparatorChar)</Slash>
 
         <!-- define the default project name -->
         <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
@@ -65,14 +65,14 @@
         <DotNetRestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
 
         <!-- locate all npm, bower, gulp, and grunt projects -->
-        <NpmInstallPaths Include="$(RepositoryRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)package.json" />
-        <BowerInstallPaths Include="$(RepositoryRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)bower.json" />
-        <GulpPaths Include="$(RepositoryRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)gulpfile.*" />
-        <GruntPaths Include="$(RepositoryRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)gruntfile.*" />
+        <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
+        <BowerInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)bower.json" />
+        <GulpPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gulpfile.*" />
+        <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
 
         <!-- locate all dotnet projects -->
-        <DotNetPaths Include="$(SrcRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)project.json" />
-        <DotNetPaths Include="$(TestRoot)$(DirectorySeparatorChar)**$(DirectorySeparatorChar)project.json" />
+        <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />
+        <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)project.json" />
     </ItemGroup>
 
     <!-- get server time from NIST -->
