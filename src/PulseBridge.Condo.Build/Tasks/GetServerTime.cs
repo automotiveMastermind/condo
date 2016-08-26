@@ -18,6 +18,7 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </remarks>
     public class GetServerTime : Task
     {
+        #region Properties
         /// <summary>
         /// Gets an accurate server time from NIST represented in UTC.
         /// </summary>
@@ -42,7 +43,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         /// <returns></returns>
         public int Port { get; set; } = 123;
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Executes the <see cref="GetServerTime"/> task.
         /// </summary>
@@ -105,5 +108,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // return true
             return true;
         }
+        #endregion
     }
 }

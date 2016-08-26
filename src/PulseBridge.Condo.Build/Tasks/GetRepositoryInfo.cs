@@ -12,6 +12,7 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </summary>
     public class GetRepositoryInfo : Task
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
@@ -36,7 +37,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string CommitId { get; set; }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Executes the <see cref="GetRepositoryInfo"/> task.
         /// </summary>
@@ -279,5 +282,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // walk the tree to the parent
             return GetRepositoryInfo.GetRoot(root.Parent);
         }
+        #endregion
     }
 }

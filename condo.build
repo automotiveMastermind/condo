@@ -5,6 +5,9 @@
         <Product>PulseBridge.Condo</Product>
         <SemanticVersion>2.0.0</SemanticVersion>
         <Authors>PulseBridge, Inc.</Authors>
+        <Company>PulseBridge, Inc.</Company>
+        <License>MIT</License>
+        <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
     </PropertyGroup>
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />

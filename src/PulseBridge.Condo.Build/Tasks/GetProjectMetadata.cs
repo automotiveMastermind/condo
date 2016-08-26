@@ -14,13 +14,16 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </summary>
     public class GetProjectMetadata : Task
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the list of projects for which to set additional metadata.
         /// </summary>
         [Required]
         [Output]
         public ITaskItem[] Projects { get; set; }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Executes the <see cref="GetProjectMetadata"/> task.
         /// </summary>
@@ -101,5 +104,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
         }
+        #endregion
     }
 }

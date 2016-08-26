@@ -29,10 +29,11 @@
         <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">$(DOTNET_BUILD_VERSION)</SemanticVersion>
         <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">1.0.0</SemanticVersion>
         <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
-        <BuildHost>Local</BuildHost>
-        <CI>false</CI>
-        <BuildOn>$([System.Environment]::MachineName)</BuildOn>
-        <BuildName>$(BuildOn)-$(BuildHost)</BuildName>
+        <BuildHost Condition=" '$(BuildHost)' == '' ">Local</BuildHost>
+        <CI Condition=" '$(CI)' == '' ">false</CI>
+        <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
+        <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
+        <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
     </PropertyGroup>
 
     <!-- capture details from a continuous integration build hosted by TFS -->
@@ -45,7 +46,7 @@
         <BuildId>$(BUILD_BUILDID)</BuildId>
         <PullRequestId Condition=" $(Branch.StartsWith('refs/pull/')) ">$(Branch.Split("/")[2])</PullRequestId>
         <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
-        <BuildAgent>$(AGENT_NAME)</BuildAgent>
+        <BuildOn>$(AGENT_NAME)</BuildOn>
         <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
         <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
         <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
@@ -145,8 +146,11 @@
 
     <!-- print all of the properties that were used to perform the build -->
     <Target Name="PrintProperties">
+        <Message Importance="High" Text="Company            : $(Company)" Condition=" '$(Company)' != '' " />
         <Message Importance="High" Text="Product Name       : $(Product)" />
         <Message Importance="High" Text="Project Name       : $(TeamProject)" Condition=" '$(TeamProject)' != '' " />
+        <Message Importance="High" Text="License            : $(License)" Condition=" '$(License)' != '' " />
+        <Message Importance="High" Text="License URI        : $(LicenseUri)" Condition=" '$(LicenseUri)' != '' " />
         <Message Importance="High" Text="Date Time (UTC)    : $(DateTimeUtc)" />
         <Message Importance="High" Text="Configuration      : $(Configuration)" />
         <Message Importance="High" Text="Platform           : $(Platform)" />
@@ -156,6 +160,7 @@
         <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
         <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
         <Message Importance="High" Text="File Version       : $(FileVersion)" />
+        <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
     </Target>
 
     <Target Name="PrintProjects">
@@ -175,7 +180,7 @@
         <Message Importance="High" Text="Build Name         : $(BuildName)" Condition=" '$(BuildName)' != '' " />
         <Message Importance="High" Text="Build ID           : $(BuildId)" />
         <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
-        <Message Importance="High" Text="Build Agent        : $(BuildAgent)" Condition=" '$(BuildAgent)' != '' " />
+        <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
         <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
         <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
     </Target>

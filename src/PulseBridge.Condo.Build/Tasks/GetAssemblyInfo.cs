@@ -11,6 +11,7 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </summary>
     public class GetAssemblyInfo : Task
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the semantic version of the product.
         /// </summary>
@@ -74,7 +75,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string DateTimeUtc { get; set; }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Executes the <see cref="GetVersionInfo"/> task.
         /// </summary>
@@ -197,5 +200,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // we are successful
             return true;
         }
+        #endregion
     }
 }

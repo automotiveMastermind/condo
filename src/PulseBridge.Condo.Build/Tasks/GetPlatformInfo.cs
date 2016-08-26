@@ -10,6 +10,7 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </summary>
     public class GetPlatformInfo : Task
     {
+        #region Properties
         /// <summary>
         /// Gets a value indicating whether or not the platform is a distribution of Linux.
         /// </summary>
@@ -33,7 +34,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public bool Windows { get; private set; }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Executes the <see cref="GetPlatformInfo"/> task.
         /// </summary>
@@ -69,5 +72,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // the build has failed
             return false;
         }
+        #endregion
     }
 }

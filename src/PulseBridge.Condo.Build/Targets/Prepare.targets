@@ -3,12 +3,13 @@
     <PropertyGroup>
         <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
         <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
-        <BowerInstallOptions Condition=" '$(BowerInstallOptions == '' '">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
+        <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
 
         <RestoreDependsOn>
             NpmInstall;
             BowerInstall;
             DotNetRestore;
+            SaveAssemblyInfo;
             $(RestoreDependsOn);
         </RestoreDependsOn>
     </PropertyGroup>
@@ -28,5 +29,35 @@
     <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' And '@(BowerInstallPaths->Count())' != '0' ">
       <Exec Command="bower install $(BowerInstallOptions)"
             WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
+    </Target>
+
+    <Target Name="SaveAssemblyInfo">
+        <SaveAssemblyInfo
+            AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
+            SemanticVersion="$(SemanticVersion)"
+            Company="$(Company)"
+            Product="$(Product)"
+            ProjectName="%(Projects.ProjectName)"
+            Copyright="$(Copyright)"
+            AssemblyVersion="$(AssemblyVersion)"
+            FileVersion="$(FileVersion)"
+            InformationalVersion="$(InformationalVersion)"
+            Configuration="$(Configuration)"
+            DateTimeUtc="$(DateTimeUtc)"
+            Platform="$(Platform)"
+            Authors="$(Authors)"
+            Branch="$(Branch)"
+            BuildQuality="$(BuildQuality)"
+            BuildId="$(BuildId)"
+            CommitId="$(CommitId)"
+            PullRequestId="$(PullRequestId)"
+            BuildOn="$(BuildOn)"
+            BuildFor="$(BuildFor)"
+            BuildName="$(BuildName)"
+            TeamUri="$(TeamUri)"
+            RepositoryUri="$(RepositoryUri)"
+            BuildUri="$(BuildUri)"
+            License="$(License)"
+            LicenseUri="$(LicenseUri)" />
     </Target>
 </Project>
