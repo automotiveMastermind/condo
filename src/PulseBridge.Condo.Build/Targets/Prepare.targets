@@ -43,7 +43,7 @@
             FileVersion="$(FileVersion)"
             InformationalVersion="$(InformationalVersion)"
             Configuration="$(Configuration)"
-            DateTimeUtc="$(DateTimeUtc)"
+            BuildDateUtc="$(BuildDateUtc)"
             Platform="$(Platform)"
             Authors="$(Authors)"
             Branch="$(Branch)"

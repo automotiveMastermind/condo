@@ -19,6 +19,12 @@ namespace PulseBridge.Condo.Build.Tasks
         public string SemanticVersion { get; set; }
 
         /// <summary>
+        /// Gets or sets the date and time (UTC) that the project was first started.
+        /// </summary>
+        [Required]
+        public string StartDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the branch used to determine the pre-release tag.
         /// </summary>
         public string Branch { get; set; } = "<unknown>";
@@ -74,7 +80,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Sets the date and time used to determine the version.
         /// </summary>
         [Output]
-        public string DateTimeUtc { get; set; }
+        public string BuildDateUtc { get; set; }
         #endregion
 
         #region Methods
@@ -87,24 +93,62 @@ namespace PulseBridge.Condo.Build.Tasks
         public override bool Execute()
         {
             // determine if the date and time is set
-            if (string.IsNullOrEmpty(this.DateTimeUtc))
+            if (string.IsNullOrEmpty(this.BuildDateUtc))
             {
                 // set the date and time to the current time
-                this.DateTimeUtc = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+                this.BuildDateUtc = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+            }
+
+            if (string.IsNullOrEmpty(this.StartDateUtc))
+            {
+                // log an error
+                Log.LogError("StartDateUtc property must be set.");
+
+                // move on immediately
+                return false;
             }
 
             // define a variable to retain the date
-            DateTime date;
+            DateTime now;
 
             // attempt to parse the date
-            if (!DateTime.TryParse(this.DateTimeUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out date))
+            if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out now))
             {
+                // log an error
+                Log.LogError($"{nameof(BuildDateUtc)} property could not be parsed. Please verify that the date is valid.");
+
                 // could not parse; move on immediately
                 return false;
             }
 
             // ensure that the date is always universal time
-            date = date.ToUniversalTime();
+            now = now.ToUniversalTime();
+
+            // define a variable to retain the start date
+            DateTime start;
+
+            // attempt to parse the start date
+            if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out start))
+            {
+                // log an error
+                Log.LogError($"{nameof(StartDateUtc)} property could not be parsed. Please verify that the date is valid.");
+
+                // could not parse; move on immediately
+                return false;
+            }
+
+            // ensure that the date is always universal time
+            start = start.ToUniversalTime();
+
+            // determine if the start date is after the current date
+            if (start > now)
+            {
+                // log an error
+                Log.LogError($"The {nameof(StartDateUtc)} cannot be after the {nameof(BuildDateUtc)}.");
+
+                // start date is after now; move on immediately
+                return false;
+            }
 
             // define a variable to retain the version
             Version version;
@@ -113,7 +157,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!Version.TryParse(this.SemanticVersion, out version))
             {
                 // emit an error if the version is not parsable
-                this.Log.LogError("Could not parse version {0} -- it is not in the expected format.", this.SemanticVersion);
+                this.Log.LogError($"Could not parse {nameof(this.SemanticVersion)} {this.SemanticVersion} -- it is not in the expected format.");
 
                 // move on immediately
                 return false;
@@ -122,8 +166,12 @@ namespace PulseBridge.Condo.Build.Tasks
             // set the assembly version to the semantic version
             this.AssemblyVersion = version.ToString();
 
-            var build = date.ToString("yyddMM", CultureInfo.InvariantCulture);
-            var commit = date.ToString("HHmm", CultureInfo.InvariantCulture);
+            // create a build number based on the number of years that have passed (and the current day of the year)
+            var build = (now.Year - start.Year).ToString("D2") + now.DayOfYear.ToString("D3");
+
+            // create a commit number from the current seconds
+            var seconds = now.Hour * 60 * 60 + now.Minute * 60 + now.Second;
+            var commit = seconds.ToString("D5", CultureInfo.InvariantCulture);
 
             // determine if the commit id is not already set
             if (string.IsNullOrEmpty(this.CommitId))

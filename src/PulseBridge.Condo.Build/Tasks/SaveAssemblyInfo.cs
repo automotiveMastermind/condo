@@ -94,7 +94,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Sets the date and time of the build.
         /// </summary>
-        public string DateTimeUtc { get; set; }
+        public string BuildDateUtc { get; set; }
 
         /// <summary>
         /// Gets the URI of the repository that is identified by the source control server.
@@ -230,9 +230,6 @@ namespace PulseBridge.Condo.Build.Tasks
                 builder.AppendLine("//------------------------------------------------------------------------------");
                 builder.AppendLine();
 
-                // add the system namespace
-                builder.AppendLine("using System;");
-
                 // add the reflection namespace
                 builder.AppendLine("using System.Reflection;");
                 builder.AppendLine();
@@ -281,7 +278,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 contents = this.AttributeReplace(contents, "AssemblyConfiguration", this.Configuration);
             }
 
-            contents = this.MetadataReplace(contents, "BuildDateUtc", this.DateTimeUtc);
+            contents = this.MetadataReplace(contents, "BuildDateUtc", this.BuildDateUtc);
 
             if (!string.IsNullOrEmpty(this.Platform))
             {

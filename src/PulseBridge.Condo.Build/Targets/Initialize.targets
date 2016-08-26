@@ -78,7 +78,7 @@
     <!-- get server time from NIST -->
     <Target Name="GetServerTime">
         <GetServerTime>
-            <Output TaskParameter="DateTimeUtc" PropertyName="DateTimeUtc" />
+            <Output TaskParameter="DateTimeUtc" PropertyName="BuildDateUtc" />
         </GetServerTime>
     </Target>
 
@@ -118,14 +118,15 @@
             Branch="$(Branch)"
             BuildId="$(BuildId)"
             CommitId="$(CommitId)"
-            DateTimeUtc="$(DateTimeUtc)">
+            StartDateUtc="$(StartDateUtc)"
+            BuildDateUtc="$(BuildDateUtc)">
             <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
             <Output TaskParameter="FileVersion" PropertyName="FileVersion" />
             <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
             <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion" />
             <Output TaskParameter="BuildId" PropertyName="BuildId" />
             <Output TaskParameter="CommitId" PropertyName="CommitId" />
-            <Output TaskParameter="DateTimeUtc" PropertyName="DateTimeUtc" />
+            <Output TaskParameter="BuildDateUtc" PropertyName="BuildDateUtc" />
             <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
         </GetAssemblyInfo>
     </Target>
@@ -151,7 +152,7 @@
         <Message Importance="High" Text="Project Name       : $(TeamProject)" Condition=" '$(TeamProject)' != '' " />
         <Message Importance="High" Text="License            : $(License)" Condition=" '$(License)' != '' " />
         <Message Importance="High" Text="License URI        : $(LicenseUri)" Condition=" '$(LicenseUri)' != '' " />
-        <Message Importance="High" Text="Date Time (UTC)    : $(DateTimeUtc)" />
+        <Message Importance="High" Text="Date Time (UTC)    : $(BuildDateUtc)" />
         <Message Importance="High" Text="Configuration      : $(Configuration)" />
         <Message Importance="High" Text="Platform           : $(Platform)" />
         <Message Importance="High" Text="Authors            : $(Authors)" />

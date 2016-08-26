@@ -4,8 +4,11 @@
     <PropertyGroup>
         <Product>PulseBridge.Condo</Product>
         <SemanticVersion>2.0.0</SemanticVersion>
-        <Authors>PulseBridge, Inc.</Authors>
+        <StartDateUtc>2015-05-28</StartDateUtc>
+
         <Company>PulseBridge, Inc.</Company>
+        <Authors>PulseBridge, Inc.</Authors>
+
         <License>MIT</License>
         <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
     </PropertyGroup>
