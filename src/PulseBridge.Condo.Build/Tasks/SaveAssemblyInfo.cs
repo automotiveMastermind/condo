@@ -288,6 +288,11 @@ namespace PulseBridge.Condo.Build.Tasks
                 contents = this.MetadataReplace(contents, "Platform", this.Platform);
             }
 
+            if (!string.IsNullOrEmpty(this.Authors))
+            {
+                contents = this.MetadataReplace(contents, "Authors", this.Authors);
+            }
+
             if (!string.IsNullOrEmpty(this.Branch))
             {
                 contents = this.MetadataReplace(contents, "Branch", this.Branch);
