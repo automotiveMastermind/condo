@@ -110,7 +110,7 @@ if [ ! -d "$CONDO_ROOT" ]; then
 
     if [ ! -z $CONDO_SOURCE ]; then
         info "Using condo build system from $CONDO_SOURCE..."
-        cp -R $CONDO_SOURCE/* $CONDO_ROOT
+        cp -R $CONDO_SOURCE/* $CONDO_ROOT/
     else
         info "Using condo build system from $CONDO_URI..."
 
