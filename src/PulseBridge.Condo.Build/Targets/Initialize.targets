@@ -216,7 +216,5 @@
     </PropertyGroup>
 
     <!-- actually perform the initialization -->
-    <Target Name="Initialization" DependsOnTargets="$(InitializeDependsOn)" BeforeTargets="Initialize">
-        <Message Importance="High" Text="Initialized $(Product) version $(InformationalVersion) on branch $(Branch) with commit $(CommitId) via $(BuildHost)." />
-    </Target>
+    <Target Name="Initialization" DependsOnTargets="$(InitializeDependsOn)" BeforeTargets="Initialize" />
 </Project>

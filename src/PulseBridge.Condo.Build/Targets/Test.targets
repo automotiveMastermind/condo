@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="DotNetTest" BeforeTargets="Test">
+    <Target Name="DotNetTest">
         <PropertyGroup>
             <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
 
@@ -21,4 +21,13 @@
             WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
             Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
     </Target>
+
+    <PropertyGroup>
+        <TestDependsOn>
+            DotNetTest;
+            $(TestDependsOn);
+        </TestDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Testing" DependsOnTargets="$(TestDependsOn)" BeforeTargets="Test" />
   </Project>

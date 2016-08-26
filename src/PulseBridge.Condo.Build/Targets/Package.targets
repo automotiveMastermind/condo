@@ -19,6 +19,7 @@
     <PropertyGroup>
         <PackDependsOn>
             DotNetPack;
+            $(PackDependsOn);
         </PackDependsOn>
     </PropertyGroup>
 

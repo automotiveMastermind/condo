@@ -4,17 +4,7 @@
         <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
         <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
         <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
-
-        <RestoreDependsOn>
-            NpmInstall;
-            BowerInstall;
-            DotNetRestore;
-            SaveAssemblyInfo;
-            $(RestoreDependsOn);
-        </RestoreDependsOn>
     </PropertyGroup>
-
-    <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" BeforeTargets="Prepare" />
 
     <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
       <Exec Command="dotnet restore @(RestorePaths, ' ') $(DotNetRestoreOptions)"
@@ -60,4 +50,23 @@
             License="$(License)"
             LicenseUri="$(LicenseUri)" />
     </Target>
+
+    <PropertyGroup>
+        <RestoreDependsOn>
+            NpmInstall;
+            BowerInstall;
+            DotNetRestore;
+            $(RestoreDependsOn);
+        </RestoreDependsOn>
+
+        <PrepareDependsOn>
+            Restore;
+            SaveAssemblyInfo;
+            $(PrepareDependsOn);
+        </PrepareDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" />
+
+    <Target Name="Preparation" DependsOnTargets="$(PrepareDependsOn)" BeforeTargets="Prepare" />
 </Project>
