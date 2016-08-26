@@ -351,7 +351,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         private string AttributeReplace(string contents, string name, string value)
         {
-            this.Log.LogMessage("  {0,-17}: {1}", name, value);
+            this.Log.LogMessage(MessageImportance.Low, "  {0,-17}: {1}", name, value);
 
             var expression = string.Format(AttributeExpression, name);
             var format = string.Format(ValueFormat, value);
@@ -368,7 +368,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         private string MetadataReplace(string contents, string name, string value)
         {
-            this.Log.LogMessage("  {0,-17}: {1}", name, value);
+            this.Log.LogMessage(MessageImportance.Low, "  {0,-17}: {1}", name, value);
 
             var expression = string.Format(MetadataExpression, name);
             var format = string.Format(ValueFormat, value);
