@@ -13,11 +13,13 @@
         </PropertyGroup>
 
         <ItemGroup>
-            <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) Or '%(TFM_netcoreapp1_0)' == 'true' " />
+            <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) Or '%(TFM_netcoreapp1_0)' == 'true' ">
+                <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
+            </_DotNetTestProjects>
         </ItemGroup>
 
         <Exec
-            Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build $(DotNetTestOptions.Trim())"
+            Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build $(DotNetTestOptions.Trim()) -xml &quot;%(_DotNetTestProjects.TestResultsPath)&quot;"
             WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
             Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
     </Target>

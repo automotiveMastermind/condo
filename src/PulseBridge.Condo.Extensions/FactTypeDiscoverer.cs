@@ -33,7 +33,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"not-{nameof(FactType.Unit)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Unit)}");
             }
 
             // determine if the type is an end-to-end test
@@ -43,7 +43,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"not-{nameof(FactType.EndToEnd)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.EndToEnd)}");
             }
 
             // determine if the type is an integration
@@ -53,7 +53,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"not-{nameof(FactType.Integration)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Integration)}");
             }
 
             // determine if the type is a performance test
@@ -63,7 +63,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"not-{nameof(FactType.Performance)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Performance)}");
             }
         }
     }

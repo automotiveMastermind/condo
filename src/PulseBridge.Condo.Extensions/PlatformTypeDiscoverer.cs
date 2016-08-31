@@ -34,7 +34,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.Windows)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.Windows)}");
             }
 
             // determine if the platform has a macos flag
@@ -44,7 +44,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.MacOS)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.MacOS)}");
             }
 
             // determine if the platform has a linux flag
@@ -54,7 +54,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.Linux)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.Linux)}");
             }
 
             // determine if the platform has a netbsd flag
@@ -64,7 +64,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.NetBSD)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.NetBSD)}");
             }
 
             // determine if the platform has a freebsd flag
@@ -74,7 +74,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.FreeBSD)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.FreeBSD)}");
             }
 
             // determine if the platform has a unix flag
@@ -84,7 +84,7 @@ namespace PulseBridge.Condo
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"not-{nameof(PlatformType.UnixFlavor)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.UnixFlavor)}");
             }
 
             // determine if the platform has an any flag
