@@ -9,11 +9,6 @@ namespace PulseBridge.Condo
     public enum PlatformType
     {
         /// <summary>
-        /// DEFAULT: No platform type is specified.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
         /// The platform for Windows.
         /// </summary>
         Windows = 1,

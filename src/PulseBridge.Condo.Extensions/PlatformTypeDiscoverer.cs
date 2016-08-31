@@ -9,8 +9,9 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents a trait discoverer that is used to discover traits based on the current platform.
     /// </summary>
-    public class PlatformDiscoverer : ITraitDiscoverer
+    public class PlatformTypeDiscoverer : ITraitDiscoverer
     {
+        #region Methods
         /// <summary>
         /// Gets the traits used to isolate tests based on the specified <paramref name="traitAttribute"/>.
         /// </summary>
@@ -92,5 +93,6 @@ namespace PulseBridge.Condo
                 yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.Any));
             }
         }
+        #endregion
     }
 }

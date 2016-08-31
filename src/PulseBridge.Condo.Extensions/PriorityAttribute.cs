@@ -11,6 +11,7 @@ namespace PulseBridge.Condo
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class PriorityAttribute: Attribute, ITraitAttribute
     {
+        #region Constructors and Finalizers
         /// <summary>
         /// Initializes a new instance of the <see cref="PriorityAttribute"/> class.
         /// </summary>
@@ -22,10 +23,13 @@ namespace PulseBridge.Condo
             // set the priority
             this.Priority = priority;
         }
+        #endregion
 
+        #region Properties
         /// <summary>
         /// Gets the priority associated with the priority attribute.
         /// </summary>
         public int Priority { get; private set; }
+        #endregion
     }
 }

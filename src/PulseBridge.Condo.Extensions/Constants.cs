@@ -24,5 +24,10 @@ namespace PulseBridge.Condo
         /// Gets the name representing the key for an architecture trait.
         /// </summary>
         public const string Architecture = "Architecture";
+
+        /// <summary>
+        /// Gets the name representing the key for a fact type trait.
+        /// </summary>
+        public const string FactType = "Type";
     }
 }

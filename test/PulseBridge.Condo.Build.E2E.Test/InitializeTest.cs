@@ -12,8 +12,9 @@ namespace PulseBridge.Condo.Build.E2E
     public class InitializeTest
     {
         [Fact]
-        [Priority(2)]
+        [FactType(FactType.EndToEnd)]
         [Platform(PlatformType.MacOS)]
+        [Priority(2)]
         public async Task Initialize_OnTfsMacAgent_Succeeds()
         {
             // arrange

@@ -11,6 +11,7 @@ namespace PulseBridge.Condo
     /// </summary>
     public class PriorityDiscoverer : ITraitDiscoverer
     {
+        #region Methods
         /// <summary>
         /// Gets the traits used to isolate tests based on the specified <paramref name="traitAttribute"/>.
         /// </summary>
@@ -29,5 +30,6 @@ namespace PulseBridge.Condo
             // return a new trait for the priority
             yield return new KeyValuePair<string, string>(Constants.Priority, priority.ToString());
         }
+        #endregion
     }
 }
