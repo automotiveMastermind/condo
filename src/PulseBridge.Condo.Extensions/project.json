@@ -7,6 +7,6 @@
   },
 
   "frameworks": {
-    "netstandard1.1": {}
+    "netstandard1.3": {}
   }
 }

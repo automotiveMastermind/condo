@@ -12,7 +12,7 @@ namespace PulseBridge.Condo.Build.Tasks
     public class GetProjectMetadataTest
     {
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WithValidProject_Succeeds()
         {
             // arrange

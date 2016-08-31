@@ -128,7 +128,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenCI_Succeeds()
         {
             // arrange
@@ -182,7 +182,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenCommitSet_Succeeds()
         {
             // arrange
@@ -236,7 +236,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenBuildSet_Succeeds()
         {
             // arrange
@@ -290,7 +290,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenDevelopBranch_Succeeds()
         {
             // arrange
@@ -348,7 +348,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenFeatureBranch_Succeeds()
         {
             // arrange
@@ -406,7 +406,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenReleaseBranch_Succeeds()
         {
             // arrange
@@ -464,7 +464,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenMasterBranch_Succeeds()
         {
             // arrange
@@ -522,7 +522,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenMainBranch_Succeeds()
         {
             // arrange
@@ -580,7 +580,7 @@ namespace PulseBridge.Condo.Build.Tasks
         }
 
         [Fact]
-        [Priority(2)]
+        [Priority(1)]
         public void Execute_WhenHotfixBranch_Succeeds()
         {
             // arrange
