@@ -9,6 +9,8 @@
             <DotNetTestPlatformOptions Condition=" $(IsMacOS) ">$(DotNetTestPlatformOptions) -notrait platform=not-macos</DotNetTestPlatformOptions>
             <DotNetTestPlatformOptions Condition=" $(IsLinux) ">$(DotNetTestPlatformOptions) -notrait platform=not-linux</DotNetTestPlatformOptions>
 
+            <DotNetTestPlatformOptions Condition=" '$(CI)' == '' Or '$(CI)' == 'false' ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
+
             <DotNetTestOptions>$(DotNetTestOptions) $(DotNetTestPlatformOptions.Trim())</DotNetTestOptions>
         </PropertyGroup>
 

@@ -21,7 +21,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -31,15 +31,15 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
-                InformationalVersion = "1.0.0-alpha-01002-11053",
-                PreReleaseTag = "alpha-01002-11053",
+                FileVersion = "1.0.01002.2359",
+                InformationalVersion = "1.0.0-alpha-01002-2359",
+                PreReleaseTag = "alpha-01002-2359",
                 BuildQuality = "alpha",
                 BuildDateUtc = now,
                 CI = ci,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -75,7 +75,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -86,16 +86,16 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
-                InformationalVersion = "1.0.0-alpha-01002-11053",
-                PreReleaseTag = "alpha-01002-11053",
+                FileVersion = "1.0.01002.2359",
+                InformationalVersion = "1.0.0-alpha-01002-2359",
+                PreReleaseTag = "alpha-01002-2359",
                 BuildQuality = "alpha",
                 BuildDateUtc = now,
                 CI = ci,
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -133,7 +133,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -143,7 +143,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-alpha-01002",
                 PreReleaseTag = "alpha-01002",
                 BuildQuality = "alpha",
@@ -151,7 +151,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 CI = ci,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -187,7 +187,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = "98";
@@ -197,7 +197,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-alpha-01002",
                 PreReleaseTag = "alpha-01002",
                 BuildQuality = "alpha",
@@ -241,7 +241,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = "99";
             var commitId = default(string);
@@ -251,7 +251,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.99.11053",
+                FileVersion = "1.0.99.2359",
                 InformationalVersion = "1.0.0-alpha-00099",
                 PreReleaseTag = "alpha-00099",
                 BuildQuality = "alpha",
@@ -259,7 +259,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 CI = ci,
 
                 BuildId = "99",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -295,7 +295,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -306,7 +306,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-beta-01002",
                 PreReleaseTag = "beta-01002",
                 BuildQuality = "beta",
@@ -315,7 +315,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -353,7 +353,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -364,7 +364,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-alpha-01002",
                 PreReleaseTag = "alpha-01002",
                 BuildQuality = "alpha",
@@ -373,7 +373,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -411,7 +411,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -422,7 +422,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-rc-01002",
                 PreReleaseTag = "rc-01002",
                 BuildQuality = "rc",
@@ -431,7 +431,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -469,7 +469,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -480,7 +480,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0",
                 PreReleaseTag = default(string),
                 BuildQuality = default(string),
@@ -489,7 +489,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -527,7 +527,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -538,7 +538,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0",
                 PreReleaseTag = default(string),
                 BuildQuality = default(string),
@@ -547,7 +547,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo
@@ -585,7 +585,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
-            var now = new DateTime(2016, 1, 2, 3, 4, 13).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
 
             var buildId = default(string);
             var commitId = default(string);
@@ -596,7 +596,7 @@ namespace PulseBridge.Condo.Build.Tasks
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
-                FileVersion = "1.0.01002.11053",
+                FileVersion = "1.0.01002.2359",
                 InformationalVersion = "1.0.0-rc-01002",
                 PreReleaseTag = "rc-01002",
                 BuildQuality = "rc",
@@ -605,7 +605,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 Branch = branch,
 
                 BuildId = "01002",
-                CommitId = "11053"
+                CommitId = "2359"
             };
 
             var actual = new GetAssemblyInfo

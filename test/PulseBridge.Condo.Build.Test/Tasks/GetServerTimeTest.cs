@@ -8,6 +8,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     public class GetServerTimeTest
     {
+        [Agent(AgentType.Local)]
         [Fact]
         [Priority(2)]
         public void Execute_WithDefaults_Succeeds()

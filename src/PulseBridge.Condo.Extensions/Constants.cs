@@ -29,5 +29,10 @@ namespace PulseBridge.Condo
         /// Gets the name representing the key for a fact type trait.
         /// </summary>
         public const string FactType = "Type";
+
+        /// <summary>
+        /// Gets the name representing the key for an agent type trait.
+        /// </summary>
+        public const string Agent = "Agent";
     }
 }

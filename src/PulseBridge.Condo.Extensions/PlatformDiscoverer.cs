@@ -9,7 +9,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents a trait discoverer that is used to discover traits based on the current platform.
     /// </summary>
-    public class PlatformTypeDiscoverer : ITraitDiscoverer
+    public class PlatformDiscoverer : ITraitDiscoverer
     {
         #region Methods
         /// <summary>

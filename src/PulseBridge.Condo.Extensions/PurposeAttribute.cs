@@ -7,21 +7,21 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents an attribute used to associate a fact type with an xunit test.
     /// </summary>
-    [TraitDiscoverer("PulseBridge.Condo.FactTypeDiscoverer", "PulseBridge.Condo.Extensions")]
+    [TraitDiscoverer("PulseBridge.Condo.PurposeDiscoverer", "PulseBridge.Condo.Extensions")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class FactTypeAttribute: Attribute, ITraitAttribute
+    public class PurposeAttribute: Attribute, ITraitAttribute
     {
         #region Constructors and Finalizers
         /// <summary>
-        /// Initializes a new instance of the <see cref="FactTypeAttribute"/> class.
+        /// Initializes a new instance of the <see cref="PurposeAttribute"/> class.
         /// </summary>
-        /// <param name="type">
+        /// <param name="purpose">
         /// The fact type associated with the attribute.
         /// </param>
-        public FactTypeAttribute(FactType type)
+        public PurposeAttribute(PurposeType purpose)
         {
             // set the fact type
-            this.FactType = type;
+            this.Purpose = purpose;
         }
         #endregion
 
@@ -29,7 +29,7 @@ namespace PulseBridge.Condo
         /// <summary>
         /// Gets the fact type  associated with the type attribute.
         /// </summary>
-        public FactType FactType { get; private set; }
+        public PurposeType Purpose { get; private set; }
         #endregion
     }
 }

@@ -3,6 +3,8 @@ namespace PulseBridge.Condo.Build.Tasks
     using System;
     using System.Globalization;
 
+    using static System.FormattableString;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
@@ -102,7 +104,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(this.StartDateUtc))
             {
                 // log an error
-                Log.LogError("StartDateUtc property must be set.");
+                Log.LogError(Invariant($"{nameof(StartDateUtc)} property must be set."));
 
                 // move on immediately
                 return false;
@@ -115,7 +117,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out now))
             {
                 // log an error
-                Log.LogError($"{nameof(BuildDateUtc)} property could not be parsed. Please verify that the date is valid.");
+                Log.LogError(Invariant($"{nameof(BuildDateUtc)} property could not be parsed. Please verify that the date is valid."));
 
                 // could not parse; move on immediately
                 return false;
@@ -131,7 +133,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out start))
             {
                 // log an error
-                Log.LogError($"{nameof(StartDateUtc)} property could not be parsed. Please verify that the date is valid.");
+                Log.LogError(Invariant($"{nameof(StartDateUtc)} property could not be parsed. Please verify that the date is valid."));
 
                 // could not parse; move on immediately
                 return false;
@@ -144,7 +146,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (start > now)
             {
                 // log an error
-                Log.LogError($"The {nameof(StartDateUtc)} cannot be after the {nameof(BuildDateUtc)}.");
+                Log.LogError(Invariant($"The {nameof(StartDateUtc)} cannot be after the {nameof(BuildDateUtc)}."));
 
                 // start date is after now; move on immediately
                 return false;
@@ -157,7 +159,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!Version.TryParse(this.SemanticVersion, out version))
             {
                 // emit an error if the version is not parsable
-                this.Log.LogError($"Could not parse {nameof(this.SemanticVersion)} {this.SemanticVersion} -- it is not in the expected format.");
+                this.Log.LogError(Invariant($"Could not parse {nameof(this.SemanticVersion)} {this.SemanticVersion} -- it is not in the expected format."));
 
                 // move on immediately
                 return false;
@@ -167,11 +169,11 @@ namespace PulseBridge.Condo.Build.Tasks
             this.AssemblyVersion = version.ToString();
 
             // create a build number based on the number of years that have passed (and the current day of the year)
-            var build = (now.Year - start.Year).ToString("D2") + now.DayOfYear.ToString("D3");
+            var build = (now.Year - start.Year).ToString("D2", CultureInfo.InvariantCulture)
+                + now.DayOfYear.ToString("D3", CultureInfo.InvariantCulture);
 
             // create a commit number from the current seconds
-            var seconds = now.Hour * 60 * 60 + now.Minute * 60 + now.Second;
-            var commit = seconds.ToString("D5", CultureInfo.InvariantCulture);
+            var commit = now.ToString("HHmm", CultureInfo.InvariantCulture);
 
             // determine if the commit id is not already set
             if (string.IsNullOrEmpty(this.CommitId))
@@ -188,7 +190,7 @@ namespace PulseBridge.Condo.Build.Tasks
             }
 
             // set the file version
-            this.FileVersion = $"{version.Major}.{version.Minor}.{this.BuildId}.{commit}";
+            this.FileVersion = Invariant($"{version.Major}.{version.Minor}.{this.BuildId}.{commit}");
 
             // determine if the prerelease tag is not already set
             if (string.IsNullOrEmpty(this.BuildQuality))
@@ -232,17 +234,17 @@ namespace PulseBridge.Condo.Build.Tasks
             if (!string.IsNullOrEmpty(this.BuildQuality))
             {
                 // append the build id
-                this.PreReleaseTag = $"{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}";
+                this.PreReleaseTag = Invariant($"{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}");
 
                 // determine if this is not a CI build
                 if (!this.CI)
                 {
                     // append the commit id
-                    this.PreReleaseTag += $"-{commit.PadLeft(4, '0')}";
+                    this.PreReleaseTag += Invariant($"-{commit.PadLeft(4, '0')}");
                 }
 
                 // append the prerelease tag to the informational version
-                this.InformationalVersion += $"-{this.PreReleaseTag}";
+                this.InformationalVersion += Invariant($"-{this.PreReleaseTag}");
             }
 
             // we are successful

@@ -6,7 +6,7 @@ namespace PulseBridge.Condo
     /// Represents an enumeration of the available fact (test) types supported by Xunit.
     /// </summary>
     [Flags]
-    public enum FactType
+    public enum PurposeType
     {
         /// <summary>
         /// The fact type is an end-to-end scenario.

@@ -9,7 +9,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents a trait discoverer that is used to discover traits based on the type of test.
     /// </summary>
-    public class FactTypeDiscoverer : ITraitDiscoverer
+    public class PurposeDiscoverer : ITraitDiscoverer
     {
         /// <summary>
         /// Gets the traits used to isolate tests based on the specified <paramref name="traitAttribute"/>.
@@ -24,46 +24,46 @@ namespace PulseBridge.Condo
         public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
         {
             // get the fact type argument from the trait constructor
-            var type = (FactType)traitAttribute.GetConstructorArguments().First();
+            var type = (PurposeType)traitAttribute.GetConstructorArguments().First();
 
             // determine if the type is a unit test
-            if (type.HasFlag(FactType.Unit))
+            if (type.HasFlag(PurposeType.Unit))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(FactType.Unit));
+                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Unit));
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Unit)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Unit)}");
             }
 
             // determine if the type is an end-to-end test
-            if (type.HasFlag(FactType.EndToEnd))
+            if (type.HasFlag(PurposeType.EndToEnd))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(FactType.EndToEnd));
+                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.EndToEnd));
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.EndToEnd)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.EndToEnd)}");
             }
 
             // determine if the type is an integration
-            if (type.HasFlag(FactType.Integration))
+            if (type.HasFlag(PurposeType.Integration))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(FactType.Integration));
+                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Integration));
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Integration)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Integration)}");
             }
 
             // determine if the type is a performance test
-            if (type.HasFlag(FactType.Performance))
+            if (type.HasFlag(PurposeType.Performance))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(FactType.Performance));
+                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Performance));
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(FactType.Performance)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Performance)}");
             }
         }
     }
