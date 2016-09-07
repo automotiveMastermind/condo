@@ -96,6 +96,7 @@
     </Target>
 
     <!-- get repository information -->
+    <!-- NOTE: this will not replace values set by environment variables from the build server -->
     <Target Name="GetRepositoryInfo">
         <GetRepositoryInfo
             RepositoryRoot="$(RepositoryRoot)"

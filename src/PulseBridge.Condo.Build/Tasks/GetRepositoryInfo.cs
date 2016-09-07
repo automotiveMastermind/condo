@@ -12,6 +12,28 @@ namespace PulseBridge.Condo.Build.Tasks
     /// </summary>
     public class GetRepositoryInfo : Task
     {
+        #region Constants
+        /// <summary>
+        /// The command (for git) used to print a log of all commits.
+        /// </summary>
+        private const string LogCommand = "log --decorate --no-color";
+
+        /// <summary>
+        /// The command (for git) used to print the current branch.
+        /// </summary>
+        private const string BranchCommand = "rev-parse --abbrev-ref HEAD";
+
+        /// <summary>
+        /// The command (for git) used to get the remote url of the 'origin'.
+        /// </summary>
+        private const string RemoteUrlCommand = "remote get-url origin";
+
+        /// <summary>
+        /// The regular expression used to discover tags within a list of commits.
+        /// </summary>
+        private const string TagRegex = @"tag:\s*(.+?)[,\)]";
+        #endregion
+
         #region Properties
         /// <summary>
         /// Gets or sets the root of the repository.
@@ -37,6 +59,24 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string CommitId { get; set; }
+
+        /// <summary>
+        /// Gets the list of tags contained within the repository, excluding release tags..
+        /// </summary>
+        [Output]
+        public ITaskItem[] Tags { get; private set; }
+
+        /// <summary>
+        /// gets the list of releases (specialized tags) contained within the repository.
+        /// </summary>
+        [Output]
+        public ITaskItem[] Releases { get; private set; }
+
+        /// <summary>
+        /// Gets the latest release tag contained within the repository.
+        /// </summary>
+        [Output]
+        public string LatestRelease { get; private set; }
         #endregion
 
         #region Methods
