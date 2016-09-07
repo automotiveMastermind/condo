@@ -15,13 +15,13 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets a value indicating whether or not the platform is a distribution of Linux.
         /// </summary>
         [Output]
-        public bool Linux { get; private set; }
+        public bool IsLinux { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether or not the platform is macOS.
         /// </summary>
         [Output]
-        public bool MacOS { get; private set; }
+        public bool IsMacOS { get; private set; }
 
         /// <summary>
         /// Gets the name of the operating system platform.
@@ -33,7 +33,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// Gets a value indicating whether or not the platform is Windows.
         /// </summary>
         [Output]
-        public bool Windows { get; private set; }
+        public bool IsWindows { get; private set; }
         #endregion
 
         #region Methods
@@ -49,21 +49,21 @@ namespace PulseBridge.Condo.Build.Tasks
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 this.Platform = "Windows";
-                return this.Windows = true;
+                return this.IsWindows = true;
             }
 
             // detect the macos platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Platform = "macOS";
-                return this.MacOS = true;
+                return this.IsMacOS = true;
             }
 
             // detect the linux platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 Platform = "Linux";
-                return this.Linux = true;
+                return this.IsLinux = true;
             }
 
             // write an error message to the log

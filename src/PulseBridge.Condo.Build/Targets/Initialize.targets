@@ -86,9 +86,9 @@
     <Target Name="GetPlatformInfo">
         <GetPlatformInfo>
             <Output TaskParameter="Platform" PropertyName="Platform" />
-            <Output TaskParameter="Linux" PropertyName="IsLinux" />
-            <Output TaskParameter="Windows" PropertyName="IsWindows" />
-            <Output TaskParameter="MacOS" PropertyName="IsMacOS" />
+            <Output TaskParameter="IsLinux" PropertyName="IsLinux" />
+            <Output TaskParameter="IsWindows" PropertyName="IsWindows" />
+            <Output TaskParameter="IsMacOS" PropertyName="IsMacOS" />
         </GetPlatformInfo>
         <PropertyGroup>
             <NuGetPath>$([System.IO.Path]::Combine('$(MSBuildBinPath)', 'corerun')) $([System.IO.Path]::Combine('$(MSBuildBinPath)', 'NuGet.CommandLine.XPlat.dll'))</NuGetPath>
