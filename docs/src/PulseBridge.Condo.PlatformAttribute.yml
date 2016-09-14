@@ -1,0 +1,394 @@
+items:
+- uid: PulseBridge.Condo.PlatformAttribute
+  commentId: T:PulseBridge.Condo.PlatformAttribute
+  id: PlatformAttribute
+  parent: PulseBridge.Condo
+  children:
+  - PulseBridge.Condo.PlatformAttribute.#ctor(PulseBridge.Condo.PlatformType)
+  - PulseBridge.Condo.PlatformAttribute.Platform
+  langs:
+  - csharp
+  - vb
+  name: PlatformAttribute
+  fullName: PulseBridge.Condo.PlatformAttribute
+  type: Class
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: PlatformAttribute
+    path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+    startLine: 9
+  assemblies:
+  - PulseBridge.Condo.Extensions
+  packages:
+  - PulseBridge.Condo.Extensions(2.0.0)
+  namespace: PulseBridge.Condo
+  summary: "\nRepresents an attribute used to associate a platform with an xunit test.\n"
+  example: []
+  syntax:
+    content: >-
+      [TraitDiscoverer("PulseBridge.Condo.PlatformDiscoverer", "PulseBridge.Condo.Extensions")]
+
+      [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
+
+      public class PlatformAttribute : Attribute, ITraitAttribute
+    content.vb: >-
+      <TraitDiscoverer("PulseBridge.Condo.PlatformDiscoverer", "PulseBridge.Condo.Extensions")>
+
+      <AttributeUsage(AttributeTargets.Class Or AttributeTargets.Method, AllowMultiple:=False)>
+
+      Public Class PlatformAttribute
+          Inherits Attribute
+          Implements ITraitAttribute
+  inheritance:
+  - System.Object
+  - System.Attribute
+  implements:
+  - Xunit.Sdk.ITraitAttribute
+  inheritedMembers:
+  - System.Attribute.Equals(System.Object)
+  - System.Attribute.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  attributes:
+  - type: Xunit.Sdk.TraitDiscovererAttribute
+    ctor: Xunit.Sdk.TraitDiscovererAttribute.#ctor(System.String,System.String)
+    arguments:
+    - type: System.String
+      value: PulseBridge.Condo.PlatformDiscoverer
+    - type: System.String
+      value: PulseBridge.Condo.Extensions
+  - type: System.AttributeUsageAttribute
+    ctor: System.AttributeUsageAttribute.#ctor(System.AttributeTargets)
+    arguments:
+    - type: System.AttributeTargets
+      value: 68
+    namedArguments:
+    - name: AllowMultiple
+      type: System.Boolean
+      value: false
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: PulseBridge.Condo.PlatformAttribute.#ctor(PulseBridge.Condo.PlatformType)
+  commentId: M:PulseBridge.Condo.PlatformAttribute.#ctor(PulseBridge.Condo.PlatformType)
+  id: '#ctor(PulseBridge.Condo.PlatformType)'
+  parent: PulseBridge.Condo.PlatformAttribute
+  langs:
+  - csharp
+  - vb
+  name: PlatformAttribute(PlatformType)
+  fullName: PulseBridge.Condo.PlatformAttribute.PlatformAttribute(PulseBridge.Condo.PlatformType)
+  type: Constructor
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: .ctor
+    path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+    startLine: 19
+  assemblies:
+  - PulseBridge.Condo.Extensions
+  packages:
+  - PulseBridge.Condo.Extensions(2.0.0)
+  namespace: PulseBridge.Condo
+  summary: "\nInitializes a new instance of the <see cref=\"T:PulseBridge.Condo.PlatformAttribute\"></see> class.\n"
+  example: []
+  syntax:
+    content: public PlatformAttribute(PlatformType platform)
+    content.vb: Public Sub New(platform As PlatformType)
+    parameters:
+    - id: platform
+      type: PulseBridge.Condo.PlatformType
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.PlatformAttribute.Platform
+  commentId: P:PulseBridge.Condo.PlatformAttribute.Platform
+  id: Platform
+  parent: PulseBridge.Condo.PlatformAttribute
+  langs:
+  - csharp
+  - vb
+  name: Platform
+  fullName: PulseBridge.Condo.PlatformAttribute.Platform
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Platform
+    path: src/PulseBridge.Condo.Extensions/PlatformAttribute.cs
+    startLine: 28
+  assemblies:
+  - PulseBridge.Condo.Extensions
+  packages:
+  - PulseBridge.Condo.Extensions(2.0.0)
+  namespace: PulseBridge.Condo
+  summary: "\nGets the platform associated with the platform attribute.\n"
+  example: []
+  syntax:
+    content: public PlatformType Platform { get; }
+    content.vb: Public ReadOnly Property Platform As PlatformType
+    parameters: []
+    return:
+      type: PulseBridge.Condo.PlatformType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: PulseBridge.Condo
+  isExternal: false
+  name: PulseBridge.Condo
+  fullName: PulseBridge.Condo
+- uid: System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  fullName: System.Object
+- uid: System.Attribute
+  parent: System
+  isExternal: true
+  name: Attribute
+  fullName: System.Attribute
+- uid: Xunit.Sdk.ITraitAttribute
+  parent: Xunit.Sdk
+  isExternal: true
+  name: ITraitAttribute
+  fullName: Xunit.Sdk.ITraitAttribute
+- uid: System.Attribute.Equals(System.Object)
+  parent: System.Attribute
+  isExternal: true
+  name: Equals(Object)
+  fullName: System.Attribute.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Attribute.Equals(System.Object)
+    name: Equals
+    fullName: System.Attribute.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Attribute.Equals(System.Object)
+    name: Equals
+    fullName: System.Attribute.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Attribute.GetHashCode
+  parent: System.Attribute
+  isExternal: true
+  name: GetHashCode()
+  fullName: System.Attribute.GetHashCode()
+  spec.csharp:
+  - uid: System.Attribute.GetHashCode
+    name: GetHashCode
+    fullName: System.Attribute.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Attribute.GetHashCode
+    name: GetHashCode
+    fullName: System.Attribute.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System
+  isExternal: false
+  name: System
+  fullName: System
+- uid: Xunit.Sdk
+  isExternal: false
+  name: Xunit.Sdk
+  fullName: Xunit.Sdk
+- uid: PulseBridge.Condo.PlatformType
+  parent: PulseBridge.Condo
+  isExternal: false
+  name: PlatformType
+  fullName: PulseBridge.Condo.PlatformType

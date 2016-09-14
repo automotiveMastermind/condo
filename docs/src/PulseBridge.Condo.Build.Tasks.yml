@@ -1,0 +1,61 @@
+items:
+- uid: PulseBridge.Condo.Build.Tasks
+  commentId: N:PulseBridge.Condo.Build.Tasks
+  id: PulseBridge.Condo.Build.Tasks
+  children:
+  - PulseBridge.Condo.Build.Tasks.GetAssemblyInfo
+  - PulseBridge.Condo.Build.Tasks.GetNodeScripts
+  - PulseBridge.Condo.Build.Tasks.GetPlatformInfo
+  - PulseBridge.Condo.Build.Tasks.GetProjectMetadata
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  - PulseBridge.Condo.Build.Tasks.GetServerTime
+  - PulseBridge.Condo.Build.Tasks.LogItemMetadata
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  - PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo
+  langs:
+  - csharp
+  - vb
+  name: PulseBridge.Condo.Build.Tasks
+  fullName: PulseBridge.Condo.Build.Tasks
+  type: Namespace
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+references:
+- uid: PulseBridge.Condo.Build.Tasks.GetAssemblyInfo
+  isExternal: false
+  name: GetAssemblyInfo
+  fullName: PulseBridge.Condo.Build.Tasks.GetAssemblyInfo
+- uid: PulseBridge.Condo.Build.Tasks.GetNodeScripts
+  isExternal: false
+  name: GetNodeScripts
+  fullName: PulseBridge.Condo.Build.Tasks.GetNodeScripts
+- uid: PulseBridge.Condo.Build.Tasks.GetPlatformInfo
+  isExternal: false
+  name: GetPlatformInfo
+  fullName: PulseBridge.Condo.Build.Tasks.GetPlatformInfo
+- uid: PulseBridge.Condo.Build.Tasks.GetProjectMetadata
+  isExternal: false
+  name: GetProjectMetadata
+  fullName: PulseBridge.Condo.Build.Tasks.GetProjectMetadata
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  isExternal: false
+  name: GetRepositoryInfo
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+- uid: PulseBridge.Condo.Build.Tasks.GetServerTime
+  isExternal: false
+  name: GetServerTime
+  fullName: PulseBridge.Condo.Build.Tasks.GetServerTime
+- uid: PulseBridge.Condo.Build.Tasks.LogItemMetadata
+  isExternal: false
+  name: LogItemMetadata
+  fullName: PulseBridge.Condo.Build.Tasks.LogItemMetadata
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  isExternal: false
+  name: PushNuGetPackage
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+- uid: PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo
+  isExternal: false
+  name: SaveAssemblyInfo
+  fullName: PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo

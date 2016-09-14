@@ -116,7 +116,6 @@ install_msbuild() {
         fi
 
         # get the msbuild project file and replace the RUNTIME marker with the current runtime, then emit to the
-        # msbuild path... NOTE: this has been removed as not all runtimes are supported currently
         cat "$CONDO_PATH/scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > $MSBUILD_PROJ
 
         # copy the nuget config to the build root

@@ -2,6 +2,10 @@ namespace PulseBridge.Condo.Build.Tasks
 {
     using System.IO;
 
+    using Microsoft.Build.Framework;
+
+    using Moq;
+
     using Xunit;
 
     public class GetRepositoryInfoTest
@@ -12,10 +16,12 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var root = default(string);
+            var engine = Mock.Of<IBuildEngine>();
 
             var actual = new GetRepositoryInfo
             {
-                RepositoryRoot = root
+                RepositoryRoot = root,
+                BuildEngine = engine
             };
 
             // act
@@ -32,10 +38,12 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var root = "/nowhere";
+            var engine = Mock.Of<IBuildEngine>();
 
             var actual = new GetRepositoryInfo
             {
-                RepositoryRoot = root
+                RepositoryRoot = root,
+                BuildEngine = engine
             };
 
             // act
@@ -52,12 +60,14 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var engine = Mock.Of<IBuildEngine>();
 
             Directory.CreateDirectory(root);
 
             var actual = new GetRepositoryInfo
             {
-                RepositoryRoot = root
+                RepositoryRoot = root,
+                BuildEngine = engine
             };
 
             // act
@@ -74,19 +84,22 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var root = Directory.GetCurrentDirectory();
+            var engine = Mock.Of<IBuildEngine>();
 
             while (!File.Exists(Path.Combine(root, "condo.sh")))
             {
                 root = Directory.GetParent(root).FullName;
             }
 
-            var expected = new {
+            var expected = new
+            {
                 RepositoryRoot = root
             };
 
             var actual = new GetRepositoryInfo
             {
-                RepositoryRoot = root
+                RepositoryRoot = root,
+                BuildEngine = engine
             };
 
             // act

@@ -1,0 +1,776 @@
+items:
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  commentId: T:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  id: GetRepositoryInfo
+  parent: PulseBridge.Condo.Build.Tasks
+  children:
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Branch
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.CommitId
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Execute
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.LatestRelease
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Releases
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryRoot
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryUri
+  - PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Tags
+  langs:
+  - csharp
+  - vb
+  name: GetRepositoryInfo
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  type: Class
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: GetRepositoryInfo
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 12
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nRepresents a Microsoft Build task that gets information about a repository.\n"
+  example: []
+  syntax:
+    content: 'public class GetRepositoryInfo : Task, ITask'
+    content.vb: >-
+      Public Class GetRepositoryInfo
+          Inherits Task
+          Implements ITask
+  inheritance:
+  - System.Object
+  - Microsoft.Build.Utilities.Task
+  implements:
+  - Microsoft.Build.Framework.ITask
+  inheritedMembers:
+  - Microsoft.Build.Utilities.Task.BuildEngine
+  - Microsoft.Build.Utilities.Task.BuildEngine2
+  - Microsoft.Build.Utilities.Task.BuildEngine3
+  - Microsoft.Build.Utilities.Task.BuildEngine4
+  - Microsoft.Build.Utilities.Task.HostObject
+  - Microsoft.Build.Utilities.Task.Log
+  - Microsoft.Build.Utilities.Task.TaskResources
+  - Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryRoot
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryRoot
+  id: RepositoryRoot
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: RepositoryRoot
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryRoot
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: RepositoryRoot
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 40
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the root of the repository.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      [Required]
+
+      public string RepositoryRoot { get; set; }
+    content.vb: >-
+      <Output>
+
+      <Required>
+
+      Public Property RepositoryRoot As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  - type: Microsoft.Build.Framework.RequiredAttribute
+    ctor: Microsoft.Build.Framework.RequiredAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryUri
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryUri
+  id: RepositoryUri
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: RepositoryUri
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.RepositoryUri
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: RepositoryUri
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 47
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets the URI of the repository that is identified by the source control server.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public string RepositoryUri { get; set; }
+    content.vb: >-
+      <Output>
+
+      Public Property RepositoryUri As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Branch
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Branch
+  id: Branch
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Branch
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Branch
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Branch
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 53
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets the name of the branch used to build the repository.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public string Branch { get; set; }
+    content.vb: >-
+      <Output>
+
+      Public Property Branch As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.CommitId
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.CommitId
+  id: CommitId
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: CommitId
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.CommitId
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: CommitId
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 59
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets the commit hash or checkin number used to build the repository.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public string CommitId { get; set; }
+    content.vb: >-
+      <Output>
+
+      Public Property CommitId As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Tags
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Tags
+  id: Tags
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Tags
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Tags
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Tags
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 65
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets the list of tags contained within the repository, excluding release tags..\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public ITaskItem[] Tags { get; }
+    content.vb: >-
+      <Output>
+
+      Public ReadOnly Property Tags As ITaskItem()
+    parameters: []
+    return:
+      type: Microsoft.Build.Framework.ITaskItem[]
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Releases
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Releases
+  id: Releases
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Releases
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Releases
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Releases
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 71
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\ngets the list of releases (specialized tags) contained within the repository.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public ITaskItem[] Releases { get; }
+    content.vb: >-
+      <Output>
+
+      Public ReadOnly Property Releases As ITaskItem()
+    parameters: []
+    return:
+      type: Microsoft.Build.Framework.ITaskItem[]
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.LatestRelease
+  commentId: P:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.LatestRelease
+  id: LatestRelease
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: LatestRelease
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.LatestRelease
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: LatestRelease
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 77
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets the latest release tag contained within the repository.\n"
+  example: []
+  syntax:
+    content: >-
+      [Output]
+
+      public string LatestRelease { get; }
+    content.vb: >-
+      <Output>
+
+      Public ReadOnly Property LatestRelease As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.OutputAttribute
+    ctor: Microsoft.Build.Framework.OutputAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Execute
+  commentId: M:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Execute
+  id: Execute
+  parent: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo
+  langs:
+  - csharp
+  - vb
+  name: Execute()
+  fullName: PulseBridge.Condo.Build.Tasks.GetRepositoryInfo.Execute()
+  type: Method
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Execute
+    path: src/PulseBridge.Condo.Build/Tasks/GetRepositoryInfo.cs
+    startLine: 88
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nExecutes the <see cref=\"T:PulseBridge.Condo.Build.Tasks.GetRepositoryInfo\"></see> task.\n"
+  example: []
+  syntax:
+    content: public override bool Execute()
+    content.vb: Public Overrides Function Execute As Boolean
+    return:
+      type: System.Boolean
+      description: "\nA value indicating whether or not the task executed successfully.\n"
+  overridden: Microsoft.Build.Utilities.Task.Execute
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: PulseBridge.Condo.Build.Tasks
+  isExternal: false
+  name: PulseBridge.Condo.Build.Tasks
+  fullName: PulseBridge.Condo.Build.Tasks
+- uid: System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  fullName: System.Object
+- uid: Microsoft.Build.Utilities.Task
+  parent: Microsoft.Build.Utilities
+  isExternal: true
+  name: Task
+  fullName: Microsoft.Build.Utilities.Task
+- uid: Microsoft.Build.Framework.ITask
+  parent: Microsoft.Build.Framework
+  isExternal: true
+  name: ITask
+  fullName: Microsoft.Build.Framework.ITask
+- uid: Microsoft.Build.Utilities.Task.BuildEngine
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine
+- uid: Microsoft.Build.Utilities.Task.BuildEngine2
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine2
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine2
+- uid: Microsoft.Build.Utilities.Task.BuildEngine3
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine3
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine3
+- uid: Microsoft.Build.Utilities.Task.BuildEngine4
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine4
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine4
+- uid: Microsoft.Build.Utilities.Task.HostObject
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: HostObject
+  fullName: Microsoft.Build.Utilities.Task.HostObject
+- uid: Microsoft.Build.Utilities.Task.Log
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: Log
+  fullName: Microsoft.Build.Utilities.Task.Log
+- uid: Microsoft.Build.Utilities.Task.TaskResources
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: TaskResources
+  fullName: Microsoft.Build.Utilities.Task.TaskResources
+- uid: Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: HelpKeywordPrefix
+  fullName: Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+- uid: System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System
+  isExternal: false
+  name: System
+  fullName: System
+- uid: Microsoft.Build.Utilities
+  isExternal: false
+  name: Microsoft.Build.Utilities
+  fullName: Microsoft.Build.Utilities
+- uid: Microsoft.Build.Framework
+  isExternal: false
+  name: Microsoft.Build.Framework
+  fullName: Microsoft.Build.Framework
+- uid: System.String
+  parent: System
+  isExternal: true
+  name: String
+  fullName: System.String
+- uid: Microsoft.Build.Framework.ITaskItem[]
+  isExternal: true
+  name: ITaskItem[]
+  fullName: Microsoft.Build.Framework.ITaskItem[]
+  fullname.vb: Microsoft.Build.Framework.ITaskItem()
+  name.vb: ITaskItem()
+  spec.csharp:
+  - uid: Microsoft.Build.Framework.ITaskItem
+    name: ITaskItem
+    fullName: Microsoft.Build.Framework.ITaskItem
+    isExternal: true
+  - name: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Microsoft.Build.Framework.ITaskItem
+    name: ITaskItem
+    fullName: Microsoft.Build.Framework.ITaskItem
+    isExternal: true
+  - name: ()
+    fullName: ()
+- uid: Microsoft.Build.Utilities.Task.Execute
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: Execute()
+  fullName: Microsoft.Build.Utilities.Task.Execute()
+  spec.csharp:
+  - uid: Microsoft.Build.Utilities.Task.Execute
+    name: Execute
+    fullName: Microsoft.Build.Utilities.Task.Execute
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: Microsoft.Build.Utilities.Task.Execute
+    name: Execute
+    fullName: Microsoft.Build.Utilities.Task.Execute
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  fullName: System.Boolean

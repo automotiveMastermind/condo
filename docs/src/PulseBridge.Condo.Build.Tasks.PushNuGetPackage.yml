@@ -1,0 +1,834 @@
+items:
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  commentId: T:PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  id: PushNuGetPackage
+  parent: PulseBridge.Condo.Build.Tasks
+  children:
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.#ctor
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.ApiKey
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Execute
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.NoSymbols
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Packages
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Parallelism
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Retries
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolApiKey
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolUri
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Timeout
+  - PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Uri
+  langs:
+  - csharp
+  - vb
+  name: PushNuGetPackage
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  type: Class
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: PushNuGetPackage
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 18
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nRepresents a Microsoft Build task used to publish a package to a NuGet feed.\n"
+  example: []
+  syntax:
+    content: 'public class PushNuGetPackage : Task, ITask'
+    content.vb: >-
+      Public Class PushNuGetPackage
+          Inherits Task
+          Implements ITask
+  inheritance:
+  - System.Object
+  - Microsoft.Build.Utilities.Task
+  implements:
+  - Microsoft.Build.Framework.ITask
+  inheritedMembers:
+  - Microsoft.Build.Utilities.Task.BuildEngine
+  - Microsoft.Build.Utilities.Task.BuildEngine2
+  - Microsoft.Build.Utilities.Task.BuildEngine3
+  - Microsoft.Build.Utilities.Task.BuildEngine4
+  - Microsoft.Build.Utilities.Task.HostObject
+  - Microsoft.Build.Utilities.Task.Log
+  - Microsoft.Build.Utilities.Task.TaskResources
+  - Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Packages
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Packages
+  id: Packages
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Packages
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Packages
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Packages
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 32
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the packages that should be published to the feed.\n"
+  example: []
+  syntax:
+    content: >-
+      [Required]
+
+      public ITaskItem[] Packages { get; set; }
+    content.vb: >-
+      <Required>
+
+      Public Property Packages As ITaskItem()
+    parameters: []
+    return:
+      type: Microsoft.Build.Framework.ITaskItem[]
+  attributes:
+  - type: Microsoft.Build.Framework.RequiredAttribute
+    ctor: Microsoft.Build.Framework.RequiredAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Uri
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Uri
+  id: Uri
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Uri
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Uri
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Uri
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 38
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the URI of the feed.\n"
+  example: []
+  syntax:
+    content: >-
+      [Required]
+
+      public string Uri { get; set; }
+    content.vb: >-
+      <Required>
+
+      Public Property Uri As String
+    parameters: []
+    return:
+      type: System.String
+  attributes:
+  - type: Microsoft.Build.Framework.RequiredAttribute
+    ctor: Microsoft.Build.Framework.RequiredAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.ApiKey
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.ApiKey
+  id: ApiKey
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: ApiKey
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.ApiKey
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: ApiKey
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 44
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the API key for the feed.\n"
+  example: []
+  syntax:
+    content: public string ApiKey { get; set; }
+    content.vb: Public Property ApiKey As String
+    parameters: []
+    return:
+      type: System.String
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolUri
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolUri
+  id: SymbolUri
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: SymbolUri
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolUri
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: SymbolUri
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 49
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the URI of the symbol feed.\n"
+  example: []
+  syntax:
+    content: public string SymbolUri { get; set; }
+    content.vb: Public Property SymbolUri As String
+    parameters: []
+    return:
+      type: System.String
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolApiKey
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolApiKey
+  id: SymbolApiKey
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: SymbolApiKey
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.SymbolApiKey
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: SymbolApiKey
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 54
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the API key for the symbol feed.\n"
+  example: []
+  syntax:
+    content: public string SymbolApiKey { get; set; }
+    content.vb: Public Property SymbolApiKey As String
+    parameters: []
+    return:
+      type: System.String
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Timeout
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Timeout
+  id: Timeout
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Timeout
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Timeout
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Timeout
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 59
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the timeout (in milliseconds) before attempting to republish a package to a feed.\n"
+  example: []
+  syntax:
+    content: public int Timeout { get; set; }
+    content.vb: Public Property Timeout As Integer
+    parameters: []
+    return:
+      type: System.Int32
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Parallelism
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Parallelism
+  id: Parallelism
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Parallelism
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Parallelism
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Parallelism
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 65
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the available number of tasks (processes) used to publish packages to the feed.\n"
+  example: []
+  syntax:
+    content: public int Parallelism { get; set; }
+    content.vb: Public Property Parallelism As Integer
+    parameters: []
+    return:
+      type: System.Int32
+      description: 
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Retries
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Retries
+  id: Retries
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Retries
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Retries
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Retries
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 70
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets the number of retries allowed before failing to publish a package.\n"
+  example: []
+  syntax:
+    content: public int Retries { get; set; }
+    content.vb: Public Property Retries As Integer
+    parameters: []
+    return:
+      type: System.Int32
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.NoSymbols
+  commentId: P:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.NoSymbols
+  id: NoSymbols
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: NoSymbols
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.NoSymbols
+  type: Property
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: NoSymbols
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 75
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nGets or sets a value indicating whether or not to allow symbol packages to be pushed.\n"
+  example: []
+  syntax:
+    content: public bool NoSymbols { get; set; }
+    content.vb: Public Property NoSymbols As Boolean
+    parameters: []
+    return:
+      type: System.Boolean
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.#ctor
+  commentId: M:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.#ctor
+  id: '#ctor'
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: PushNuGetPackage()
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.PushNuGetPackage()
+  type: Constructor
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: .ctor
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 82
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nInitializes a new instance of the <see cref=\"T:PulseBridge.Condo.Build.Tasks.PushNuGetPackage\"></see> class.\n"
+  example: []
+  syntax:
+    content: public PushNuGetPackage()
+    content.vb: Public Sub New
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Execute
+  commentId: M:PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Execute
+  id: Execute
+  parent: PulseBridge.Condo.Build.Tasks.PushNuGetPackage
+  langs:
+  - csharp
+  - vb
+  name: Execute()
+  fullName: PulseBridge.Condo.Build.Tasks.PushNuGetPackage.Execute()
+  type: Method
+  source:
+    remote:
+      path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+      branch: feature/docfx
+      repo: https://github.com/pulsebridge/condo
+    id: Execute
+    path: src/PulseBridge.Condo.Build/Tasks/PushNuGetPackage.cs
+    startLine: 132
+  assemblies:
+  - PulseBridge.Condo.Build
+  packages:
+  - PulseBridge.Condo.Build(2.0.0)
+  namespace: PulseBridge.Condo.Build.Tasks
+  summary: "\nExecutes the <see cref=\"T:PulseBridge.Condo.Build.Tasks.PushNuGetPackage\"></see> task.\n"
+  example: []
+  syntax:
+    content: public override bool Execute()
+    content.vb: Public Overrides Function Execute As Boolean
+    return:
+      type: System.Boolean
+      description: "\nA value indicating whether or not the task was successfully executed.\n"
+  overridden: Microsoft.Build.Utilities.Task.Execute
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: PulseBridge.Condo.Build.Tasks
+  isExternal: false
+  name: PulseBridge.Condo.Build.Tasks
+  fullName: PulseBridge.Condo.Build.Tasks
+- uid: System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  fullName: System.Object
+- uid: Microsoft.Build.Utilities.Task
+  parent: Microsoft.Build.Utilities
+  isExternal: true
+  name: Task
+  fullName: Microsoft.Build.Utilities.Task
+- uid: Microsoft.Build.Framework.ITask
+  parent: Microsoft.Build.Framework
+  isExternal: true
+  name: ITask
+  fullName: Microsoft.Build.Framework.ITask
+- uid: Microsoft.Build.Utilities.Task.BuildEngine
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine
+- uid: Microsoft.Build.Utilities.Task.BuildEngine2
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine2
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine2
+- uid: Microsoft.Build.Utilities.Task.BuildEngine3
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine3
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine3
+- uid: Microsoft.Build.Utilities.Task.BuildEngine4
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: BuildEngine4
+  fullName: Microsoft.Build.Utilities.Task.BuildEngine4
+- uid: Microsoft.Build.Utilities.Task.HostObject
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: HostObject
+  fullName: Microsoft.Build.Utilities.Task.HostObject
+- uid: Microsoft.Build.Utilities.Task.Log
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: Log
+  fullName: Microsoft.Build.Utilities.Task.Log
+- uid: Microsoft.Build.Utilities.Task.TaskResources
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: TaskResources
+  fullName: Microsoft.Build.Utilities.Task.TaskResources
+- uid: Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: HelpKeywordPrefix
+  fullName: Microsoft.Build.Utilities.Task.HelpKeywordPrefix
+- uid: System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    fullName: )
+- uid: System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+- uid: System
+  isExternal: false
+  name: System
+  fullName: System
+- uid: Microsoft.Build.Utilities
+  isExternal: false
+  name: Microsoft.Build.Utilities
+  fullName: Microsoft.Build.Utilities
+- uid: Microsoft.Build.Framework
+  isExternal: false
+  name: Microsoft.Build.Framework
+  fullName: Microsoft.Build.Framework
+- uid: Microsoft.Build.Framework.ITaskItem[]
+  isExternal: true
+  name: ITaskItem[]
+  fullName: Microsoft.Build.Framework.ITaskItem[]
+  fullname.vb: Microsoft.Build.Framework.ITaskItem()
+  name.vb: ITaskItem()
+  spec.csharp:
+  - uid: Microsoft.Build.Framework.ITaskItem
+    name: ITaskItem
+    fullName: Microsoft.Build.Framework.ITaskItem
+    isExternal: true
+  - name: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: Microsoft.Build.Framework.ITaskItem
+    name: ITaskItem
+    fullName: Microsoft.Build.Framework.ITaskItem
+    isExternal: true
+  - name: ()
+    fullName: ()
+- uid: System.String
+  parent: System
+  isExternal: true
+  name: String
+  fullName: System.String
+- uid: System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  fullName: System.Int32
+- uid: System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  fullName: System.Boolean
+- uid: Microsoft.Build.Utilities.Task.Execute
+  parent: Microsoft.Build.Utilities.Task
+  isExternal: true
+  name: Execute()
+  fullName: Microsoft.Build.Utilities.Task.Execute()
+  spec.csharp:
+  - uid: Microsoft.Build.Utilities.Task.Execute
+    name: Execute
+    fullName: Microsoft.Build.Utilities.Task.Execute
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )
+  spec.vb:
+  - uid: Microsoft.Build.Utilities.Task.Execute
+    name: Execute
+    fullName: Microsoft.Build.Utilities.Task.Execute
+    isExternal: true
+  - name: (
+    fullName: (
+  - name: )
+    fullName: )

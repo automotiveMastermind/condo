@@ -4,7 +4,10 @@ namespace PulseBridge.Condo.Build.Tasks
     using System.IO;
     using System.Text.RegularExpressions;
 
+    using static System.FormattableString;
+
     using Microsoft.Build.Framework;
+    using Microsoft.Build.Tasks;
     using Microsoft.Build.Utilities;
 
     /// <summary>
@@ -14,6 +17,11 @@ namespace PulseBridge.Condo.Build.Tasks
     {
         #region Constants
         /// <summary>
+        /// The command (for git) used to retrieve the git-cli version.
+        /// </summary>
+        private const string VersionCommand = "--version";
+
+        /// <summary>
         /// The command (for git) used to print a log of all commits.
         /// </summary>
         private const string LogCommand = "log --decorate --no-color";
@@ -22,6 +30,11 @@ namespace PulseBridge.Condo.Build.Tasks
         /// The command (for git) used to print the current branch.
         /// </summary>
         private const string BranchCommand = "rev-parse --abbrev-ref HEAD";
+
+        /// <summary>
+        /// The command (for git) used to commit
+        /// </summary>
+        private const string CommitCommand = "rev-parse HEAD";
 
         /// <summary>
         /// The command (for git) used to get the remote url of the 'origin'.
@@ -77,6 +90,12 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string LatestRelease { get; private set; }
+
+        /// <summary>
+        /// Gest the version of the client used to access the repository.
+        /// </summary>
+        [Output]
+        public string ClientVersion { get; private set; }
         #endregion
 
         #region Methods
@@ -100,6 +119,99 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // update the repository root
             this.RepositoryRoot = root;
+
+            // attempt to use the command line first, then the file system to lookup repository info
+            return this.TryCommandLine(root) || this.TryFileSystem(root);
+        }
+
+        /// <summary>
+        /// Attempt to use the `git` command line tool to retrieve repository information.
+        /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the repository information could be retrieved using the git command line tool.
+        /// </returns>
+        public bool TryCommandLine(string root = null)
+        {
+            // determine if the root is specified
+            if (root == null)
+            {
+                // set the root
+                root = this.RepositoryRoot;
+            }
+
+            // create an exec task for retrieving the version
+            var exec = this.CreateExecTask(VersionCommand, root);
+
+            // execute the command and ensure that the output exists
+            if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
+            {
+                // move on immediately
+                return false;
+            }
+
+            // set the client version
+            this.ClientVersion = exec.ConsoleOutput[0].ItemSpec;
+
+            // determine if the repository uri has not already been set
+            if (string.IsNullOrEmpty(this.RepositoryUri))
+            {
+                // create the command for the remote uri
+                exec = this.CreateExecTask(RemoteUrlCommand, root);
+
+                // execute the command and ensure that the output contains a result
+                if (exec.Execute() && exec.ConsoleOutput.Length == 1)
+                {
+                    // set the repository uri
+                    this.RepositoryUri = exec.ConsoleOutput[0].ItemSpec;
+                }
+            }
+
+            // determine if the branch has already been set
+            if (string.IsNullOrEmpty(this.Branch))
+            {
+                // create the command for the branch
+                exec = this.CreateExecTask(BranchCommand, root);
+
+                // execute the command and ensure that the output contains a result
+                if (exec.Execute() && exec.ConsoleOutput.Length == 1)
+                {
+                    // set the branch
+                    this.Branch = exec.ConsoleOutput[0].ItemSpec;
+                }
+            }
+
+            // determine if the commit id has already been set
+            if (string.IsNullOrEmpty(this.CommitId))
+            {
+                // create the command to retrieve the commit id
+                exec = this.CreateExecTask(CommitCommand, root);
+
+                // execute the command and ensure that the output contains a result
+                if (exec.Execute() && exec.ConsoleOutput.Length == 1)
+                {
+                    // set the commit
+                    this.CommitId = exec.ConsoleOutput[0].ItemSpec;
+                }
+            }
+
+            // we were successful
+            return true;
+        }
+
+        /// <summary>
+        /// Attempt to read the git configuration from the file system to retrieve repository information.
+        /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the repository information could be retrieved using the file system.
+        /// </returns>
+        public bool TryFileSystem(string root = null)
+        {
+            // determine if the root is specified
+            if (root == null)
+            {
+                // set the root
+                root = this.RepositoryRoot;
+            }
 
             // create the path to the head node marker
             var node = Path.Combine(root, ".git", "HEAD");
@@ -209,6 +321,18 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // success
             return true;
+        }
+
+        private Exec CreateExecTask(string command, string root)
+        {
+            // create a new exec
+            return new Exec
+            {
+                Command = Invariant($"git {command}"),
+                WorkingDirectory = root,
+                BuildEngine = this.BuildEngine,
+                ConsoleToMSBuild = true
+            };
         }
 
         /// <summary>
