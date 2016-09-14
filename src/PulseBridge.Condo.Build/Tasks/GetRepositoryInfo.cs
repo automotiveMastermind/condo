@@ -213,6 +213,13 @@ namespace PulseBridge.Condo.Build.Tasks
                 root = this.RepositoryRoot;
             }
 
+            // determine if the root is now specified
+            if (root == null)
+            {
+                // omove on immediately
+                return false;
+            }
+
             // create the path to the head node marker
             var node = Path.Combine(root, ".git", "HEAD");
 
