@@ -36,10 +36,10 @@ namespace PulseBridge.Condo
         /// <summary>
         /// The platform for any flavor of Unix, which includes:
         /// <list type="bullet">
-        ///     <item><see cref="PlatformType.FreeBSD"/></item>
-        ///     <item><see cref="PlatformType.Linux"/></item>
-        ///     <item><see cref="PlatformType.MacOS"/></item>
-        ///     <item><see cref="PlatformType.NetBSD"/></item>
+        ///     <item><description><see cref="PlatformType.FreeBSD"/></description></item>
+        ///     <item><description><see cref="PlatformType.Linux"/></description></item>
+        ///     <item><description><see cref="PlatformType.MacOS"/></description></item>
+        ///     <item><description><see cref="PlatformType.NetBSD"/></description></item>
         /// </list>
         /// </summary>
         UnixFlavor = FreeBSD | Linux | MacOS | NetBSD,

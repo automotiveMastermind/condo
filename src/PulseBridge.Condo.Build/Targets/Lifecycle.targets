@@ -23,8 +23,11 @@
   <!-- verify build output and test results -->
   <Target Name="Verify" DependsOnTargets="Package" />
 
+  <!-- generate documentation from build output -->
+  <Target Name="Document" DependsOnTargets="Verify" />
+
   <!-- publish final build artifacts -->
-  <Target Name="Publish" DependsOnTargets="Verify" />
+  <Target Name="Publish" DependsOnTargets="Document" />
 
   <!-- the default target for build -->
   <Target Name="Build" DependsOnTargets="Package" />

@@ -11,5 +11,6 @@
     <Import Project="$(MSBuildThisFileDirectory)Test.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Package.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Verify.targets" />
+    <Import Project="$(MSBuildThisFileDirectory)Document.targets" />
     <Import Project="$(MSBuildThisFileDirectory)Publish.targets" />
 </Project>

@@ -4,6 +4,7 @@
     <PropertyGroup>
         <Product>PulseBridge.Condo</Product>
         <SemanticVersion>2.0.0</SemanticVersion>
+        <Versioning>Conventional</Versioning>
         <StartDateUtc>2015-05-28</StartDateUtc>
 
         <Company>PulseBridge, Inc.</Company>

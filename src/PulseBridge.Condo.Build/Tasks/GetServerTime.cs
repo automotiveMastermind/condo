@@ -41,7 +41,6 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Gets or sets the port of the time server used to get the server time.
         /// </summary>
-        /// <returns></returns>
         public int Port { get; set; } = 123;
         #endregion
 

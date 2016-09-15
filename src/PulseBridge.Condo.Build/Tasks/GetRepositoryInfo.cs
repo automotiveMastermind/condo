@@ -32,9 +32,24 @@ namespace PulseBridge.Condo.Build.Tasks
         private const string BranchCommand = "rev-parse --abbrev-ref HEAD";
 
         /// <summary>
-        /// The command (for git) used to commit
+        /// The command (for git) used to get the latest commit.
         /// </summary>
-        private const string CommitCommand = "rev-parse HEAD";
+        private const string LatestCommitCommand = "rev-parse HEAD";
+
+        /// <summary>
+        /// The command (for git) used to get the first commit.
+        /// </summary>
+        private const string RootCommitCommand = "rev-list --max-parents=0 HEAD";
+
+        /// <summary>
+        /// The command (for git) used to get the latest tag.
+        /// </summary>
+        private const string LatestTagCommitCommand = "rev-list --tags --max-count=1";
+
+        /// <summary>
+        /// The command (for git) used to describe a tag.
+        /// </summary>
+        private const string DescribeTagCommand = "describe --tags";
 
         /// <summary>
         /// The command (for git) used to get the remote url of the 'origin'.
@@ -74,22 +89,70 @@ namespace PulseBridge.Condo.Build.Tasks
         public string CommitId { get; set; }
 
         /// <summary>
-        /// Gets the list of tags contained within the repository, excluding release tags..
+        /// Gets the commits that belong to the current release.
         /// </summary>
+        /// <remarks>
+        /// This list contains the commit SHA's of all commits that have occurred after the commit associated with
+        /// the <see cref="LatestTag"/> property. The SHA value will be the <see cref="ITaskItem.ItemSpec"/>. In
+        /// addition, the task items will contain metadata that describes any commit that follows the
+        /// conventional-changelog style guide. This metadata includes the following:
+        /// <list type="bullet">
+        /// <item>
+        ///     <term>Type</term>
+        ///     <description>
+        ///     The type (of change) for the commit, which may be Feature, Fix, Docs, Style, Refactor,
+        ///     Test or Chore.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Scope</term>
+        ///     <description>
+        ///     The component in which the change occurred.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Subject</term>
+        ///     <description>
+        ///     The subject, or description, of the change that occurred.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Body</term>
+        ///     <description>
+        ///     The body that describes additional details about the change that occurred.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Closes</term>
+        ///     <description>
+        ///     A semi-colon (;) delimited list of issues (work items) that are closed (resolved) by the commit.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Breaks</term>
+        ///     <description>
+        ///     A summary description of breaking changes associated with the commit.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Message</term>
+        ///     <description>
+        ///     The entire commit message including new-lines. This is useful for commits that do not follow the
+        ///     conventional changelog style.
+        ///     </description>
+        /// </list>
+        /// </remarks>
         [Output]
-        public ITaskItem[] Tags { get; private set; }
-
-        /// <summary>
-        /// gets the list of releases (specialized tags) contained within the repository.
-        /// </summary>
-        [Output]
-        public ITaskItem[] Releases { get; private set; }
+        public ITaskItem[] NewCommits { get; set; }
 
         /// <summary>
         /// Gets the latest release tag contained within the repository.
         /// </summary>
         [Output]
-        public string LatestRelease { get; private set; }
+        public string LatestTag { get; private set; }
+
+        [Output]
+        public string LatestTagCommit { get; private set; }
 
         /// <summary>
         /// Gest the version of the client used to access the repository.
@@ -184,13 +247,37 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(this.CommitId))
             {
                 // create the command to retrieve the commit id
-                exec = this.CreateExecTask(CommitCommand, root);
+                exec = this.CreateExecTask(LatestCommitCommand, root);
 
                 // execute the command and ensure that the output contains a result
                 if (exec.Execute() && exec.ConsoleOutput.Length == 1)
                 {
                     // set the commit
                     this.CommitId = exec.ConsoleOutput[0].ItemSpec;
+                }
+            }
+
+            // determine if the latest tag commit is empty
+            if (string.IsNullOrEmpty(this.LatestTagCommit))
+            {
+                // create the command used to get the latest tag commit
+                exec = this.CreateExecTask(LatestTagCommitCommand, root);
+
+                // execute the command and ensure that the output contains a result
+                if (exec.Execute() && exec.ConsoleOutput.Length == 1)
+                {
+                    // set the tag commit
+                    this.LatestTagCommit = exec.ConsoleOutput[0].ItemSpec;
+
+                    // create the command used to describe the commit
+                    exec = this.CreateExecTask(Invariant($"{DescribeTagCommand} {this.LatestTagCommit}"), root);
+
+                    // execute the command and ensure that the output contains a result
+                    if (exec.Execute() && exec.ConsoleOutput.Length == 1)
+                    {
+                        // set the tag
+                        this.LatestTag = exec.ConsoleOutput[0].ItemSpec;
+                    }
                 }
             }
 
@@ -333,12 +420,13 @@ namespace PulseBridge.Condo.Build.Tasks
         private Exec CreateExecTask(string command, string root)
         {
             // create a new exec
-            return new Exec
+            return new QuietExec
             {
                 Command = Invariant($"git {command}"),
                 WorkingDirectory = root,
                 BuildEngine = this.BuildEngine,
-                ConsoleToMSBuild = true
+                ConsoleToMSBuild = true,
+                EchoOff = true
             };
         }
 
