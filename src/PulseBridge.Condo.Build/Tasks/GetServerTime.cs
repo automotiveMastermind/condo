@@ -56,7 +56,7 @@ namespace PulseBridge.Condo.Build.Tasks
             try
             {
                 // get the current address of the time server from DNS
-                var addresses = Dns.GetHostEntryAsync(this.Uri).Result.AddressList;
+                var addresses = Dns.GetHostAddressesAsync(this.Uri).Result;
 
                 // create the endpoint using the first address in the response
                 var endpoint = new IPEndPoint(addresses[0], this.Port);

@@ -7,7 +7,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents an attribute used to associate a agent type with an xunit test.
     /// </summary>
-    [TraitDiscoverer("PulseBridge.Condo.AgentDiscoverer", "PulseBridge.Condo.Extensions")]
+    [TraitDiscoverer("PulseBridge.Condo.AgentDiscoverer", "PulseBridge.Condo.Testing")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class AgentAttribute: Attribute, ITraitAttribute
     {

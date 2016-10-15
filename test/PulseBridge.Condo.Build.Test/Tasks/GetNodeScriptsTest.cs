@@ -13,6 +13,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using PulseBridge.Condo.IO;
 
+    [Class(nameof(GetNodeScripts))]
     public class GetNodeScriptsTest
     {
         [Fact]

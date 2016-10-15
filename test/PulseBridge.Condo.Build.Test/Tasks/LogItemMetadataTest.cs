@@ -9,6 +9,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using Xunit;
 
+    [Class(nameof(LogItemMetadata))]
     public class LogItemMetadataTest
     {
         [Fact]

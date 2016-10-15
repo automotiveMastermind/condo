@@ -9,7 +9,7 @@
   <Target Name="Initialize" DependsOnTargets="Debugging" />
 
   <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
-  <Target Name="Prepare" DependsOnTargets="Initialize" />
+  <Target Name="Prepare" DependsOnTargets="Initialize;Clean" />
 
   <!-- compile the project -->
   <Target Name="Compile" DependsOnTargets="Prepare" />

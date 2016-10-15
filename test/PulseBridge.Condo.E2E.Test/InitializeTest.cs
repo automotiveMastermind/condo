@@ -1,21 +1,19 @@
-namespace PulseBridge.Condo.Build.E2E
+namespace PulseBridge.Condo
 {
     using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
 
-    using PulseBridge.Condo;
-
     using Xunit;
 
+    [Agent(AgentType.Local)]
+    [Purpose(PurposeType.EndToEnd)]
     public class InitializeTest
     {
-        [Fact]
+        [Fact(Skip = "do not use local repo")]
         [Priority(2)]
-        [Agent(AgentType.Local)]
         [Platform(PlatformType.MacOS)]
-        [Purpose(PurposeType.EndToEnd)]
         public async Task Initialize_OnTfsMacAgent_Succeeds()
         {
             // arrange

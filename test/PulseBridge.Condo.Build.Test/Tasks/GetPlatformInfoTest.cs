@@ -2,6 +2,7 @@ namespace PulseBridge.Condo.Build.Tasks
 {
     using Xunit;
 
+    [Class(nameof(GetPlatformInfo))]
     public class GetPlatformInfoTest
     {
         [Fact]

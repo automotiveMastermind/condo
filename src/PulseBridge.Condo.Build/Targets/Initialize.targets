@@ -105,6 +105,7 @@
             CommitId="$(CommitId)">
             <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot" />
             <Output TaskParameter="RepositoryUri" PropertyName="RepositoryUri" />
+            <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
             <Output TaskParameter="Branch" PropertyName="Branch" />
             <Output TaskParameter="CommitId" PropertyName="CommitId" />
         </GetRepositoryInfo>

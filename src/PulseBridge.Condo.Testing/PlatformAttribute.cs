@@ -7,7 +7,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents an attribute used to associate a platform with an xunit test.
     /// </summary>
-    [TraitDiscoverer("PulseBridge.Condo.PlatformDiscoverer", "PulseBridge.Condo.Extensions")]
+    [TraitDiscoverer("PulseBridge.Condo.PlatformDiscoverer", "PulseBridge.Condo.Testing")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class PlatformAttribute: Attribute, ITraitAttribute
     {

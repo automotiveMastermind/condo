@@ -8,6 +8,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using Xunit;
 
+    [Class(nameof(GetRepositoryInfo))]
     public class GetRepositoryInfoTest
     {
         [Fact]
@@ -40,6 +41,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void Execute_WhenRepositoryRootDoesNotExist_Succeeds()
         {
+            // todo: create and then delete a temporary path instead of hard-coding a path
+
             // arrange
             var root = "/nowhere";
             var engine = Mock.Of<IBuildEngine>();
@@ -93,6 +96,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
         {
+            // todo: do not use own repo -- create a new one instead
+
             // arrange
             var root = Directory.GetCurrentDirectory();
             var engine = Mock.Of<IBuildEngine>();
@@ -154,6 +159,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void TryCommandLine_WhenRepositoryRootDoesNotExist_Fails()
         {
+            // todo: create and then delete a temporary path instead of hard-coding a path
+
             // arrange
             var root = "/nowhere";
             var engine = Mock.Of<IBuildEngine>();
@@ -202,6 +209,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void TryCommandLine_WhenRepositoryRootValid_Succeeds()
         {
+            // todo: do not use own repo -- create a new one instead
+
             // arrange
             var root = Directory.GetCurrentDirectory();
             var engine = Mock.Of<IBuildEngine>();
@@ -261,6 +270,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void TryFileSystem_WhenRepositoryRootDoesNotExist_Succeeds()
         {
+            // todo: create and then delete a temporary path instead of hard-coding a path
+
             // arrange
             var root = "/nowhere";
             var engine = Mock.Of<IBuildEngine>();
@@ -309,6 +320,8 @@ namespace PulseBridge.Condo.Build.Tasks
         [Priority(2)]
         public void TryFileSystem_WhenRepositoryRootValid_Succeeds()
         {
+            // todo: do not use own repo -- create a new one instead
+
             // arrange
             var root = Directory.GetCurrentDirectory();
             var engine = Mock.Of<IBuildEngine>();

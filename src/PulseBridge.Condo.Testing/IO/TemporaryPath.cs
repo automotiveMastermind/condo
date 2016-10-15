@@ -8,10 +8,12 @@ namespace PulseBridge.Condo.IO
     /// <summary>
     /// Represents a temporary path used for testing purposes.
     /// </summary>
-    public class TemporaryPath : IDisposable
+    public class TemporaryPath : IPathManager, IDisposable
     {
         #region Fields
         private readonly string path;
+
+        private bool disposed;
         #endregion
 
         #region Constructors and Finalizers
@@ -44,20 +46,10 @@ namespace PulseBridge.Condo.IO
             // create the directory
             Directory.CreateDirectory(this.path);
         }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="TemporaryPath"/> class.
-        /// </summary>
-        ~TemporaryPath()
-        {
-            this.Dispose(false);
-        }
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the full path of the temporary path.
-        /// </summary>
+        /// <inheritdoc/>
         public string FullPath => this.path;
         #endregion
 
@@ -76,12 +68,15 @@ namespace PulseBridge.Condo.IO
             return Path.Combine(this.path, path);
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+        /// <inheritdoc/>
+        public bool Exists()
+        {
+            return Directory.Exists(this.path);
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
@@ -93,6 +88,15 @@ namespace PulseBridge.Condo.IO
         /// </param>
         protected void Dispose(bool disposing)
         {
+            if (this.disposed)
+            {
+                // throw an object disposed exception
+                throw new ObjectDisposedException(nameof(TemporaryPath));
+            }
+
+            // set the disposed flag
+            this.disposed = true;
+
             try
             {
                 // delete the directory

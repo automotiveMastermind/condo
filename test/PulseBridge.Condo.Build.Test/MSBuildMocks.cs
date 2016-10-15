@@ -1,7 +1,5 @@
 namespace PulseBridge.Condo.Build
 {
-    using System;
-
     using Microsoft.Build.Framework;
 
     using Moq;

@@ -14,6 +14,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
     using Xunit;
 
+    [Class(nameof(PushNuGetPackage))]
     public class PushNuGetPackageTest
     {
         [Fact]

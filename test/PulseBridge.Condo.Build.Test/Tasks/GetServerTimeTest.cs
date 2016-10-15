@@ -1,11 +1,13 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
+    using System.Net;
+
     using Microsoft.Build.Framework;
-
     using Moq;
-
+    using PulseBridge.Condo.Net;
     using Xunit;
 
+    [Class(nameof(GetServerTime))]
     public class GetServerTimeTest
     {
         [Agent(AgentType.Local)]
@@ -14,16 +16,29 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WithDefaults_Succeeds()
         {
             // arrange
+            var port = 8080;
+            var uri = "localhost";
+            var addresses = Dns.GetHostAddressesAsync(uri).Result;
+            var endpoint = new IPEndPoint(addresses[0], port);
+
+            var expected = NtpTimestamp.UtcNow;
+
             var engine = new Mock<IBuildEngine>();
+            var clock = Mock.Of<IClockProvider>(mock => mock.NtpNow == expected);
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
             var actual = new GetServerTime()
             {
+                Port = port,
+                Uri = uri,
                 BuildEngine = engine.Object
             };
 
             // act
-            actual.Execute();
+            using (var server = new NtpServer(port, clock))
+            {
+                actual.Execute();
+            }
 
             // assert
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Never);

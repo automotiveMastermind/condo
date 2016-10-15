@@ -15,6 +15,7 @@
       "version": "1.0.0",
       "type": "platform"
     },
+
     "NuGet.Versioning": "3.5.0-*",
     "NuGet.Packaging": "3.5.0-*",
     "NuGet.Commands": "3.5.0-*",

@@ -7,7 +7,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents an attribute used to associate a priority for an Xunit fact.
     /// </summary>
-    [TraitDiscoverer("PulseBridge.Condo.PriorityDiscoverer", "PulseBridge.Condo.Extensions")]
+    [TraitDiscoverer("PulseBridge.Condo.PriorityDiscoverer", "PulseBridge.Condo.Testing")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class PriorityAttribute: Attribute, ITraitAttribute
     {

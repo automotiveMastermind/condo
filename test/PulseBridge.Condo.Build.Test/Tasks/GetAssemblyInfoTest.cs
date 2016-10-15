@@ -6,6 +6,7 @@ namespace PulseBridge.Condo.Build.Tasks
     using Xunit;
     using Xunit.Abstractions;
 
+    [Class(nameof(GetAssemblyInfo))]
     public class GetAssemblyInfoTest
     {
         private ITestOutputHelper output;

@@ -7,7 +7,7 @@ namespace PulseBridge.Condo
     /// <summary>
     /// Represents an attribute used to associate a fact type with an xunit test.
     /// </summary>
-    [TraitDiscoverer("PulseBridge.Condo.PurposeDiscoverer", "PulseBridge.Condo.Extensions")]
+    [TraitDiscoverer("PulseBridge.Condo.PurposeDiscoverer", "PulseBridge.Condo.Testing")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class PurposeAttribute: Attribute, ITraitAttribute
     {
