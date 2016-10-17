@@ -131,7 +131,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (string.IsNullOrEmpty(this.RepositoryUri))
             {
                 // create the command for the remote uri
-                exec = this.CreateExecTask("remote get-url origin", root);
+                exec = this.CreateExecTask("ls-remote --get-url origin", root);
 
                 // execute the command and ensure that the output contains a result
                 if (exec.Execute() && exec.ConsoleOutput.Length == 1)
