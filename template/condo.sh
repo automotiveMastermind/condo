@@ -85,7 +85,7 @@ done
 
 BUILD_ROOT="$ROOT_PATH/.build"
 CONDO_ROOT="$BUILD_ROOT/condo"
-CONDO_SHELL="$CONDO_ROOT/scripts/condo.sh"
+CONDO_SHELL="$CONDO_ROOT/Scripts/condo.sh"
 
 if [ -z "$CONDO_BRANCH" ]; then
     CONDO_BRANCH="develop"

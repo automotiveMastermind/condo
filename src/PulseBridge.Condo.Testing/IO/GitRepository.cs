@@ -96,10 +96,20 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepository Initialize()
         {
+            return this.Initialize("pb-open", "open@pulsebridge.com");
+        }
+
+        /// <inheritdoc/>
+        public IGitRepository Initialize(string name, string email)
+        {
             const string cmd = "init";
 
             // execute the init command
             this.Execute(cmd);
+
+            // set the username and email address
+            this.Execute(Invariant($@"config user.name ""{name}"""));
+            this.Execute(Invariant($@"config user.email ""{email}"""));
 
             // set the current branch
             this.CurrentBranch = "master";
@@ -280,7 +290,7 @@ namespace PulseBridge.Condo.IO
             if (process.ExitCode != 0)
             {
                 // return the result
-                throw new InvalidOperationException(Invariant($"Execution of {command} failed. Error: {error}"));
+                throw new InvalidOperationException(Invariant($"Execution of {command} failed in path {this.RepositoryPath}. Error: {error}"));
             }
 
             // return process output

@@ -36,6 +36,20 @@ namespace PulseBridge.Condo.IO
         IGitRepository Initialize();
 
         /// <summary>
+        /// Initializes the git repository.
+        /// </summary>
+        /// <param name="name">
+        /// The username that should be used to initialize the git repository.
+        /// </param>
+        /// <param name="email">
+        /// The email address that should be used to initialize the git repository.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepository Initialize(string name, string email);
+
+        /// <summary>
         /// Creates a default README file with no content at the root of the repository.
         /// </summary>
         /// <returns>

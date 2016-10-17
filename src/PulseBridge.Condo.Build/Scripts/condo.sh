@@ -71,7 +71,7 @@ install_dotnet() {
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL IS SET)..."
     else
-        DOTNET_TEMP=$(mktemp -d -t dotnet)
+        DOTNET_TEMP=$(mktemp -d)
         DOTNET_INSTALL="$DOTNET_TEMP/dotnet-install.sh"
 
         retries=5
@@ -116,10 +116,10 @@ install_msbuild() {
         fi
 
         # get the msbuild project file and replace the RUNTIME marker with the current runtime, then emit to the
-        cat "$CONDO_PATH/scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > $MSBUILD_PROJ
+        cat "$CONDO_PATH/Scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > $MSBUILD_PROJ
 
         # copy the nuget config to the build root
-        cp "$CONDO_PATH/scripts/nuget.config" $BUILD_ROOT
+        cp "$CONDO_PATH/Scripts/nuget.config" $BUILD_ROOT
 
         # restore msbuild
         info "msbuild: restoring msbuild packages..."
@@ -211,7 +211,7 @@ fi
 install_dotnet
 install_msbuild
 
-CONDO_TARGETS="$CONDO_PATH/targets"
+CONDO_TARGETS="$CONDO_PATH/Targets"
 CONDO_PROJ="$WORKING_PATH/condo.build"
 
 if [ ! -e "$CONDO_PROJ" ]; then

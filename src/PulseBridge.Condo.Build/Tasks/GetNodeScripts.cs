@@ -39,6 +39,12 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public bool HasCI { get; private set; }
+
+        /// <summary>
+        /// Gets the version of the NPM client that is currently available on the command line.
+        /// </summary>
+        [Output]
+        public string ClientVersion { get; private set; }
         #endregion
 
         #region Methods
@@ -82,32 +88,43 @@ namespace PulseBridge.Condo.Build.Tasks
             // get the parent directory of the project
             var working = Path.GetDirectoryName(path);
 
-            // create an exec task
-            var exec = new Exec
-            {
-                Command = "npm run --porcelain",
-                WorkingDirectory = working,
-                BuildEngine = this.BuildEngine,
-                ConsoleToMSBuild = true
-            };
+            // create the version task
+            var exec = this.CreateExecTask("--version", working);
 
-            // attempt to serialize the project
-            try
+            // execute the command and ensure that the output exists
+            if (!exec.Execute())
             {
-                // execute the command and enure that it was successful
-                if (!exec.Execute())
-                {
-                    // move on immediately
-                    return false;
-                }
+                // log a warning
+                Log.LogWarning("The npm command line tool is not available on the current path.");
+
+                // move on immediately
+                return true;
             }
-            catch (Exception netEx)
-            {
-                // log an error message
-                this.Log.LogError(Invariant($"could not parse NPM scripts from package.json."));
 
-                // log an error from the exception
-                this.Log.LogErrorFromException(netEx);
+            // determine if the output did not exist
+            if (exec.ConsoleOutput.Length == 0)
+            {
+                // log a warning
+                Log.LogWarning("The version of the npm command line tool is unavailable.");
+
+                // move on immediately
+                return true;
+            }
+
+            // set the client version
+            this.ClientVersion = exec.ConsoleOutput[0].ItemSpec;
+
+            // create the npm task
+            exec = this.CreateExecTask("run --porcelain", working);
+
+            // execute the command and enure that it was successful
+            if (!exec.Execute())
+            {
+                // log an npm warning
+                Log.LogWarning("Could not retrieve a list of available npm scripts.");
+
+                // move on immediately
+                return true;
             }
 
             // iterate over each output
@@ -156,6 +173,31 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // we were successful
             return true;
+        }
+
+        /// <summary>
+        /// Creates a Microsoft Build execution task used to execute a git command.
+        /// </summary>
+        /// <param name="command">
+        /// The git command that should be executed.
+        /// </param>
+        /// <param name="root">
+        /// The root path in which to execute the git command.
+        /// </param>
+        /// <returns>
+        /// The execution task that can be used to execute the git command.
+        /// </returns>
+        private Exec CreateExecTask(string command, string root)
+        {
+            // create a new exec
+            return new QuietExec
+            {
+                Command = Invariant($"npm {command}"),
+                WorkingDirectory = root,
+                BuildEngine = this.BuildEngine,
+                ConsoleToMSBuild = true,
+                EchoOff = true
+            };
         }
         #endregion
     }
