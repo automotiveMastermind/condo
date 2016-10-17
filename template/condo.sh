@@ -142,8 +142,14 @@ chmod a+x $CONDO_SHELL
 # execute condo shell with the arguments
 $CONDO_SHELL $@
 
+# capture the current exit code
+EXIT_CODE=$?
+
 # write a newline for separation
 echo
 
 # change to the original path
 cd $CURRENT_PATH
+
+# exit
+exit $EXIT_CODE

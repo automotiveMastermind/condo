@@ -22,8 +22,14 @@ cp template/condo.sh condo-local.sh
 CONDO_SHELL="$ROOT_PATH/condo-local.sh"
 $CONDO_SHELL --reset --local $@
 
+# capture the exit code
+EXIT_CODE=$?
+
 # remove the local condo file
 rm -f condo-local.sh
 
 # change back to the current directory
 cd $CURRENT_PATH
+
+# exit using the exit code
+exit $EXIT_CODE
