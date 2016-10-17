@@ -15,6 +15,11 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Required]
         public ITaskItem[] Items { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the specification when printing an item.
+        /// </summary>
+        public string Name { get; set; } = "Item";
         #endregion
 
         #region Methods
@@ -30,7 +35,7 @@ namespace PulseBridge.Condo.Build.Tasks
             foreach (var item in this.Items)
             {
                 // log the item specification
-                Log.LogMessage(MessageImportance.High, "{0,-19}: {1}", "Item", item.ItemSpec);
+                Log.LogMessage(MessageImportance.High, "{0,-19}: {1}", this.Name, item.ItemSpec);
 
                 // iterate over each metdata name
                 foreach (var name in item.MetadataNames.Cast<string>())

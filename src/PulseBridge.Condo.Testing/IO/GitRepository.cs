@@ -1,8 +1,12 @@
 namespace PulseBridge.Condo.IO
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
+
+    using static System.FormattableString;
 
     using PulseBridge.Condo.Diagnostics;
 
@@ -68,7 +72,8 @@ namespace PulseBridge.Condo.IO
             }
             catch (Exception netEx)
             {
-                throw new InvalidOperationException("A git client was not found on the current path.", netEx);
+                throw new InvalidOperationException
+                    (Invariant($"A git client was not found on the current path ({path.FullPath})."), netEx);
             }
 
             try
@@ -77,7 +82,9 @@ namespace PulseBridge.Condo.IO
                 var branch = this.Execute("symbolic-ref HEAD");
 
                 // set the current branch
-                this.CurrentBranch = branch.Output.Substring(11);
+                this.CurrentBranch = branch.Output.StartsWith("refs/heads/")
+                    ? branch.Output.Substring(11)
+                    : branch.Output;
             }
             catch
             {
@@ -181,12 +188,14 @@ namespace PulseBridge.Condo.IO
                 message = scope == null ? $"{type}: {message}" : $"{type}({scope}): {message}";
             }
 
+            var cmd = $@"commit --allow-empty -m ""{message}""";
+
             if (body != null)
             {
-                message = $"{message}{Environment.NewLine}{body}";
+                cmd += $@" -m ""{body}""";
             }
 
-            this.Execute($@"commit --allow-empty -m ""{message}""");
+            this.Execute(cmd);
 
             return this;
         }
@@ -236,28 +245,83 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IProcessOutput Execute(string command)
         {
-            var start = new ProcessStartInfo("git", command)
+            var start = this.CreateProcessInfo(command);
+            var process = new Process
             {
-                WorkingDirectory = this.path.FullPath,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
+                StartInfo = start,
+                EnableRaisingEvents = true
             };
 
-            var process = Process.Start(start);
+            // create queues for data
+            var errorQueue = new Queue<string>();
+            var outputQueue = new Queue<string>();
+
+            // setup event handlers to handle queue processing
+            process.ErrorDataReceived += (sender, args) => errorQueue.Enqueue(args.Data);
+            process.OutputDataReceived += (sender, args) => outputQueue.Enqueue(args.Data);
+
+            // start the process
+            process.Start();
+
+            // do not write to standard input
+            process.StandardInput.Dispose();
+
+            // wait for exit
             process.WaitForExit();
 
-            if (process.HasExited && process.ExitCode == 0)
-            {
-                var output = process.StandardOutput.ReadToEnd();
-                var error = process.StandardError.ReadToEnd();
+            // spinwait to ensure exit
+            SpinWait.SpinUntil(() => process.HasExited);
 
-                return new ProcessOutput(output, error);
+            // create strings for outputs
+            var error = string.Join(string.Empty, errorQueue);
+            var output = string.Join(string.Empty, outputQueue);
+
+            // determine if the process did not exit successfully
+            if (process.ExitCode != 0)
+            {
+                // return the result
+                throw new InvalidOperationException(Invariant($"Execution of {command} failed. Error: {error}"));
             }
 
-            // return the result
-            throw new InvalidOperationException($"Execution of {command} failed.");
+            // return process output
+            return new ProcessOutput(output, error);
+        }
+
+        /// <inheritdoc/>
+        public IGitRepository Condo(string root)
+        {
+            if (root == null)
+            {
+                throw new ArgumentNullException(nameof(root), $"The {nameof(root)} parameter cannot be null.");
+            }
+
+            if (string.IsNullOrEmpty(root))
+            {
+                throw new ArgumentException($"The {nameof(root)} parameter cannot be empty.", nameof(root));
+            }
+
+            if (!Directory.Exists(root))
+            {
+                throw new ArgumentException($"The {nameof(root)} path does not exist.", nameof(root));
+            }
+
+            var template = Path.Combine(root, "template");
+
+            if (!Directory.Exists(template))
+            {
+                throw new ArgumentException($"The {nameof(root)} path does not contain the condo template.", nameof(root));
+            }
+
+            foreach (var source in Directory.GetFiles(template))
+            {
+                var destination = Path.Combine(this.RepositoryPath, Path.GetFileName(source));
+
+                File.Copy(source, destination);
+            }
+
+            File.Copy(Path.Combine(root, "condo.build"), Path.Combine(this.RepositoryPath, "condo.build"));
+
+            return this;
         }
 
         /// <inheritdoc/>
@@ -287,6 +351,19 @@ namespace PulseBridge.Condo.IO
             }
 
             this.path.Dispose();
+        }
+
+        private ProcessStartInfo CreateProcessInfo(string command)
+        {
+            return new ProcessStartInfo("git", command)
+            {
+                WorkingDirectory = this.path.FullPath,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                RedirectStandardInput = true
+            };
         }
         #endregion
     }

@@ -71,7 +71,19 @@ namespace PulseBridge.Condo.Build.Tasks
             this.RepositoryRoot = root;
 
             // attempt to use the command line first, then the file system to lookup repository info
-            return this.TryCommandLine(root) || this.TryFileSystem(root);
+            var result = this.TryCommandLine(root) || this.TryFileSystem(root);
+
+            // determine if we were successful and the repository url ends with a ".git" extension
+            if (!string.IsNullOrEmpty(this.RepositoryUri) && this.RepositoryUri.EndsWith(".git"))
+            {
+                // strip the '.git' from the uri
+                // tricky: this is done to support browsing to the repository from
+                // a browser rather than just cloning directly for github
+                this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
+            }
+
+            // return the result
+            return result;
         }
 
         /// <summary>
@@ -93,8 +105,21 @@ namespace PulseBridge.Condo.Build.Tasks
             var exec = this.CreateExecTask("--version", root);
 
             // execute the command and ensure that the output exists
-            if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
+            if (!exec.Execute())
             {
+                // log a warning
+                Log.LogWarning("The git command line tool is not available on the current path.");
+
+                // move on immediately
+                return false;
+            }
+
+            // determine if the output did not exist
+            if (exec.ConsoleOutput.Length == 0)
+            {
+                // log a warning
+                Log.LogWarning("The version of the git command line tool is unavailable.");
+
                 // move on immediately
                 return false;
             }
@@ -196,7 +221,9 @@ namespace PulseBridge.Condo.Build.Tasks
                 if (string.IsNullOrEmpty(this.Branch))
                 {
                     // get the branch
-                    this.Branch = branch;
+                    this.Branch = branch.StartsWith("refs/heads/")
+                        ? branch.Substring(11)
+                        : branch;
                 }
 
                 // get the branch node marker path
@@ -262,15 +289,6 @@ namespace PulseBridge.Condo.Build.Tasks
                         {
                             // get the match for the uri
                             this.RepositoryUri = match.Groups["url"].Value;
-
-                            // determine if the match ends with '.git'
-                            if (this.RepositoryUri.EndsWith(".git"))
-                            {
-                                // strip the '.git' from the uri
-                                // tricky: this is done to support browsing to the repository from
-                                // a browser rather than just cloning directly for github
-                                this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
-                            }
                         }
                     }
                 }

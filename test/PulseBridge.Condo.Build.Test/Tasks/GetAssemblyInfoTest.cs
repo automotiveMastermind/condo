@@ -18,6 +18,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenNotCI_Succeeds()
         {
             // arrange
@@ -72,6 +73,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenNotCIAndBranchSet_Succeeds()
         {
             // arrange
@@ -130,6 +132,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenCI_Succeeds()
         {
             // arrange
@@ -184,6 +187,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenCommitSet_Succeeds()
         {
             // arrange
@@ -238,6 +242,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenBuildSet_Succeeds()
         {
             // arrange
@@ -292,6 +297,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenDevelopBranch_Succeeds()
         {
             // arrange
@@ -350,6 +356,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenFeatureBranch_Succeeds()
         {
             // arrange
@@ -408,6 +415,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenReleaseBranch_Succeeds()
         {
             // arrange
@@ -466,6 +474,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenMasterBranch_Succeeds()
         {
             // arrange
@@ -524,6 +533,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenMainBranch_Succeeds()
         {
             // arrange
@@ -582,6 +592,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenHotfixBranch_Succeeds()
         {
             // arrange

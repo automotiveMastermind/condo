@@ -11,6 +11,7 @@ namespace PulseBridge.Condo.Build
     /// </summary>
     public class NuGetMachineSettings : IMachineWideSettings
     {
+        #region Properties
         /// <summary>
         /// The lazy initialization field containing the machine wide settings.
         /// </summary>
@@ -29,5 +30,6 @@ namespace PulseBridge.Condo.Build
         /// Gets the machine-wide NuGet settings for the current system.
         /// </summary>
         public IEnumerable<Settings> Settings => settings.Value;
+        #endregion
     }
 }

@@ -191,6 +191,18 @@ namespace PulseBridge.Condo.IO
         IGitRepository Tag(string name);
 
         /// <summary>
+        /// Initializes condo within the current repository using the specified <paramref name="root"/> path to locate
+        /// the source for condo and configuring the build system.
+        /// </summary>
+        /// <param name="root">
+        /// The root path containing the source code for condo.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepository Condo(string root);
+
+        /// <summary>
         /// Executes the specified <paramref name="command"/> using the git command line tool.
         /// </summary>
         /// <param name="command">

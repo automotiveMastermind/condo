@@ -4,7 +4,9 @@
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetPlatformInfo" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetProjectMetadata" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetRepositoryInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetCommitInfo" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetServerTime" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.LogItemMetadata" />
     <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo" />
+    <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetNodeScripts" />
 </Project>

@@ -22,7 +22,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WithNullPackages_Fails()
         {
             // arrange
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
             var provider = Mock.Of<IPackageSourceProvider>();
 
             var settings = Settings.LoadDefaultSettings(null, null, null);
@@ -47,7 +47,7 @@ namespace PulseBridge.Condo.Build.Tasks
         public void Execute_WithEmptyPackages_Succeeds()
         {
             // arrange
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
             var provider = Mock.Of<IPackageSourceProvider>();
 
             var settings = Settings.LoadDefaultSettings(null, null, null);
@@ -77,7 +77,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 var source = temp.Combine("source");
                 var push = temp.Combine("push");
 
-                var engine = Mock.Of<IBuildEngine>();
+                var engine = MSBuildMocks.CreateEngine();
                 var provider = NuGetMocks.CreateProvider(source, push);
 
                 var settings = Settings.LoadDefaultSettings(null, null, null);

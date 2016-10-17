@@ -111,6 +111,19 @@
         </GetRepositoryInfo>
     </Target>
 
+    <Target Name="GetCommitInfo">
+        <GetCommitInfo
+            RepositoryRoot="$(RepositoryRoot)"
+            From="$(CommitFrom)"
+            To="$(CommitTo)">
+            <Output TaskParameter="From" PropertyName="CommitFrom" />
+            <Output TaskParameter="To" PropertyName="CommitTo" />
+            <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
+            <Output TaskParameter="LatestTagCommit" PropertyName="LatestTagCommit" />
+            <Output TaskParameter="Commits" ItemName="Commits" />
+        </GetCommitInfo>
+    </Target>
+
     <!-- get assembly info based on the repository -->
     <Target Name="GetAssemblyInfo">
         <GetAssemblyInfo
@@ -166,8 +179,9 @@
         <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
     </Target>
 
+    <!-- print project information -->
     <Target Name="PrintProjects">
-        <LogItemMetadata Items="@(Projects)" />
+        <LogItemMetadata Items="@(Projects)" Name="Project" />
     </Target>
 
     <!-- print repository information -->
@@ -179,6 +193,7 @@
         <Message Importance="High" Text="Provider           : $(RepositoryProvider)" Condition=" '$(RepositoryProvider)' != '' " />
     </Target>
 
+    <!-- print build information -->
     <Target Name="PrintBuildInfo">
         <Message Importance="High" Text="Build Name         : $(BuildName)" Condition=" '$(BuildName)' != '' " />
         <Message Importance="High" Text="Build ID           : $(BuildId)" />
@@ -201,12 +216,18 @@
         <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
     </Target>
 
+    <!-- print commit information -->
+    <Target Name="PrintCommits">
+        <LogItemMetadata Items="@(Commits)" Name="Commit" />
+    </Target>
+
     <PropertyGroup>
         <InitializeDependsOn>
             $(InitializeDependsOn);
             GetServerTime;
             GetPlatformInfo;
             GetRepositoryInfo;
+            GetCommitInfo;
             GetProjectMetadata;
             GetAssemblyInfo;
             PrintProperties;

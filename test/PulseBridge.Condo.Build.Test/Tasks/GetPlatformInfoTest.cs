@@ -8,6 +8,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Fact]
         [Platform(PlatformType.MacOS)]
         [Priority(1)]
+        [Purpose(PurposeType.Integration)]
         public void Execute_OnMacOS_Succeeds()
         {
             // arrange
@@ -35,6 +36,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Fact]
         [Platform(PlatformType.Windows)]
         [Priority(1)]
+        [Purpose(PurposeType.Integration)]
         public void Execute_OnWindows_Succeeds()
         {
             // arrange
@@ -62,6 +64,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Fact]
         [Platform(PlatformType.Linux)]
         [Priority(1)]
+        [Purpose(PurposeType.Integration)]
         public void Execute_OnLinux_Succeeds()
         {
             // arrange

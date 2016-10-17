@@ -14,6 +14,7 @@ namespace PulseBridge.Condo.Build.Tasks
     {
         [Fact]
         [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WithValidProject_Succeeds()
         {
             // arrange
@@ -48,7 +49,7 @@ namespace PulseBridge.Condo.Build.Tasks
             var actual = new Dictionary<string, string>();
             actual.Add("FullPath", path);
 
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
 
             var item = new Mock<ITaskItem>();
             item.Setup(mock => mock.SetMetadata(It.IsAny<string>(), It.IsAny<string>()))

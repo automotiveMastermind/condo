@@ -2,6 +2,8 @@ namespace PulseBridge.Condo.Build
 {
     using System;
 
+    using static System.FormattableString;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
@@ -17,13 +19,19 @@ namespace PulseBridge.Condo.Build
         #endregion
 
         #region Constructors and Finalizers
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NuGetMSBuildLogger"/> class.
+        /// </summary>
+        /// <param name="log">
+        /// The underlying log helper to which the output from the NuGet command line interface should log.
+        /// </param>
         public NuGetMSBuildLogger(TaskLoggingHelper log)
         {
             // ensure that the log is specified
             if (log == null)
             {
                 // throw a new argument null exception
-                throw new ArgumentNullException(nameof(log), $"{nameof(log)} cannot be null.");
+                throw new ArgumentNullException(nameof(log), Invariant($"The {nameof(log)} parameter cannot be null."));
             }
 
             // set the log

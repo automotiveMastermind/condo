@@ -18,6 +18,7 @@ namespace PulseBridge.Condo.Build.Tasks
     {
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Integration)]
         public void Execute_WithValidProject_Succeeds()
         {
             using (var temp = new TemporaryPath())
@@ -51,7 +52,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
                 var item = new TaskItem(path);
 
-                var engine = Mock.Of<IBuildEngine>();
+                var engine = MSBuildMocks.CreateEngine();
 
                 var instance = new GetNodeScripts
                 {

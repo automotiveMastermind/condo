@@ -1,23 +1,20 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
-    using System.IO;
-
-    using Microsoft.Build.Framework;
-
-    using Moq;
-
     using Xunit;
+
+    using PulseBridge.Condo.IO;
 
     [Class(nameof(GetRepositoryInfo))]
     public class GetRepositoryInfoTest
     {
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenRepositoryRootNull_Succeeds()
         {
             // arrange
             var root = default(string);
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
 
             var actual = new GetRepositoryInfo
             {
@@ -39,79 +36,18 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenRepositoryRootDoesNotExist_Succeeds()
         {
-            // todo: create and then delete a temporary path instead of hard-coding a path
-
             // arrange
-            var root = "/nowhere";
-            var engine = Mock.Of<IBuildEngine>();
+            var root = default(string);
+            var engine = MSBuildMocks.CreateEngine();
 
-            var actual = new GetRepositoryInfo
+            using (var temp = new TemporaryPath())
             {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.RepositoryUri);
-            Assert.Null(actual.Branch);
-            Assert.Null(actual.CommitId);
-        }
-
-        [Fact]
-        [Priority(2)]
-        public void Execute_WhenRepositoryRootNotRepository_Succeeds()
-        {
-            // arrange
-            var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var engine = Mock.Of<IBuildEngine>();
-
-            Directory.CreateDirectory(root);
-
-            var actual = new GetRepositoryInfo
-            {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.RepositoryUri);
-            Assert.Null(actual.Branch);
-            Assert.Null(actual.CommitId);
-        }
-
-        [Fact]
-        [Priority(2)]
-        public void Execute_WhenRepositoryRootValid_Succeeds()
-        {
-            // todo: do not use own repo -- create a new one instead
-
-            // arrange
-            var root = Directory.GetCurrentDirectory();
-            var engine = Mock.Of<IBuildEngine>();
-
-            while (!File.Exists(Path.Combine(root, "condo.sh")))
-            {
-                root = Directory.GetParent(root).FullName;
+                root = temp.FullPath;
             }
 
-            var expected = new
-            {
-                RepositoryRoot = root
-            };
-
             var actual = new GetRepositoryInfo
             {
                 RepositoryRoot = root,
@@ -123,20 +59,83 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
-            Assert.NotNull(actual.RepositoryUri);
-            Assert.NotNull(actual.CommitId);
-
-            Assert.NotEqual("<unknown>", actual.Branch);
+            Assert.Equal(root, actual.RepositoryRoot);
+            Assert.Equal(root, actual.RepositoryRoot);
+            Assert.Null(actual.RepositoryUri);
+            Assert.Null(actual.Branch);
+            Assert.Null(actual.CommitId);
         }
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
+        public void Execute_WhenRepositoryRootNotRepository_Succeeds()
+        {
+            using (var temp = new TemporaryPath())
+            {
+                // arrange
+                var root = temp.FullPath;
+                var engine = MSBuildMocks.CreateEngine();
+
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
+
+                // act
+                var result = actual.Execute();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(root, actual.RepositoryRoot);
+                Assert.Null(actual.RepositoryUri);
+                Assert.Null(actual.Branch);
+                Assert.Null(actual.CommitId);
+            }
+        }
+
+        [Priority(2)]
+        [Purpose(PurposeType.Integration)]
+        public void Execute_WhenRepositoryRootValid_Succeeds()
+        {
+            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            {
+                // arrange
+                var root = repo.RepositoryPath;
+                var engine = MSBuildMocks.CreateEngine();
+
+                var expected = new
+                {
+                    RepositoryRoot = root,
+                    Branch = "master"
+                };
+
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
+
+                // act
+                var result = actual.Execute();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
+                Assert.Equal(expected.Branch, actual.Branch);
+                Assert.NotNull(actual.CommitId);
+            }
+        }
+
+        [Fact]
+        [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootNull_Succeeds()
         {
             // arrange
             var root = default(string);
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
 
             var actual = new GetRepositoryInfo
             {
@@ -157,13 +156,17 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootDoesNotExist_Fails()
         {
-            // todo: create and then delete a temporary path instead of hard-coding a path
-
             // arrange
-            var root = "/nowhere";
-            var engine = Mock.Of<IBuildEngine>();
+            var root = default(string);
+            var engine = MSBuildMocks.CreateEngine();
+
+           using (var temp = new TemporaryPath())
+            {
+                root = temp.FullPath;
+            }
 
             var actual = new GetRepositoryInfo
             {
@@ -179,67 +182,66 @@ namespace PulseBridge.Condo.Build.Tasks
             Assert.Null(actual.RepositoryUri);
             Assert.Null(actual.Branch);
             Assert.Null(actual.CommitId);
-        }
+    }
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootNotRepository_Fails()
         {
-            // arrange
-            var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var engine = Mock.Of<IBuildEngine>();
-
-            Directory.CreateDirectory(root);
-
-            var actual = new GetRepositoryInfo
+            using (var temp = new TemporaryPath())
             {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
+                // arrange
+                var root = temp.FullPath;
+                var engine = MSBuildMocks.CreateEngine();
 
-            // act
-            var result = actual.TryCommandLine();
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
 
-            // assert
-            Assert.True(result);
-            Assert.Equal(root, actual.RepositoryRoot);
+                // act
+                var result = actual.TryCommandLine();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(root, actual.RepositoryRoot);
+            }
         }
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootValid_Succeeds()
         {
-            // todo: do not use own repo -- create a new one instead
-
-            // arrange
-            var root = Directory.GetCurrentDirectory();
-            var engine = Mock.Of<IBuildEngine>();
-
-            while (!File.Exists(Path.Combine(root, "condo.sh")))
+            using (var repo = new GitRepository().Initialize().Commit("initial"))
             {
-                root = Directory.GetParent(root).FullName;
+                // arrange
+                var root = repo.RepositoryPath;
+                var engine = MSBuildMocks.CreateEngine();
+
+                var expected = new
+                {
+                    RepositoryRoot = root,
+                    Branch = "master"
+                };
+
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
+
+                // act
+                var result = actual.TryCommandLine();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
+                Assert.Equal(expected.Branch, actual.Branch);
+                Assert.NotNull(actual.CommitId);
             }
-
-            var expected = new
-            {
-                RepositoryRoot = root
-            };
-
-            var actual = new GetRepositoryInfo
-            {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
-
-            // act
-            var result = actual.TryCommandLine();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
-            Assert.NotEqual("<unknown>", actual.Branch);
-            Assert.NotNull(actual.RepositoryUri);
-            Assert.NotNull(actual.CommitId);
         }
 
         [Fact]
@@ -248,7 +250,7 @@ namespace PulseBridge.Condo.Build.Tasks
         {
             // arrange
             var root = default(string);
-            var engine = Mock.Of<IBuildEngine>();
+            var engine = MSBuildMocks.CreateEngine();
 
             var actual = new GetRepositoryInfo
             {
@@ -268,13 +270,17 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryFileSystem_WhenRepositoryRootDoesNotExist_Succeeds()
         {
-            // todo: create and then delete a temporary path instead of hard-coding a path
-
             // arrange
-            var root = "/nowhere";
-            var engine = Mock.Of<IBuildEngine>();
+            var root = default(string);
+            var engine = MSBuildMocks.CreateEngine();
+
+            using (var temp = new TemporaryPath())
+            {
+                root = temp.FullPath;
+            }
 
             var actual = new GetRepositoryInfo
             {
@@ -294,63 +300,62 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryFileSystem_WhenRepositoryRootNotRepository_Fails()
         {
-            // arrange
-            var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var engine = Mock.Of<IBuildEngine>();
-
-            Directory.CreateDirectory(root);
-
-            var actual = new GetRepositoryInfo
+            using (var temp = new TemporaryPath())
             {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
+                // arrange
+                var root = temp.FullPath;
+                var engine = MSBuildMocks.CreateEngine();
 
-            // act
-            var result = actual.TryFileSystem();
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
 
-            // assert
-            Assert.True(result);
-            Assert.Equal(root, actual.RepositoryRoot);
+                // act
+                var result = actual.TryFileSystem();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(root, actual.RepositoryRoot);
+            }
         }
 
         [Fact]
         [Priority(2)]
+        [Purpose(PurposeType.Unit)]
         public void TryFileSystem_WhenRepositoryRootValid_Succeeds()
         {
-            // todo: do not use own repo -- create a new one instead
-
-            // arrange
-            var root = Directory.GetCurrentDirectory();
-            var engine = Mock.Of<IBuildEngine>();
-
-            while (!File.Exists(Path.Combine(root, "condo.sh")))
+            using (var repo = new GitRepository().Initialize().Commit("initial"))
             {
-                root = Directory.GetParent(root).FullName;
+                // arrange
+                var root = repo.RepositoryPath;
+                var engine = MSBuildMocks.CreateEngine();
+
+                var expected = new
+                {
+                    RepositoryRoot = root,
+                    Branch= "master"
+                };
+
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine
+                };
+
+                // act
+                var result = actual.TryFileSystem();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
+                Assert.Equal(expected.Branch, actual.Branch);
+                Assert.NotNull(actual.CommitId);
             }
-
-            var expected = new
-            {
-                RepositoryRoot = root
-            };
-
-            var actual = new GetRepositoryInfo
-            {
-                RepositoryRoot = root,
-                BuildEngine = engine
-            };
-
-            // act
-            var result = actual.TryFileSystem();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
-            Assert.NotEqual("<unknown>", actual.Branch);
-            Assert.NotNull(actual.RepositoryUri);
-            Assert.NotNull(actual.CommitId);
         }
     }
 }

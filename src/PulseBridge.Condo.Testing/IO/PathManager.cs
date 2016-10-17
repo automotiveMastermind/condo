@@ -80,6 +80,9 @@ namespace PulseBridge.Condo.IO
 
             // set the disposed flag
             this.disposed = true;
+
+            // delete the path
+            Directory.Delete(this.path);
         }
         #endregion
     }

@@ -2,6 +2,7 @@ namespace PulseBridge.Condo.Build.Tasks
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -220,6 +221,31 @@ namespace PulseBridge.Condo.Build.Tasks
             // determine if the root could be found
             if (string.IsNullOrEmpty(root))
             {
+                // write a warning
+                this.Log.LogWarning(Invariant($"The {nameof(RepositoryRoot)} property was not specified."));
+
+                // move on immediately
+                return true;
+            }
+
+            // determine if the directory exists
+            if (!Directory.Exists(root))
+            {
+                // write a warning
+                this.Log.LogWarning(Invariant($"The repository root ({root}) does not exist."));
+
+                // move on immediately
+                return true;
+            }
+
+            var gitconfig = Path.Combine(root, ".git");
+
+            // determine if the git config path exists
+            if (!Directory.Exists(gitconfig))
+            {
+                // write a warning
+                this.Log.LogWarning(Invariant($"The repository root ({root}) is not a git repository."));
+
                 // move on immediately
                 return true;
             }
@@ -230,8 +256,11 @@ namespace PulseBridge.Condo.Build.Tasks
             // execute the command and ensure that the output exists
             if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
             {
+                // write a warning
+                this.Log.LogWarning(Invariant($"Git cannot be found on the current path."));
+
                 // move on immediately
-                return false;
+                return true;
             }
 
             // set the client version
@@ -274,7 +303,7 @@ namespace PulseBridge.Condo.Build.Tasks
             var range = string.IsNullOrEmpty(this.From) ? this.To : $"{this.From}..{this.To}";
 
             // create the command used to get the history of commits
-            var exec = this.CreateExecTask($@"log --format=""%H%%s%n%b%n{Split}%n"" {range}", this.RepositoryRoot);
+            var exec = this.CreateExecTask($@"log --format=""%H%n%h%n%s%n%b%n{Split}%n"" {range}", this.RepositoryRoot);
 
             // create the regular expression used to parse headers
             var headerRegex = string.IsNullOrEmpty(this.HeaderPattern) ? null : new Regex(this.HeaderPattern);
@@ -320,6 +349,9 @@ namespace PulseBridge.Condo.Build.Tasks
                 // get the hash
                 var hash = lines[i++];
 
+                // get the abbreviated hash
+                var spec = lines[i++];
+
                 // get the subject
                 var subject = lines[i++];
 
@@ -332,15 +364,24 @@ namespace PulseBridge.Condo.Build.Tasks
                 // continue processing until the split marker
                 while (!Split.Equals(line))
                 {
-                    body += $"{Environment.NewLine}{line}";
+                    body += body.Length > 0 ? $"{Environment.NewLine}{line}" : line;
                     line = lines[i++];
                 }
 
+                // tricky: decrement by one since the for loop will once again skip
+                // over this value
+                i--;
+
                 // create the commit
-                var commit = new TaskItem(hash);
-                commit.SetMetadata("Message", $"{subject}{body}");
-                commit.SetMetadata("Subject", subject);
+                var commit = new TaskItem(spec);
+                commit.SetMetadata("Hash", $"{hash}");
+                commit.SetMetadata("Message", $"{subject}{Environment.NewLine}{body}");
                 commit.SetMetadata("Body", body);
+
+                // tricky: subject may be overwritten below, which is why we set the header metadata to retain the
+                // full header before splicing
+                commit.SetMetadata("Header", subject);
+                commit.SetMetadata("Subject", subject);
 
                 // determine if a header regex exists
                 if (header != null)
@@ -348,9 +389,16 @@ namespace PulseBridge.Condo.Build.Tasks
                     // get the match
                     match = header.Match(subject);
 
+                    // get the total matches
+                    // tricky: match[0] will always be the entire string in .net, which we ignore
+                    var matches = match.Groups.Count + 1;
+
                     // iterate over each header correspondence
-                    for (var j = 0; j < this.HeaderCorrespondence.Length && j < match.Groups.Count; j++)
+                    for (var j = 0; j < this.HeaderCorrespondence.Length && j < matches; j++)
                     {
+                        // get the associated match group
+                        var group = match.Groups[j+1];
+
                         // get the correspondence metadata
                         var correspondence = this.HeaderCorrespondence[j];
 
@@ -358,7 +406,7 @@ namespace PulseBridge.Condo.Build.Tasks
                         var name = correspondence.GetMetadata("Name") ?? correspondence.ItemSpec;
 
                         // get the value of the match
-                        var value = match.Groups[j].Value;
+                        var value = group.Value;
 
                         // set the metadata
                         commit.SetMetadata(name, value);
