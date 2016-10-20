@@ -114,6 +114,7 @@ bower.cmd
 
 # docs
 vnd/
+docs/src/
 
 # hidden folders
 .*/
