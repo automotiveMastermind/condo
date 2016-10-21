@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Target Name="CleanArtifacts">
+        <ItemGroup>
+            <Artifacts Include="$(ArtifactsRoot)" Condition=" Exists('$(ArtifactsRoot)') " />
+        </ItemGroup>
+
+        <RemoveDir Directories="@(Artifacts)" />
+    </Target>
+
+    <Target Name="CleanIntermediateArtifacts">
+        <ItemGroup>
+            <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" Condition=" Exists('%(Projects.ProjectDir)bin') " />
+            <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" Condition=" Exists('%(Projects.ProjectDir)obj') " />
+
+            <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" Condition=" Exists('%(Projects.CondoAssemblyInfo)') " />
+        </ItemGroup>
+
+        <RemoveDir Directories="@(IntermediateArtifacts)" />
+        <Delete Files="@(IntermediateFiles)" />
+    </Target>
+
+    <PropertyGroup>
+        <CleanDependsOn>
+            CleanArtifacts;
+            CleanIntermediateArtifacts;
+            $(CleanDependsOn);
+        </CleanDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" />
+</Project>

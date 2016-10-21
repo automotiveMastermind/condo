@@ -1,7 +1,0 @@
-This build system is loosely based on the works of the .NET Foundation, namely KoreBuild (https://github.com/aspnet/Universe) 
-and Sake (https://github.com/sakeproject/sake) and follows the design pattern and similiar concepts.
-
-Contributors
-
-Deavon M. McCaffery (@dmccaffery)
-Tomasz Iniewicz (@7D8)

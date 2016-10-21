@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0-*",
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
+    "xunit": "2.2.0-beta2-build3300",
+    "Moq":  "4.6.36-*",
+    "Newtonsoft.Json": "9.0.1",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "PulseBridge.Condo.Build": "2.0.0-*",
+    "PulseBridge.Condo.Testing": "2.0.0-*"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
+  }
+}

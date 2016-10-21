@@ -1,34 +1,26 @@
-language: csharp
-sudo: required
-dist: trusty
-os:
-- linux
-- osx
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - libunwind8
+    - os: osx
+      osx_image: xcode7.3
 branches:
   except:
-  - gh-pages
-addons:
-  apt:
-    packages:
-    - gettext
-    - libcurl4-openssl-dev
-    - libicu-dev
-    - libssl-dev
-    - libunwind8
-    - zlib1g
-mono:
-- 4.2.1
+    - gh-pages
+before_install:
+  - if test "$TRAVIS_OS_NAME" == "osx"; then brew update; brew install openssl; ln -s /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib /usr/local/lib/; ln -s /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/lib/; fi
 script:
-- "./condo.sh --secure docs-deploy"
-env:
-  global:
-    - TSD_GITHUB_TOKEN=ad69d8cf36823134752489ea08a060761fc41c00
-    - secure: Co+lrFP6Pu6iiSvy9l2gdl9P9EKuCXKAMmwBeHt/DtD22l4aDkM/eLd2Bv5AE0Ti9gAxqHuPxRTf0rKPaT8iy8eDVVcK5gDpBjoWy1R4bEQFHH7ZlHUHsVZKA3dEO1vGi9jjx6hMIvxkCkthXFLIyCbJy2CZTwHvFRoTRrM7dybgWSg+L3MIC+DcNexFilR7vjNIVRvbPdbpML0tLzQKcJVQJ375+hpmOswm9G8+VJ6uBshncuIF/roDyD/Bb9dJKjhUBzoPQwDa2myfV1OJ8ZaVNN4Dv/fyCG1eUDEVrkMfC9KGzsdnOM8NTq+t4d+L71+M9iPDVakBOk8QwxL1t+dbnUIMgu8AUh611HNlP+goAkrqr9oocTluKxqJbRnFw5UtyDneerQ3sXVw20uD8zkhV2OvY8+VCpLYph/KzwIJQsMffEMdqmXf9TKB7KZygFhBUZXzBe8eQpPkkmxn2gaRdsMvDvWnZ/ydYIJ1us2DWJTvHhepVuJcQQHNpfKJ1K5989pNPHsh4oE8bqrR1/nfGDemMu6NMS4tIREupjtn9/p4+pdtAEdL6n6Yi4T/DEvmYiPZZxVf2ITQJ55Mi5U/ayXRm0SG1F1mKQmkcrSNLMv4XQKoR7pCUOYjMtBdF8yHyhd9y6vEleEfPH8LD/f4xGIoOM1k3cHu28lkBVE=
+  - "./condo.sh"
 notifications:
   webhooks:
     urls:
-    - secure: dMhB7rWQO7yiMDxnc6G27skc79t/SPZyFZxwt1j0gWHVYe/PtPuo80cEafCLQGK7trJxUjgTKEqjSW/tPBiUHMbklWpExIDMr4jH7V2eHgYIH6/DmzlWXHdotsof25Yc9uFlUlkz4Ab4vPnVY/4HlQAgUakhKk053o3J+QRQmmdDVmqiPthGEo8JYFiQhRvzkWr4O2dmhCsys80lllEbedjmvle2w2bHMxWzKLWIPFy9j0uBNoOLFzuy0JqbRfGCFedPc5bRRrAFsISD4Shw84MZKM1QrUg283x2TXoEB+pl1FBVCiwGw+lavddRUPEo/l5U9ghQ/j7Vwr87KxPeQzMCDeOkASZpWfypX4/7XB4uOvYRRQLF7d0NZ1oS7E7VH5fqIZuevPfsHjtlUFtDEb4N/kvBLFsO7ay0QKJco/zgUgWb/cugmOX9SfdfIsoynibirHKUXw7BTiWOfI4OquhzUbGXwiR8lwvQO21NDBjVf1IZ99eVl54plTVHm8X3VZJTvz2yq2xnkRBGFz32Taa7o4KNwyqp/2HCy1N2t9qxwAGydDV2RZBCQcJr4FD4sgI3b5pbIoJjBLGeH50u2MGTqyZvKKnxYpUtABmkE/SYBWGqh3N5wSk0+0KJffLP0SqctfQtejNpzgDWCa7aLVTAPkfXyVuBz4IUPrK5XrA=
-    - secure: Y9sC5qaWFkBFuTvrwX9gOAhN951UhhbKGT47JgyEOQU+Pzan2Hk00osLrUEUntdH4utHRx+IaJyrX/Tkwjxc5K8CCKHWrRzUPks4fPutlZOQoB/EPUmJLoiXv0GjfAUmAPY/Rxs1vKVbPoN0si1H/EqtelaWEBP1Bt4gfcC6opi3tHQcTy9OAKX3kkuHlHhRW03idpJ8TGWH8ggvzZ/6hgh5nDGFAPwrayrK9KJ9Kqwx6BggpfGioS1Qj5oGDPzS/SX3VBXH4IA5yE2baJWBpJghLuIMQXrGs9AseGrnYsl0lOSbbmYX7ccKPdD86x+b9zGni8YQCBeA195wrH0YMqhoibOqlbesBIvyFSID2xA4eKo1lsLWrOjO8j3aWfdBMzJhb9UnXTEQHevHMhYhPJGgKSuX9mYjL1tbbFhKKgcLHpEsgLvcsdysaSufRmc/5ckgHGof+kMfJzPKsitdqz/YpZeiPEAar6hGrv9XbfArv6SVITyNqizWCmFtVKFExpO9HSIu6buNRhfmg94rm34JoWxH+0okLSHsqs+ZonE4cXRcDNqU7EXL8L7C9MwWpz5v9Dy/A93Pz3/nxpqqKWo2x1yNanqktpd0G9mFtmQ3PPY/OKLZ+XsUUHEoiiDu0VEo6eh3Jnf4h/001a8nTfBcsHrR3vOjcfxMcqa4/Qw=
+      - secure: dMhB7rWQO7yiMDxnc6G27skc79t/SPZyFZxwt1j0gWHVYe/PtPuo80cEafCLQGK7trJxUjgTKEqjSW/tPBiUHMbklWpExIDMr4jH7V2eHgYIH6/DmzlWXHdotsof25Yc9uFlUlkz4Ab4vPnVY/4HlQAgUakhKk053o3J+QRQmmdDVmqiPthGEo8JYFiQhRvzkWr4O2dmhCsys80lllEbedjmvle2w2bHMxWzKLWIPFy9j0uBNoOLFzuy0JqbRfGCFedPc5bRRrAFsISD4Shw84MZKM1QrUg283x2TXoEB+pl1FBVCiwGw+lavddRUPEo/l5U9ghQ/j7Vwr87KxPeQzMCDeOkASZpWfypX4/7XB4uOvYRRQLF7d0NZ1oS7E7VH5fqIZuevPfsHjtlUFtDEb4N/kvBLFsO7ay0QKJco/zgUgWb/cugmOX9SfdfIsoynibirHKUXw7BTiWOfI4OquhzUbGXwiR8lwvQO21NDBjVf1IZ99eVl54plTVHm8X3VZJTvz2yq2xnkRBGFz32Taa7o4KNwyqp/2HCy1N2t9qxwAGydDV2RZBCQcJr4FD4sgI3b5pbIoJjBLGeH50u2MGTqyZvKKnxYpUtABmkE/SYBWGqh3N5wSk0+0KJffLP0SqctfQtejNpzgDWCa7aLVTAPkfXyVuBz4IUPrK5XrA=
+      - secure: Y9sC5qaWFkBFuTvrwX9gOAhN951UhhbKGT47JgyEOQU+Pzan2Hk00osLrUEUntdH4utHRx+IaJyrX/Tkwjxc5K8CCKHWrRzUPks4fPutlZOQoB/EPUmJLoiXv0GjfAUmAPY/Rxs1vKVbPoN0si1H/EqtelaWEBP1Bt4gfcC6opi3tHQcTy9OAKX3kkuHlHhRW03idpJ8TGWH8ggvzZ/6hgh5nDGFAPwrayrK9KJ9Kqwx6BggpfGioS1Qj5oGDPzS/SX3VBXH4IA5yE2baJWBpJghLuIMQXrGs9AseGrnYsl0lOSbbmYX7ccKPdD86x+b9zGni8YQCBeA195wrH0YMqhoibOqlbesBIvyFSID2xA4eKo1lsLWrOjO8j3aWfdBMzJhb9UnXTEQHevHMhYhPJGgKSuX9mYjL1tbbFhKKgcLHpEsgLvcsdysaSufRmc/5ckgHGof+kMfJzPKsitdqz/YpZeiPEAar6hGrv9XbfArv6SVITyNqizWCmFtVKFExpO9HSIu6buNRhfmg94rm34JoWxH+0okLSHsqs+ZonE4cXRcDNqU7EXL8L7C9MwWpz5v9Dy/A93Pz3/nxpqqKWo2x1yNanqktpd0G9mFtmQ3PPY/OKLZ+XsUUHEoiiDu0VEo6eh3Jnf4h/001a8nTfBcsHrR3vOjcfxMcqa4/Qw=
     on_success: always
     on_failure: always
     on_start: never

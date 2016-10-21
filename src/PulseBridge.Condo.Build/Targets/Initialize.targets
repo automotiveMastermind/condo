@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <!-- default to visual studio "15" -->
+        <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">15.0</VisualStudioVersion>
+
+        <!-- get the directory separator character for the current platform used to keep paths consistent -->
+        <Slash>$([System.IO.Path]::DirectorySeparatorChar)</Slash>
+
+        <!-- define the default project name -->
+        <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
+
+        <!-- get the solution and package root paths -->
+        <RepositoryRoot     Condition=" '$(RepositoryRoot)'     == '' ">$(MSBuildStartupDirectory)</RepositoryRoot>
+        <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'src'))</SrcRoot>
+        <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'test'))</TestRoot>
+        <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'artifacts'))</ArtifactsRoot>
+
+        <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)'     == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
+        <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
+        <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'publish'))</PublishArtifactsRoot>
+        <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
+        <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
+    </PropertyGroup>
+
+    <!-- provide reasonable defaults for required attributes -->
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">$(DOTNET_BUILD_VERSION)</SemanticVersion>
+        <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">1.0.0</SemanticVersion>
+        <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
+        <BuildHost Condition=" '$(BuildHost)' == '' ">Local</BuildHost>
+        <CI Condition=" '$(CI)' == '' ">false</CI>
+        <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
+        <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
+        <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
+    </PropertyGroup>
+
+    <!-- capture details from a continuous integration build hosted by TFS -->
+    <PropertyGroup Condition=" '$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '' ">
+        <BuildHost>TFS</BuildHost>
+        <CI>true</CI>
+        <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
+        <Branch>$(BUILD_SOURCEBRANCH)</Branch>
+        <CommitId>$(BUILD_SOURCEVERSION)</CommitId>
+        <BuildId>$(BUILD_BUILDID)</BuildId>
+        <PullRequestId Condition=" $(Branch.StartsWith('refs/pull/')) ">$(Branch.Split("/")[2])</PullRequestId>
+        <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
+        <BuildOn>$(AGENT_NAME)</BuildOn>
+        <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
+        <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
+        <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
+        <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
+        <TeamUri Condition=" '$(TeamUri)' == '' ">$(TF_BUILD_COLLECTIONURI)</TeamUri>
+        <RepositoryUri>$(BUILD_REPOSITORY_URI)</RepositoryUri>
+        <BuildUri>$(BUILD_BUILDURI)</BuildUri>
+        <BuildUri Condition=" '$(BuildUri)' == '' ">$(TF_BUILD_BUILDURI)</BuildUri>
+        <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
+        <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- locate all dotnet project paths -->
+        <DotNetRestorePaths Include="$(SrcRoot)" Condition=" Exists('$(SrcRoot)') " />
+        <DotNetRestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
+
+        <!-- locate all npm, bower, gulp, and grunt projects -->
+        <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
+        <BowerInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)bower.json" />
+        <GulpPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gulpfile.*" />
+        <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
+
+        <!-- locate all dotnet projects -->
+        <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />
+        <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)project.json" />
+    </ItemGroup>
+
+    <!-- get server time from NIST -->
+    <Target Name="GetServerTime">
+        <GetServerTime>
+            <Output TaskParameter="DateTimeUtc" PropertyName="BuildDateUtc" />
+        </GetServerTime>
+    </Target>
+
+    <!-- get platform information -->
+    <Target Name="GetPlatformInfo">
+        <GetPlatformInfo>
+            <Output TaskParameter="Platform" PropertyName="Platform" />
+            <Output TaskParameter="IsLinux" PropertyName="IsLinux" />
+            <Output TaskParameter="IsWindows" PropertyName="IsWindows" />
+            <Output TaskParameter="IsMacOS" PropertyName="IsMacOS" />
+        </GetPlatformInfo>
+        <PropertyGroup>
+            <NuGetPath>$([System.IO.Path]::Combine('$(MSBuildBinPath)', 'corerun')) $([System.IO.Path]::Combine('$(MSBuildBinPath)', 'NuGet.CommandLine.XPlat.dll'))</NuGetPath>
+        </PropertyGroup>
+    </Target>
+
+    <!-- get repository information -->
+    <!-- NOTE: this will not replace values set by environment variables from the build server -->
+    <Target Name="GetRepositoryInfo">
+        <GetRepositoryInfo
+            RepositoryRoot="$(RepositoryRoot)"
+            RepositoryUri="$(RepositoryUri)"
+            Branch="$(Branch)"
+            CommitId="$(CommitId)">
+            <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot" />
+            <Output TaskParameter="RepositoryUri" PropertyName="RepositoryUri" />
+            <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
+            <Output TaskParameter="Branch" PropertyName="Branch" />
+            <Output TaskParameter="CommitId" PropertyName="CommitId" />
+        </GetRepositoryInfo>
+    </Target>
+
+    <Target Name="GetCommitInfo">
+        <GetCommitInfo
+            RepositoryRoot="$(RepositoryRoot)"
+            From="$(CommitFrom)"
+            To="$(CommitTo)">
+            <Output TaskParameter="From" PropertyName="CommitFrom" />
+            <Output TaskParameter="To" PropertyName="CommitTo" />
+            <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
+            <Output TaskParameter="LatestTagCommit" PropertyName="LatestTagCommit" />
+            <Output TaskParameter="Commits" ItemName="Commits" />
+        </GetCommitInfo>
+    </Target>
+
+    <!-- get assembly info based on the repository -->
+    <Target Name="GetAssemblyInfo">
+        <GetAssemblyInfo
+            CI="$(CI)"
+            SemanticVersion="$(SemanticVersion)"
+            AssemblyVersion="$(AssemblyVersion)"
+            Branch="$(Branch)"
+            BuildId="$(BuildId)"
+            CommitId="$(CommitId)"
+            StartDateUtc="$(StartDateUtc)"
+            BuildDateUtc="$(BuildDateUtc)">
+            <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
+            <Output TaskParameter="FileVersion" PropertyName="FileVersion" />
+            <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
+            <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion" />
+            <Output TaskParameter="BuildId" PropertyName="BuildId" />
+            <Output TaskParameter="CommitId" PropertyName="CommitId" />
+            <Output TaskParameter="BuildDateUtc" PropertyName="BuildDateUtc" />
+            <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
+        </GetAssemblyInfo>
+    </Target>
+
+    <!-- get project metadata based on its location -->
+    <Target Name="GetProjectMetadata">
+        <GetProjectMetadata Projects="@(DotNetPaths)">
+            <Output TaskParameter="Projects" ItemName="Projects" />
+        </GetProjectMetadata>
+
+        <ItemGroup>
+            <SourceProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'src' "/>
+            <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
+            <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>
+            <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
+        </ItemGroup>
+    </Target>
+
+    <!-- print all of the properties that were used to perform the build -->
+    <Target Name="PrintProperties">
+        <Message Importance="High" Text="Company            : $(Company)" Condition=" '$(Company)' != '' " />
+        <Message Importance="High" Text="Product Name       : $(Product)" />
+        <Message Importance="High" Text="Project Name       : $(TeamProject)" Condition=" '$(TeamProject)' != '' " />
+        <Message Importance="High" Text="License            : $(License)" Condition=" '$(License)' != '' " />
+        <Message Importance="High" Text="License URI        : $(LicenseUri)" Condition=" '$(LicenseUri)' != '' " />
+        <Message Importance="High" Text="Date Time (UTC)    : $(BuildDateUtc)" />
+        <Message Importance="High" Text="Configuration      : $(Configuration)" />
+        <Message Importance="High" Text="Platform           : $(Platform)" />
+        <Message Importance="High" Text="Authors            : $(Authors)" />
+        <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
+        <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
+        <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
+        <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
+        <Message Importance="High" Text="File Version       : $(FileVersion)" />
+        <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
+    </Target>
+
+    <!-- print project information -->
+    <Target Name="PrintProjects">
+        <LogItemMetadata Items="@(Projects)" Name="Project" />
+    </Target>
+
+    <!-- print repository information -->
+    <Target Name="PrintRepositoryInfo">
+        <Message Importance="High" Text="Repository URI     : $(RepositoryUri)" Condition=" '$(RepositoryUri)' != '' " />
+        <Message Importance="High" Text="Branch             : $(Branch)" Condition=" '$(Branch)' != '' " />
+        <Message Importance="High" Text="Commit ID          : $(CommitId)" />
+        <Message Importance="High" Text="Pull Request ID    : $(PullRequestId)" Condition=" '$(PullRequestId)' != '' " />
+        <Message Importance="High" Text="Provider           : $(RepositoryProvider)" Condition=" '$(RepositoryProvider)' != '' " />
+    </Target>
+
+    <!-- print build information -->
+    <Target Name="PrintBuildInfo">
+        <Message Importance="High" Text="Build Name         : $(BuildName)" Condition=" '$(BuildName)' != '' " />
+        <Message Importance="High" Text="Build ID           : $(BuildId)" />
+        <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
+        <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
+        <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
+        <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
+    </Target>
+
+     <!-- print all of the paths used to create the build -->
+    <Target Name="PrintPaths">
+        <Message Importance="High" Text="Repository Root    : $(RepositoryRoot)" />
+        <Message Importance="High" Text="Source Projects    : $(SrcRoot)" />
+        <Message Importance="High" Text="Test Projects      : $(TestRoot)" />
+        <Message Importance="High" Text="Artifacts          : $(ArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Build)  : $(BuildArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Publish): $(PublishArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Package): $(PackageArtifactsRoot)" />
+        <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
+    </Target>
+
+    <!-- print commit information -->
+    <Target Name="PrintCommits">
+        <LogItemMetadata Items="@(Commits)" Name="Commit" />
+    </Target>
+
+    <PropertyGroup>
+        <InitializeDependsOn>
+            $(InitializeDependsOn);
+            GetServerTime;
+            GetPlatformInfo;
+            GetRepositoryInfo;
+            GetCommitInfo;
+            GetProjectMetadata;
+            GetAssemblyInfo;
+            PrintProperties;
+            PrintRepositoryInfo;
+            PrintProjects;
+            PrintBuildInfo;
+            PrintPaths;
+        </InitializeDependsOn>
+    </PropertyGroup>
+
+    <!-- actually perform the initialization -->
+    <Target Name="Initialization" DependsOnTargets="$(InitializeDependsOn)" BeforeTargets="Initialize" />
+</Project>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         InitialTargets="Clean" DefaultTargets="Build">
+    <PropertyGroup>
+        <Product>PulseBridge.Condo</Product>
+        <SemanticVersion>2.0.0</SemanticVersion>
+        <Versioning>Conventional</Versioning>
+        <StartDateUtc>2015-05-28</StartDateUtc>
+
+        <Company>PulseBridge, Inc.</Company>
+        <Authors>PulseBridge, Inc.</Authors>
+
+        <License>MIT</License>
+        <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
+    </PropertyGroup>
+
+    <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
+    <Import Project="$(CondoTargetsPath)\Goals.targets" />
+</Project>

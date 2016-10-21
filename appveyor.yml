@@ -7,13 +7,12 @@ pull_requests:
   do_not_increment_build_number: true
 environment:
   RUBY_INSTALL_PATH: C:\Ruby22-x64\bin
-  TSD_GITHUB_TOKEN: ad69d8cf36823134752489ea08a060761fc41c00
   NUGET_PUSH_FEED:
     secure: bDDMNs4Db9yruHKBN9AHLkredI7oRY2j2hhqQpYp72iRCPnbYx6hJEh5ouQvFLxC
   NUGET_PUSH_APIKEY:
     secure: /BBmYv/HUU0lnVk7iypx0Nq5yeoD8N/LGxGA4xrUPYuqbeMsW0XuUiMSaM/GMwB3
 build_script:
-  - condo.cmd --coverage --secure push
+  - condo.cmd
 clone_depth: 1
 test: off
 deploy: off

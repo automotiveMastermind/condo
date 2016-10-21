@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
+    </PropertyGroup>
+
+    <Target Name="DotNetBuild">
+        <ItemGroup>
+            <BuildProjects Include="@(Projects)" />
+        </ItemGroup>
+
+        <Exec
+            Command="dotnet build --version-suffix &quot;$(PreReleaseTag)&quot; --configuration &quot;$(Configuration)&quot; $(DotNetBuildOptions) @(BuildProjects->'&quot;%(FullPath)&quot;', ' ')"
+            WorkingDirectory="$(RepositoryRoot)" />
+    </Target>
+
+    <Target Name="CopyDotNetBuild" AfterTargets="DotNetBuild">
+        <ItemGroup>
+            <_CopyDotNetBuild Include="%(BuildProjects.ProjectDir)bin$(Slash)**">
+                <ProjectName>%(BuildProjects.ProjectName)</ProjectName>
+            </_CopyDotNetBuild>
+        </ItemGroup>
+
+        <Copy
+            SourceFiles="@(_CopyDotNetBuild)"
+            DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(Slash)%(ProjectName)$(Slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
+    <PropertyGroup>
+        <CompileDependsOn>
+            DotNetBuild;
+        </CompileDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Compilation" DependsOnTargets="$(CompileDependsOn)" BeforeTargets="Compile" />
+</Project>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
+    </PropertyGroup>
+
+    <Target Name="DotNetPack">
+        <Exec
+            Command="dotnet pack --version-suffix &quot;$(PreReleaseTag)&quot; -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(BuildProjects.FullPath)&quot;"
+            Condition="'%(BuildProjects.ProjectGroup)' == 'src'"
+            WorkingDirectory="$(RepositoryRoot)" />
+
+        <ItemGroup>
+            <Packages Include="$(PackageArtifactsRoot)$(slash)*.nupkg" Exclude="$(PackageArtifactsRoot)$(slash)*.symbols.nupkg" />
+            <Symbols Include="$(PackageArtifactsRoot)$(slash)*.symbols.nupkg" />
+        </ItemGroup>
+    </Target>
+
+    <PropertyGroup>
+        <PackDependsOn>
+            DotNetPack;
+            $(PackDependsOn);
+        </PackDependsOn>
+    </PropertyGroup>
+
+    <Target Name="Packaging" DependsOnTargets="$(PackDependsOn)" BeforeTargets="Package" />
+</Project>
