@@ -52,7 +52,7 @@ while [[ $# > 0 ]]; do
             CONDO_BRANCH=$2
             shift
             ;;
-        -p|--path)
+        -s|--source)
             CONDO_SOURCE=$2
             shift
             ;;

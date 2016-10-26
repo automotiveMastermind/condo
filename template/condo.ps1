@@ -43,7 +43,6 @@
 
 Param (
     [Parameter(Mandatory=$false)]
-    [ValidateSet("sun", "moon", "earth")]
     [Alias("r")]
     [switch]
     $Reset,
@@ -64,7 +63,7 @@ Param (
     [string]
     $Verbosity = "Normal",
 
-    [Parameter(Mandatory=$false, ParameterSetName="ByUri")]
+    [Parameter(Mandatory=$true, ParameterSetName="ByUri")]
     [Alias("u")]
     [string]
     $Uri,
@@ -74,10 +73,10 @@ Param (
     [string]
     $Branch = "develop",
 
-    [Parameter(Mandatory=$false, ParameterSetName="ByPath")]
-    [Alias("p")]
+    [Parameter(Mandatory=$true, ParameterSetName="BySource")]
+    [Alias("s")]
     [string]
-    $Path,
+    $Source,
 
     [Parameter(Mandatory=$false, ValueFromRemainingArguments=$true)]
     [string[]]
@@ -87,7 +86,7 @@ Param (
 function Write-Message([string] $message, [System.ConsoleColor] $color) {
     if ($NoColor) {
         Write-Host $message
-        return
+        break
     }
 
     Write-Host -ForegroundColor $color $message
@@ -101,10 +100,9 @@ function Write-Info([string] $message) {
     Write-Message -Color Yellow -Message $message
 }
 
-function Download-File([string] $url, [string] $path, [int] $retries = 5) {
+function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
         Invoke-WebRequest $url -OutFile $path | Out-Null
-        break
     }
     catch [System.Exception]
     {
@@ -126,7 +124,7 @@ $RootPath = $PSScriptRoot
 
 $BuildRoot = Join-Path $RootPath ".build"
 $CondoRoot = Join-Path $BuildRoot "condo"
-$CondoScript = Join-Path $ScriptRoot "Scripts\condo.ps1"
+$CondoScript = Join-Path $CondoRoot "Scripts\condo.ps1"
 
 if ($PSCmdlet.ParameterSetName -eq "ByBranch") {
     $Uri = "https://github.com/pulsebridge/condo/archive/$Branch.zip"
@@ -134,20 +132,20 @@ if ($PSCmdlet.ParameterSetName -eq "ByBranch") {
 
 if ($Reset -and (Test-Path $BuildRoot)) {
     Write-Info "Resetting condo build system..."
-    del -Recursive -Force $BuildRoot | Out-Null
+    del -Recurse -Force $BuildRoot | Out-Null
 }
 
 if ($Local) {
-    $Path = Join-Path $RootPath "src\PulseBridge.Condo.Build"
+    $Source = Join-Path $RootPath "src\PulseBridge.Condo.Build\*"
 }
 
 if (!(Test-Path $CondoRoot)) {
     Write-Info "Creating path for condo at $CondoRoot"
     mkdir $CondoRoot | Out-Null
 
-    if ($Path) {
-        Write-Info "Using condo build system from $Path"
-        cp -Recursive $Path $CondoRoot
+    if ($Source) {
+        Write-Info "Using condo build system from $Source"
+        cp -Recurse $Source $CondoRoot
     } else {
         Write-Info "Using condo build system from $Uri"
 
@@ -156,18 +154,18 @@ if (!(Test-Path $CondoRoot)) {
 
         mkdir $CondoTemp | Out-Null
 
-        Download-File -url $Uri -Path $CondoZip
+        Get-File -url $Uri -Path $CondoZip
 
         $CondoExtract = Join-Path $CondoTemp "extract"
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
         pushd "$CondoExtract\src\PulseBridge.Condo.Build\*"
-        cp -Recursive . $CondoRoot
+        cp -Recurse . $CondoRoot
         popd
 
         if (Test-Path $CondoTemp) {
-            del -Recursive -Force $CondoTemp
+            del -Recurse -Force $CondoTemp
         }
     }
 }

@@ -303,7 +303,7 @@ namespace PulseBridge.Condo.Build.Tasks
             var range = string.IsNullOrEmpty(this.From) ? this.To : $"{this.From}..{this.To}";
 
             // create the command used to get the history of commits
-            var exec = this.CreateExecTask($@"log --format=""%H%n%h%n%s%n%b%n{Split}%n"" {range}", this.RepositoryRoot);
+            var exec = this.CreateExecTask($@"log {range} --format=""%H%n%h%n%s%n%b%n{Split}%n""", this.RepositoryRoot);
 
             // create the regular expression used to parse headers
             var headerRegex = string.IsNullOrEmpty(this.HeaderPattern) ? null : new Regex(this.HeaderPattern);

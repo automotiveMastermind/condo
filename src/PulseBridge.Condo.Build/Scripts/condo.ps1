@@ -22,7 +22,7 @@ Param (
 function Write-Message([string] $message, [System.ConsoleColor] $color) {
     if ($NoColor) {
         Write-Host $message
-        return
+        break
     }
 
     Write-Host -ForegroundColor $color $message
@@ -40,10 +40,9 @@ function Write-Info([string] $message) {
     Write-Message -Color Yellow -Message $message
 }
 
-function Download-File([string] $url, [string] $path, [int] $retries = 5) {
+function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
         Invoke-WebRequest $url -OutFile $path | Out-Null
-        break
     }
     catch [System.Exception]
     {
@@ -60,9 +59,6 @@ function Download-File([string] $url, [string] $path, [int] $retries = 5) {
     }
 }
 
-# find the script path
-$RootPath = $PSScriptRoot
-
 # set well-known paths
 $WorkingPath = Convert-Path (Get-Location)
 $ArtifactsRoot = Join-Path $WorkingPath "artifacts"
@@ -77,6 +73,7 @@ $MSBuildRsp = Join-Path $BuildRoot "condo.msbuild.rsp"
 $CondoPath = Join-Path $BuildRoot "condo"
 $CondoPublish = $MSBuildPublish
 $CondoLog = Join-Path $BuildRoot "condo.log"
+$ScriptsPath = Join-Path $CondoPath "Scripts"
 
 if (!(Test-Path $ArtifactsRoot)) {
     mkdir $ArtifactsRoot | Out-Null
@@ -95,8 +92,13 @@ if (Test-Path $MSBuildRsp) {
 }
 
 $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
+$MSBuildDisableColor = ""
 
-function Execute-Cmd([string] $cmd) {
+if ($NoColor) {
+    $MSBuildDisableColor = "DisableConsoleColor"
+}
+
+function Invoke-Cmd([string] $cmd) {
     # get the command name
     $cmdName = [System.IO.Path]::GetFileName($cmd)
 
@@ -136,15 +138,15 @@ function Install-DotNet() {
     }
     else {
         $dotnetTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
-        $dotnetInstall = Join-Path $dotnetTemp "condo.zip"
+        $dotnetInstall = Join-Path $dotnetTemp "dotnet-install.ps1"
 
         try {
             mkdir $dotnetTemp | Out-Null
-            Download-File -url $Uri -Path $dotnetInstall
-            Execute-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion -Architecture $env:PROCESSOR_ARCHITECTURE
+            Get-File -url $dotnetUrl -Path $dotnetInstall
+            Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
         }
         finally {
-            del -Force $dotnetTemp
+            del -Recurse -Force $dotnetTemp
         }
 
         Write-Success "dotnet-cli was installed..."
@@ -160,13 +162,83 @@ function Install-DotNet() {
 
 function Install-MSBuild() {
     if (Test-Path $MSBuildPath) {
-        Write-Info "condo was already build: use -Reset to get the latest version."
-        return
+        Write-Info "condo was already built: use -Reset to get the latest version."
+        break
     }
 
     try {
-        mkdir $MSBuildPath | Out-Null
+        mkdir $MSBuildPublish -ErrorAction SilentlyContinue | Out-Null
+        mkdir $CondoPublish -ErrorAction SilentlyContinue | Out-Null
 
-        $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches[1].Value
+        $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches.Groups[1].Value
+
+        $contents = [System.IO.File]::ReadAllText((Convert-Path "$ScriptsPath\msbuild.json"))
+        [System.IO.File]::WriteAllText($MSBuildProj, $contents.Replace("RUNTIME", $runtime))
+
+        # copy nuget to the build root
+        cp "$ScriptsPath\nuget.config" $BuildRoot | Out-Null
+
+        # restore msbuild
+        Write-Info "msbuild: restoring msbuild packages..."
+        Invoke-Cmd dotnet restore $MSBuildPath --verbosity minimal
+        Write-Success "msbuild: restore complete"
+
+        # publish msbuild
+        Write-Info "msbuild: publishing msbuild system..."
+        Invoke-Cmd dotnet publish $MSBuildPath --output $MSBuildPublish --runtime $runtime
+        Write-Success "msbuild: publish complete"
+
+        # restore condo
+        Write-Info "condo: restoring condo packages..."
+        Invoke-Cmd dotnet restore $CondoPath --verbosity minimal
+        Write-Success "condo: restore complete"
+
+        # publish condo
+        Write-Info "condo: publishing condo tasks..."
+        Invoke-Cmd dotnet publish $CondoPath --output $CondoPublish --runtime $runtime
+        Write-Success "condo: publish complete"
     }
+    catch {
+        $ex = $error[0]
+
+        if(Test-Path $MSBuildPath) {
+            del -rec -for $MSBuildPath
+        }
+
+        throw $ex
+    }
+}
+
+try
+{
+    Install-DotNet
+    Install-MSBuild
+
+    $CondoTargets = Join-Path $CondoPath "Targets"
+    $CondoProj = Join-Path $WorkingPath "condo.build"
+
+    if (!(Test-Path $CondoProj)) {
+        $CondoProj = Join-Path $CondoTargets "condo.build"
+    }
+
+    $MSBuildRspData = @"
+/nologo
+"$CondoProj"
+/p:CondoTargetsPath="$CondoTargets\\"
+/p:CondoTasksPath="$CondoPublish\\"
+/fl
+/flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
+/clp:MSBuildDisableColor;Verbosity=$Verbosity
+"@
+
+    $MSBuildRspData | Out-File -Encoding ASCII -FilePath $MSBuildRsp
+    $MSBuildArgs | foreach { $_ | Out-File -Append -Encoding ASCII -FilePath $MSBuildRsp }
+
+    Write-Info "Starting build..."
+    Write-Info "msbuild '$CondoProj' $MSBuildArgs"
+
+    & "$MSBuildPublish\corerun.exe" "$MSBuildPublish\MSBuild.exe" `@"$MSBuildRsp"
+}
+finally {
+    cp -ErrorAction SilentlyContinue $MSBuildRsp,$CondoLog,$MSBuildLog $ArtifactsRoot
 }

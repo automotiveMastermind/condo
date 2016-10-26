@@ -9,12 +9,12 @@ $TemplatePath = Join-Path $RootPath "template"
 $CondoTemplatePath = Join-Path $TemplatePath "condo.ps1"
 
 # determine if condo-local.ps1 already exists and delete it if it does
-if (Test-Path CondoScriptPath) {
-    del -Force CondoScriptPath
+if (Test-Path $CondoScriptPath) {
+    del -Force $CondoScriptPath
 }
 
 # copy the template to the local path
-cp -ErrorAction SilentlyContinue $CondoTemplatePath $CondoScriptPath
+cp $CondoTemplatePath $CondoScriptPath | Out-Null
 
 # run condo using local build
 try {
@@ -22,7 +22,7 @@ try {
     pushd $RootPath
 
     # execute the local script
-    & "$CondoScriptPath"
+    & $CondoScriptPath -Reset -Local @args
 }
 finally {
     # change back to the current path
