@@ -86,7 +86,7 @@ Param (
 function Write-Message([string] $message, [System.ConsoleColor] $color) {
     if ($NoColor) {
         Write-Host $message
-        break
+        return
     }
 
     Write-Host -ForegroundColor $color $message
@@ -145,7 +145,7 @@ if (!(Test-Path $CondoRoot)) {
 
     if ($Source) {
         Write-Info "Using condo build system from $Source"
-        cp -Recurse $Source $CondoRoot
+        cp -Recurse "$Source\*" $CondoRoot
     } else {
         Write-Info "Using condo build system from $Uri"
 

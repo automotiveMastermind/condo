@@ -6,5 +6,7 @@ namespace PulseBridge.Condo.Build
     public sealed class QuietExec : Exec
     {
         protected override MessageImportance StandardOutputLoggingImportance { get; } = MessageImportance.Low;
+
+        protected override MessageImportance StandardErrorLoggingImportance { get; } = MessageImportance.Low;
     }
 }

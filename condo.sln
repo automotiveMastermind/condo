@@ -47,6 +47,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "settings", "settings", "{6F
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{F6A2C918-F0FB-4F68-8990-05D993442519}"
+	ProjectSection(SolutionItems) = preProject
+		template\condo.cmd = template\condo.cmd
+		template\condo.msbuild = template\condo.msbuild
+		template\condo.ps1 = template\condo.ps1
+		template\condo.sh = template\condo.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

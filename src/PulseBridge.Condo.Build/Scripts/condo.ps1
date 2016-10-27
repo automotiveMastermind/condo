@@ -22,7 +22,7 @@ Param (
 function Write-Message([string] $message, [System.ConsoleColor] $color) {
     if ($NoColor) {
         Write-Host $message
-        break
+        return
     }
 
     Write-Host -ForegroundColor $color $message
@@ -163,7 +163,7 @@ function Install-DotNet() {
 function Install-MSBuild() {
     if (Test-Path $MSBuildPath) {
         Write-Info "condo was already built: use -Reset to get the latest version."
-        break
+        return
     }
 
     try {

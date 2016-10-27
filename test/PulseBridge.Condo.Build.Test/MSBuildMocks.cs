@@ -6,11 +6,16 @@ namespace PulseBridge.Condo.Build
     using Microsoft.Build.Framework;
     using Moq;
 
+    public interface IBuildEngineLog : IBuildEngine4
+    {
+        IEnumerable<string> Log { get; }
+    }
+
     public static class MSBuildMocks
     {
-        public static IBuildEngine4 CreateEngine()
+        public static IBuildEngineLog CreateEngine()
         {
-            var engine = new Mock<IBuildEngine4>();
+            var engine = new Mock<IBuildEngineLog>();
 
             var queue = new Queue<string>();
 
@@ -42,8 +47,7 @@ namespace PulseBridge.Condo.Build
                 }
             );
 
-            engine.Setup(mock => mock.ToString())
-                .Returns(string.Join(Environment.NewLine, queue));
+            engine.Setup(mock => mock.Log).Returns(queue);
 
             return engine.Object;
         }

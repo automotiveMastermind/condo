@@ -19,6 +19,11 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
+            if (!Debugger.IsAttached)
+            {
+                Debugger.Launch();
+            }
+
             while (!Debugger.IsAttached)
             {
                 Thread.Sleep(250);

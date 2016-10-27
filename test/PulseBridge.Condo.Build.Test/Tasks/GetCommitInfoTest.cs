@@ -111,6 +111,7 @@ namespace PulseBridge.Condo.Build.Tasks
             }
         }
 
+        [Fact]
         [Priority(2)]
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
