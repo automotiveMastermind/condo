@@ -92,6 +92,7 @@ install_dotnet() {
         chmod +x $DOTNET_INSTALL
 
         safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
+		safe-exec $DOTNET_INSTALL
     fi
 
     export PATH="$DOTNET_INSTALL_DIR:$PATH"
