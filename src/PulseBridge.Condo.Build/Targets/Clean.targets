@@ -6,7 +6,7 @@
       <Artifacts Include="$(ArtifactsRoot)" Condition=" Exists('$(ArtifactsRoot)') " />
     </ItemGroup>
 
-    <RemoveDir Directories="@(Artifacts)" />
+    <RemoveDir Directories="@(Artifacts)" ContinueOnError="true" />
   </Target>
 
   <Target Name="CleanIntermediateArtifacts">

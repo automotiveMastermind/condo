@@ -67,7 +67,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Gets or sets the number of retries allowed before failing to publish a package.
         /// </summary>
-        public int Retries { get; set; }
+        public int Retries { get; set; } = 2;
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to allow symbol packages to be pushed.

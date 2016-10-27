@@ -20,6 +20,7 @@
     <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
     <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'publish'))</PublishArtifactsRoot>
     <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
+    <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'feed'))</FeedArtifactsRoot>
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
   </PropertyGroup>
 
@@ -57,6 +58,7 @@
     <BuildUri Condition=" '$(BuildUri)' == '' ">$(TF_BUILD_BUILDURI)</BuildUri>
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
+    <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
   </PropertyGroup>
 
   <ItemGroup>
@@ -213,6 +215,7 @@
     <Message Importance="High" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Publish): $(PublishArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Package): $(PackageArtifactsRoot)" />
+    <Message Importance="High" Text="Artifacts (Feed)   : $(FeedArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
   </Target>
 

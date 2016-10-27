@@ -1,4 +1,5 @@
-#requires -version 4
+#Requires -version 4
+
 
 <#
 .SYNOPSIS
@@ -16,31 +17,49 @@
     The URI from which to download and restore condo.
 .PARAMETER Branch
     The branch from which to download and restore condo from its default repository.
-.PARAMETER Path
-    The file system path from which to restore condo and its dependencies. This is useful for locally testing
+.PARAMETER Source
+    The file system path from which to restore condo and its dependencies from source. This is useful for locally testing
     customizations to condo from a different repository.
 .PARAMETER Verbosity
     The verbosity used for messaging to the standard output from both condo and the underlying MSBuild system.
+
+	Acceptable values are: Quiet, Minimal, Normal, Detailed, and Diagnostic
 .PARAMETER NoColor
     Indicates that any messaging to the standard output should not be emitted using colors. This is useful for parsing
     output by third party tools.
+.PARAMETER MSBuildArgs
+	Contains any additional parameters that are not bound to one of the parameters above. These values will be passed
+	to the underlying MSBuild runtime. These values are automatically bound from all remaining arguments. Specifying
+	the parameter as a collection is not necessary. See examples for more information.
 .EXAMPLE
     condo -Uri https://github.com/pulsebridge/condo/releases/2.0.0.zip
+
+	# use the specified uri to install condo (if it is not already installed)
 .EXAMPLE
     condo -Branch develop
+
+	# use the develop branch to install condo
 .EXAMPLE
     condo -Reset -Verbosity Detailed
+
+	# reset condo to latest release build and enable verbose logging
+.EXAMPLE
+	condo /t:Publish /p:Configuration=Release
+
+	# pass a target and property to the msbuild runtime
+.INPUTS
+	None. Condo does not accept any inputs through a pipe.
+.OUTPUTS
+	None. Condo does not emit any outputs through a pipe.
 .NOTES
     The underlying build system in use is Microsoft Build for .NET Core. Any parameters beyond those supported by this
     cmdlet will be passed to the msbuild process for consideration.
-.FUNCTIONALITY
-    A conventional approach to automated build and test execution for .NET Core, NodeJS, Gulp, and Grunt. The build
-    system is highly extensible and additional frameworks, languages, and systems will be added in the near future.
+.LINK
+	http://open.pulsebridge.com/condo
 #>
-[CmdletBinding(DefaultParameterSetName='ByBranch',
-                PositionalBinding=$false,
-                HelpUri = 'http://open.pulsebridge.com/condo')]
 
+
+[CmdletBinding(DefaultParameterSetName='ByBranch', PositionalBinding=$false)]
 Param (
     [Parameter(Mandatory=$false)]
     [Alias("r")]

@@ -1,3 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(AccessToken)</PackageFeedApiKey>
+    
+    <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
+    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
+    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(AccessToken)</PackageSymbolApiKey>
+    
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
+  </PropertyGroup>
+  <Target Name="InstallPackages">
+    <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
+  </Target>
+
+  <Target Name="PublishPackages" Condition=" '$(PackageFeedUri)' != '' ">
+    <ItemGroup>
+      <AllPackages Include="$(Packages)" />
+      <AllPackages Include="$(Symbols)" />
+    </ItemGroup>
+
+    <PushNuGetPackage
+      Packages="@(AllPackages)"
+      Uri="$(PackageFeedUri)"
+      ApiKey="$(PackageFeedApiKey)"
+      SymbolUri="$(PackageSymbolUri)"
+      SymbolApiKey="$(PackageSymbolApiKey)"
+      NoSymbols="$(PackageNoSymbols)" />
+  </Target>
+
+  <PropertyGroup>
+    <PublishingDependsOn>
+      InstallPackages;
+      PublishPackages;
+      $(PublishDependsOn);
+    </PublishingDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Publishing" DependsOnTargets="$(PublishingDependsOn)" BeforeTargets="Publish" />
 </Project>

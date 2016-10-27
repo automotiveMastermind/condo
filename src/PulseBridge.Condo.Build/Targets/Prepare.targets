@@ -28,6 +28,7 @@
       <ArtifactPaths Include="$(TestArtifactsRoot)" />
       <ArtifactPaths Include="$(PublishArtifactsRoot)" />
       <ArtifactPaths Include="$(PackageArtifactsRoot)" />
+      <ArtifactPaths Include="$(FeedArtifactsRoot)" />
       <ArtifactPaths Include="$(DocsArtifactsRoot)" />
     </ItemGroup>
     <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
