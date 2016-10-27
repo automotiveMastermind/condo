@@ -7,9 +7,9 @@ pull_requests:
   do_not_increment_build_number: true
 environment:
   RUBY_INSTALL_PATH: C:\Ruby22-x64\bin
-  NUGET_PUSH_FEED:
+  PUSH_FEED_URI:
     secure: bDDMNs4Db9yruHKBN9AHLkredI7oRY2j2hhqQpYp72iRCPnbYx6hJEh5ouQvFLxC
-  NUGET_PUSH_APIKEY:
+  PUSH_FEED_APIKEY:
     secure: /BBmYv/HUU0lnVk7iypx0Nq5yeoD8N/LGxGA4xrUPYuqbeMsW0XuUiMSaM/GMwB3
 build_script:
   - condo.cmd
