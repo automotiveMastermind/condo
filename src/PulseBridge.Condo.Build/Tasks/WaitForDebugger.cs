@@ -3,6 +3,9 @@ namespace PulseBridge.Condo.Build.Tasks
     using System.Diagnostics;
     using System.Threading;
 
+    using static System.FormattableString;
+
+    using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
     /// <summary>
@@ -19,6 +22,9 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
+            var process = Process.GetCurrentProcess();
+            var message = Invariant($"Waiting for debugger to attach to process {process.Id}: {process.ProcessName}");
+
             if (!Debugger.IsAttached)
             {
                 Debugger.Launch();
@@ -26,6 +32,8 @@ namespace PulseBridge.Condo.Build.Tasks
 
             while (!Debugger.IsAttached)
             {
+                this.Log.LogMessageFromText(message, MessageImportance.High);
+
                 Thread.Sleep(250);
             }
 

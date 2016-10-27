@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="DotNetTest">
-        <PropertyGroup>
-            <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
-
-            <DotNetTestPlatformOptions Condition=" !$(IsWindows) "> --framework netcoreapp1.0</DotNetTestPlatformOptions>
-            <DotNetTestPlatformOptions Condition=" $(IsWIndows) ">$(DotNetTestPlatformOptions) -notrait platform=not-windows</DotNetTestPlatformOptions>
-            <DotNetTestPlatformOptions Condition=" $(IsMacOS) ">$(DotNetTestPlatformOptions) -notrait platform=not-macos</DotNetTestPlatformOptions>
-            <DotNetTestPlatformOptions Condition=" $(IsLinux) ">$(DotNetTestPlatformOptions) -notrait platform=not-linux</DotNetTestPlatformOptions>
-
-            <DotNetTestPlatformOptions Condition=" '$(CI)' != '' And '$(CI.ToLower())' != 'false' ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
-
-            <DotNetTestOptions>$(DotNetTestOptions) $(DotNetTestPlatformOptions.Trim())</DotNetTestOptions>
-        </PropertyGroup>
-
-        <ItemGroup>
-            <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) Or '%(TFM_netcoreapp1_0)' == 'true' ">
-                <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
-            </_DotNetTestProjects>
-        </ItemGroup>
-
-        <Exec
-            Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build $(DotNetTestOptions.Trim()) -xml &quot;%(_DotNetTestProjects.TestResultsPath)&quot;"
-            WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
-            Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
-    </Target>
-
+  <Target Name="DotNetTest">
     <PropertyGroup>
-        <TestDependsOn>
-            DotNetTest;
-            $(TestDependsOn);
-        </TestDependsOn>
+      <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
+
+      <DotNetTestPlatformOptions Condition=" !$(IsWindows) "> --framework netcoreapp1.0</DotNetTestPlatformOptions>
+      <DotNetTestPlatformOptions Condition=" $(IsWIndows) ">$(DotNetTestPlatformOptions) -notrait platform=not-windows</DotNetTestPlatformOptions>
+      <DotNetTestPlatformOptions Condition=" $(IsMacOS) ">$(DotNetTestPlatformOptions) -notrait platform=not-macos</DotNetTestPlatformOptions>
+      <DotNetTestPlatformOptions Condition=" $(IsLinux) ">$(DotNetTestPlatformOptions) -notrait platform=not-linux</DotNetTestPlatformOptions>
+
+      <DotNetTestPlatformOptions Condition=" '$(CI)' != '' And '$(CI.ToLower())' != 'false' ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
+
+      <DotNetTestOptions>$(DotNetTestOptions) $(DotNetTestPlatformOptions.Trim())</DotNetTestOptions>
     </PropertyGroup>
 
-    <Target Name="Testing" DependsOnTargets="$(TestDependsOn)" BeforeTargets="Test" />
-  </Project>
+    <ItemGroup>
+      <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) Or '%(TFM_netcoreapp1_0)' == 'true' ">
+        <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
+      </_DotNetTestProjects>
+    </ItemGroup>
+
+    <Exec
+        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build $(DotNetTestOptions.Trim()) -xml &quot;%(_DotNetTestProjects.TestResultsPath)&quot;"
+        WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
+        Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
+  </Target>
+
+  <PropertyGroup>
+    <TestDependsOn>
+      DotNetTest;
+      $(TestDependsOn);
+    </TestDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Testing" DependsOnTargets="$(TestDependsOn)" BeforeTargets="Test" />
+</Project>

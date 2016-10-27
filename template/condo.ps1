@@ -136,7 +136,7 @@ if ($Reset -and (Test-Path $BuildRoot)) {
 }
 
 if ($Local) {
-    $Source = Join-Path $RootPath "src\PulseBridge.Condo.Build\*"
+    $Source = Join-Path $RootPath "src\PulseBridge.Condo.Build"
 }
 
 if (!(Test-Path $CondoRoot)) {

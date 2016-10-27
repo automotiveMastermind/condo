@@ -144,6 +144,7 @@ function Install-DotNet() {
             mkdir $dotnetTemp | Out-Null
             Get-File -url $dotnetUrl -Path $dotnetInstall
             Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
+			Invoke-Cmd "$dotnetInstall"
         }
         finally {
             del -Recurse -Force $dotnetTemp
