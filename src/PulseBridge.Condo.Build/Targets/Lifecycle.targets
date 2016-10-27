@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- allow debugging of targets -->
   <Target Name="Debugging">
-    <!-- allow debugging of targets -->
     <WaitForDebugger Condition=" '$(Debug)' == 'true' " />
   </Target>
 
