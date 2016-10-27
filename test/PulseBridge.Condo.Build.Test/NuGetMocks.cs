@@ -12,8 +12,24 @@ namespace PulseBridge.Condo.Build
     using NuGet.Packaging;
     using NuGet.Versioning;
 
+    /// <summary>
+    /// Represents a set of mocks for use with the <see cref="NuGet"/> API.
+    /// </summary>
     public static class NuGetMocks
     {
+        /// <summary>
+        /// Creates a new mock of a package source provider that uses the specified <paramref name="source"/> and
+        /// <paramref name="push"/> locations.
+        /// </summary>
+        /// <param name="source">
+        /// The location of the source feed, which can be any URI or location on a file system.
+        /// </param>
+        /// <param name="push">
+        /// The location to which packages should be pushed, which can be a URI or a location on a file system.
+        /// </param>
+        /// <returns>
+        /// The mock of a package source provider used for testing purposes.
+        /// </returns>
         public static IPackageSourceProvider CreateProvider(string source, string push)
         {
             // create the mock
@@ -26,7 +42,8 @@ namespace PulseBridge.Condo.Build
             Uri url;
 
             // determine if the uri is not a URL
-            if (!Uri.TryCreate(push, UriKind.Absolute, out url))
+            // todo: replace with Uri.UriSchemeFile when it becomes available
+            if (!Uri.TryCreate(push, UriKind.Absolute, out url) || url.Scheme.Equals("file"))
             {
                 // create the directory
                 Directory.CreateDirectory(push);
@@ -36,6 +53,22 @@ namespace PulseBridge.Condo.Build
             return mock.Object;
         }
 
+        /// <summary>
+        /// Creates a new package with the specified <paramref name="id"/> and <paramref name="version"/> and saves it at the specified
+        /// <paramref name="path"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The unique identifier of the package.
+        /// </param>
+        /// <param name="version">
+        /// The semantic version of the package.
+        /// </param>
+        /// <param name="path">
+        /// The path where the package should be saved.
+        /// </param>
+        /// <returns>
+        /// The fully-qualified file path where the newly created package now exists on the file system.
+        /// </returns>
         public static string CreatePackage(string id, string version, string path)
         {
             // create  a package builder and set the id and version

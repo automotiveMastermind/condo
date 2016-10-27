@@ -55,7 +55,7 @@ safe-exec() {
     local EXIT_CODE=$?
 
     if [ $EXIT_CODE -ne 0 ]; then
-        echo -e "${CLR_FAILURE}check '$CONDO_LOG' for additional information...${CLR_CLEAR}" 1>&2
+        echo -e "${CLR_FAILURE}$CMD_NAME failed with exit code: $EXIT_CODE. Check '$CONDO_LOG' for additional information...${CLR_CLEAR}" 1>&2
         safe-exit $EXIT_CODE
     fi
 }
@@ -69,7 +69,7 @@ safe-join() {
 # download dotnet
 install_dotnet() {
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
-        info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL IS SET)..."
+        info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
     else
         DOTNET_TEMP=$(mktemp -d)
         DOTNET_INSTALL="$DOTNET_TEMP/dotnet-install.sh"
@@ -92,6 +92,7 @@ install_dotnet() {
         chmod +x $DOTNET_INSTALL
 
         safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
+		safe-exec $DOTNET_INSTALL
     fi
 
     export PATH="$DOTNET_INSTALL_DIR:$PATH"
@@ -141,7 +142,7 @@ install_msbuild() {
         safe-exec dotnet publish $CONDO_PATH --output $CONDO_PUBLISH --runtime $RUNTIME
         success "condo: publish complete"
     else
-        info "condo was already built: use --update or --reset to get the latest version."
+        info "condo was already built: use --reset to get the latest version."
     fi
 }
 

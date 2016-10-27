@@ -5,6 +5,7 @@ namespace PulseBridge.Condo.Build.Tasks
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Runtime.InteropServices;
 
     using static System.FormattableString;
 
@@ -19,6 +20,8 @@ namespace PulseBridge.Condo.Build.Tasks
     {
         #region Constants
         private const string Split = "------------------------ >8 ------------------------";
+
+        private static readonly bool IsWinblows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         #endregion
 
         #region Properties
@@ -303,16 +306,13 @@ namespace PulseBridge.Condo.Build.Tasks
             var range = string.IsNullOrEmpty(this.From) ? this.To : $"{this.From}..{this.To}";
 
             // create the command used to get the history of commits
-            var exec = this.CreateExecTask($@"log --format=""%H%n%h%n%s%n%b%n{Split}%n"" {range}", this.RepositoryRoot);
-
-            // create the regular expression used to parse headers
-            var headerRegex = string.IsNullOrEmpty(this.HeaderPattern) ? null : new Regex(this.HeaderPattern);
+            var exec = this.CreateExecTask($@"log {range} --format=""%H%n%h%n%s%n%b%n{Split}%n""", this.RepositoryRoot);
 
             // execute the command and ensure results
             if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
             {
                 // move on immediately
-                return null;
+                return new ITaskItem[0];
             }
 
             // capture the lines from the console output
@@ -432,6 +432,14 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         private Exec CreateExecTask(string command, string root)
         {
+            // determine if we are on windows
+            if (IsWinblows)
+            {
+                // escape the '%' to ensure that the temporary response file created by Exec doesn't
+                // attempt to parse environment variables in format string
+                command = command.Replace("%", "%%");
+            }
+
             // create a new exec
             return new QuietExec
             {
@@ -439,6 +447,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 WorkingDirectory = root,
                 BuildEngine = this.BuildEngine,
                 ConsoleToMSBuild = true,
+                UseCommandProcessor = false,
                 EchoOff = true
             };
         }

@@ -1,72 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
-        <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
-        <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
-    </PropertyGroup>
+  <PropertyGroup>
+    <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
+    <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
+    <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
+  </PropertyGroup>
 
-    <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
-      <Exec Command="dotnet restore @(RestorePaths, ' ') $(DotNetRestoreOptions)"
-            WorkingDirectory="%(DotNetRestorePaths.RootDir)%(DotNetRestorePaths.Directory)" />
-    </Target>
+  <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
+    <Exec Command="dotnet restore @(RestorePaths, ' ') $(DotNetRestoreOptions)"
+          WorkingDirectory="$(RepositoryRoot)" />
+  </Target>
 
-    <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' And '@(NpmInstallPaths->Count())' != '0' ">
-      <Exec Command="npm install $(NpmInstallOptions)"
-            WorkingDirectory="%(NpmInstallPaths.RootDir)%(NpmInstallPaths.Directory)" />
-    </Target>
+  <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' And '@(NpmInstallPaths->Count())' != '0' ">
+    <Exec Command="npm install $(NpmInstallOptions)"
+          WorkingDirectory="%(NpmInstallPaths.RootDir)%(NpmInstallPaths.Directory)" />
+  </Target>
 
-    <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' And '@(BowerInstallPaths->Count())' != '0' ">
-      <Exec Command="bower install $(BowerInstallOptions)"
-            WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
-    </Target>
+  <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' And '@(BowerInstallPaths->Count())' != '0' ">
+    <Exec Command="bower install $(BowerInstallOptions)"
+          WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
+  </Target>
 
-    <Target Name="SaveAssemblyInfo">
-        <SaveAssemblyInfo
-            AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
-            SemanticVersion="$(SemanticVersion)"
-            Company="$(Company)"
-            Product="$(Product)"
-            ProjectName="%(Projects.ProjectName)"
-            Copyright="$(Copyright)"
-            AssemblyVersion="$(AssemblyVersion)"
-            FileVersion="$(FileVersion)"
-            InformationalVersion="$(InformationalVersion)"
-            Configuration="$(Configuration)"
-            BuildDateUtc="$(BuildDateUtc)"
-            Platform="$(Platform)"
-            Authors="$(Authors)"
-            Branch="$(Branch)"
-            BuildQuality="$(BuildQuality)"
-            BuildId="$(BuildId)"
-            CommitId="$(CommitId)"
-            PullRequestId="$(PullRequestId)"
-            BuildOn="$(BuildOn)"
-            BuildFor="$(BuildFor)"
-            BuildName="$(BuildName)"
-            TeamUri="$(TeamUri)"
-            RepositoryUri="$(RepositoryUri)"
-            BuildUri="$(BuildUri)"
-            License="$(License)"
-            LicenseUri="$(LicenseUri)" />
-    </Target>
+  <Target Name="CreateOutputPaths">
+    <ItemGroup>
+      <ArtifactPaths Include="$(ArtifactsRoot)" />
+      <ArtifactPaths Include="$(BuildArtifactsRoot)" />
+      <ArtifactPaths Include="$(TestArtifactsRoot)" />
+      <ArtifactPaths Include="$(PublishArtifactsRoot)" />
+      <ArtifactPaths Include="$(PackageArtifactsRoot)" />
+      <ArtifactPaths Include="$(DocsArtifactsRoot)" />
+    </ItemGroup>
+    <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
+  </Target>
 
-    <PropertyGroup>
-        <RestoreDependsOn>
-            NpmInstall;
-            BowerInstall;
-            DotNetRestore;
-            $(RestoreDependsOn);
-        </RestoreDependsOn>
+  <Target Name="SaveAssemblyInfo">
+    <SaveAssemblyInfo
+        AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
+        SemanticVersion="$(SemanticVersion)"
+        Company="$(Company)"
+        Product="$(Product)"
+        ProjectName="%(Projects.ProjectName)"
+        Copyright="$(Copyright)"
+        AssemblyVersion="$(AssemblyVersion)"
+        FileVersion="$(FileVersion)"
+        InformationalVersion="$(InformationalVersion)"
+        Configuration="$(Configuration)"
+        BuildDateUtc="$(BuildDateUtc)"
+        Platform="$(Platform)"
+        Authors="$(Authors)"
+        Branch="$(Branch)"
+        BuildQuality="$(BuildQuality)"
+        BuildId="$(BuildId)"
+        CommitId="$(CommitId)"
+        PullRequestId="$(PullRequestId)"
+        BuildOn="$(BuildOn)"
+        BuildFor="$(BuildFor)"
+        BuildName="$(BuildName)"
+        TeamUri="$(TeamUri)"
+        RepositoryUri="$(RepositoryUri)"
+        BuildUri="$(BuildUri)"
+        License="$(License)"
+        LicenseUri="$(LicenseUri)" />
+  </Target>
 
-        <PrepareDependsOn>
-            Restore;
-            SaveAssemblyInfo;
-            $(PrepareDependsOn);
-        </PrepareDependsOn>
-    </PropertyGroup>
+  <PropertyGroup>
+    <RestoreDependsOn>
+      NpmInstall;
+      BowerInstall;
+      DotNetRestore;
+      $(RestoreDependsOn);
+    </RestoreDependsOn>
 
-    <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" />
+    <PrepareDependsOn>
+      CreateOutputPaths;
+      Restore;
+      SaveAssemblyInfo;
+      $(PrepareDependsOn);
+    </PrepareDependsOn>
+  </PropertyGroup>
 
-    <Target Name="Preparation" DependsOnTargets="$(PrepareDependsOn)" BeforeTargets="Prepare" />
+  <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" />
+
+  <Target Name="Preparation" DependsOnTargets="$(PrepareDependsOn)" BeforeTargets="Prepare" />
 </Project>

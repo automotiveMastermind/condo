@@ -2,7 +2,6 @@
 
 CLR_INFO='\033[1;33m'       # BRIGHT YELLOW
 CLR_FAILURE='\033[1;31m'    # BRIGHT RED
-CLR_SUCCESS="\033[1;32m"    # BRIGHT GREEN
 CLR_CLEAR="\033[0m"         # DEFAULT COLOR
 
 # get the current path
@@ -16,10 +15,6 @@ cd $ROOT_PATH
 
 # write a newline for separation
 echo
-
-success() {
-    echo -e "${CLR_SUCCESS}$@${CLR_CLEAR}"
-}
 
 failure() {
     echo -e "${CLR_FAILURE}$@${CLR_CLEAR}"
@@ -43,31 +38,30 @@ while [[ $# > 0 ]]; do
             condo_help
             exit 0
             ;;
-        --reset|--update)
+        -r|--reset)
             CONDO_RESET=1
             ;;
-        --local)
+        -l|--local)
             CONDO_LOCAL=1
             ;;
-        --uri)
+        -u|--uri)
             CONDO_URI=$2
             shift
             ;;
-        --branch)
+        -b|--branch)
             CONDO_BRANCH=$2
             shift
             ;;
-        --path)
+        -s|--source)
             CONDO_SOURCE=$2
             shift
             ;;
-        --verbosity)
+        -v|--verbosity)
             CONDO_VERBOSITY=$2
             break
             ;;
-        --no-color)
+        -nc|--no-color)
             CLR_INFO=
-            CLR_SUCCESS=
             CLR_FAILURE=
             CLR_CLEAR=
             break
@@ -120,7 +114,7 @@ if [ ! -d "$CONDO_ROOT" ]; then
         retries=5
 
         until (wget -O $CONDO_TAR $CONDO_URI 2>/dev/null || curl -o $CONDO_TAR --location $CONDO_URI 2>/dev/null); do
-            failure "Unable to retrieve condo: '$CONDO_TAR'"
+            failure "Unable to retrieve condo: '$CONDO_URI'"
 
             if [ "$retries" -le 0 ]; then
                 exit 1
