@@ -140,7 +140,7 @@ namespace PulseBridge.Condo
                 var repoUri = "https://pulsebridge.visualstudio.com/_git/condo";
                 var buildUri = "vstfs:///pulsebridge/Build/1430";
                 var buildName = "condo-ci-1430";
-                var platform = "macOS";
+                var platform = "Windows";
                 var configuration = "release";
 
                 var cmd = "condo.sh";
