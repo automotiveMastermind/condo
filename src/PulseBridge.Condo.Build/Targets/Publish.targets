@@ -18,8 +18,8 @@
 
   <Target Name="PublishPackages" Condition=" '$(PackageFeedUri)' != '' ">
     <ItemGroup>
-      <AllPackages Include="$(Packages)" />
-      <AllPackages Include="$(Symbols)" />
+      <AllPackages Include="@(Packages)" />
+      <AllPackages Include="@(Symbols)" />
     </ItemGroup>
 
     <PushNuGetPackage
