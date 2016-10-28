@@ -12,16 +12,12 @@
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
   </PropertyGroup>
+  
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
 
   <Target Name="PublishPackages" Condition=" '$(PackageFeedUri)' != '' ">
-    <ItemGroup>
-      <AllPackages Include="@(Packages)" />
-      <AllPackages Include="@(Symbols)" />
-    </ItemGroup>
-
     <PushNuGetPackage
       Packages="@(AllPackages)"
       Uri="$(PackageFeedUri)"
@@ -32,12 +28,12 @@
   </Target>
 
   <PropertyGroup>
-    <PublishingDependsOn>
+    <PublishDependsOn>
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);
-    </PublishingDependsOn>
+    </PublishDependsOn>
   </PropertyGroup>
 
-  <Target Name="Publishing" DependsOnTargets="$(PublishingDependsOn)" BeforeTargets="Publish" />
+  <Target Name="Publishing" DependsOnTargets="$(PublishDependsOn)" BeforeTargets="Publish" />
 </Project>

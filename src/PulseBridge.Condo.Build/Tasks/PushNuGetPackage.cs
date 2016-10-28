@@ -228,6 +228,9 @@ namespace PulseBridge.Condo.Build.Tasks
                             logger: logger
                         );
 
+                    // log a success message
+                    this.Log.LogMessage(MessageImportance.High, $"Successfully pushed package {name} after {attempts} attempts.");
+
                     // move on immediately
                     return true;
                 }
@@ -239,7 +242,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 }
                 catch
                 {
-                    this.Log.LogError("Failed to push package: {name} after {attempts} attempts.");
+                    this.Log.LogError($"Failed to push package: {name} after {attempts} attempts.");
 
                     // move on immediately
                     return false;
