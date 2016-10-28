@@ -199,11 +199,12 @@ if (!(Test-Path $CondoRoot)) {
         Get-File -url $Uri -Path $CondoZip
 
         $CondoExtract = Join-Path $CondoTemp "extract"
+
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
-        pushd "$CondoExtract\src\PulseBridge.Condo.Build\*"
-        cp -Recurse . $CondoRoot
+        pushd "$CondoExtract\*\src\PulseBridge.Condo.Build"
+        cp -Recurse * $CondoRoot
         popd
 
         if (Test-Path $CondoTemp) {

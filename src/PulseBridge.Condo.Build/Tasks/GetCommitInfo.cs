@@ -448,6 +448,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 BuildEngine = this.BuildEngine,
                 ConsoleToMSBuild = true,
                 UseCommandProcessor = false,
+                IgnoreExitCode = true,
                 EchoOff = true
             };
         }
