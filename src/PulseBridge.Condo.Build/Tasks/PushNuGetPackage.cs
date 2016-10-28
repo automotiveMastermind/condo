@@ -35,6 +35,7 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Gets the root path of the repository used to locate NuGet configuration settings.
         /// </summary>
+        [Required]
         public string RepositoryRoot { get; set; }
 
         /// <summary>
@@ -104,11 +105,8 @@ namespace PulseBridge.Condo.Build.Tasks
             // determine if the settings are not specified
             if (settings == null)
             {
-                // get the current working directory
-                var working = Directory.GetCurrentDirectory();
-
                 // load the settings
-                settings = Settings.LoadDefaultSettings(working);
+                settings = Settings.LoadDefaultSettings(this.RepositoryRoot);
             }
 
             // determine if the provider is not specified
