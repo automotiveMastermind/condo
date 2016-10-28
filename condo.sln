@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{ACAEA5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B3D47AFD-48F9-4E53-9C1A-320ED2289BD1}"
 	ProjectSection(SolutionItems) = preProject
-		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
 		condo.build = condo.build
 		condo.cmd = condo.cmd
 		condo.ps1 = condo.ps1

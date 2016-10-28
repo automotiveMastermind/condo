@@ -2,7 +2,6 @@ namespace PulseBridge.Condo.Build.Tasks
 {
     using System;
     using System.Collections.Concurrent;
-    using System.IO;
     using System.Threading.Tasks;
 
     using Microsoft.Build.Framework;
@@ -211,7 +210,8 @@ namespace PulseBridge.Condo.Build.Tasks
             var @lock = new object();
 
             // execute the push using the appropriate parallelism
-            Parallel.ForEach(this.Packages, options, package => {
+            Parallel.ForEach(this.Packages, options, package =>
+            {
                 // create an action logger
                 var actions = new NuGetActionLogger();
 
@@ -226,7 +226,8 @@ namespace PulseBridge.Condo.Build.Tasks
                 }
 
                 // log the results
-                tasks.Add(Task.Run(() => {
+                tasks.Add(Task.Run(() =>
+                {
                     // lock so log messages are congruent
                     lock (@lock)
                     {
@@ -297,7 +298,7 @@ namespace PulseBridge.Condo.Build.Tasks
                     var exception = netEx;
 
                     // continue logging until exception is null
-                    while(exception != null)
+                    while (exception != null)
                     {
                         // log the exception
                         this.Log.LogErrorFromException(exception);
