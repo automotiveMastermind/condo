@@ -221,8 +221,8 @@ try {
 		$MSBuildArgs = @(
 			$MSBuildArgs,
 			"/t:Bootstrap",
-			"/p:BootstrapUsername=$Username",
-			"/p:BootstrapPassword=$Password"
+			"/p:PackageFeedUsername=$Username",
+			"/p:PackageFeedPassword=$Password"
 		)
 	}
 

@@ -62,8 +62,6 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
-    <BootstrapUsername Condition=" '$(BootstrapUsername)' == '' ">VssSessionToken</BootstrapUsername>
-    <BootstrapPassword Condition=" '$(BootstrapPassword)' == '' ">$(AccessToken)</BootstrapPassword>
   </PropertyGroup>
 
   <ItemGroup>
@@ -168,15 +166,15 @@
   </Target>
   
   <!-- get vsts package feeds -->
-  <Target Name="BootstrapVstsFeeds" Condition=" '$(BootstrapUsername)' != '' AND '$(BootstrapPassword)' != '' ">
+  <Target Name="BootstrapVstsFeeds" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
     <GetVstsPackageFeeds RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Sources" ItemName="BootstrapSources" />
+      <Output TaskParameter="Sources" ItemName="VstsSources" />
     </GetVstsPackageFeeds>
 
     <SetNuGetCredentials RepositoryRoot="$(RepositoryRoot)"
-                         Sources="@(BootstrapSources)"
-                         Username="$(BootstrapUsername)"
-                         Password="$(BootstrapPassword)">
+                         Sources="@(VstsSources)"
+                         Username="$(PackageFeedUsername)"
+                         Password="$(PackageFeedPassword)">
       <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
     </SetNuGetCredentials>
   </Target>
