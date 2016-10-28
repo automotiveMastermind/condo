@@ -252,7 +252,19 @@ namespace PulseBridge.Condo.Build.Tasks
                 {
                     // log an error
                     this.Log.LogError($"Failed to push package: {name} after {attempts} attempts.");
-                    this.Log.LogErrorFromException(netEx);
+
+                    // capture the exception
+                    var exception = netEx;
+
+                    // continue logging until exception is null
+                    while(exception != null)
+                    {
+                        // log the exception
+                        this.Log.LogErrorFromException(exception);
+
+                        // get the inner exception
+                        exception = exception.InnerException;
+                    }
 
                     // move on immediately
                     return false;
