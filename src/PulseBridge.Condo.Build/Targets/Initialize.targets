@@ -35,6 +35,9 @@
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
+
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(PACKAGE_FEED_USERNAME)</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
   </PropertyGroup>
 
   <!-- capture details from a continuous integration build hosted by TFS -->

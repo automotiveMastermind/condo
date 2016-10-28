@@ -185,11 +185,8 @@ namespace PulseBridge.Condo.Build.Tasks
                     sources.Add(source);
                 }
 
-                // create a log entry
-                this.Log.LogMessage(MessageImportance.High, $"Setting credentials to {this.Username} - {this.Password} - {this.ApiKey}");
-
                 // update the credentials
-                source.Credentials = new PackageSourceCredential(source.Source, this.Username, this.Password, true);
+                source.Credentials = new PackageSourceCredential(source.Name, this.Username, this.Password, true);
 
                 // save the sources
                 this.provider.SavePackageSources(sources);
