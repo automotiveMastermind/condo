@@ -175,12 +175,18 @@ namespace PulseBridge.Condo.Build.Tasks
                 // determine if the source is null
                 if (source == null)
                 {
+                    // create a log entry
+                    this.Log.LogWarning($"Creating a source for {this.Uri}...");
+
                     // create a new source
                     source = new PackageSource(this.Uri, "condo");
 
                     // add the source to the collection
                     sources.Add(source);
                 }
+
+                // create a log entry
+                this.Log.LogMessage(MessageImportance.High, $"Setting credentials to {this.Username} - {this.Password} - {this.ApiKey}");
 
                 // update the credentials
                 source.Credentials = new PackageSourceCredential(source.Source, this.Username, this.Password, true);
