@@ -11,7 +11,7 @@ namespace PulseBridge.Condo.IO
     public class TemporaryPath : IPathManager, IDisposable
     {
         #region Fields
-        private readonly string path;
+        private readonly IPathManager path;
 
         private bool disposed;
         #endregion
@@ -41,37 +41,44 @@ namespace PulseBridge.Condo.IO
             }
 
             // create the temporary path
-            this.path = Path.Combine(Path.GetTempPath(), Invariant($"{prefix}"), Path.GetRandomFileName());
+            var path = Path.Combine(Path.GetTempPath(), Invariant($"{prefix}"), Path.GetRandomFileName());
 
-            // create the directory
-            Directory.CreateDirectory(this.path);
+            // create the directory for the path
+            Directory.CreateDirectory(path);
+
+            // create the path manager
+            this.path = new PathManager(path);
         }
         #endregion
 
         #region Properties
         /// <inheritdoc/>
-        public string FullPath => this.path;
+        public string FullPath => this.path.FullPath;
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Combines the current temporary path with the specified <paramref name="path"/>.
-        /// </summary>
-        /// <param name="path">
-        /// The path that should be combined with the current temporary path.
-        /// </param>
-        /// <returns>
-        /// The specified <paramref name="path"/> combined with the current temporary path.
-        /// </returns>
+        /// <inheritdoc/>
         public string Combine(string path)
         {
-            return Path.Combine(this.path, path);
+            return this.path.Combine(path);
         }
 
         /// <inheritdoc/>
         public bool Exists()
         {
-            return Directory.Exists(this.path);
+            return this.path.Exists();
+        }
+
+        /// <inheritdoc/>
+        public string Create(string relativePath)
+        {
+            return this.path.Create(relativePath);
+        }
+
+        /// <inheritdoc/>
+        public string Save(string relativePath, string contents)
+        {
+            return this.path.Save(relativePath, contents);
         }
 
         /// <inheritdoc/>
@@ -97,15 +104,8 @@ namespace PulseBridge.Condo.IO
             // set the disposed flag
             this.disposed = true;
 
-            try
-            {
-                // delete the directory
-                Directory.Delete(this.path, recursive: true);
-            }
-            catch
-            {
-                // swallow exceptions on dispose
-            }
+            // dispose of the underlying path
+            this.path.Dispose();
         }
         #endregion
     }

@@ -75,21 +75,23 @@ $CondoPublish = $MSBuildPublish
 $CondoLog = Join-Path $BuildRoot "condo.log"
 $ScriptsPath = Join-Path $CondoPath "Scripts"
 
-if (!(Test-Path $ArtifactsRoot)) {
-    mkdir $ArtifactsRoot | Out-Null
+if (Test-Path $ArtifactsRoot) {
+	del -Force -Recurse $ArtifactsRoot | Out-Null
 }
 
 if (Test-Path $CondoLog) {
-    del -Force $CondoLog
+    del -Force $CondoLog | Out-Null
 }
 
 if (Test-Path $MSBuildLog) {
-    del -Force $MSBuildLog
+    del -Force $MSBuildLog | Out-Null
 }
 
 if (Test-Path $MSBuildRsp) {
-    del -Force $MSBuildRsp
+    del -Force $MSBuildRsp | Out-Null
 }
+
+mkdir $ArtifactsRoot | Out-Null
 
 $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
 $MSBuildDisableColor = ""
@@ -229,7 +231,7 @@ try
 /p:CondoTasksPath="$CondoPublish\\"
 /fl
 /flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
-/clp:MSBuildDisableColor;Verbosity=$Verbosity
+/clp:$MSBuildDisableColor;Verbosity=$Verbosity
 "@
 
     $MSBuildRspData | Out-File -Encoding ASCII -FilePath $MSBuildRsp

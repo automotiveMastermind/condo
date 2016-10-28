@@ -7,9 +7,11 @@
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetRepositoryInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetServerTime" />
+  <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.GetVstsPackageFeeds" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.LogItemMetadata" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.InstallNuGetPackage" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.PushNuGetPackage" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo" />
+  <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SetNuGetCredentials" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.WaitForDebugger" />
 </Project>

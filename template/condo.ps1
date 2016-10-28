@@ -27,6 +27,13 @@
 .PARAMETER NoColor
     Indicates that any messaging to the standard output should not be emitted using colors. This is useful for parsing
     output by third party tools.
+.PARAMETER Bootstrap
+	Indicates that condo should bootstrap a developer environment to configure access to secured package feeds.
+.PARAMETER Username
+	The username used to bootstrap access to secured package feeds.
+.PARAMETER Password
+	The password used to bootstrap access to secured package feeds. For Visual Studio Team Services (VSTS) feeds, this
+	should be an access token with at least the Packaging (read) scope.
 .PARAMETER MSBuildArgs
 	Contains any additional parameters that are not bound to one of the parameters above. These values will be passed
 	to the underlying MSBuild runtime. These values are automatically bound from all remaining arguments. Specifying
@@ -47,6 +54,10 @@
 	condo /t:Publish /p:Configuration=Release
 
 	# pass a target and property to the msbuild runtime
+.EXAMPLE
+	condo -Bootstrap -Username bill.gates@contoso.com -Password B528BF58-8C1F-48AC-9D9D-737E5DFD2B77
+
+	# bootstrap secured feeds using the specified username and password
 .INPUTS
 	None. Condo does not accept any inputs through a pipe.
 .OUTPUTS
@@ -75,6 +86,18 @@ Param (
     [Alias("nc")]
     [switch]
     $NoColor,
+
+	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+	[switch]
+	$Bootstrap,
+
+	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+	[string]
+	$Username,
+
+	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+	[string]
+	$Password,
 
     [Parameter(Mandatory=$false)]
     [Alias("v")]
@@ -193,8 +216,18 @@ try {
     # change to the root path
     pushd $RootPath
 
-    # execute the underlying script
-    & "$CondoScript" -Verbosity $Verbosity -NoColor:$NoColor @MSBuildArgs
+	# add the bootstrap arguments
+	if ($Bootstrap) {
+		$MSBuildArgs = @(
+			$MSBuildArgs,
+			"/t:Bootstrap",
+			"/p:BootstrapUsername=$Username",
+			"/p:BootstrapPassword=$Password"
+		)
+	}
+
+	# execute the underlying script
+	& "$CondoScript" -Verbosity $Verbosity -NoColor:$NoColor @MSBuildArgs
 }
 finally {
     popd

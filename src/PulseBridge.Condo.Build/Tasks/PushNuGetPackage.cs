@@ -10,12 +10,12 @@ namespace PulseBridge.Condo.Build.Tasks
     using NuGet.Commands;
     using NuGet.Configuration;
 
-    using Task = Microsoft.Build.Utilities.Task;
+    using MSBuildTask = Microsoft.Build.Utilities.Task;
 
     /// <summary>
     /// Represents a Microsoft Build task used to publish a package to a NuGet feed.
     /// </summary>
-    public class PushNuGetPackage : Task
+    public class PushNuGetPackage : MSBuildTask
     {
         #region Fields
         private volatile bool success;
@@ -31,6 +31,11 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Required]
         public ITaskItem[] Packages { get; set; }
+
+        /// <summary>
+        /// Gets the root path of the repository used to locate NuGet configuration settings.
+        /// </summary>
+        public string RepositoryRoot { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the feed.
@@ -102,11 +107,8 @@ namespace PulseBridge.Condo.Build.Tasks
                 // get the current working directory
                 var working = Directory.GetCurrentDirectory();
 
-                // get the machine wide settings
-                var machine = new NuGetMachineSettings();
-
                 // load the settings
-                settings = Settings.LoadDefaultSettings(working, null, machine);
+                settings = Settings.LoadDefaultSettings(working);
             }
 
             // determine if the provider is not specified
@@ -169,30 +171,36 @@ namespace PulseBridge.Condo.Build.Tasks
             var @lock = new object();
 
             // execute the push using the appropriate parallelism
-            var result = Parallel.ForEach(this.Packages, options, package => {
+            Parallel.ForEach(this.Packages, options, package => {
                 // create an action logger
                 var actions = new NuGetActionLogger();
 
-                // push the package and log the results
-                this.Push(package, actions).ContinueWith(push => {
-                    // determine if the push was unsuccessful
-                    if (!push.Result)
-                    {
-                        // set the success flag
-                        this.success = false;
-                    }
+                // push the package
+                var result = this.Push(package, actions).Result;
 
+                // determine if the push was unsuccessful
+                if (!result)
+                {
+                    // set the success flag
+                    this.success = false;
+                }
+
+                // log the results
+                tasks.Add(Task.Run(() => {
                     // lock so log messages are congruent
                     lock (@lock)
                     {
                         // replay the log actions against the msbuild log
                         actions.Replay(logger);
                     }
-                });
+                }));
             });
 
+            // wait for tasks to complete
+            Task.WhenAll(tasks).Wait();
+
             // return success
-            return this.success && result.IsCompleted;
+            return this.success;
         }
 
         private async Task<bool> Push(ITaskItem package, NuGet.Common.ILogger logger)
@@ -224,7 +232,7 @@ namespace PulseBridge.Condo.Build.Tasks
                             this.SymbolApiKey,
                             this.Timeout / 1000,
                             disableBuffering: false,
-                            noSymbols: false,
+                            noSymbols: this.NoSymbols,
                             logger: logger
                         );
 
@@ -242,6 +250,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 }
                 catch
                 {
+                    // log an error
                     this.Log.LogError($"Failed to push package: {name} after {attempts} attempts.");
 
                     // move on immediately

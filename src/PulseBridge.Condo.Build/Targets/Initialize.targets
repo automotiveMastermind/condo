@@ -59,6 +59,8 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+    <BootstrapUsername Condition=" '$(BootstrapUsername)' == '' ">condo</BootstrapUsername>
+    <BootstrapPassword Condition=" '$(BootstrapPassword)' == '' ">$(AccessToken)</BootstrapPassword>
   </PropertyGroup>
 
   <ItemGroup>
@@ -161,6 +163,20 @@
       <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
     </ItemGroup>
   </Target>
+  
+  <!-- get vsts package feeds -->
+  <Target Name="BootstrapVstsFeeds" Condition=" '$(BootstrapUsername)' != '' AND '$(BootstrapPassword)' != '' ">
+    <GetVstsPackageFeeds RepositoryRoot="$(RepositoryRoot)">
+      <Output TaskParameter="Sources" ItemName="BootstrapSources" />
+    </GetVstsPackageFeeds>
+
+    <SetNuGetCredentials RepositoryRoot="$(RepositoryRoot)"
+                         Sources="@(BootstrapSources)"
+                         Username="$(BootstrapUsername)"
+                         Password="$(BootstrapPassword)">
+      <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
+    </SetNuGetCredentials>
+  </Target>
 
   <!-- print all of the properties that were used to perform the build -->
   <Target Name="PrintProperties">
@@ -233,6 +249,7 @@
       GetCommitInfo;
       GetProjectMetadata;
       GetAssemblyInfo;
+      BootstrapVstsFeeds;
       PrintProperties;
       PrintRepositoryInfo;
       PrintProjects;

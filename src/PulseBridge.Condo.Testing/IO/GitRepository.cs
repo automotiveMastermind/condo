@@ -133,15 +133,8 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepository Save(string relativePath, string contents)
         {
-            var path = this.path.Combine(relativePath);
-            var directory = Path.GetDirectoryName(path);
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            File.WriteAllText(path, contents ?? string.Empty);
+            // save the contents using the path manager
+            this.path.Save(relativePath, contents);
 
             return this;
         }
