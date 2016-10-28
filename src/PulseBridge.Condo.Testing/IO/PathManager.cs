@@ -57,6 +57,41 @@ namespace PulseBridge.Condo.IO
             return Directory.Exists(this.path);
         }
 
+        public string Create(string relativePath)
+        {
+            // create the path
+            var path = this.Combine(relativePath);
+
+            // create the path
+            Directory.CreateDirectory(path);
+
+            // return the path
+            return path;
+        }
+
+        /// <inheritdoc/>
+        public string Save(string relativePath, string contents)
+        {
+            // get he final path of the file
+            var path = this.Combine(relativePath);
+
+            // get the directory name
+            var directory = Path.GetDirectoryName(path);
+
+            // determine if the directory exists
+            if (!Directory.Exists(directory))
+            {
+                // create the directory
+                Directory.CreateDirectory(directory);
+            }
+
+            // save the content
+            File.WriteAllText(path, contents ?? string.Empty);
+
+            // assume success
+            return path;
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -81,8 +116,15 @@ namespace PulseBridge.Condo.IO
             // set the disposed flag
             this.disposed = true;
 
-            // delete the path
-            Directory.Delete(this.path);
+            try
+            {
+                // delete the directory
+                Directory.Delete(this.path, recursive: true);
+            }
+            catch
+            {
+                // swallow exceptions on dispose
+            }
         }
         #endregion
     }

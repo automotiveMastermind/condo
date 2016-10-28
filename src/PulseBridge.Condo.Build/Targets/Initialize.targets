@@ -20,6 +20,7 @@
     <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
     <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'publish'))</PublishArtifactsRoot>
     <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
+    <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'feed'))</FeedArtifactsRoot>
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
   </PropertyGroup>
 
@@ -34,6 +35,9 @@
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
+
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(PACKAGE_FEED_USERNAME)</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
   </PropertyGroup>
 
   <!-- capture details from a continuous integration build hosted by TFS -->
@@ -57,6 +61,7 @@
     <BuildUri Condition=" '$(BuildUri)' == '' ">$(TF_BUILD_BUILDURI)</BuildUri>
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
+    <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
   </PropertyGroup>
 
   <ItemGroup>
@@ -159,6 +164,20 @@
       <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
     </ItemGroup>
   </Target>
+  
+  <!-- get vsts package feeds -->
+  <Target Name="BootstrapVstsFeeds" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
+    <GetVstsPackageFeeds RepositoryRoot="$(RepositoryRoot)">
+      <Output TaskParameter="Sources" ItemName="VstsSources" />
+    </GetVstsPackageFeeds>
+
+    <SetNuGetCredentials RepositoryRoot="$(RepositoryRoot)"
+                         Sources="@(VstsSources)"
+                         Username="$(PackageFeedUsername)"
+                         Password="$(PackageFeedPassword)">
+      <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
+    </SetNuGetCredentials>
+  </Target>
 
   <!-- print all of the properties that were used to perform the build -->
   <Target Name="PrintProperties">
@@ -177,6 +196,10 @@
     <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
+
+    <Message Importance="High"
+             Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
+             Condition=" '$(BuildHost)' == 'TFS' " />
   </Target>
 
   <!-- print project information -->
@@ -200,7 +223,7 @@
     <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
     <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
-    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
+    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />    
   </Target>
 
   <!-- print all of the paths used to create the build -->
@@ -213,6 +236,7 @@
     <Message Importance="High" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Publish): $(PublishArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Package): $(PackageArtifactsRoot)" />
+    <Message Importance="High" Text="Artifacts (Feed)   : $(FeedArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
   </Target>
 
@@ -230,6 +254,7 @@
       GetCommitInfo;
       GetProjectMetadata;
       GetAssemblyInfo;
+      BootstrapVstsFeeds;
       PrintProperties;
       PrintRepositoryInfo;
       PrintProjects;

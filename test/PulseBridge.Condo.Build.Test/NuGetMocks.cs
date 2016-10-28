@@ -11,6 +11,7 @@ namespace PulseBridge.Condo.Build
     using NuGet.Frameworks;
     using NuGet.Packaging;
     using NuGet.Versioning;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents a set of mocks for use with the <see cref="NuGet"/> API.
@@ -54,8 +55,8 @@ namespace PulseBridge.Condo.Build
         }
 
         /// <summary>
-        /// Creates a new package with the specified <paramref name="id"/> and <paramref name="version"/> and saves it at the specified
-        /// <paramref name="path"/>.
+        /// Creates a new package with the specified <paramref name="id"/> and <paramref name="version"/> and saves it 
+        /// at the specified <paramref name="path"/>.
         /// </summary>
         /// <param name="id">
         /// The unique identifier of the package.
@@ -107,6 +108,28 @@ namespace PulseBridge.Condo.Build
 
             // return the path
             return package;
+        }
+
+        public static IPackageSourceProvider CreateSettings(string root, string source, string name)
+        {
+            // create empty settings
+            var settings = new Settings(root, "nuget.config");
+
+            // create a provider
+            var provider = new PackageSourceProvider(settings);
+
+            // create a new list for sources
+            var sources = new List<PackageSource>(provider.LoadPackageSources())
+            {
+                // add the new source
+                new PackageSource(source, name, true) { ProtocolVersion = 3 }
+            };
+
+            // save the sources
+            provider.SavePackageSources(sources);
+
+            // return the provider
+            return provider;
         }
 
         private static IPackageFile CreateFile(string name)

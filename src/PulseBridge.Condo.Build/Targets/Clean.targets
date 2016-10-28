@@ -3,10 +3,10 @@
 
   <Target Name="CleanArtifacts">
     <ItemGroup>
-      <Artifacts Include="$(ArtifactsRoot)" Condition=" Exists('$(ArtifactsRoot)') " />
+      <ArtifactsToRemove Include="$(ArtifactsRoot)/*/" />
     </ItemGroup>
-
-    <RemoveDir Directories="@(Artifacts)" />
+    
+    <RemoveDir Directories="@(ArtifactsToRemove)" ContinueOnError="true" />
   </Target>
 
   <Target Name="CleanIntermediateArtifacts">
