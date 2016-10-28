@@ -11,6 +11,7 @@ namespace PulseBridge.Condo.Build.Tasks
     using NuGet.Configuration;
 
     using MSBuildTask = Microsoft.Build.Utilities.Task;
+    using System.Linq;
 
     /// <summary>
     /// Represents a Microsoft Build task used to publish a package to a NuGet feed.
@@ -102,20 +103,6 @@ namespace PulseBridge.Condo.Build.Tasks
             // set success to false
             this.success = false;
 
-            // determine if the settings are not specified
-            if (settings == null)
-            {
-                // load the settings
-                settings = Settings.LoadDefaultSettings(this.RepositoryRoot);
-            }
-
-            // determine if the provider is not specified
-            if (provider == null)
-            {
-                // create a new package source provider
-                provider = new PackageSourceProvider(settings);
-            }
-
             // set the settings and package source provider
             this.settings = settings;
             this.provider = provider;
@@ -130,6 +117,20 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
+            // determine if the settings are not specified
+            if (this.settings == null)
+            {
+                // load the settings
+                this.settings = Settings.LoadDefaultSettings(this.RepositoryRoot);
+            }
+
+            // determine if the provider is not specified
+            if (this.provider == null)
+            {
+                // create a new package source provider
+                this.provider = new PackageSourceProvider(settings);
+            }
+
             // ensure that packages are specified
             if (this.Packages == null)
             {
@@ -148,6 +149,14 @@ namespace PulseBridge.Condo.Build.Tasks
 
                 // move on immediately
                 return true;
+            }
+
+            var source = this.provider.LoadPackageSources()
+                .FirstOrDefault(s => s.Source.ToLower().Equals(this.Uri, StringComparison.OrdinalIgnoreCase));
+
+            if (source != null)
+            {
+                this.Log.LogMessage(MessageImportance.High, $"source: {source.Name}, username: {source.Credentials?.Username}, password: {source.Credentials?.PasswordText}");
             }
 
             // set success to true
