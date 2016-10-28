@@ -59,6 +59,8 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+    <BootstrapUsername Condition=" '$(BootstrapUsername)' == '' ">VssSessionToken</BootstrapUsername>
+    <BootstrapPassword Condition=" '$(BootstrapPassword)' == '' ">$(AccessToken)</BootstrapPassword>
   </PropertyGroup>
 
   <ItemGroup>
