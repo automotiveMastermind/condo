@@ -195,6 +195,10 @@
     <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
+
+    <Message Importance="High"
+           Text="##vso[task.setvariable variable=build.buildnumber;]$(InformationalVersion)"
+           Condition=" '$(BuildHost)' == 'TFS' " />
   </Target>
 
   <!-- print project information -->
@@ -218,7 +222,7 @@
     <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
     <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
-    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
+    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />    
   </Target>
 
   <!-- print all of the paths used to create the build -->
