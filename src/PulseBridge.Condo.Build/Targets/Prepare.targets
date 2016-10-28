@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
-    <Exec Command="dotnet restore @(RestorePaths, ' ') $(DotNetRestoreOptions)"
+    <Exec Command="dotnet restore @(DotNetRestorePaths, ' ') $(DotNetRestoreOptions)"
           WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 

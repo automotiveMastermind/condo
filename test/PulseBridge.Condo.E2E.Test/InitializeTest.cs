@@ -184,7 +184,7 @@ namespace PulseBridge.Condo
 
                 // act
                 var process = Process.Start(start);
-                process.WaitForExit();
+                process.WaitForExit(60 * 1000);
 
                 var actual = await process.StandardOutput.ReadToEndAsync();
 

@@ -242,16 +242,17 @@ namespace PulseBridge.Condo.Build.Tasks
                     // move on immediately
                     return true;
                 }
-                catch when (attempts < this.Retries)
+                catch when (attempts <= this.Retries)
                 {
                     // log a warning
                     this.Log.LogWarning
-                        ($"NuGet push failed for package: {name} after {attempts} attempts with {this.Retries} retries remaining.");
+                        ($"NuGet push failed for package: {name} after {attempts} attempts with {this.Retries - attempts} retries remaining.");
                 }
-                catch
+                catch (Exception netEx)
                 {
                     // log an error
                     this.Log.LogError($"Failed to push package: {name} after {attempts} attempts.");
+                    this.Log.LogErrorFromException(netEx);
 
                     // move on immediately
                     return false;

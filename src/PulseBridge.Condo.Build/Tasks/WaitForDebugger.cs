@@ -22,17 +22,14 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </returns>
         public override bool Execute()
         {
-            var process = Process.GetCurrentProcess();
-            var message = Invariant($"Waiting for debugger to attach to process {process.Id}: {process.ProcessName}");
-
             if (!Debugger.IsAttached)
             {
-                Debugger.Launch();
+                var process = Process.GetCurrentProcess();
+                this.Log.LogWarning($"Waiting for debugger to attach to process {process.Id}: {process.ProcessName}");
             }
 
             while (!Debugger.IsAttached)
             {
-                this.Log.LogMessageFromText(message, MessageImportance.High);
 
                 Thread.Sleep(250);
             }

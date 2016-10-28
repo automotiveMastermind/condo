@@ -10,7 +10,6 @@
     "Microsoft.NETCore.Runtime.CoreCLR": "1.0.3",
     "System.Dynamic.Runtime": "4.0.11",
     "NuGet.CommandLine.Xplat": "3.5.0-beta-final",
-    "Microsoft.VisualStudio.Services.NuGet.CredentialProvider": "*",
     "MSBuild": "0.1.0-preview-00028-160627",
     "Microsoft.Build": "0.1.0-preview-00028-160627",
     "Microsoft.Build.Targets": "0.1.0-preview-00028-160627",
