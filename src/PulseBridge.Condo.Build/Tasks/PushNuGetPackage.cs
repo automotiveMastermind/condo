@@ -48,7 +48,18 @@ namespace PulseBridge.Condo.Build.Tasks
         /// <summary>
         /// Gets or sets the API key for the feed.
         /// </summary>
+        [Required]
         public string ApiKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the username used to push the package.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password used to push the package.
+        /// </summary>
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the symbol feed.
@@ -128,7 +139,7 @@ namespace PulseBridge.Condo.Build.Tasks
             if (this.provider == null)
             {
                 // create a new package source provider
-                this.provider = new PackageSourceProvider(settings);
+                this.provider = new PackageSourceProvider(this.settings);
             }
 
             // ensure that packages are specified
@@ -151,12 +162,31 @@ namespace PulseBridge.Condo.Build.Tasks
                 return true;
             }
 
-            var source = this.provider.LoadPackageSources()
-                .FirstOrDefault(s => s.Source.ToLower().Equals(this.Uri, StringComparison.OrdinalIgnoreCase));
-
-            if (source != null)
+            // determine if a password is set
+            if (!string.IsNullOrEmpty(this.Password))
             {
-                this.Log.LogMessage(MessageImportance.High, $"source: {source.Name}, username: {source.Credentials?.Username}, password: {source.Credentials?.PasswordText}");
+                // get the source
+                var sources = this.provider.LoadPackageSources().ToList();
+
+                // get the source
+                var source = sources
+                    .FirstOrDefault(s => s.Source.ToLower().Equals(this.Uri, StringComparison.OrdinalIgnoreCase));
+
+                // determine if the source is null
+                if (source == null)
+                {
+                    // create a new source
+                    source = new PackageSource(this.Uri, "condo");
+
+                    // add the source to the collection
+                    sources.Add(source);
+                }
+
+                // update the credentials
+                source.Credentials = new PackageSourceCredential(source.Source, this.Username, this.Password, true);
+
+                // save the sources
+                this.provider.SavePackageSources(sources);
             }
 
             // set success to true
@@ -258,7 +288,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 catch (Exception netEx)
                 {
                     // log an error
-                    this.Log.LogError($"Failed to push package: {name} after {attempts} attempts.");
+                    this.Log.LogError($"Failed to push package: {name} after {this.Retries} attempts.");
 
                     // capture the exception
                     var exception = netEx;

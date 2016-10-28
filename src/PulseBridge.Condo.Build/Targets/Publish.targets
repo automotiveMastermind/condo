@@ -3,7 +3,10 @@
   <PropertyGroup>
     <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
     <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
-    
+
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(BootstrapUsername)</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(BootstrapPassword)</PackageFeedPassword>
+
     <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
     <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
     
@@ -21,6 +24,8 @@
       Packages="@(AllPackages)"
       Uri="$(PackageFeedUri)"
       ApiKey="$(PackageFeedApiKey)"
+      Username="$(PackageFeedUsername)"
+      Password="$(PackageFeedPassword)"
       SymbolUri="$(PackageSymbolUri)"
       SymbolApiKey="$(PackageSymbolApiKey)"
       NoSymbols="$(PackageNoSymbols)" />

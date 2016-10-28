@@ -59,7 +59,7 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
-    <BootstrapUsername Condition=" '$(BootstrapUsername)' == '' ">VssSessionToken</BootstrapUsername>
+    <BootstrapUsername Condition=" '$(BootstrapUsername)' == '' ">condo</BootstrapUsername>
     <BootstrapPassword Condition=" '$(BootstrapPassword)' == '' ">$(AccessToken)</BootstrapPassword>
   </PropertyGroup>
 
@@ -197,8 +197,8 @@
     <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
 
     <Message Importance="High"
-           Text="##vso[task.setvariable variable=build.buildnumber;]$(InformationalVersion)"
-           Condition=" '$(BuildHost)' == 'TFS' " />
+             Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
+             Condition=" '$(BuildHost)' == 'TFS' " />
   </Target>
 
   <!-- print project information -->
