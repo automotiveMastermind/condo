@@ -4,10 +4,10 @@
     <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
   </PropertyGroup>
 
-  <Target Name="DotNetPack">
+  <Target Name="DotNetPack" Condition=" '@(Projects->Count())' != '0' ">
     <Exec
-        Command="dotnet pack --version-suffix &quot;$(PreReleaseTag)&quot; -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(BuildProjects.FullPath)&quot;"
-        Condition="'%(BuildProjects.ProjectGroup)' == 'src'"
+        Command="dotnet pack --version-suffix &quot;$(PreReleaseTag)&quot; -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(Projects.FullPath)&quot;"
+        Condition="'%(Projects.ProjectGroup)' == 'src'"
         WorkingDirectory="$(RepositoryRoot)" />
 
     <ItemGroup>

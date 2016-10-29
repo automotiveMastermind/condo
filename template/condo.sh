@@ -128,7 +128,12 @@ if [ ! -d "$CONDO_ROOT" ]; then
             sleep 10s
         done
 
-        tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_ROOT
+        CONDO_EXTRACT="$CONDO_TEMP/extract"
+        CONDO_SOURCE="$CONDO_EXTRACT/src/PulseBridge.Condo.Build"
+
+        mkdir -p $CONDO_EXTRACT
+        tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
+        cp -r $CONDO_SOURCE/* $CONDO_ROOT/
         rm -Rf $CONDO_TEMP
     fi
 fi

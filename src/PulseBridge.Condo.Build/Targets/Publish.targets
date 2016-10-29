@@ -6,11 +6,11 @@
 
     <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
     <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
-    
+
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
   </PropertyGroup>
-  
+
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
