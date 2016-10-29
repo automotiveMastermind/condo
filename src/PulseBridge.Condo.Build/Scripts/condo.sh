@@ -160,6 +160,17 @@ while [[ $# > 0 ]]; do
             CLR_CLEAR=
             MSBUILD_DISABLE_COLOR="DisableConsoleColor"
             ;;
+        --bootstrap)
+            BOOTSTRAP=1
+            ;;
+        --username)
+            BOOTSTRAP_USERNAME=$2
+            shift
+            ;;
+        --password)
+            BOOTSTRAP_PASSWORD=$2
+            shift
+            ;;
         *)
             break
             ;;
@@ -224,10 +235,16 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 "$CONDO_PROJ"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
+-p:PackageFeedUsername=$BOOTSTRAP_USERNAME
+-p:PackageFeedPassword=$BOOTSTRAP_PASSWORD
 -fl
 -flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
 -clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY
 END_MSBUILD_RSP
+
+if [ "$BOOTSTRAP" = "1" ]; then
+safe-join $'\n' "-t:Bootstrap" >> $MSBUILD_RSP
+fi
 
 # write out msbuild arguments to the rsp
 safe-join $'\n' "$@" >> $MSBUILD_RSP

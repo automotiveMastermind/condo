@@ -66,6 +66,9 @@ while [[ $# > 0 ]]; do
             CLR_CLEAR=
             break
             ;;
+        --username|--password)
+            shift
+            ;;
         --)
             shift
             break

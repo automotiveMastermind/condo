@@ -12,7 +12,6 @@ namespace PulseBridge.Condo
 
     using PulseBridge.Condo.IO;
 
-    [Agent(AgentType.Local)]
     [Purpose(PurposeType.EndToEnd)]
     public class InitializeTest
     {
