@@ -95,6 +95,7 @@ namespace PulseBridge.Condo.Build.Tasks
             }
         }
 
+        [Fact]
         [Priority(2)]
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
@@ -115,6 +116,42 @@ namespace PulseBridge.Condo.Build.Tasks
                 {
                     RepositoryRoot = root,
                     BuildEngine = engine
+                };
+
+                // act
+                var result = actual.Execute();
+
+                // assert
+                Assert.True(result);
+                Assert.Equal(expected.RepositoryRoot, actual.RepositoryRoot);
+                Assert.Equal(expected.Branch, actual.Branch);
+                Assert.NotNull(actual.CommitId);
+            }
+        }
+
+        [Fact]
+        [Priority(2)]
+        [Purpose(PurposeType.Integration)]
+        public void Execute_WhenBranchRefSet_UsesAbbreviatedBranch()
+        {
+            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            {
+                // arrange
+                var root = repo.RepositoryPath;
+                var engine = MSBuildMocks.CreateEngine();
+                var branch = "refs/heads/master";
+
+                var expected = new
+                {
+                    RepositoryRoot = root,
+                    Branch = "master"
+                };
+
+                var actual = new GetRepositoryInfo
+                {
+                    RepositoryRoot = root,
+                    BuildEngine = engine,
+                    Branch = branch
                 };
 
                 // act
@@ -338,7 +375,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 var expected = new
                 {
                     RepositoryRoot = root,
-                    Branch= "master"
+                    Branch= "refs/heads/master"
                 };
 
                 var actual = new GetRepositoryInfo

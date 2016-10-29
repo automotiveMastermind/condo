@@ -74,12 +74,19 @@ namespace PulseBridge.Condo.Build.Tasks
             var result = this.TryCommandLine(root) || this.TryFileSystem(root);
 
             // determine if we were successful and the repository url ends with a ".git" extension
-            if (!string.IsNullOrEmpty(this.RepositoryUri) && this.RepositoryUri.EndsWith(".git"))
+            if (this.RepositoryUri != null && this.RepositoryUri.EndsWith(".git"))
             {
                 // strip the '.git' from the uri
                 // tricky: this is done to support browsing to the repository from
                 // a browser rather than just cloning directly for github
                 this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
+            }
+
+            // determine if the branch is set and starts with /refs/heads
+            if (this.Branch != null && this.Branch.ToLower().StartsWith("refs/heads/"))
+            {
+                // remove the /refs/heads reference from the branch name
+                this.Branch = this.Branch.Substring(11);
             }
 
             // return the result
@@ -221,9 +228,7 @@ namespace PulseBridge.Condo.Build.Tasks
                 if (string.IsNullOrEmpty(this.Branch))
                 {
                     // get the branch
-                    this.Branch = branch.StartsWith("refs/heads/")
-                        ? branch.Substring(11)
-                        : branch;
+                    this.Branch = branch;
                 }
 
                 // get the branch node marker path
