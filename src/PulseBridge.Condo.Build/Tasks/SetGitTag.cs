@@ -183,7 +183,28 @@ namespace PulseBridge.Condo.Build.Tasks
             exec = this.CreateExecTask($"{cmd} {this.Remote} {this.Tag}");
 
             // execute the task and return the result
-            return exec.Execute();
+            if (!exec.Execute())
+            {
+                // execute the task
+                if (!exec.Execute())
+                {
+                    // create a mesage for the error
+                    var message = string.Empty;
+
+                    // iterate over all output
+                    foreach (var output in exec.ConsoleOutput)
+                    {
+                        // append the message
+                        message += $"{output.ItemSpec}{Environment.NewLine}";
+                    }
+
+                    // log an error indicating that the tag could not be created
+                    Log.LogError($"Failed to create the git tag {this.Tag} - {message}");
+
+                    // move on immediately
+                    return false;
+                }
+            }
         }
 
         /// <summary>
