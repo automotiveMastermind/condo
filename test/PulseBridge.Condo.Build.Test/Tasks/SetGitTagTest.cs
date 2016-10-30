@@ -88,7 +88,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
         [Fact]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenRepositoryIsInvalid_Fails()
+        public void Execute_WhenRepositoryIsInvalid_SucceedsWithWarning()
         {
             using (var temp = new TemporaryPath())
             {
@@ -109,13 +109,15 @@ namespace PulseBridge.Condo.Build.Tasks
                 var result = actual.Execute();
 
                 // assert
-                Assert.False(result);
+                Assert.True(result);
+
+                // todo: assert warning
             }
         }
 
         [Fact]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenRepositoryHasNoCommits_Fails()
+        public void Execute_WhenRepositoryHasNoCommits_SucceedsWithWarning()
         {
             using (var repo = repository.Initialize())
             {
@@ -136,7 +138,9 @@ namespace PulseBridge.Condo.Build.Tasks
                 var result = actual.Execute();
 
                 // assert
-                Assert.False(result);
+                Assert.True(result);
+
+                // todo: assert warning
             }
         }
 
