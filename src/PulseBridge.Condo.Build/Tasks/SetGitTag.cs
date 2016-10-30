@@ -152,18 +152,8 @@ namespace PulseBridge.Condo.Build.Tasks
             // execute the task
             if (!exec.Execute())
             {
-                // create a mesage for the error
-                var message = string.Empty;
-
-                // iterate over all output
-                foreach (var output in exec.ConsoleOutput)
-                {
-                    // append the message
-                    message += $"{output.ItemSpec}{Environment.NewLine}";
-                }
-
                 // log an error indicating that the tag could not be created
-                Log.LogError($"Failed to create the git tag {this.Tag} - {message}");
+                Log.LogError($"Failed to create the git tag {this.Tag}");
 
                 // move on immediately
                 return false;
@@ -182,32 +172,8 @@ namespace PulseBridge.Condo.Build.Tasks
             // create the task to push the tag to the remote
             exec = this.CreateExecTask($"{cmd} {this.Remote} {this.Tag}");
 
-            // execute the task and return the result
-            if (!exec.Execute())
-            {
-                // execute the task
-                if (!exec.Execute())
-                {
-                    // create a mesage for the error
-                    var message = string.Empty;
-
-                    // iterate over all output
-                    foreach (var output in exec.ConsoleOutput)
-                    {
-                        // append the message
-                        message += $"{output.ItemSpec}{Environment.NewLine}";
-                    }
-
-                    // log an error indicating that the tag could not be created
-                    Log.LogError($"Failed to create the git tag {this.Tag} - {message}");
-
-                    // move on immediately
-                    return false;
-                }
-            }
-
-            // assume success
-            return true;
+            // execute the push
+            return exec.Execute();
         }
 
         /// <summary>
