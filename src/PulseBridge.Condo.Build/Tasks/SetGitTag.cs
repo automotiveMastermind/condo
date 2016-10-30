@@ -205,6 +205,9 @@ namespace PulseBridge.Condo.Build.Tasks
                     return false;
                 }
             }
+
+            // assume success
+            return true;
         }
 
         /// <summary>
