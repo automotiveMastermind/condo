@@ -48,11 +48,6 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string ClientVersion { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not the tag can replace an existing tag.
-        /// </summary>
-        public bool AllowReplace { get; set; } = true;
         #endregion
 
         #region Methods
@@ -136,44 +131,31 @@ namespace PulseBridge.Condo.Build.Tasks
             // replace whitespace characters in the tag
             this.Tag = this.Tag.Replace(' ', '-').Replace(Environment.NewLine, "-");
 
-            // set the command
-            var cmd = "tag";
-
-            // determine if tags are allowed to be replaced
-            if (this.AllowReplace)
-            {
-                // add the force (replace) tag
-                cmd = $"{cmd} -f";
-            }
-
             // create the task used to set the git tag
-            exec = this.CreateExecTask($@"{cmd} -a {this.Tag} -m ""{this.Annotation}""");
+            exec = this.CreateExecTask($@"tag -a {this.Tag} -m ""{this.Annotation}""");
 
             // execute the task
             if (!exec.Execute())
             {
                 // log an error indicating that the tag could not be created
-                Log.LogError($"Failed to create the git tag {this.Tag}");
+                Log.LogWarning($"Failed to create the git tag {this.Tag}");
 
                 // move on immediately
-                return false;
-            }
-
-            // set the cmd for push
-            cmd = "push";
-
-            // determine if replace is allowed
-            if (this.AllowReplace)
-            {
-                // set the force flag
-                cmd = $"{cmd} -f";
+                return true;
             }
 
             // create the task to push the tag to the remote
-            exec = this.CreateExecTask($"{cmd} {this.Remote} {this.Tag}");
+            exec = this.CreateExecTask($"push {this.Remote} --tags");
+
+            // execute the task
+            if (!exec.Execute())
+            {
+                // log an error indicating that the tag could not be created
+                Log.LogWarning($"Failed to push the git tag {this.Tag} to the remote {this.Remote}");
+            }
 
             // execute the push
-            return exec.Execute();
+            return true;
         }
 
         /// <summary>
