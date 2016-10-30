@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' And '@(DotNetRestorePaths->Count())' != '0' ">
-    <Exec Command="dotnet restore @(DotNetRestorePaths, ' ') $(DotNetRestoreOptions)"
+    <ItemGroup>
+      <_DotNetToRestore Include="%(DotNetRestorePaths.RootDir)%(DotNetRestorePaths.Directory)" />
+    </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(_DotNetToRestore)">
+      <Output TaskParameter="Filtered" ItemName="_DotNetToRestore" />
+    </RemoveDuplicates>
+
+    <Exec Command="dotnet restore @(_DotNetToRestore, ' ') $(DotNetRestoreOptions)"
           WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 
@@ -34,7 +42,7 @@
     <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 
-  <Target Name="SaveAssemblyInfo">
+  <Target Name="SaveAssemblyInfo" Condition=" '@(Projects->Count())' != '0' ">
     <SaveAssemblyInfo
         AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
         SemanticVersion="$(SemanticVersion)"

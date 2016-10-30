@@ -66,8 +66,10 @@
 
   <ItemGroup>
     <!-- locate all dotnet project paths -->
-    <DotNetRestorePaths Include="$(SrcRoot)" Condition=" Exists('$(SrcRoot)') " />
-    <DotNetRestorePaths Include="$(TestRoot)" Condition=" Exists('$(TestRoot)') " />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(SrcRoot)') " />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(TestRoot)') " />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(SrcRoot)') " />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(TestRoot)') " />
 
     <!-- locate all npm, bower, gulp, and grunt projects -->
     <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
@@ -164,7 +166,7 @@
       <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
     </ItemGroup>
   </Target>
-  
+
   <!-- get vsts package feeds -->
   <Target Name="BootstrapVstsFeeds" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
     <GetVstsPackageFeeds RepositoryRoot="$(RepositoryRoot)">
@@ -223,7 +225,7 @@
     <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
     <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
-    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />    
+    <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
   </Target>
 
   <!-- print all of the paths used to create the build -->
