@@ -17,6 +17,8 @@ namespace PulseBridge.Condo
     {
         private ITestOutputHelper output;
 
+        private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();
+
         public InitializeTest(ITestOutputHelper output)
         {
             this.output = output;
@@ -27,7 +29,7 @@ namespace PulseBridge.Condo
         [Platform(PlatformType.MacOS)]
         public async Task Initialize_OnTfsMacAgent_Succeeds()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var definitionId = Guid.NewGuid().ToString();
@@ -121,7 +123,7 @@ namespace PulseBridge.Condo
         [Platform(PlatformType.Windows)]
         public async Task Initialize_OnTfsWindowsAgent_Succeeds()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var definitionId = Guid.NewGuid().ToString();

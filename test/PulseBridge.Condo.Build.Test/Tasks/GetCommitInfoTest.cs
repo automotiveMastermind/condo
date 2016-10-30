@@ -12,6 +12,8 @@ namespace PulseBridge.Condo.Build.Tasks
     [Class(nameof(GetCommitInfo))]
     public class GetCommitInfoTest
     {
+        private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();
+
         [Fact]
         [Priority(2)]
         [Purpose(PurposeType.Unit)]
@@ -116,7 +118,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = new GitRepository())
+            using (var repo = repository.Initialize())
             {
                 // arrange
                 var root = repo.RepositoryPath;
@@ -137,8 +139,6 @@ namespace PulseBridge.Condo.Build.Tasks
                     },
                     LatestTag = "latest"
                 };
-
-                repo.Initialize();
 
                 foreach (var commit in expected.Commits)
                 {

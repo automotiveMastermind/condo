@@ -64,6 +64,11 @@
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
   </PropertyGroup>
 
+  <!-- determine if the repository is managed by git -->
+  <PropertyGroup>
+    <RepositoryProvider Condition=" '$(RepositoryProvider)' == '' AND Exists('$(RepositoryRoot)$(slash).git') ">git</RepositoryProvider>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- locate all dotnet project paths -->
     <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(SrcRoot)') " />
@@ -115,6 +120,7 @@
       <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
       <Output TaskParameter="Branch" PropertyName="Branch" />
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
+      <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
   </Target>
 

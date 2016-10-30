@@ -12,6 +12,7 @@
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.InstallNuGetPackage" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.PushNuGetPackage" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SaveAssemblyInfo" />
+  <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SetGitTag" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.SetNuGetCredentials" />
   <UsingTask AssemblyName="PulseBridge.Condo.Build" TaskName="PulseBridge.Condo.Build.Tasks.WaitForDebugger" />
 </Project>

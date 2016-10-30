@@ -55,7 +55,7 @@ namespace PulseBridge.Condo.Build
         }
 
         /// <summary>
-        /// Creates a new package with the specified <paramref name="id"/> and <paramref name="version"/> and saves it 
+        /// Creates a new package with the specified <paramref name="id"/> and <paramref name="version"/> and saves it
         /// at the specified <paramref name="path"/>.
         /// </summary>
         /// <param name="id">
@@ -110,10 +110,10 @@ namespace PulseBridge.Condo.Build
             return package;
         }
 
-        public static IPackageSourceProvider CreateSettings(string root, string source, string name)
+        public static ISettings CreateSettings(string root, string source, string name)
         {
             // create empty settings
-            var settings = new Settings(root, "nuget.config");
+            ISettings settings = new Settings(root, "nuget.config");
 
             // create a provider
             var provider = new PackageSourceProvider(settings);
@@ -128,8 +128,8 @@ namespace PulseBridge.Condo.Build
             // save the sources
             provider.SavePackageSources(sources);
 
-            // return the provider
-            return provider;
+            // load specific settings
+            return Settings.LoadSpecificSettings(root, "nuget.config");
         }
 
         private static IPackageFile CreateFile(string name)
