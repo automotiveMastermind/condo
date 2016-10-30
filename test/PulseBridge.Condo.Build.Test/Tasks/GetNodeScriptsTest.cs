@@ -2,13 +2,8 @@ namespace PulseBridge.Condo.Build.Tasks
 {
     using System.IO;
 
-    using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-
-    using Moq;
-
     using Newtonsoft.Json;
-
     using Xunit;
 
     using PulseBridge.Condo.IO;

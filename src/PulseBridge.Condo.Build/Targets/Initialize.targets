@@ -52,6 +52,7 @@
     <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
     <BuildOn>$(AGENT_NAME)</BuildOn>
     <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
+    <RepositoryProvider Condition=" '$(RepositoryProvider)' == 'TfsGit' ">Git</RepositoryProvider>
     <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
     <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
     <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
@@ -62,6 +63,11 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+  </PropertyGroup>
+
+  <!-- determine if the repository is managed by git -->
+  <PropertyGroup>
+    <RepositoryProvider Condition=" '$(RepositoryProvider)' == '' AND Exists('$(RepositoryRoot)$(slash).git') ">git</RepositoryProvider>
   </PropertyGroup>
 
   <ItemGroup>

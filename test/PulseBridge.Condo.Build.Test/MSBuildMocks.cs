@@ -1,6 +1,5 @@
 namespace PulseBridge.Condo.Build
 {
-    using System;
     using System.Collections.Generic;
 
     using Microsoft.Build.Framework;

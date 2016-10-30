@@ -1,12 +1,10 @@
 ﻿namespace PulseBridge.Condo.Build.Tasks
 {
     using System.Linq;
-    using System.IO;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using NuGet.Configuration;
-    using System;
 
     /// <summary>
     /// Represents a NuGet task that gets NuGet package sources that are Visual Studio Team Services (VSTS) secured

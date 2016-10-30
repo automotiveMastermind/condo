@@ -3,9 +3,6 @@ namespace PulseBridge.Condo.Build.Tasks
     using System.Diagnostics;
     using System.Threading;
 
-    using static System.FormattableString;
-
-    using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
     /// <summary>

@@ -32,13 +32,45 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc/>
         public string RepositoryPath => this.path.FullPath;
+
+        /// <inheritdoc/>
+        public string Username
+        {
+            get
+            {
+                var result = this.Execute("config --get user.name");
+
+                return result.Output;
+            }
+
+            set
+            {
+                this.Execute($@"config user.name ""{value}""");
+            }
+        }
+
+        /// <inheritdoc/>
+        public string Email
+        {
+            get
+            {
+                var result = this.Execute("config --get user.email");
+
+                return result.Output;
+            }
+
+            set
+            {
+                this.Execute($@"config user.email ""{value}""");
+            }
+        }
         #endregion
 
         #region Constructors and Finalizers
         /// <summary>
         /// Initializes a new instance of the <see cref="GitRepository"/> class.
         /// </summary>
-        public GitRepository()
+        internal GitRepository()
             : this(new TemporaryPath())
         {
         }
@@ -49,7 +81,7 @@ namespace PulseBridge.Condo.IO
         /// <param name="path">
         /// The path containing the repository.
         /// </param>
-        public GitRepository(string path)
+        internal GitRepository(string path)
             : this(new PathManager(path))
         {
         }
@@ -60,7 +92,7 @@ namespace PulseBridge.Condo.IO
         /// <param name="path">
         /// The path manager that is responsible for managing the path.
         /// </param>
-        public GitRepository(IPathManager path)
+        internal GitRepository(IPathManager path)
         {
             this.path = path;
 
@@ -94,22 +126,28 @@ namespace PulseBridge.Condo.IO
 
         #region Methods
         /// <inheritdoc/>
-        public IGitRepository Initialize()
+        public IGitRepositoryInitialized Initialize()
         {
             return this.Initialize("pb-open", "open@pulsebridge.com");
         }
 
         /// <inheritdoc/>
-        public IGitRepository Initialize(string name, string email)
+        public IGitRepositoryBare Bare()
         {
-            const string cmd = "init";
+            this.Execute("init --bare");
 
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGitRepositoryInitialized Initialize(string name, string email)
+        {
             // execute the init command
-            this.Execute(cmd);
+            this.Execute("init");
 
-            // set the username and email address
-            this.Execute(Invariant($@"config user.name ""{name}"""));
-            this.Execute(Invariant($@"config user.email ""{email}"""));
+            // set the user and email
+            this.Username = name;
+            this.Email = email;
 
             // set the current branch
             this.CurrentBranch = "master";
@@ -118,20 +156,31 @@ namespace PulseBridge.Condo.IO
             return this;
         }
 
+        public IGitRepositoryInitialized Clone(string uri)
+        {
+            // create the cmd to clone the repository
+            var cmd = $"clone {uri} .";
+
+            // execute the cmd
+            this.Execute(cmd);
+
+            return this;
+        }
+
         /// <inheritdoc/>
-        public IGitRepository Save()
+        public IGitRepositoryInitialized Save()
         {
             return this.Save("README");
         }
 
         /// <inheritdoc/>
-        public IGitRepository Save(string relativePath)
+        public IGitRepositoryInitialized Save(string relativePath)
         {
             return this.Save(relativePath, string.Empty);
         }
 
         /// <inheritdoc/>
-        public IGitRepository Save(string relativePath, string contents)
+        public IGitRepositoryInitialized Save(string relativePath, string contents)
         {
             // save the contents using the path manager
             this.path.Save(relativePath, contents);
@@ -140,13 +189,13 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepository Add()
+        public IGitRepositoryInitialized Add()
         {
             return this.Add(".");
         }
 
         /// <inheritdoc/>
-        public IGitRepository Add(string spec)
+        public IGitRepositoryInitialized Add(string spec)
         {
             this.Execute($@"add ""{spec}""");
 
@@ -154,25 +203,25 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepository Commit(string subject)
+        public IGitRepositoryInitialized Commit(string subject)
         {
-            return this.Commit(null, null, subject, null);
+            return this.Commit(type: null, scope: null, subject: subject, body: null);
         }
 
         /// <inheritdoc/>
-        public IGitRepository Commit(string type, string subject)
+        public IGitRepositoryInitialized Commit(string type, string subject)
         {
-            return this.Commit(type, null, subject, null);
+            return this.Commit(type, scope: null, subject: subject, body: null);
         }
 
         /// <inheritdoc/>
-        public IGitRepository Commit(string type, string scope, string subject)
+        public IGitRepositoryInitialized Commit(string type, string scope, string subject)
         {
-            return this.Commit(type, scope, subject, null);
+            return this.Commit(type, scope, subject, body: null);
         }
 
         /// <inheritdoc/>
-        public IGitRepository Commit(string type, string scope, string subject, string body)
+        public IGitRepositoryInitialized Commit(string type, string scope, string subject, string body)
         {
             if (subject == null)
             {
@@ -205,13 +254,13 @@ namespace PulseBridge.Condo.IO
 
 
         /// <inheritdoc/>
-        public IGitRepository Branch(string name)
+        public IGitRepositoryInitialized Branch(string name)
         {
-            return this.Branch(name, null);
+            return this.Branch(name, source: null);
         }
 
         /// <inheritdoc/>
-        public IGitRepository Branch(string name, string source)
+        public IGitRepositoryInitialized Branch(string name, string source)
         {
             var cmd = $"checkout -b {name}";
 
@@ -228,7 +277,7 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepository Checkout(string name)
+        public IGitRepositoryInitialized Checkout(string name)
         {
             this.Execute($"checkout {name}");
 
@@ -238,7 +287,7 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepository Tag(string name)
+        public IGitRepositoryInitialized Tag(string name)
         {
             this.Execute($"tag {name}");
 
@@ -291,7 +340,7 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepository Condo(string root)
+        public IGitRepositoryInitialized Condo(string root)
         {
             if (root == null)
             {

@@ -11,6 +11,10 @@
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
   </PropertyGroup>
 
+  <Target Name="TagVersion" Condition=" '$(CI)' == 'true' AND '$(RepositoryProvider.ToLower())' == 'git' ">
+    <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
+  </Target>
+
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
@@ -33,6 +37,7 @@
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);
+      TagVersion;
     </PublishDependsOn>
   </PropertyGroup>
 

@@ -7,6 +7,8 @@ namespace PulseBridge.Condo.Build.Tasks
     [Class(nameof(GetRepositoryInfo))]
     public class GetRepositoryInfoTest
     {
+        private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();
+
         [Fact]
         [Priority(2)]
         [Purpose(PurposeType.Unit)]
@@ -100,7 +102,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var root = repo.RepositoryPath;
@@ -134,7 +136,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenBranchRefSet_UsesAbbreviatedBranch()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var root = repo.RepositoryPath;
@@ -252,7 +254,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var root = repo.RepositoryPath;
@@ -366,7 +368,7 @@ namespace PulseBridge.Condo.Build.Tasks
         [Purpose(PurposeType.Unit)]
         public void TryFileSystem_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = new GitRepository().Initialize().Commit("initial"))
+            using (var repo = repository.Initialize().Commit("initial"))
             {
                 // arrange
                 var root = repo.RepositoryPath;

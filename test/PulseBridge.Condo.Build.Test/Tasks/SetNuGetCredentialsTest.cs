@@ -1,6 +1,7 @@
 ﻿namespace PulseBridge.Condo.Build.Tasks
 {
     using Microsoft.Build.Utilities;
+    using NuGet.Configuration;
     using Xunit;
 
     using PulseBridge.Condo.IO;
@@ -23,9 +24,10 @@
                 var password = "example";
 
                 var engine = MSBuildMocks.CreateEngine();
-                var provider = NuGetMocks.CreateSettings(root, source, name);
+                var settings = NuGetMocks.CreateSettings(root, source, name);
+                var provider = new PackageSourceProvider(settings);
 
-                var actual = new SetNuGetCredentials
+                var actual = new SetNuGetCredentials(settings, provider)
                 {
                     RepositoryRoot = root,
                     BuildEngine = engine,
