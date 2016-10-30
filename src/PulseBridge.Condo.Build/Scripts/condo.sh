@@ -235,15 +235,13 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 "$CONDO_PROJ"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
--p:PackageFeedUsername=$BOOTSTRAP_USERNAME
--p:PackageFeedPassword=$BOOTSTRAP_PASSWORD
 -fl
 -flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
 -clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY
 END_MSBUILD_RSP
 
 if [ "$BOOTSTRAP" = "1" ]; then
-safe-join $'\n' "-t:Bootstrap" >> $MSBUILD_RSP
+safe-join $'\n' "-p:PackageFeedUsername=$BOOTSTRAP_USERNAME -p:PackageFeedPassword=$BOOTSTRAP_PASSWORD -t:Bootstrap" >> $MSBUILD_RSP
 fi
 
 # write out msbuild arguments to the rsp

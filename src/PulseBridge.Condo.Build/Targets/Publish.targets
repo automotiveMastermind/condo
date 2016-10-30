@@ -19,7 +19,7 @@
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
 
-  <Target Name="PublishPackages" Condition=" '$(PackageFeedUri)' != '' ">
+  <Target Name="PublishPackages" Condition=" '$(CI)' == 'true' AND '$(PackageFeedUri)' != '' ">
     <PushNuGetPackage
       RepositoryRoot="$(RepositoryRoot)"
       Packages="@(AllPackages)"
