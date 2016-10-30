@@ -52,7 +52,6 @@
     <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
     <BuildOn>$(AGENT_NAME)</BuildOn>
     <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
-    <RepositoryProvider Condition=" '$(RepositoryProvider)' == 'TfsGit' ">Git</RepositoryProvider>
     <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
     <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
     <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
@@ -121,6 +120,7 @@
       <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
       <Output TaskParameter="Branch" PropertyName="Branch" />
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
+      <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
   </Target>
 

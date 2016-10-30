@@ -46,6 +46,12 @@ namespace PulseBridge.Condo.Build.Tasks
         /// </summary>
         [Output]
         public string ClientVersion { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the repository supports git.
+        /// </summary>
+        [Output]
+        public bool HasGit { get; set; }
         #endregion
 
         #region Methods
@@ -69,6 +75,9 @@ namespace PulseBridge.Condo.Build.Tasks
 
             // update the repository root
             this.RepositoryRoot = root;
+
+            // set the has git flag
+            this.HasGit = true;
 
             // attempt to use the command line first, then the file system to lookup repository info
             var result = this.TryCommandLine(root) || this.TryFileSystem(root);
@@ -430,6 +439,7 @@ namespace PulseBridge.Condo.Build.Tasks
             // create the path for the .git folder
             var path = Path.Combine(root.FullName, ".git");
 
+            // determine if the directory exists
             if (Directory.Exists(path))
             {
                 // move on immediately

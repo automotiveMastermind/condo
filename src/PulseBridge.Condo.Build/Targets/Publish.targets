@@ -11,7 +11,7 @@
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
   </PropertyGroup>
 
-  <Target Name="TagVersion" Condition=" '$(CI)' == 'true' AND '$(RepositoryProvider.ToLower())' == 'git' ">
+  <Target Name="TagVersion" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
     <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
   </Target>
 
