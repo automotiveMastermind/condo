@@ -88,11 +88,9 @@ install_dotnet() {
             sleep 10s
         done
 
-        export DOTNET_INSTALL_DIR=$DOTNET_PATH
         chmod +x $DOTNET_INSTALL
-
         safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
-		safe-exec $DOTNET_INSTALL
+        safe-exec rm -rf $DOTNET_TEMP
     fi
 
     export PATH="$DOTNET_INSTALL_DIR:$PATH"
@@ -200,24 +198,26 @@ CONDO_LOG="$BUILD_ROOT/condo.log"
 [ -e "$MSBUILD_RSP" ] && rm -f $MSBUILD_RSP
 
 # set the dotnet install path
-DOTNET_PATH=~/.dotnet
+if [ -z "$DOTNET_INSTALL_DIR" ]; then
+    export DOTNET_INSTALL_DIR=~/.dotnet
+fi
 
 # determine if the dotnet install url is not already set
 if [ -z "$DOTNET_INSTALL_URL" ]; then
     # set the dotnet install url to the 1.0.0 release
-    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.0/scripts/obtain/dotnet-install.sh"
+    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.0-preview2.1/scripts/obtain/dotnet-install.sh"
 fi
 
 # determine if the dotnet install channel is not already set
 if [ -z "$DOTNET_CHANNEL" ]; then
     # set the dotnet channel
-    DOTNET_CHANNEL="rel-1.0.0"
+    DOTNET_CHANNEL="preview"
 fi
 
 # determine if the dotnet version is not already set
 if [ -z "$DOTNET_VERSION" ]; then
     # set the dotnet version
-    DOTNET_VERSION="1.0.0-preview2-003121"
+    DOTNET_VERSION="1.0.0-preview2-003131"
 fi
 
 install_dotnet
