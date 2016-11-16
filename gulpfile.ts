@@ -235,7 +235,7 @@ gulp.task('deploy', ['docs'], () => {
     return gulp
         .src(".docs/**/*")
         .pipe(pages({
-            remoteUrl: 'https://' + process.env.GH_TOKEN + '@github.com/pulsebridge/condo.git',
+            remoteUrl: 'https://github.com/pulsebridge/condo.git',
             branch: 'gh-pages'
         }));
 });

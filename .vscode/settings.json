@@ -3,5 +3,6 @@
     "editor.insertSpaces": true,
 
     "files.encoding": "utf8",
-    "files.trimTrailingWhitespace": true
+"files.trimTrailingWhitespace": true,
+"typescript.tsdk": "./node_modules/typescript/lib"
 }

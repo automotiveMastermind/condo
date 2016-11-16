@@ -25,14 +25,14 @@
     "tests"
   ],
   "devDependencies": {
-    "bootstrap": "~4.0.0-alpha.2",
-    "anchor-js": "~2.0.0",
-    "jquery": "~2.1.4",
-    "font-awesome": "~4.5.0",
-    "picturefill": "~3.0.1"
+    "bootstrap": "4.0.0-alpha.2",
+    "anchor-js": "2.0.0",
+    "jquery": "2.1.4",
+    "font-awesome": "4.5.0",
+    "picturefill": "3.0.1"
   },
   "dependencies": {
-    "clipboard": "~1.5.5",
-    "tether": "~1.1.1"
+    "clipboard": "1.5.5",
+    "tether": "1.1.1"
   }
 }
