@@ -1,5 +1,6 @@
 namespace PulseBridge.Condo.Build.Tasks
 {
+    using System;
     using System.IO;
     using System.Linq;
 
@@ -70,18 +71,16 @@ namespace PulseBridge.Condo.Build.Tasks
                 return;
             }
 
-            // get the name properties
-            var names = frameworks.Properties().Select(p => p.Name);
+            // get the name properties ordered by name
+            var names = frameworks.Properties().Select(p => p.Name)
+                .OrderByDescending(name => name);
+
+            // get the highest netcore tfm
+            var tfm = names.FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
 
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", names));
-
-            // iterate over each target framework
-            foreach (var name in names)
-            {
-                // enable the target framework moniker property for the expected framework
-                project.SetMetadata($"TFM_{name.Replace('.', '_')}", "true");
-            }
+            project.SetMetadata("NetCoreFramework", tfm);
 
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);

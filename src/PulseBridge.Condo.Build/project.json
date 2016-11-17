@@ -12,23 +12,22 @@
 
   "dependencies": {
     "Microsoft.NETCore.App": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "type": "platform"
     },
 
-    "NuGet.Versioning": "3.5.0-*",
-    "NuGet.Packaging": "3.5.0-*",
-    "NuGet.Commands": "3.5.0-*",
-    "Newtonsoft.Json": "9.0.*",
-    "Microsoft.Build": "0.1.0-*",
-    "Microsoft.Build.Framework": "0.1.0-*",
-    "Microsoft.Build.Utilities.Core": "0.1.0-*",
-    "Microsoft.Build.Tasks.Core": "0.1.0-*"
+    "NuGet.Versioning": "3.5.0-rc1-final",
+    "NuGet.Packaging": "3.5.0-rc1-final",
+    "NuGet.Commands": "3.5.0-rc1-final",
+    "Newtonsoft.Json": "9.0.1",
+
+    "Microsoft.Build": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Framework": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Utilities.Core": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Tasks.Core": "15.1.0-preview-000370-00"
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": "dotnet"
-    }
+    "netcoreapp1.1": {}
   }
 }

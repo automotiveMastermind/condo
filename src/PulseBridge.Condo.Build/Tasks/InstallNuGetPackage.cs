@@ -83,8 +83,8 @@
                             id,
                             this.Path,
                             logger,
-                            PackageSaveMode.Nupkg | PackageSaveMode.Nuspec,
-                            XmlDocFileSaveMode.None
+                            packageSaveMode: PackageSaveMode.Nupkg | PackageSaveMode.Nuspec,
+                            xmlDocFileSaveMode: XmlDocFileSaveMode.None
                         );
 
                     // install the package

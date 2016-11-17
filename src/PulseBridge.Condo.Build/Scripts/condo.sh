@@ -107,13 +107,6 @@ install_msbuild() {
         # get the current runtime
         RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
-        # TRICKY, HACK, TODO: this is a hack to resolve the runtime for macos sierra, which is not yet officially
-        # supported with native runtime libraries
-        if [ "$RUNTIME" = "osx.10.12-x64" ]; then
-            # set the runtime to el capitan
-            RUNTIME="osx.10.11-x64"
-        fi
-
         # get the msbuild project file and replace the RUNTIME marker with the current runtime, then emit to the
         cat "$CONDO_PATH/Scripts/msbuild.json" | sed "s/RUNTIME/$RUNTIME/g" > $MSBUILD_PROJ
 
@@ -217,7 +210,7 @@ fi
 # determine if the dotnet version is not already set
 if [ -z "$DOTNET_VERSION" ]; then
     # set the dotnet version
-    DOTNET_VERSION="1.0.0-preview2-003131"
+    DOTNET_VERSION="1.0.0-preview2-1-003177"
 fi
 
 install_dotnet
@@ -250,5 +243,5 @@ safe-join $'\n' "$@" >> $MSBUILD_RSP
 info "Starting build..."
 info "msbuild '$CONDO_PROJ' $MSBUILD_ARGS"
 
-"$MSBUILD_PUBLISH/corerun" "$MSBUILD_PUBLISH/MSBuild.exe" @"$MSBUILD_RSP"
+"$MSBUILD_PUBLISH/corerun" "$MSBUILD_PUBLISH/MSBuild.dll" @"$MSBUILD_RSP"
 safe-exit $?

@@ -131,7 +131,12 @@ namespace PulseBridge.Condo.Build.Tasks
             if (this.settings == null)
             {
                 // load the settings
-                this.settings = Settings.LoadDefaultSettings(this.RepositoryRoot);
+                this.settings = Settings.LoadDefaultSettings
+                    (
+                        this.RepositoryRoot,
+                        configFileName: null,
+                        machineWideSettings: new NuGetMachineSettings()
+                    );
             }
 
             // determine if the provider is not specified
