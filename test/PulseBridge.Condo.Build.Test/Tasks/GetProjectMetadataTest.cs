@@ -27,8 +27,9 @@ namespace PulseBridge.Condo.Build.Tasks
             var shared = Path.Combine(directory, "shared");
             var info = Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs");
 
-            var framework = "netcoreapp1.0";
-            var tfm = $"TFM_{framework.Replace('.', '_')}";
+            var netcore10 = "netcoreapp1.0";
+            var netcore11 = "netcoreapp1.1";
+            var frameworks = $"{netcore11};{netcore10}";
 
             var expected = new Dictionary<string, string>
             {
@@ -38,11 +39,11 @@ namespace PulseBridge.Condo.Build.Tasks
                 { "ProjectDir", directory + Path.DirectorySeparatorChar },
                 { "SharedSourcesDir", shared + Path.DirectorySeparatorChar },
                 { "CondoAssemblyInfo", info },
-                { "TargetFrameworks", framework },
-                { tfm, "true" }
+                { "TargetFrameworks", frameworks },
+                { "NetCoreFramework", netcore11 }
             };
 
-            var json = $"{{ \"frameworks\": {{ \"{framework}\": {{ }} }} }}";
+            var json = $"{{ \"frameworks\": {{ \"{netcore10}\": {{ }}, \"{netcore11}\": {{ }} }} }}";
             Directory.CreateDirectory(directory);
             File.WriteAllText(path, json);
 
@@ -53,7 +54,7 @@ namespace PulseBridge.Condo.Build.Tasks
 
             var item = new Mock<ITaskItem>();
             item.Setup(mock => mock.SetMetadata(It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string>((key, value) => actual.Add(key, value));
+                .Callback<string, string>((key, value) => actual[key] = value);
             item.Setup(mock => mock.GetMetadata(It.IsAny<string>()))
                 .Returns<string>(key => actual[key]);
 

@@ -7,8 +7,8 @@ namespace PulseBridge.Condo.Build.Tasks
     using static System.FormattableString;
 
     using Microsoft.Build.Framework;
-    using Microsoft.Build.Tasks;
     using Microsoft.Build.Utilities;
+    using Microsoft.Build.Tasks;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about a repository.

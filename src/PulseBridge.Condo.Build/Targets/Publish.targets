@@ -22,7 +22,7 @@
   <Target Name="PublishPackages" Condition=" '$(CI)' == 'true' AND '$(PackageFeedUri)' != '' ">
     <PushNuGetPackage
       RepositoryRoot="$(RepositoryRoot)"
-      Packages="@(AllPackages)"
+      Packages="@(Packages)"
       Uri="$(PackageFeedUri)"
       ApiKey="$(PackageFeedApiKey)"
       Username="$(PackageFeedUsername)"

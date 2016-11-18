@@ -123,15 +123,15 @@ function Install-DotNet() {
     $dotnetVersion = $env:DOTNET_VERSION
 
     if (!$dotnetUrl) {
-        $dotnetUrl = "https://github.com/dotnet/cli/raw/rel/1.0.0/scripts/obtain/dotnet-install.ps1"
+        $dotnetUrl = "https://github.com/dotnet/cli/raw/rel/1.0.0-preview2.1/scripts/obtain/dotnet-install.ps1"
     }
 
     if (!$dotnetChannel) {
-        $dotnetChannel = "rel-1.0.0"
+        $dotnetChannel = "preview"
     }
 
     if (!$dotnetVersion) {
-        $dotnetVersion = "1.0.0-preview2-003121"
+        $dotnetVersion = "1.0.0-preview2-1-003177"
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -146,7 +146,6 @@ function Install-DotNet() {
             mkdir $dotnetTemp | Out-Null
             Get-File -url $dotnetUrl -Path $dotnetInstall
             Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
-			Invoke-Cmd "$dotnetInstall"
         }
         finally {
             del -Recurse -Force $dotnetTemp
@@ -240,7 +239,7 @@ try
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj' $MSBuildArgs"
 
-    & "$MSBuildPublish\corerun.exe" "$MSBuildPublish\MSBuild.exe" `@"$MSBuildRsp"
+    & "$MSBuildPublish\corerun.exe" "$MSBuildPublish\MSBuild.dll" `@"$MSBuildRsp"
 }
 finally {
     cp -ErrorAction SilentlyContinue $MSBuildRsp,$CondoLog,$MSBuildLog $ArtifactsRoot

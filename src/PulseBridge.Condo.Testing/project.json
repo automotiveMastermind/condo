@@ -2,9 +2,10 @@
   "version": "2.0.0-*",
 
   "dependencies": {
-    "xunit": "2.2.0-beta2-build3300",
-    "System.Diagnostics.Process": "4.1.0",
-    "System.Net.NameResolution": "4.0.0"
+    "System.Diagnostics.Process": "4.3.0",
+    "System.Net.NameResolution": "4.3.0",
+
+    "xunit": "2.2.0-beta4-build3444"
   },
 
   "frameworks": {
