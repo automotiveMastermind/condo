@@ -42,7 +42,7 @@ namespace PulseBridge.Condo
                 var buildFor = "E2E_User";
                 var agent = "E2E_Machine";
                 var provider = "TfsGit";
-                var project = "PulseBridge.Condo.Build";
+                var project = "PulseBridge.Condo";
                 var teamUri = "https://pulsebridge.visualstudio.com/";
                 var repoUri = "https://pulsebridge.visualstudio.com/_git/condo";
                 var buildUri = "vstfs:///pulsebridge/Build/1430";
@@ -62,7 +62,7 @@ namespace PulseBridge.Condo
 
                 repo.Condo(root);
 
-                var args = $@"--source ""{root}/src/PulseBridge.Condo.Build"" --no-color --verbosity minimal -t:initialize "
+                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -t:initialize "
                     + $"-p:TF_BUILD={ci} "
                     + $"-p:BUILD_VERSION={version} "
                     + $"-p:BUILD_SOURCEBRANCH={branch} "
@@ -136,7 +136,7 @@ namespace PulseBridge.Condo
                 var buildFor = "E2E_User";
                 var agent = "E2E_Machine";
                 var provider = "TfsGit";
-                var project = "PulseBridge.Condo.Build";
+                var project = "PulseBridge.Condo";
                 var teamUri = "https://pulsebridge.visualstudio.com/";
                 var repoUri = "https://pulsebridge.visualstudio.com/_git/condo";
                 var buildUri = "vstfs:///pulsebridge/Build/1430";
@@ -156,7 +156,7 @@ namespace PulseBridge.Condo
 
                 repo.Condo(root);
 
-                var args = $@"-Source ""{root}\src\PulseBridge.Condo.Build"" -NoColor -Verbosity minimal /t:initialize "
+                var args = $@"-Source ""{root}\src\PulseBridge.Condo"" -NoColor -Verbosity minimal /t:initialize "
                     + $"/p:TF_BUILD={ci} "
                     + $"/p:BUILD_VERSION={version} "
                     + $"/p:BUILD_SOURCEBRANCH={branch} "

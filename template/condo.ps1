@@ -178,7 +178,7 @@ if ($Reset -and (Test-Path $BuildRoot)) {
 }
 
 if ($Local) {
-    $Source = Join-Path $RootPath "src\PulseBridge.Condo.Build"
+    $Source = Join-Path $RootPath "src\PulseBridge.Condo"
 }
 
 if (!(Test-Path $CondoRoot)) {
@@ -203,7 +203,7 @@ if (!(Test-Path $CondoRoot)) {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
-        pushd "$CondoExtract\*\src\PulseBridge.Condo.Build"
+        pushd "$CondoExtract\*\src\PulseBridge.Condo"
         cp -Recurse * $CondoRoot
         popd
 

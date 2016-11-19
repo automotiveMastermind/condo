@@ -11,12 +11,12 @@
       "version": "1.1.0",
       "type": "platform"
     },
-
+    
     "xunit": "2.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
     "Moq":  "4.6.38-*",
 
-    "PulseBridge.Condo": "2.0.0-*",
+    "PulseBridge.Condo.IO": "2.0.0-*",
     "PulseBridge.Condo.Xunit": "2.0.0-*"
   },
 

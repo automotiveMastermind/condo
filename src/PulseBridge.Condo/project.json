@@ -1,0 +1,36 @@
+{
+  "name": "PulseBridge.Condo",
+  "version": "2.0.0-*",
+
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "debugType": "portable"
+  },
+
+  "publishOptions": {
+    "include": [ "PulseBridge.Condo.tasks" ]
+  },
+
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "version": "1.1.0",
+      "type": "platform"
+    },
+
+    "NuGet.Versioning": "3.5.0-rc1-final",
+    "NuGet.Packaging": "3.5.0-rc1-final",
+    "NuGet.Commands": "3.5.0-rc1-final",
+    "Newtonsoft.Json": "9.0.1",
+
+    "Microsoft.Build": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Framework": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Utilities.Core": "15.1.0-preview-000370-00",
+    "Microsoft.Build.Tasks.Core": "15.1.0-preview-000370-00",
+
+    "PulseBridge.Condo.IO": "2.0.0-*"
+  },
+
+  "frameworks": {
+    "netcoreapp1.1": { }
+  }
+}

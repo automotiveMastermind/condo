@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0-*",
+
+  "buildOptions": {
+    "debugType": "portable"
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.1",
+    "System.Diagnostics.Process": "4.3.0",
+
+    "PulseBridge.Condo.Abstractions": "2.0.0-*"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

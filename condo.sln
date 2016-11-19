@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{58429933-D48
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2DEA9CED-ED8E-474A-9E1B-69AE3B5BF755}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Build", "src\PulseBridge.Condo.Build\PulseBridge.Condo.Build.xproj", "{3A64FB3F-EC20-4533-A8BA-11BF0C5A5D6F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo", "src\PulseBridge.Condo\PulseBridge.Condo.xproj", "{3A64FB3F-EC20-4533-A8BA-11BF0C5A5D6F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Testing", "src\PulseBridge.Condo.Testing\PulseBridge.Condo.Testing.xproj", "{DBC25EE4-F756-423C-9ED6-4252B6850E9F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Xunit", "src\PulseBridge.Condo.Xunit\PulseBridge.Condo.Xunit.xproj", "{DBC25EE4-F756-423C-9ED6-4252B6850E9F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Testing.Test", "test\PulseBridge.Condo.Testing.Test\PulseBridge.Condo.Testing.Test.xproj", "{CA6389E6-C61B-44C8-8CF0-B35358F48382}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Xunit.Test", "test\PulseBridge.Condo.Xunit.Test\PulseBridge.Condo.Xunit.Test.xproj", "{CA6389E6-C61B-44C8-8CF0-B35358F48382}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Build.Test", "test\PulseBridge.Condo.Build.Test\PulseBridge.Condo.Build.Test.xproj", "{730D2C24-D34C-40E1-928A-B1377F2A76FC}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.Test", "test\PulseBridge.Condo.Test\PulseBridge.Condo.Test.xproj", "{730D2C24-D34C-40E1-928A-B1377F2A76FC}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PulseBridge.Condo.E2E.Test", "test\PulseBridge.Condo.E2E.Test\PulseBridge.Condo.E2E.Test.xproj", "{8F132909-7201-4457-A402-F20EF36B935B}"
 EndProject

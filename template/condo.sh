@@ -82,7 +82,7 @@ done
 
 BUILD_ROOT="$ROOT_PATH/.build"
 CONDO_ROOT="$BUILD_ROOT/condo"
-CONDO_SHELL="$CONDO_ROOT/Scripts/condo.sh"
+CONDO_SHELL="$CONDO_ROOT/PulseBridge.Condo/Scripts/condo.sh"
 
 if [ -z "$DOTNET_INSTALL_DIR" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
@@ -103,7 +103,7 @@ if [[ -d "$BUILD_ROOT" && "$CONDO_RESET" = "1" ]]; then
 fi
 
 if [ "$CONDO_LOCAL" = "1" ]; then
-    CONDO_SOURCE="$ROOT_PATH/src/PulseBridge.Condo.Build"
+    CONDO_SOURCE="$ROOT_PATH/src"
 fi
 
 if [ ! -d "$CONDO_ROOT" ]; then
@@ -134,7 +134,7 @@ if [ ! -d "$CONDO_ROOT" ]; then
         done
 
         CONDO_EXTRACT="$CONDO_TEMP/extract"
-        CONDO_SOURCE="$CONDO_EXTRACT/src/PulseBridge.Condo.Build"
+        CONDO_SOURCE="$CONDO_EXTRACT/src"
 
         mkdir -p $CONDO_EXTRACT
         tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
