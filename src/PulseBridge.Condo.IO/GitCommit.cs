@@ -21,9 +21,6 @@ namespace PulseBridge.Condo.IO
         public string Body { get; set; }
 
         /// <inheritdoc/>
-        public string Notes { get; set; }
-
-        /// <inheritdoc/>
         public IDictionary<string, string> HeaderCorrespondence { get; } = new Dictionary<string, string>();
 
         /// <inheritdoc/>

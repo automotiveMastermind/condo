@@ -1,5 +1,7 @@
 namespace PulseBridge.Condo.Diagnostics
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Defines the properties and methods required to implement output from a process.
     /// </summary>
@@ -9,12 +11,12 @@ namespace PulseBridge.Condo.Diagnostics
         /// <summary>
         /// Gets the standard output.
         /// </summary>
-        string Output { get; }
+        IReadOnlyCollection<string> Output { get; }
 
         /// <summary>
         /// Gets the standard error.
         /// </summary>
-        string Error { get; }
+        IReadOnlyCollection<string> Error { get; }
 
         /// <summary>
         /// Gets the exit code of the process.

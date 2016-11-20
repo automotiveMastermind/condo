@@ -1,5 +1,7 @@
 namespace PulseBridge.Condo.Diagnostics
 {
+    using System.Collections.Generic;
+
     using Xunit;
 
     [Class(nameof(ProcessOutput))]
@@ -11,8 +13,8 @@ namespace PulseBridge.Condo.Diagnostics
         public void Ctor_WhenOutputNull_SetsToEmpty()
         {
             // arrange
-            var output = default(string);
-            var error = default(string);
+            var output = default(IEnumerable<string>);
+            var error = default(IEnumerable<string>);
             var exitCode = 0;
 
             // act
@@ -27,8 +29,8 @@ namespace PulseBridge.Condo.Diagnostics
         public void Ctor_WhenErrorNull_SetsToEmpty()
         {
             // arrange
-            var output = default(string);
-            var error = default(string);
+            var output = default(IEnumerable<string>);
+            var error = default(IEnumerable<string>);
             var exitCode = 0;
 
             // act
@@ -43,8 +45,8 @@ namespace PulseBridge.Condo.Diagnostics
         public void Ctor_WhenOutputSet_OutputMatches()
         {
             // arrange
-            var output = "output";
-            var error = default(string);
+            var output = new HashSet<string> { "output" };
+            var error = default(IEnumerable<string>);
             var exitCode = 0;
 
             // act
@@ -59,8 +61,8 @@ namespace PulseBridge.Condo.Diagnostics
         public void Ctor_WhenErrorSet_ErrorMatches()
         {
             // arrange
-            var output = default(string);
-            var error = "error";
+            var output = default(IEnumerable<string>);
+            var error = new HashSet<string> { "error" };
             var exitCode = 1;
 
             // act

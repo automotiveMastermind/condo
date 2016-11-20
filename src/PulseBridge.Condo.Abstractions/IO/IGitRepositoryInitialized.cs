@@ -54,25 +54,15 @@ namespace PulseBridge.Condo.IO
         IGitRepositoryInitialized Add(string spec);
 
         /// <summary>
-        /// Creates a new commit with the specified <paramref name="type"/>, <paramref name="scope"/> and
-        /// <paramref name="subject"/>.
+        /// Creates a new commit with the specified <paramref name="message"/>.
         /// </summary>
-        /// <param name="type">
-        /// The type of the commit.
-        /// </param>
-        /// <param name="scope">
-        /// The scope of the commit.
-        /// </param>
-        /// <param name="subject">
-        /// The subject, or first line of the commit message.
-        /// </param>
-        /// <param name="body">
-        /// The body of the commit message.
+        /// <param name="message">
+        /// The message used to describe the commit.
         /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
-        IGitRepositoryInitialized Commit(string type, string scope, string subject, string body);
+        IGitRepositoryInitialized Commit(string message);
 
         /// <summary>
         /// Creates a new branch with the specified <paramref name="name"/>
@@ -119,6 +109,26 @@ namespace PulseBridge.Condo.IO
         /// The current repository instance.
         /// </returns>
         IGitRepositoryInitialized Condo(string root);
+
+        /// <summary>
+        /// Gets the git log using the specified <paramref name="options"/>
+        /// </summary>
+        /// </param name="from">
+        /// The item specification from which the git log should start.
+        /// </param>
+        /// <param name="to">
+        /// The item specification to which the git log should end.
+        /// </param>
+        /// <param name="options">
+        /// The options used to parse the git log.
+        /// </param>
+        /// <param name="parser">
+        /// The parser used to get the log.
+        /// </param>
+        /// <returns>
+        /// The git log for the specified <paramref name="parser"/>.
+        /// </returns>
+        IGitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser);
         #endregion
     }
 }

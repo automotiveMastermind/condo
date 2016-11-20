@@ -1,12 +1,14 @@
 namespace PulseBridge.Condo.Diagnostics
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Represents a default implementation of process output.
     /// </summary>
     public class ProcessOutput : IProcessOutput
     {
         #region Constructors and Finalizers
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessOutput"/> class.
         /// </summary>
@@ -19,20 +21,21 @@ namespace PulseBridge.Condo.Diagnostics
         /// <param name="exitCode">
         /// The exit code of the process.
         /// </param>
-        public ProcessOutput(string output, string error, int exitCode)
+        public ProcessOutput(IEnumerable<string> output, IEnumerable<string> error, int exitCode)
         {
-            this.Output = output ?? string.Empty;
-            this.Error = error ?? string.Empty;
+            this.Output = (output ?? new HashSet<string>()).ToList().AsReadOnly();
+            this.Error = (error ?? new HashSet<string>()).ToList().AsReadOnly();
+
             this.ExitCode = exitCode;
         }
         #endregion
 
         #region Properties
         /// <inheritdoc />
-        public string Error { get; private set; }
+        public IReadOnlyCollection<string> Error { get; private set; }
 
         /// <inheritdoc />
-        public string Output { get; private set; }
+        public IReadOnlyCollection<string> Output { get; private set; }
 
         /// <inheritdoc />
         public int ExitCode { get; private set; }

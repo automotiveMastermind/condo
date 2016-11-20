@@ -4,6 +4,7 @@ namespace PulseBridge.Condo.IO
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading;
 
     using static System.FormattableString;
@@ -16,8 +17,6 @@ namespace PulseBridge.Condo.IO
     public class GitRepository : IGitRepository
     {
         #region Private Fields
-        private const string Split = "------------------------ >8 ------------------------";
-
         private readonly IPathManager path;
 
         private readonly string version;
@@ -45,7 +44,7 @@ namespace PulseBridge.Condo.IO
             {
                 var version = this.Execute("--version");
 
-                this.version = version.Output;
+                this.version = version.Output.First();
             }
             catch (Exception netEx)
             {
@@ -71,10 +70,12 @@ namespace PulseBridge.Condo.IO
                     return null;
                 }
 
+                var branch = result.Output.FirstOrDefault();
+
                 // return the current branch
-                return result.Output.StartsWith("refs/heads/")
-                    ? result.Output.Substring(11)
-                    : result.Output;
+                return branch.StartsWith("refs/heads/")
+                    ? branch.Substring(11)
+                    : branch;
             }
         }
 
@@ -92,7 +93,7 @@ namespace PulseBridge.Condo.IO
                 var result = this.Execute("config --get user.name");
 
                 // return the username
-                return result.Success ? result.Output : null;
+                return result.Success ? result.Output.FirstOrDefault() : null;
             }
 
             set
@@ -109,7 +110,7 @@ namespace PulseBridge.Condo.IO
                 var result = this.Execute("config --get user.email");
 
                 // return the email
-                return result.Success ? result.Output : null;
+                return result.Success ? result.Output.FirstOrDefault() : null;
             }
 
             set
@@ -127,7 +128,7 @@ namespace PulseBridge.Condo.IO
                 var result = this.Execute("ls-remote --get-url origin");
 
                 // return the origin uri
-                return result.Success ? result.Output : null;
+                return result.Success ? result.Output.FirstOrDefault() : null;
             }
         }
 
@@ -138,7 +139,7 @@ namespace PulseBridge.Condo.IO
             {
                 var result = this.Execute("rev-parse HEAD");
 
-                return result.Success ? result.Output : null;
+                return result.Success ? result.Output.FirstOrDefault() : null;
             }
         }
         #endregion
@@ -190,38 +191,6 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepositoryInitialized Commit(string type, string scope, string subject, string body)
-        {
-            if (subject == null)
-            {
-                throw new ArgumentNullException(nameof(subject), $"The {nameof(subject)} parameter cannot be null.");
-            }
-
-            if (subject == string.Empty)
-            {
-                throw new ArgumentException(nameof(subject), $"The {nameof(subject)} parameter cannot be empty.");
-            }
-
-            var message = subject;
-
-            if (type != null)
-            {
-                message = scope == null ? $"{type}: {message}" : $"{type}({scope}): {message}";
-            }
-
-            var cmd = $@"commit --allow-empty -m ""{message}""";
-
-            if (body != null)
-            {
-                cmd += $@" -m ""{body}""";
-            }
-
-            this.Execute(cmd);
-
-            return this;
-        }
-
-        /// <inheritdoc/>
         public IGitRepositoryInitialized Branch(string name, string source)
         {
             var cmd = $"checkout -b {name}";
@@ -240,6 +209,14 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Checkout(string name)
         {
             this.Execute($"checkout {name}");
+
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGitRepositoryInitialized Commit(string message)
+        {
+            this.Execute($@"commit --allow-empty -m ""{message}""");
 
             return this;
         }
@@ -308,12 +285,8 @@ namespace PulseBridge.Condo.IO
                 process.Dispose();
             }
 
-            // create strings for outputs
-            var error = string.Join(string.Empty, errorQueue);
-            var output = string.Join(string.Empty, outputQueue);
-
             // return process output
-            return new ProcessOutput(output, error, exitCode);
+            return new ProcessOutput(outputQueue, errorQueue, exitCode);
         }
 
         /// <inheritdoc/>
@@ -352,6 +325,28 @@ namespace PulseBridge.Condo.IO
             File.Copy(Path.Combine(root, "condo.build"), Path.Combine(this.RepositoryPath, "condo.build"));
 
             return this;
+        }
+
+        /// <inheritdoc />
+        public IGitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser)
+        {
+            const string Split = "------------------------ >8 ------------------------";
+
+            // create the range
+            var range = string.IsNullOrEmpty(from) ? to : $"{from}..{to}";
+
+            // create the command used to get the history of commits
+            var exec = this.Execute($@"log {range} --format=""%H%n%h%n%s%n%b%n{Split}%n""");
+
+            // determine if we were successful
+            if (!exec.Success)
+            {
+                // move on immediately
+                return null;
+            }
+
+            // parse the output
+            return parser.Parse(exec.Output, options);
         }
 
         /// <inheritdoc/>

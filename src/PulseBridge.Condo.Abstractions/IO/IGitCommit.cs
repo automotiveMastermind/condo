@@ -29,11 +29,6 @@ namespace PulseBridge.Condo.IO
         string Body { get; set; }
 
         /// <summary>
-        /// Gets or sets the notes of the git commit.
-        /// </summary>
-        string Notes { get; set; }
-
-        /// <summary>
         /// Gets the header correspondence for the git commit.
         /// </summary>
         IDictionary<string, string> HeaderCorrespondence { get; }
