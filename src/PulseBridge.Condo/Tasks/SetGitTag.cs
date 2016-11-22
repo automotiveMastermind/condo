@@ -164,9 +164,6 @@ namespace PulseBridge.Condo.Tasks
         /// <param name="command">
         /// The git command that should be executed.
         /// </param>
-        /// <param name="root">
-        /// The root path in which to execute the git command.
-        /// </param>
         /// <returns>
         /// The execution task that can be used to execute the git command.
         /// </returns>

@@ -2,6 +2,9 @@ namespace PulseBridge.Condo.IO
 {
     using System.Text;
 
+    /// <summary>
+    /// Represents a set of extension methods for the <see cref="IGitRepository"/> interface.
+    /// </summary>
     public static partial class GitRepositoryExtensions
     {
         /// <summary>
@@ -128,6 +131,9 @@ namespace PulseBridge.Condo.IO
         /// <param name="subject">
         /// The subject, or first line of the commit message.
         /// </param>
+        /// <param name="body">
+        /// The body of the commit.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
@@ -141,6 +147,9 @@ namespace PulseBridge.Condo.IO
         /// Creates a new commit with the specified <paramref name="type"/>, <paramref name="scope"/> and
         /// <paramref name="subject"/>.
         /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
         /// <param name="type">
         /// The type of the commit.
         /// </param>
@@ -199,8 +208,7 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <summary>
-        /// Creates a new branch with the specified <paramref name="name"/>
-        /// based on the specified <paramref name="source"/>.
+        /// Creates a new branch with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="repository">
         /// The current repository instance.
@@ -216,11 +224,38 @@ namespace PulseBridge.Condo.IO
             return repository.Branch(name, source: null);
         }
 
+        /// <summary>
+        /// Gets a log of commits using the specified <paramref name="options"/>.
+        /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
+        /// <param name="options">
+        /// The options used to retrieve and parse the log of commits.
+        /// </param>
+        /// <returns>
+        /// The log of commits using the specified <paramref name="options"/>.
+        /// </returns>
         public static GitLog Log(this IGitRepositoryInitialized repository, IGitLogOptions options)
         {
             return repository.Log(from: null, to: "HEAD", options: options, parser: null);
         }
 
+        /// <summary>
+        /// Gets a log of commits using the specified <paramref name="options"/>.
+        /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
+        /// <param name="from">
+        /// The git item specification from which to start the log.
+        /// </param>
+        /// <param name="options">
+        /// The options used to retrieve and parse the log of commits.
+        /// </param>
+        /// <returns>
+        /// The log of commits using the specified <paramref name="options"/>.
+        /// </returns>
         public static GitLog Log(this IGitRepositoryInitialized repository, string from, IGitLogOptions options)
         {
             return repository.Log(from, to: "HEAD", options: options, parser: null);

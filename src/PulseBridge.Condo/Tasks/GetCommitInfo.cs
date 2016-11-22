@@ -185,6 +185,7 @@ namespace PulseBridge.Condo.Tasks
         ///     The entire commit message including new-lines. This is useful for commits that do not follow the
         ///     conventional changelog style.
         ///     </description>
+        /// </item>
         /// </list>
         /// </remarks>
         [Output]

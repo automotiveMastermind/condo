@@ -69,18 +69,48 @@ namespace PulseBridge.Condo.Net
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NtpServer"/> class.
+        /// </summary>
+        /// <param name="port">
+        /// The port used to listen for requests to the NTP server.
+        /// </param>
+        /// <param name="clock">
+        /// The clock provider used to retrieve the current date and time from a trusted authority.
+        /// </param>
         public NtpServer(int port, IClockProvider clock)
             : this(port, 100, clock, null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NtpServer"/> class.
+        /// </summary>
+        /// <param name="port">
+        /// The port used to listen for requests to the NTP server.
+        /// </param>
+        /// <param name="backlog">
+        /// The backlog, or number of connections, allowed by the server.
+        /// </param>
         public NtpServer(int port, int backlog)
-            : this(port, 100, null, null)
+            : this(port, backlog, null, null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NtpServer"/> class.
+        /// </summary>
+        /// <param name="port">
+        /// The port used to listen for requests to the NTP server.
+        /// </param>
+        /// <param name="backlog">
+        /// The backlog, or number of connections, allowed by the server.
+        /// </param>
+        /// <param name="clock">
+        /// The clock provider used to retrieve the current date and time from a trusted authority.
+        /// </param>
         public NtpServer(int port, int backlog, IClockProvider clock)
-            : this(port, 100, clock, null)
+            : this(port, backlog, clock, null)
         {
         }
 
@@ -176,6 +206,7 @@ namespace PulseBridge.Condo.Net
         #endregion
 
         #region Methods
+        /// <inheritdoc/>
         public void Dispose()
         {
             this.Dispose(true);

@@ -1,5 +1,8 @@
 namespace PulseBridge.Condo.IO
 {
+    /// <summary>
+    /// Represents a set of extension methods for the <see cref="IGitRepositoryFactory"/> interface.
+    /// </summary>
     public static class GitRepositoryFactoryExtensions
     {
         /// <summary>
@@ -26,7 +29,7 @@ namespace PulseBridge.Condo.IO
 
         /// <summary>
         /// Creates a new git repository instance after cloning the repository from the specified
-        /// <paramref name="uri"/> into the specified <paramref name="path"/>.
+        /// <paramref name="uri"/>.
         /// </summary>
         /// <param name="factory">
         /// The current factory instance.

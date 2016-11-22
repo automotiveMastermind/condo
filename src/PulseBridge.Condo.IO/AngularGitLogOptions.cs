@@ -32,7 +32,7 @@ namespace PulseBridge.Condo.IO
         public IList<string> MergeCorrespondence { get; } = new List<string>();
 
         /// <inheritdoc />
-        public IList<string> RevertCorrespondence { get; } = new List<string>();
+        public IList<string> RevertCorrespondence { get; } = new List<string> { "header", "hash" };
 
         /// <inheritdoc />
         public IList<string> ReferencePrefixes { get; } = new List<string> { "#" };
@@ -42,9 +42,10 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc />
         public IList<string> ActionKeywords { get; }
-            = new List<string> { "close", "closes", "closed", "fix", "fixed", "resolve", "resolves", "resolved" };
+            // = new List<string> { "close", "closes", "closed", "fix", "fixes", "fixed", "resolve", "resolves", "resolved" };
+            = new List<string> { "closes" };
 
         /// <inheritdoc />
-        public IList<string> NoteKeywords { get; } = new List<string> { "BREAKING CHANGE" };
+        public IList<string> NoteKeywords { get; } = new List<string> { "BREAKING CHANGE", "BREAKING CHANGES" };
     }
 }

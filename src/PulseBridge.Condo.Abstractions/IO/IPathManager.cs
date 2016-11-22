@@ -46,7 +46,8 @@ namespace PulseBridge.Condo.IO
         string Create(string relativePath);
 
         /// <summary>
-        /// Saves a file at the specified <paramref name="relativePath"/> with the specified <param name="contents"/>.
+        /// Saves a file at the specified <paramref name="relativePath"/> with the specified
+        /// <paramref name="contents"/>.
         /// </summary>
         /// <param name="relativePath">
         /// The relative path of the file that should be saved.

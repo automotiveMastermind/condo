@@ -87,7 +87,7 @@ namespace PulseBridge.Condo.Tasks
 
         #region Methods
         /// <summary>
-        /// Executes the <see cref="GetVersionInfo"/> task.
+        /// Executes the <see cref="GetAssemblyInfo"/> task.
         /// </summary>
         /// <returns>
         /// A value indicating whether or not the task executed successfully.

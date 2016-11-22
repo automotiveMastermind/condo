@@ -8,12 +8,12 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets or sets the title of the note.
         /// </summary>
-        string Title { get; set; }
+        public string Header { get; set; }
 
         /// <summary>
         /// Gets or set s
         /// </summary>
         /// <returns></returns>
-        string Text { get; set; }
+        public string Body { get; set; }
     }
 }

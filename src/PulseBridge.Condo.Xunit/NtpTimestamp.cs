@@ -214,7 +214,7 @@ namespace PulseBridge.Condo
         /// </summary>
         /// <remarks>
         /// The ticks are equivelant to those used by the <see cref="DateTime.Ticks"/> property with a
-        /// <see cref="DateTimeKind.UTC"/>. The ticks are not calculated using the NTP epoch.
+        /// <see cref="DateTimeKind.Utc"/>. The ticks are not calculated using the NTP epoch.
         /// </remarks>
         public long Ticks => this.ticks;
 

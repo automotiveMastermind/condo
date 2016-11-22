@@ -2,7 +2,8 @@
   "version": "2.0.0-*",
 
   "buildOptions": {
-    "debugType": "portable"
+    "debugType": "portable",
+    "xmlDoc": true
   },
 
   "dependencies": {

@@ -25,7 +25,8 @@ namespace PulseBridge.Condo.IO
 
         #region Methods
         /// <summary>
-        /// Saves a file at the specified <paramref name="relativePath"/> with the specified <param name="contents"/>.
+        /// Saves a file at the specified <paramref name="relativePath"/> with the specified
+        /// <paramref name="contents"/>.
         /// </summary>
         /// <param name="relativePath">
         /// The relative path of the file that should be saved.
@@ -113,7 +114,7 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the git log using the specified <paramref name="options"/>
         /// </summary>
-        /// </param name="from">
+        /// <param name="from">
         /// The item specification from which the git log should start.
         /// </param>
         /// <param name="to">

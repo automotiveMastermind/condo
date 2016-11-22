@@ -14,7 +14,7 @@ namespace PulseBridge.Condo
         /// <summary>
         /// Initializes a new instance of the <see cref="PlatformAttribute"/> class.
         /// </summary>
-        /// <param name="type">
+        /// <param name="platform">
         /// The platform associated with the attribute.
         /// </param>
         public PlatformAttribute(PlatformType platform)

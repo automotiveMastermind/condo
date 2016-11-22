@@ -161,6 +161,7 @@ namespace PulseBridge.Condo.IO
             return this;
         }
 
+        /// <inheritdoc/>
         public IGitRepositoryInitialized Clone(string uri)
         {
             // create the cmd to clone the repository

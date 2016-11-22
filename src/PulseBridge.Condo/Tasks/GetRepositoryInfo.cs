@@ -340,7 +340,7 @@ namespace PulseBridge.Condo.Tasks
 
         /// <summary>
         /// Attempt to find the git repository root by scanning the specified
-        /// <paramref cref="root"/> path and walking upward.
+        /// <paramref name="root"/> path and walking upward.
         /// </summary>
         /// <param name="root">
         /// The starting path that is believed to be the root path.
@@ -364,7 +364,7 @@ namespace PulseBridge.Condo.Tasks
 
         /// <summary>
         /// Attempt to find the git repository root by scanning the specified
-        /// <paramref cref="root"/> path and walking upward.
+        /// <paramref name="root"/> path and walking upward.
         /// </summary>
         /// <param name="root">
         /// The starting path that is believed to be the root path.

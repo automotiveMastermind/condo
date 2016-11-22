@@ -62,6 +62,7 @@ namespace PulseBridge.Condo.IO
             return Directory.Exists(this.path);
         }
 
+        /// <inheritdoc/>
         public string Create(string relativePath)
         {
             // create the path

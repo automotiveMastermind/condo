@@ -15,7 +15,7 @@ namespace PulseBridge.Condo
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentAttribute"/> class.
         /// </summary>
-        /// <param name="type">
+        /// <param name="agent">
         /// The agent type associated with the attribute.
         /// </param>
         public AgentAttribute(AgentType agent)
