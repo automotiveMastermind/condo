@@ -113,25 +113,20 @@ install_msbuild() {
         # copy the nuget config to the build root
         cp "$CONDO_PATH/Scripts/nuget.config" $BUILD_ROOT
 
-        # restore msbuild
-        info "msbuild: restoring msbuild packages..."
-        safe-exec dotnet restore $MSBUILD_PATH --verbosity minimal
-        success "msbuild: restore complete"
-
-        # publish msbuild
-        info "msbuild: publishing msbuild system..."
-        safe-exec dotnet publish $MSBUILD_PATH --output $MSBUILD_PUBLISH --runtime $RUNTIME
-        success "msbuild: publish complete"
-
         # restore condo
-        info "condo: restoring condo packages..."
-        safe-exec dotnet restore $CONDO_PATH --verbosity minimal
+        info "condo: restoring msbuild packages..."
+        safe-exec dotnet restore $BUILD_ROOT --verbosity minimal
         success "condo: restore complete"
 
         # publish condo
         info "condo: publishing condo tasks..."
         safe-exec dotnet publish $CONDO_PATH --output $CONDO_PUBLISH --runtime $RUNTIME
         success "condo: publish complete"
+
+        # publish msbuild
+        info "msbuild: publishing msbuild system..."
+        safe-exec dotnet publish $MSBUILD_PATH --output $MSBUILD_PUBLISH --runtime $RUNTIME
+        success "msbuild: publish complete"
     else
         info "condo was already built: use --reset to get the latest version."
     fi

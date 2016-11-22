@@ -216,12 +216,12 @@ namespace PulseBridge.Condo.IO
             return repository.Branch(name, source: null);
         }
 
-        public static IGitLog Log(this IGitRepositoryInitialized repository, IGitLogOptions options)
+        public static GitLog Log(this IGitRepositoryInitialized repository, IGitLogOptions options)
         {
             return repository.Log(from: null, to: "HEAD", options: options, parser: null);
         }
 
-        public static IGitLog Log(this IGitRepositoryInitialized repository, string from, IGitLogOptions options)
+        public static GitLog Log(this IGitRepositoryInitialized repository, string from, IGitLogOptions options)
         {
             return repository.Log(from, to: "HEAD", options: options, parser: null);
         }

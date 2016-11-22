@@ -11,12 +11,12 @@ namespace PulseBridge.Condo.Diagnostics
         /// <summary>
         /// Gets the standard output.
         /// </summary>
-        IReadOnlyCollection<string> Output { get; }
+        IList<string> Output { get; }
 
         /// <summary>
         /// Gets the standard error.
         /// </summary>
-        IReadOnlyCollection<string> Error { get; }
+        IList<string> Error { get; }
 
         /// <summary>
         /// Gets the exit code of the process.

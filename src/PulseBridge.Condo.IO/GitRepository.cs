@@ -5,7 +5,6 @@ namespace PulseBridge.Condo.IO
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Threading;
 
     using static System.FormattableString;
 
@@ -245,8 +244,21 @@ namespace PulseBridge.Condo.IO
             var exitCode = -1;
 
             // setup event handlers to handle queue processing
-            process.ErrorDataReceived += (sender, args) => errorQueue.Enqueue(args.Data);
-            process.OutputDataReceived += (sender, args) => outputQueue.Enqueue(args.Data);
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                if (args.Data != null)
+                {
+                    errorQueue.Enqueue(args.Data);
+                }
+            };
+
+            process.OutputDataReceived += (sender, args) =>
+            {
+                if (args.Data != null)
+                {
+                    outputQueue.Enqueue(args.Data);
+                }
+            };
 
             try
             {
@@ -262,9 +274,6 @@ namespace PulseBridge.Condo.IO
 
                 // wait for exit
                 process.WaitForExit();
-
-                // spinwait to ensure exit
-                SpinWait.SpinUntil(() => process.HasExited);
 
                 // determine if the process did not exit successfully
                 if (process.ExitCode != 0)
@@ -328,15 +337,13 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc />
-        public IGitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser)
+        public GitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser)
         {
-            const string Split = "------------------------ >8 ------------------------";
-
             // create the range
             var range = string.IsNullOrEmpty(from) ? to : $"{from}..{to}";
 
             // create the command used to get the history of commits
-            var exec = this.Execute($@"log {range} --format=""%H%n%h%n%s%n%b%n{Split}%n""");
+            var exec = this.Execute($@"log {range} --format=""{options.Format}""");
 
             // determine if we were successful
             if (!exec.Success)
@@ -346,7 +353,14 @@ namespace PulseBridge.Condo.IO
             }
 
             // parse the output
-            return parser.Parse(exec.Output, options);
+            var log = parser.Parse(exec.Output, options);
+
+            // set the from/to ranges
+            log.From = from;
+            log.To = to;
+
+            // return the log
+            return log;
         }
 
         /// <inheritdoc/>

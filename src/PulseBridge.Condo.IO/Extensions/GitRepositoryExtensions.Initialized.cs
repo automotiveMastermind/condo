@@ -6,7 +6,7 @@ namespace PulseBridge.Condo.IO
 
         private static readonly IGitLogParser Parser = new GitLogParser();
 
-        public static IGitLog Log(this IGitRepositoryInitialized repository)
+        public static GitLog Log(this IGitRepositoryInitialized repository)
         {
             return repository.Log(from: null, to: null, options: Angular, parser: Parser);
         }

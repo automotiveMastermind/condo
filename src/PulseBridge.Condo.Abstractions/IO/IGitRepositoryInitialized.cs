@@ -128,7 +128,7 @@ namespace PulseBridge.Condo.IO
         /// <returns>
         /// The git log for the specified <paramref name="parser"/>.
         /// </returns>
-        IGitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser);
+        GitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser);
         #endregion
     }
 }

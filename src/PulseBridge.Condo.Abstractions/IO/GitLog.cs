@@ -5,20 +5,20 @@ namespace PulseBridge.Condo.IO
     /// <summary>
     /// Represents a log of git commits.
     /// </summary>
-    public class GitLog : IGitLog
+    public class GitLog
     {
         #region Properties
         /// <inheritdoc/>
-        public string From { get; }
+        public string From { get; set; }
 
         /// <inheritdoc/>
-        public string To { get; }
+        public string To { get; set; }
 
         /// <inheritdoc/>
-        public IEnumerable<IGitCommit> Commits { get; }
+        public ICollection<GitCommit> Commits { get; } = new HashSet<GitCommit>();
 
         /// <inheritdoc/>
-        public IEnumerable<string> Tags { get; }
+        public IEnumerable<string> Tags { get; } = new HashSet<string>();
         #endregion
     }
 }

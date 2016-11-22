@@ -32,10 +32,10 @@ namespace PulseBridge.Condo.Diagnostics
 
         #region Properties
         /// <inheritdoc />
-        public IReadOnlyCollection<string> Error { get; private set; }
+        public IList<string> Error { get; private set; }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> Output { get; private set; }
+        public IList<string> Output { get; private set; }
 
         /// <inheritdoc />
         public int ExitCode { get; private set; }

@@ -44,7 +44,6 @@ namespace PulseBridge.Condo.IO
         }
         #endregion
 
-
         #region Properties
         /// <inheritdoc/>
         public string FullPath => this.path;

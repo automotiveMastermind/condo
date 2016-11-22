@@ -20,7 +20,7 @@ namespace PulseBridge.Condo.IO
         /// <returns>
         /// The parsed git log.
         /// </returns>
-        IGitLog Parse(IEnumerable<string> lines, IGitLogOptions options);
+        GitLog Parse(IList<string> lines, IGitLogOptions options);
         #endregion
     }
 }

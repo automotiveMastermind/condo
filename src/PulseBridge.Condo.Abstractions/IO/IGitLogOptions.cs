@@ -7,6 +7,17 @@ namespace PulseBridge.Condo.IO
     /// </summary>
     public interface IGitLogOptions
     {
+        #region Properties
+        /// <summary>
+        /// Gets or sets the string to used to split entries from a git log.
+        /// </summary>
+        string Split { get; set; }
+
+        /// <summary>
+        /// Gets or sets the format used to emit the git log.
+        /// </summary>
+        string Format { get; set; }
+
         /// <summary>
         /// Gets or sets the regular expression pattern used to parse the subject line of a git commit.
         /// </summary>
@@ -28,36 +39,51 @@ namespace PulseBridge.Condo.IO
         string FieldPattern { get; set; }
 
         /// <summary>
-        /// Gets the fields that should be contained within a header.
+        /// Gets the correspondence that should be contained within a header.
         /// </summary>
         /// <remarks>
         /// This collection should contain the same number of elements as there are capture groups in the related
         /// <see cref="HeaderPattern"/>.
         /// </remarks>
-        ICollection<string> HeaderFields { get; }
+        IList<string> HeaderCorrespondence { get; }
 
         /// <summary>
-        /// Gets the fields that should be contained within a merge commit.
+        /// Gets the correspondence that should be contained within a revert commit.
+        /// </summary>
+        /// <remarks>
+        /// This collection should contain the same number of elements as there are capture groups in the related
+        /// <see cref="RevertPattern"/>.
+        /// </remarks>
+        IList<string> RevertCorrespondence { get; }
+
+        /// <summary>
+        /// Gets the correspondence that should be contained within a merge commit.
         /// </summary>
         /// <remarks>
         /// This collection should contain the same number of elements as there are capture groups in the related
         /// <see cref="MergePattern"/>.
         /// </remarks>
-        ICollection<string> MergeFields { get; }
+        IList<string> MergeCorrespondence { get; }
 
         /// <summary>
         /// Gets the prefixes used to denote a reference within a git commit message.
         /// </summary>
-        ICollection<string> ReferencePrefixes { get; }
+        IList<string> ReferencePrefixes { get; }
+
+        /// <summary>
+        /// Gets the prefixes used to denote a mention within a git commit message.
+        /// </summary>
+        IList<string> MentionPrefixes { get; }
 
         /// <summary>
         /// Gets the actions used to denote why a reference within the git commit exists.
         /// </summary>
-        ICollection<string> ActionKeywords { get; }
+        IList<string> ActionKeywords { get; }
 
         /// <summary>
         /// Gets the keywords used to denote a note or breaking change within a commit.
         /// </summary>
-        ICollection<string> NoteKeywords { get; }
+        IList<string> NoteKeywords { get; }
+        #endregion
     }
 }
