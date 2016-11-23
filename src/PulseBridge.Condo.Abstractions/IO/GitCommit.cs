@@ -59,7 +59,13 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the references contained within the git commit.
         /// </summary>
-        public IList<GitReference> References { get; } = new List<GitReference>();
+        public ICollection<GitReference> References { get; } = new List<GitReference>();
+
+        /// <summary>
+        /// Gets the collection of tags associated with the commit.
+        /// </summary>
+        /// <returns></returns>
+        public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
         #endregion
     }
 }

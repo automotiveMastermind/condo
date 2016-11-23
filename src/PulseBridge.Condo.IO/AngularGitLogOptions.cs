@@ -11,7 +11,7 @@ namespace PulseBridge.Condo.IO
         public string Split { get; set; } = "------------------------ >8< ------------------------";
 
         /// <inheritdoc />
-        public string Format { get; set; } = "%H%n%h%n%s%n%b------------------------ >8< ------------------------";
+        public string Format { get; set; } = "%H%n%h%n%D%n%s%n%b------------------------ >8< ------------------------";
 
         /// <inheritdoc />
         public string HeaderPattern { get; set; } = @"^(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$";

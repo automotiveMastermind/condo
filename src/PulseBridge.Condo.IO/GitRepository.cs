@@ -343,8 +343,10 @@ namespace PulseBridge.Condo.IO
             // create the range
             var range = string.IsNullOrEmpty(from) ? to : $"{from}..{to}";
 
+            var cmd = $@"log {range} --format=""{options.Format}""";
+
             // create the command used to get the history of commits
-            var exec = this.Execute($@"log {range} --format=""{options.Format}""");
+            var exec = this.Execute(cmd);
 
             // determine if we were successful
             if (!exec.Success)

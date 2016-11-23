@@ -1,5 +1,6 @@
 namespace PulseBridge.Condo.IO
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -8,17 +9,25 @@ namespace PulseBridge.Condo.IO
     public class GitLog
     {
         #region Properties
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the git item specification from which to start the log.
+        /// </summary>
         public string From { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the git item specification to which to end the log.
+        /// </summary>
         public string To { get; set; }
 
-        /// <inheritdoc/>
-        public ICollection<GitCommit> Commits { get; } = new HashSet<GitCommit>();
+        /// <summary>
+        /// Gets the collection of commits contained within the log.
+        /// </summary>
+        public ICollection<GitCommit> Commits { get; } = new List<GitCommit>();
 
-        /// <inheritdoc/>
-        public IEnumerable<string> Tags { get; } = new HashSet<string>();
+        /// <summary>
+        /// Gets or sets the tag contained within the log.
+        /// </summary>
+        public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
         #endregion
     }
 }

@@ -14,6 +14,8 @@ namespace PulseBridge.Condo.IO
     {
         private static readonly Regex NoMatchRegex = new Regex("(?!.*)");
 
+        private static readonly Regex TagRegex = new Regex("(?:tag: )(.+)[,|$]");
+
         /// <inheritdoc />
         public GitLog Parse(IList<string> lines, IGitLogOptions options)
         {
@@ -45,7 +47,8 @@ namespace PulseBridge.Condo.IO
 
             var mentionRegex = GetMentionRegex(options.MentionPrefixes);
             var noteRegex = GetNotesRegex(options.NoteKeywords);
-            var referenceRegex = GetReferenceRegex(options.ActionKeywords, options.ReferencePrefixes);
+            var actionRegex = GetActionsRegex(options.ActionKeywords);
+            var referenceRegex = GetReferenceRegex(options.ReferencePrefixes);
 
             // define the match variable used to track regex matches
             var match = default(Match);
@@ -114,7 +117,7 @@ namespace PulseBridge.Condo.IO
                 }
 
                 // add references for the header
-                AddReferences(referenceRegex.Matches(commit.Header), commit.References);
+                AddReferences(actionRegex.Match(commit.Header), referenceRegex, commit.References);
 
                 // create a variable to retain a note
                 var note = default(GitNote);
@@ -149,7 +152,7 @@ namespace PulseBridge.Condo.IO
                     section.AppendLine(line);
 
                     // add references for the line
-                    AddReferences(referenceRegex.Matches(line), commit.References);
+                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
 
                     // append the raw line
                     raw.AppendLine(line);
@@ -171,7 +174,7 @@ namespace PulseBridge.Condo.IO
                     section.AppendLine(line);
 
                     // add references for the line
-                    AddReferences(referenceRegex.Matches(line), commit.References);
+                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
 
                     // append the raw line
                     raw.AppendLine(line);
@@ -254,36 +257,50 @@ namespace PulseBridge.Condo.IO
             return new Regex(Invariant($"{joined}([\\w-]+)"), RegexOptions.IgnoreCase);
         }
 
-        private static Regex GetReferenceRegex(ICollection<string> actions, ICollection<string> prefixes)
+        private static Regex GetActionsRegex(ICollection<string> actions)
         {
             if (actions == null || actions.Count == 0)
             {
                 return new Regex("()(.+)");
             }
 
-            var a = string.Join("|", actions);
-            var p = string.Join("|", prefixes);
+            var join = string.Join("|", actions);
 
-            return new Regex(Invariant($"({a})?:?\\s*?([\\w-\\.\\/]*?)({p})([\\w-]*\\d+)"), RegexOptions.IgnoreCase);
+            return new Regex(Invariant($"^({join})?(.*)$"));
         }
 
-        private static void AddReferences(MatchCollection matches, IList<GitReference> references)
+        private static Regex GetReferenceRegex(ICollection<string> prefixes)
         {
-            foreach (Match match in matches)
+            var join = string.Join("|", prefixes);
+
+            return new Regex(Invariant($"([\\w-\\.\\/]*?)({join})([\\w-]*\\d+)"), RegexOptions.IgnoreCase);
+        }
+
+        private static void AddReferences
+            (Match match, Regex referenceRegex, ICollection<GitReference> references)
+        {
+            if (!match.Success)
             {
-                if (!match.Success)
-                {
-                    continue;
-                }
+                return;
+            }
 
-                var groups = match.Groups;
+            var action = match.Groups[1].Value;
+            var parts = referenceRegex.Matches(match.Groups[2].Value);
 
-                var action = groups[1].Value;
+            foreach (Match part in parts)
+            {
+                var groups = part.Groups;
+
+                var repository = groups[1].Value;
+                var prefix = groups[2].Value;
+                var id = groups[3].Value;
+                var raw = groups[0].Value;
                 var owner = default(string);
-                var repository = groups[2].Value;
-                var prefix = groups[3].Value;
-                var id = groups[4].Value;
-                var raw = groups[0].Value.Trim();
+
+                if (!string.IsNullOrEmpty(action))
+                {
+                    raw = Invariant($"{action}: {raw}");
+                }
 
                 if (!string.IsNullOrEmpty(repository))
                 {
