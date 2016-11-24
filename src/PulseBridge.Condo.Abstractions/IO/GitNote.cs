@@ -15,5 +15,11 @@ namespace PulseBridge.Condo.IO
         /// </summary>
         /// <returns></returns>
         public string Body { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return this.Header ?? "<unknown>";
+        }
     }
 }

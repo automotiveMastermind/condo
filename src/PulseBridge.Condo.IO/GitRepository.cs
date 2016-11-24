@@ -16,6 +16,10 @@ namespace PulseBridge.Condo.IO
     public class GitRepository : IGitRepository
     {
         #region Private Fields
+        private const string Split = "------------------------ >8< ------------------------";
+
+        private const string Format = "%H%n%h%n%D%n%B" + Split;
+
         private readonly IPathManager path;
 
         private readonly string version;
@@ -97,7 +101,12 @@ namespace PulseBridge.Condo.IO
 
             set
             {
-                this.Execute($@"config user.name ""{value}""");
+                var output = this.Execute($@"config user.name ""{value}""");
+
+                if (!output.Success)
+                {
+                    throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+                }
             }
         }
 
@@ -114,7 +123,12 @@ namespace PulseBridge.Condo.IO
 
             set
             {
-                this.Execute($@"config user.email ""{value}""");
+                var output = this.Execute($@"config user.email ""{value}""");
+
+                if (!output.Success)
+                {
+                    throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+                }
             }
         }
 
@@ -148,7 +162,12 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Initialize()
         {
             // execute the init command
-            this.Execute("init");
+            var output = this.Execute("init");
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -156,7 +175,12 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryBare Bare()
         {
-            this.Execute("init --bare");
+            var output = this.Execute("init --bare");
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -185,7 +209,12 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Add(string spec)
         {
-            this.Execute($@"add ""{spec}""");
+            var output = this.Execute($@"add ""{spec}""");
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -200,7 +229,12 @@ namespace PulseBridge.Condo.IO
                 cmd += $" {source}";
             }
 
-            this.Execute(cmd);
+            var output = this.Execute(cmd);
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -208,7 +242,12 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Checkout(string name)
         {
-            this.Execute($"checkout {name}");
+            var output = this.Execute($"checkout {name}");
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -216,7 +255,12 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Commit(string message)
         {
-            this.Execute($@"commit --allow-empty -m ""{message}""");
+            var output = this.Execute($@"commit --allow-empty -m ""{message}""");
+
+            if (!output.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
+            }
 
             return this;
         }
@@ -224,7 +268,12 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Tag(string name)
         {
-            this.Execute($"tag {name}");
+            var exec = this.Execute($"tag {name}");
+
+            if (!exec.Success)
+            {
+                throw new InvalidOperationException(string.Join(Environment.NewLine, exec.Error));
+            }
 
             return this;
         }
@@ -276,8 +325,11 @@ namespace PulseBridge.Condo.IO
                 // wait for exit
                 process.WaitForExit();
 
+                // capture the exit code
+                exitCode = process.ExitCode;
+
                 // determine if the process did not exit successfully
-                if (process.ExitCode != 0)
+                if (exitCode != 0)
                 {
                     // enqueue the error
                     errorQueue.Enqueue
@@ -291,7 +343,6 @@ namespace PulseBridge.Condo.IO
             }
             finally
             {
-                exitCode = process.ExitCode;
                 process.Dispose();
             }
 
@@ -343,7 +394,7 @@ namespace PulseBridge.Condo.IO
             // create the range
             var range = string.IsNullOrEmpty(from) ? to : $"{from}..{to}";
 
-            var cmd = $@"log {range} --format=""{options.Format}""";
+            var cmd = $@"log {range} --format=""{Format}""";
 
             // create the command used to get the history of commits
             var exec = this.Execute(cmd);
@@ -351,12 +402,11 @@ namespace PulseBridge.Condo.IO
             // determine if we were successful
             if (!exec.Success)
             {
-                // move on immediately
-                return null;
+                throw new InvalidOperationException(string.Join(Environment.NewLine, exec.Error));
             }
 
             // parse the output
-            var log = parser.Parse(exec.Output, options);
+            var log = parser.Parse(GetCommits(exec.Output), options);
 
             // set the from/to ranges
             log.From = from;
@@ -364,6 +414,25 @@ namespace PulseBridge.Condo.IO
 
             // return the log
             return log;
+        }
+
+        private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
+        {
+            var set = new List<string>();
+
+            foreach (var line in lines)
+            {
+                if (Split.Equals(line))
+                {
+                    yield return set;
+
+                    set = new List<string>();
+
+                    continue;
+                }
+
+                set.Add(line);
+            }
         }
 
         /// <inheritdoc/>

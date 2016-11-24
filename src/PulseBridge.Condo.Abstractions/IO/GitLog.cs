@@ -2,6 +2,7 @@ namespace PulseBridge.Condo.IO
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>
     /// Represents a log of git commits.
@@ -29,5 +30,17 @@ namespace PulseBridge.Condo.IO
         /// </summary>
         public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
         #endregion
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            builder.Append(this.From ?? "<root>");
+            builder.Append("..");
+            builder.Append(this.To ?? "HEAD");
+
+            return builder.ToString();
+        }
     }
 }

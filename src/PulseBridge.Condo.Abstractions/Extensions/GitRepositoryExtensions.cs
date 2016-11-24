@@ -178,29 +178,49 @@ namespace PulseBridge.Condo.IO
                 string notes
             )
         {
-            var message = new StringBuilder(type ?? string.Empty);
+            var message = new StringBuilder();
 
-            if (scope != null)
+            if (!string.IsNullOrEmpty(type))
             {
-                message.Append($"({scope})");
+                message.Append(type);
             }
 
-            if (subject != null)
+            if (!string.IsNullOrEmpty(scope))
             {
-                message.Append($": {subject}");
+                message.Append('(');
+                message.Append(scope);
+                message.Append(')');
             }
 
-            if (body != null)
+            if (!string.IsNullOrEmpty(subject))
             {
-                message.AppendLine();
-                message.AppendLine();
+                if (message.Length > 0)
+                {
+                    message.Append(": ");
+                }
+
+                message.Append(subject);
+            }
+
+            if (!string.IsNullOrEmpty(body))
+            {
+                if (message.Length > 0)
+                {
+                    message.AppendLine();
+                    message.AppendLine();
+                }
+
                 message.Append(body);
             }
 
-            if (notes != null)
+            if (!string.IsNullOrEmpty(notes))
             {
-                message.AppendLine();
-                message.AppendLine();
+                if (message.Length > 0)
+                {
+                    message.AppendLine();
+                    message.AppendLine();
+                }
+
                 message.Append(notes);
             }
 

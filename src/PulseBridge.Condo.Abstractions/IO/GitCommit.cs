@@ -2,6 +2,7 @@ namespace PulseBridge.Condo.IO
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>
     /// Represents a git commit.
@@ -59,13 +60,33 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the references contained within the git commit.
         /// </summary>
-        public ICollection<GitReference> References { get; } = new List<GitReference>();
+        public ICollection<GitReference> References { get; } = new HashSet<GitReference>();
 
         /// <summary>
         /// Gets the collection of tags associated with the commit.
         /// </summary>
-        /// <returns></returns>
         public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Gets the collection of branches associated with the commit.
+        /// </summary>
+        public ICollection<string> Branches { get; } = new HashSet<string>();
         #endregion
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            builder.Append(this.ShortHash ?? this.Hash ?? "<hash>");
+
+            if (this.Header != null)
+            {
+                builder.Append(" | ");
+                builder.Append(this.Header);
+            }
+
+            return builder.ToString();
+        }
     }
 }

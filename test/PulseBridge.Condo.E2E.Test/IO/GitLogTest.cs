@@ -3,8 +3,7 @@ namespace PulseBridge.Condo.IO
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using static System.FormattableString;
+    using System.Text;
 
     using Xunit;
 
@@ -17,46 +16,46 @@ namespace PulseBridge.Condo.IO
 
         [MemberData(nameof(CommitMessages))]
         [Theory]
-        public void GitLog_WhenMixedHistory_Succeeds(CommitMessage message)
+        public void GitLog_WhenSimple_Succeeds(CommitMessage expected)
         {
-            using (var repo = this.repository.Initialize().Save().Add())
+            using (var repo = this.repository.Initialize().Commit(expected.Raw))
             {
                 // arrange
-                repo.Commit(message.Type, message.Scope, message.Subject, message.Body, message.Note);
+                // repo.Commit(expected.Type, expected.Scope, expected.Subject, expected.Body, expected.Note);
 
-                var expected = new
+                foreach (var tag in expected.Tags)
                 {
-                    Type = message.Type,
-                    Scope = message.Scope,
-                    Subject = message.Subject,
-                    Body = message.Body,
-                    Header = Invariant($"{message.Type}({message.Scope}): {message.Subject}"),
-                    References = string.Join(string.Empty, message.References.Split(' ')).Split(',')
-                };
+                    repo.Tag(tag);
+                }
 
                 // act
                 var log = repo.Log();
-                var actual = log.Commits.First();
-                var references = actual.References.Select(a => a.Raw).ToList();
+                var actual = log.Commits.FirstOrDefault();
 
                 // assert
+                if (actual == null)
+                {
+                    // assert that the type and scope is not specified
+                    Assert.Empty(expected.Type);
+                    Assert.Empty(expected.Scope);
+
+                    // move on immediately
+                    return;
+                }
+
                 Assert.Equal(expected.Type, actual.HeaderCorrespondence["type"]);
                 Assert.Equal(expected.Scope, actual.HeaderCorrespondence["scope"]);
                 Assert.Equal(expected.Subject, actual.HeaderCorrespondence["subject"]);
-                Assert.Equal(expected.Body, actual.Body);
                 Assert.Equal(expected.Header, actual.Header);
+                Assert.Equal(expected.Body, actual.Body);
+                Assert.Equal(expected.Footer, actual.Footer);
+                Assert.Equal(expected.Raw, actual.Raw);
 
-                Assert.All
-                (
-                    expected.References,
-                    reference =>
-                    {
-                        if (!string.IsNullOrEmpty(reference))
-                        {
-                            Assert.Contains(reference, references);
-                        }
-                    }
-                );
+                var references = actual.References.Select(a => a.Raw).ToList();
+                var tags = actual.Tags;
+
+                Assert.All(expected.References, reference => Assert.Contains(reference, references));
+                Assert.All(expected.Tags, tag => Assert.Contains(tag, tags));
             }
         }
 
@@ -64,26 +63,26 @@ namespace PulseBridge.Condo.IO
         {
             get
             {
-                var random = Random.Next(20) + 2;
-
                 var data = new TheoryData<CommitMessage>();
 
-                var items = Enumerable.Range(0, random).Select
-                (
-                    i => new CommitMessage
-                    {
-                        Type = Types[i % Types.Count],
-                        Scope = Scopes[i % Scopes.Count],
-                        Subject = Headers[i % Headers.Count],
-                        Body = (Bodies[i % Bodies.Count] + ' ' + References[i % References.Count]).Trim(),
-                        Note = Notes[i % Notes.Count],
-                        References = References[i % References.Count]
-                    }
-                );
-
-                foreach (var item in items)
+                for (var i = 1; i < 5; i++)
                 {
-                    data.Add(item);
+                    var random = Random.Next();
+
+                    var reference = References[random % References.Count];
+
+                    var commit = new CommitMessage
+                    {
+                        Type = Types[random % Types.Count],
+                        Scope = Scopes[random % Scopes.Count],
+                        Subject = Subjects[random % Subjects.Count],
+                        Body = (Bodies[random % Bodies.Count] + ' ' + reference).Trim(),
+                        Note = Notes[random % Notes.Count],
+                        Tags = Tags[random % Tags.Count].Split(',').Where(t => !string.IsNullOrEmpty(t)),
+                        References = reference.Split(',').Where(r => !string.IsNullOrEmpty(r))
+                    };
+
+                    data.Add(commit);
                 }
 
                 return data;
@@ -113,15 +112,13 @@ namespace PulseBridge.Condo.IO
             "two",
             "three",
             "four",
-            "five",
-            "six",
-            "seven",
+            string.Empty,
             string.Empty,
             string.Empty,
             string.Empty
         };
 
-        private static readonly IList<string> Headers = new List<string>
+        private static readonly IList<string> Subjects = new List<string>
         {
             "fix the ticktock on the clock",
             "add a new author to the contributors",
@@ -138,7 +135,6 @@ namespace PulseBridge.Condo.IO
             string.Empty,
             string.Empty,
             string.Empty,
-            string.Empty,
             string.Empty
         };
 
@@ -147,7 +143,7 @@ namespace PulseBridge.Condo.IO
             "BREAKING CHANGE: the world has come to an end",
             "BREAKING CHANGE: do this, or that... i don't really care",
             "BREAKING CHANGE: everything exploded",
-            string.Empty,
+            "BREAKING CHANGE: oh, my god... look at her butt",
             string.Empty,
             string.Empty,
             string.Empty,
@@ -156,12 +152,22 @@ namespace PulseBridge.Condo.IO
 
         private static readonly IList<string> References = new List<string>
         {
-            "#34, #92, #99, #58, #293",
-            "#123, #998, #578",
-            "#246, #9592",
-            "#84",
+            "#34,#92,#99,#58,#293",
+            "#123,#998,#578",
+            "#246,#9592",
             "#9",
             string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty
+        };
+
+        private static readonly IList<string> Tags = new List<string>
+        {
+            "1.0.0-beta.2,the-best-ever-tag",
+            "2.0.0-alpha.1,what-what-what",
+            "3.0.0-rc.3,didnt-do-it",
+            "4.0.0",
             string.Empty,
             string.Empty,
             string.Empty,
@@ -178,9 +184,77 @@ namespace PulseBridge.Condo.IO
 
             public string Body { get; set; }
 
+            public string Header
+            {
+                get
+                {
+                    var builder = new StringBuilder();
+
+                    if (!string.IsNullOrEmpty(this.Type))
+                    {
+                        builder.Append(this.Type);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.Scope))
+                    {
+                        builder.Append('(');
+                        builder.Append(this.Scope);
+                        builder.Append(')');
+                    }
+
+                    if (!string.IsNullOrEmpty(this.Subject))
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append(": ");
+                        }
+
+                        builder.Append(this.Subject);
+                    }
+
+                    return builder.ToString();
+                }
+            }
+
+            public string Footer => this.Note;
+
+            public string Raw
+            {
+                get
+                {
+                    var builder = new StringBuilder(this.Header);
+
+                    if (!string.IsNullOrEmpty(this.Body))
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.AppendLine();
+                            builder.AppendLine();
+                        }
+
+                        builder.Append(this.Body);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.Footer))
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.AppendLine();
+                            builder.AppendLine();
+                        }
+
+                        builder.Append(this.Footer);
+                    }
+
+                    return builder.ToString();
+                }
+            }
+
             public string Note { get; set; }
 
-            public string References { get; set; }
+            public IEnumerable<string> References { get; set; }
+
+            public IEnumerable<string> Tags { get; set; }
         }
     }
 }

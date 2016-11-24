@@ -2,6 +2,7 @@ namespace PulseBridge.Condo.IO
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -14,19 +15,20 @@ namespace PulseBridge.Condo.IO
     {
         private static readonly Regex NoMatchRegex = new Regex("(?!.*)");
 
-        private static readonly Regex TagRegex = new Regex("(?:tag: )(.+)[,|$]");
+        private static readonly Regex TagRegex = new Regex("(?:tag:\\s*)(.+)");
 
         /// <inheritdoc />
-        public GitLog Parse(IList<string> lines, IGitLogOptions options)
+        public GitLog Parse(IEnumerable<IList<string>> commits, IGitLogOptions options)
         {
-            // determine if the output is null
-            if (lines == null)
-            {
-                return null;
-            }
-
             // create the git log
             var log = new GitLog();
+
+            // determine if the output is null
+            if (commits == null || !commits.Any())
+            {
+                // return the log
+                return log;
+            }
 
             // create the regex's
             var headerRegex = string.IsNullOrEmpty(options.HeaderPattern)
@@ -65,75 +67,115 @@ namespace PulseBridge.Condo.IO
             // create an empty string builder to retain the raw commit
             var raw = new StringBuilder();
 
-            // create an index
-            var i = 0;
-
-            // process all lines
-            while (i < lines.Count)
+            // iterate over each commit
+            foreach (var item in commits)
             {
+                // create an enumerator for the commit and move to the first item
+                var lines = item.GetEnumerator();
+                lines.MoveNext();
+
                 // get the hash
-                var hash = lines[i++];
+                var hash = lines.Current;
+                lines.MoveNext();
 
-                // get the abbreviated hash
-                var shortHash = lines[i++];
-
-                // get the subject
-                var header = lines[i++];
+                // get the short hash
+                var shortHash = lines.Current;
+                lines.MoveNext();
 
                 // create the commit
                 var commit = new GitCommit
                 {
                     Hash = hash,
-                    ShortHash = shortHash,
-                    Header = header
+                    ShortHash = shortHash
                 };
+
+                // get the tags
+                var tags = lines.Current.Split(',');
+                lines.MoveNext();
+
+                // iterate over each tag
+                foreach (var tag in tags)
+                {
+                    // test for a tag
+                    match = TagRegex.Match(tag);
+
+                    // determine if tag was found
+                    if (match.Success)
+                    {
+                        // get the label
+                        var label = match.Groups[1].Value;
+
+                        // add the tag
+                        commit.Tags.Add(label);
+                        log.Tags.Add(label);
+
+                        // move on immediately
+                        continue;
+                    }
+
+                    // add the tag as a branch reference
+                    commit.Branches.Add(tag);
+                }
+
+                // get the header
+                commit.Header = lines.Current;
+
+                // append the header to the raw commit
+                raw.AppendLine(commit.Header);
+
+                // match for a merge header
+                match = mergeRegex.Match(commit.Header);
+
+                // add correspondence for merge
+                var valid = AddCorrespondence(match, options.MergeCorrespondence, commit.MergeCorrespondence);
+
+                // determine if a merge was found
+                if (match.Success && lines.MoveNext())
+                {
+                    // set the header
+                    commit.Header = lines.Current;
+
+                    // append the header to the raw commit
+                    raw.AppendLine(commit.Header);
+                }
+
+                // add header correspondence
+                valid = valid || AddCorrespondence(headerRegex.Match(commit.Header), options.HeaderCorrespondence, commit.HeaderCorrespondence);
+
+                // determine if the commit is not valid and including invalid commits is not allowed
+                if (!(valid || options.IncludeInvalidCommits))
+                {
+                    // move to the next commit
+                    continue;
+                }
 
                 // add the commit to the log
                 log.Commits.Add(commit);
 
-                // match for a merge header
-                match = mergeRegex.Match(header);
-
-                // add correspondence for merge
-                AddCorrespondence(match, options.MergeCorrespondence, commit.MergeCorrespondence);
-
-                // append the header to the raw commit
-                raw.AppendLine(header);
-
-                // get the next line
-                var line = lines[i++];
-
-                // determine if the merge header existed
-                if (match.Success && !options.Split.Equals(line))
-                {
-                    // set the subject to the line
-                    commit.Header = line;
-
-                    // append the line to the raw commit message
-                    raw.AppendLine(line);
-
-                    // increment the line
-                    line = lines[i++];
-                }
-
-                // add references for the header
+                // add references from the header
                 AddReferences(actionRegex.Match(commit.Header), referenceRegex, commit.References);
 
                 // create a variable to retain a note
                 var note = default(GitNote);
 
-                // continue processing until the split marker
-                while (!options.Split.Equals(line))
+                // continue processing lines (in the body)
+                while(lines.MoveNext())
                 {
-                    // match a note
+                    // capture the line
+                    var line = lines.Current;
+
+                    // append the line to the raw content
+                    raw.AppendLine(line);
+
+                    // add references for the line
+                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
+
+                    // try to detect a note
                     match = noteRegex.Match(line);
 
-                    // determine if the note was matched
+                    // determine if the line was the start of a note
                     if (match.Success)
                     {
-                        // move to the next line
-                        line = lines[i++];
-
                         // create a new note
                         note = new GitNote
                         {
@@ -144,54 +186,48 @@ namespace PulseBridge.Condo.IO
                         // add the note
                         commit.Notes.Add(note);
 
-                        // break
+                        // append the footer line
+                        footer.Append(line);
+
+                        // break from parsing the body
                         break;
                     }
 
-                    // capture the body
+                    // append the line to the current section
                     section.AppendLine(line);
-
-                    // add references for the line
-                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
-
-                    // append the raw line
-                    raw.AppendLine(line);
-
-                    // move to the next line
-                    line = lines[i++];
                 }
 
                 // set the body
                 commit.Body = section.ToString().Trim(newline);
 
-                // clear the builder
+                // clear the section
                 section.Clear();
 
-                // continue processing until the split marker
-                while (!options.Split.Equals(line))
+                // continue processing (now in the footer)
+                while (lines.MoveNext())
                 {
-                    // capture the body
+                    // capture the line
+                    var line = lines.Current;
+
+                    // capture the content
                     section.AppendLine(line);
-
-                    // add references for the line
-                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
-
-                    // append the raw line
-                    raw.AppendLine(line);
 
                     // append the footer line
                     footer.Append(line);
 
-                    // move to the next line
-                    line = lines[i++];
+                    // append the raw line
+                    raw.AppendLine(line);
 
-                    // detect the next match
+                    // add references for the line
+                    AddReferences(actionRegex.Match(line), referenceRegex, commit.References);
+
+                    // detect another note
                     match = noteRegex.Match(line);
 
                     // determine if the note was match
                     if (match.Success)
                     {
-                        // set the note body
+                        // set the note body to the current section content
                         note.Body += section.ToString().Trim(newline);
 
                         // clear the section
@@ -216,12 +252,9 @@ namespace PulseBridge.Condo.IO
                     note.Body += section.ToString().Trim(newline);
                 }
 
-                // add header correspondence
-                AddCorrespondence(headerRegex.Match(header), options.HeaderCorrespondence, commit.HeaderCorrespondence);
-
                 // set the raw and footer
-                commit.Raw = raw.ToString();
-                commit.Footer = footer.ToString();
+                commit.Raw = raw.ToString().Trim(newline);
+                commit.Footer = footer.ToString().Trim(newline);
 
                 // clear the raw, footer, and section
                 raw.Clear();
@@ -295,7 +328,7 @@ namespace PulseBridge.Condo.IO
                 var prefix = groups[2].Value;
                 var id = groups[3].Value;
                 var raw = groups[0].Value;
-                var owner = default(string);
+                var owner = string.Empty;
 
                 if (!string.IsNullOrEmpty(action))
                 {
@@ -329,13 +362,13 @@ namespace PulseBridge.Condo.IO
             }
         }
 
-        private static void AddCorrespondence(Match match, IList<string> source, IDictionary<string, string> target)
+        private static bool AddCorrespondence(Match match, IList<string> source, IDictionary<string, string> target)
         {
             // determines if the match was successful
             if (!match.Success)
             {
                 // move on immediately
-                return;
+                return false;
             }
 
             // count the number of matches
@@ -356,6 +389,8 @@ namespace PulseBridge.Condo.IO
                 // add the header
                 target.Add(name, value);
             }
+
+            return true;
         }
     }
 }

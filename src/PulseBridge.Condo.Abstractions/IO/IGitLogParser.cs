@@ -11,8 +11,8 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Parses the specified lines using the specified <paramref name="options"/>
         /// </summary>
-        /// <param name="lines">
-        /// The lines emitted from the git log command.
+        /// <param name="commits">
+        /// The raw commit lines emitted from a git log operation.
         /// </param>
         /// <param name="options">
         /// The options used to parse the log.
@@ -20,7 +20,7 @@ namespace PulseBridge.Condo.IO
         /// <returns>
         /// The parsed git log.
         /// </returns>
-        GitLog Parse(IList<string> lines, IGitLogOptions options);
+        GitLog Parse(IEnumerable<IList<string>> commits, IGitLogOptions options);
         #endregion
     }
 }

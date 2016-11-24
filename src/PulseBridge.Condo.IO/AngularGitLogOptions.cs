@@ -8,12 +8,6 @@ namespace PulseBridge.Condo.IO
     public class AngularGitLogOptions : IGitLogOptions
     {
         /// <inheritdoc />
-        public string Split { get; set; } = "------------------------ >8< ------------------------";
-
-        /// <inheritdoc />
-        public string Format { get; set; } = "%H%n%h%n%D%n%s%n%b------------------------ >8< ------------------------";
-
-        /// <inheritdoc />
         public string HeaderPattern { get; set; } = @"^(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$";
 
         /// <inheritdoc />
@@ -47,5 +41,8 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc />
         public IList<string> NoteKeywords { get; } = new List<string> { "BREAKING CHANGE", "BREAKING CHANGES" };
+
+        /// <inheritdoc />
+        public bool IncludeInvalidCommits { get; set; } = false;
     }
 }

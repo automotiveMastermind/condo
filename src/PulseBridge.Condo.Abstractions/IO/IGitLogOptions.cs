@@ -9,16 +9,6 @@ namespace PulseBridge.Condo.IO
     {
         #region Properties
         /// <summary>
-        /// Gets or sets the string to used to split entries from a git log.
-        /// </summary>
-        string Split { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format used to emit the git log.
-        /// </summary>
-        string Format { get; set; }
-
-        /// <summary>
         /// Gets or sets the regular expression pattern used to parse the subject line of a git commit.
         /// </summary>
         string HeaderPattern { get; set; }
@@ -84,6 +74,11 @@ namespace PulseBridge.Condo.IO
         /// Gets the keywords used to denote a note or breaking change within a commit.
         /// </summary>
         IList<string> NoteKeywords { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether or not to include invalid commits.
+        /// </summary>
+        bool IncludeInvalidCommits { get; set; }
         #endregion
     }
 }

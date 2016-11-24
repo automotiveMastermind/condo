@@ -36,5 +36,11 @@ namespace PulseBridge.Condo.IO
         /// </summary>
         public string Prefix { get; set; }
         #endregion
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return this.Raw ?? "<unknown>";
+        }
     }
 }
