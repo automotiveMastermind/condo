@@ -10,8 +10,8 @@ namespace PulseBridge.Condo.Tasks
     using Newtonsoft.Json.Linq;
 
     /// <summary>
-    /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the project.json
-    /// format.
+    /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the
+    /// project.json format.
     /// </summary>
     public class GetProjectMetadata : Task
     {
@@ -40,7 +40,11 @@ namespace PulseBridge.Condo.Tasks
                 SetMetadata(project);
 
                 // log a message
-                Log.LogMessage(MessageImportance.Low, $"Updated project metadata for project: {project.GetMetadata("ProjectName")}");
+                Log.LogMessage
+                    (
+                        MessageImportance.Low,
+                        $"Updated project metadata for project: {project.GetMetadata("ProjectName")}"
+                    );
             }
 
             // assume its always true

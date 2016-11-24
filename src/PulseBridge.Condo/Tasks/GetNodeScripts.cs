@@ -79,7 +79,7 @@ namespace PulseBridge.Condo.Tasks
             if (!string.Equals(name, "package.json", StringComparison.OrdinalIgnoreCase))
             {
                 // log a warning
-                this.Log.LogWarning(Invariant($"the project at {path} is not a NodeJS project and has been skipped"));
+                this.Log.LogWarning(Invariant($"the project at {path} is not a NodeJS project and has been skipped."));
 
                 // move on immediately
                 return true;
@@ -137,7 +137,8 @@ namespace PulseBridge.Condo.Tasks
                 if (colon == -1)
                 {
                     // write a warning
-                    this.Log.LogWarning(Invariant($"output from NPM for script {output.ItemSpec} in project {name} was malformed; skipping"));
+                    this.Log.LogWarning
+                        (Invariant($"output from NPM for script {output.ItemSpec} in project {name} was malformed; skipping."));
 
                     // continue
                     continue;

@@ -2,7 +2,6 @@ namespace PulseBridge.Condo.Tasks
 {
     using System;
     using System.IO;
-    using System.Text.RegularExpressions;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -78,8 +77,8 @@ namespace PulseBridge.Condo.Tasks
             // set the has git flag
             this.HasGit = true;
 
-            // attempt to use the command line first, then the file system to lookup repository info
-            var result = this.TryCommandLine(root) || this.TryFileSystem(root);
+            // attempt to use the command line first
+            var result = this.TryCommandLine(root);
 
             // determine if we were successful and the repository url ends with a ".git" extension
             if (this.RepositoryUri != null && this.RepositoryUri.EndsWith(".git"))
@@ -105,7 +104,8 @@ namespace PulseBridge.Condo.Tasks
         /// Attempt to use the `git` command line tool to retrieve repository information.
         /// </summary>
         /// <returns>
-        /// A value indicating whether or not the repository information could be retrieved using the git command line tool.
+        /// A value indicating whether or not the repository information could be retrieved using the git command line
+        /// tool.
         /// </returns>
         public bool TryCommandLine(string root)
         {
@@ -158,184 +158,6 @@ namespace PulseBridge.Condo.Tasks
 
             // we were successful
             return true;
-        }
-
-        /// <summary>
-        /// Attempt to read the git configuration from the file system to retrieve repository information.
-        /// </summary>
-        /// <returns>
-        /// A value indicating whether or not the repository information could be retrieved using the file system.
-        /// </returns>
-        public bool TryFileSystem(string root)
-        {
-            // determine if the root is specified
-            if (root == null)
-            {
-                // set the root
-                root = this.RepositoryRoot;
-            }
-
-            // determine if the root is now specified
-            if (root == null)
-            {
-                // omove on immediately
-                return false;
-            }
-
-            // create the path to the head node marker
-            var node = Path.Combine(root, ".git", "HEAD");
-
-            // determine if the file exists
-            if (!File.Exists(node))
-            {
-                // move on immediately
-                return true;
-            }
-
-            // read the data from the head node
-            var head = File.ReadAllText(node);
-
-            // create the regular expression for matching the branch
-            var match = Regex.Match(head, "^ref: (?<branch>refs/heads/.*)$");
-
-            // determine if their was a match
-            if (match.Success)
-            {
-                // get the branch
-                var branch = match.Groups["branch"].Value;
-
-                // determine if the branch is not already set
-                if (string.IsNullOrEmpty(this.Branch))
-                {
-                    // get the branch
-                    this.Branch = branch;
-                }
-
-                // get the branch node marker path
-                node = Path.Combine(root, ".git", branch.Replace("/", Path.DirectorySeparatorChar.ToString()));
-
-                // determine if the commit id is not already set and the node exists
-                if (string.IsNullOrEmpty(this.CommitId) && File.Exists(node))
-                {
-                    // set the commit id
-                    this.CommitId = File.ReadAllText(node).Trim();
-                }
-            }
-            else
-            {
-                // determine if the commit id is already set
-                if (string.IsNullOrEmpty(this.CommitId))
-                {
-                    // set the commit id to the data from the head
-                    this.CommitId = head.Trim();
-                }
-
-                // determine if the branch is already set
-                if (string.IsNullOrEmpty(this.Branch))
-                {
-                    // attempt to get the head of the origin remote
-                    node = Path.Combine(root, @".git\refs\remotes\origin");
-
-                    // attempt to find the branch
-                    this.Branch = this.FindBranch(node) ?? "<unknown>";
-                }
-            }
-
-            // find the git config marker
-            node = Path.Combine(root, ".git", "config");
-
-            // determine if the repository uri is already set or the file exists
-            if (!string.IsNullOrEmpty(this.RepositoryUri) || !File.Exists(node))
-            {
-                // move on immediately
-                return true;
-            }
-
-            // open a file stream
-            using (var file = new FileStream(node, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan))
-            {
-                // attempt to read the git config path
-                using (var stream = new StreamReader(file))
-                {
-                    // define a variable to retain the line number
-                    string line;
-
-                    // find the line for the origin remote
-                    while (((line = stream.ReadLine()) != null) && !string.Equals(line.Trim(), "[remote \"origin\"]", StringComparison.OrdinalIgnoreCase)) { }
-
-                    // determine if the line exists
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        // attempt to find the
-                        match = Regex.Match(stream.ReadLine(), @"^\s+url\s*=\s*(?<url>[^\s]*)\s*$");
-
-                        // determine if a match was found
-                        if (match.Success)
-                        {
-                            // get the match for the uri
-                            this.RepositoryUri = match.Groups["url"].Value;
-                        }
-                    }
-                }
-            }
-
-            // success
-            return true;
-        }
-
-        /// <summary>
-        /// Attempts to find the branch that matches the expected commit.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the remote git configuration path containing markers for branches on the remote.
-        /// </param>
-        /// <returns>
-        /// The name of the branch whose HEAD matches the expected commit.
-        /// </returns>
-        /// <remarks>
-        /// This is a last-ditch effort to try to 'discover' the branch. If multiple
-        /// branches all contain the same commit, then this could be innacurate, but they should
-        /// be building the exact same code regardless.
-        /// </remarks>
-        private string FindBranch(string path)
-        {
-            // determine if the path exists
-            if (!Directory.Exists(path))
-            {
-                // move on immediately
-                return null;
-            }
-
-            // iterate over each file in the remote folder
-            foreach (var branch in Directory.GetFiles(path))
-            {
-                // read the commit from the head
-                var head = File.ReadAllText(branch).Trim();
-
-                // see if the commit matches the head
-                if (string.Equals(this.CommitId, head))
-                {
-                    // assume we found the right branch
-                    return Path.GetFileName(branch).Trim();
-                }
-
-                // iterate over each child branch
-                foreach(var part in Directory.GetDirectories(path))
-                {
-                    // attempt to find the branch
-                    var current = this.FindBranch(part);
-
-                    // determine if the branch was found
-                    if (current != null)
-                    {
-                        // return the child branch
-                        return Path.GetFileName(part) + '/' + current;
-                    }
-                }
-            }
-
-            // move on immediately
-            return null;
         }
 
         /// <summary>
