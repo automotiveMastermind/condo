@@ -461,7 +461,7 @@ namespace PulseBridge.Condo.IO
                 return;
             }
 
-            this.path.Dispose();
+            // this.path.Dispose();
         }
 
         private ProcessStartInfo CreateProcessInfo(string command)

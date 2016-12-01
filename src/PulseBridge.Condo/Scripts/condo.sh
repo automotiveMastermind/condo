@@ -114,7 +114,7 @@ install_msbuild() {
         cp "$CONDO_PATH/Scripts/nuget.config" $BUILD_ROOT
 
         # restore condo
-        info "condo: restoring msbuild packages..."
+        info "condo: restoring condo packages..."
         safe-exec dotnet restore $BUILD_ROOT --verbosity minimal
         success "condo: restore complete"
 

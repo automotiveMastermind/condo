@@ -66,11 +66,11 @@ $BuildRoot = Join-Path $WorkingPath ".build"
 
 $MSBuildPath = Join-Path $BuildRoot "msbuild-cli"
 $MSBuildProj = Join-Path $MSBuildPath "project.json"
-$MSBuildPublish = Join-Path $MSBuildPath "bin\publish"
+$MSBuildPublish = Join-Path (Join-Path $MSBuildPath "bin") "publish"
 $MSBuildLog = Join-Path $BuildRoot "condo.msbuild.log"
 $MSBuildRsp = Join-Path $BuildRoot "condo.msbuild.rsp"
 
-$CondoPath = Join-Path $BuildRoot "condo"
+$CondoPath = Join-Path (Join-Path $BuildRoot "condo") "PulseBridge.Condo"
 $CondoPublish = $MSBuildPublish
 $CondoLog = Join-Path $BuildRoot "condo.log"
 $ScriptsPath = Join-Path $CondoPath "Scripts"
@@ -113,7 +113,10 @@ function Invoke-Cmd([string] $cmd) {
     # determine if the command was successful
     if($exitCode -ne 0) {
         # throw an exception message
-        throw "'$cmdName $args' failed with exit code: $exitCode. Check '$CONDO_LOG' for additional information..."
+        $message = "'$cmdName $args' failed with exit code: $exitCode. Check '$CondoLog' for additional information..."
+        $exception = New-Object System.FormatException $message
+        Write-Failure $message
+        throw $exception
     }
 }
 
@@ -181,24 +184,19 @@ function Install-MSBuild() {
         cp "$ScriptsPath\nuget.config" $BuildRoot | Out-Null
 
         # restore msbuild
-        Write-Info "msbuild: restoring msbuild packages..."
-        Invoke-Cmd dotnet restore $MSBuildPath --verbosity minimal
-        Write-Success "msbuild: restore complete"
-
-        # publish msbuild
-        Write-Info "msbuild: publishing msbuild system..."
-        Invoke-Cmd dotnet publish $MSBuildPath --output $MSBuildPublish --runtime $runtime
-        Write-Success "msbuild: publish complete"
-
-        # restore condo
         Write-Info "condo: restoring condo packages..."
-        Invoke-Cmd dotnet restore $CondoPath --verbosity minimal
+        Invoke-Cmd dotnet restore $BuildRoot --verbosity minimal
         Write-Success "condo: restore complete"
 
         # publish condo
         Write-Info "condo: publishing condo tasks..."
         Invoke-Cmd dotnet publish $CondoPath --output $CondoPublish --runtime $runtime
         Write-Success "condo: publish complete"
+
+        # publish msbuild
+        Write-Info "msbuild: publishing msbuild system..."
+        Invoke-Cmd dotnet publish $MSBuildPath --output $MSBuildPublish --runtime $runtime
+        Write-Success "msbuild: publish complete"
     }
     catch {
         $ex = $error[0]
