@@ -4,7 +4,7 @@
         "test"
     ],
     "sdk": {
-        "version": "1.0.0-preview2-1-003177",
+        "version": "1.0.0-preview2-1-003182",
         "runtime": "CoreCLR",
         "architecture": "x64"
     }
