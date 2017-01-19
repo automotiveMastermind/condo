@@ -228,6 +228,17 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <summary>
+        /// Restores all available submodules within the current repository.
+        /// </summary>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        public static IGitRepositoryInitialized RestoreSubmodules(this IGitRepositoryInitialized repository)
+        {
+            return repository.RestoreSubmodules(recursive: false);
+        }
+
+        /// <summary>
         /// Creates a new branch with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="repository">

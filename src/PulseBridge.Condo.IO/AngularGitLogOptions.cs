@@ -36,8 +36,7 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc />
         public IList<string> ActionKeywords { get; }
-            // = new List<string> { "close", "closes", "closed", "fix", "fixes", "fixed", "resolve", "resolves", "resolved" };
-            = new List<string> { "closes" };
+            = new List<string> { "close", "closes", "closed", "fix", "fixes", "fixed", "resolve", "resolves", "resolved" };
 
         /// <inheritdoc />
         public IList<string> NoteKeywords { get; } = new List<string> { "BREAKING CHANGE", "BREAKING CHANGES" };

@@ -173,6 +173,26 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
+        public IGitRepositoryInitialized Push(string remote, bool tags)
+        {
+            var cmd = "push";
+
+            if (!string.IsNullOrEmpty(remote))
+            {
+                cmd += $" {remote}";
+            }
+
+            if (tags)
+            {
+                cmd += " --tags";
+            }
+
+            this.Execute(cmd);
+
+            return this;
+        }
+
+        /// <inheritdoc/>
         public IGitRepositoryBare Bare()
         {
             var output = this.Execute("init --bare");
@@ -274,6 +294,21 @@ namespace PulseBridge.Condo.IO
             {
                 throw new InvalidOperationException(string.Join(Environment.NewLine, exec.Error));
             }
+
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGitRepositoryInitialized RestoreSubmodules(bool recursive)
+        {
+            var cmd = "submodule update --init";
+
+            if (recursive)
+            {
+                cmd += " --recursive";
+            }
+
+            this.Execute(cmd);
 
             return this;
         }

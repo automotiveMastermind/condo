@@ -168,10 +168,6 @@ namespace PulseBridge.Condo.Tasks
             // set the assembly version to the semantic version
             this.AssemblyVersion = version.ToString();
 
-            // create a build number based on the number of years that have passed (and the current day of the year)
-            var build = (now.Year - start.Year).ToString("D2", CultureInfo.InvariantCulture)
-                + now.DayOfYear.ToString("D3", CultureInfo.InvariantCulture);
-
             // create a commit number from the current seconds
             var commit = now.ToString("HHmm", CultureInfo.InvariantCulture);
 
@@ -185,6 +181,10 @@ namespace PulseBridge.Condo.Tasks
             // determine if the build id is not already set
             if (string.IsNullOrEmpty(this.BuildId))
             {
+                // create a build number based on the number of years that have passed (and the current day of the year)
+                var build = (now.Year - start.Year).ToString("D2", CultureInfo.InvariantCulture)
+                    + now.DayOfYear.ToString("D3", CultureInfo.InvariantCulture);
+
                 // set the build id
                 this.BuildId = build;
             }

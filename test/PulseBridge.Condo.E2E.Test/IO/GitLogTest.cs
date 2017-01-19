@@ -21,8 +21,6 @@ namespace PulseBridge.Condo.IO
             using (var repo = this.repository.Initialize().Commit(expected.Raw))
             {
                 // arrange
-                // repo.Commit(expected.Type, expected.Scope, expected.Subject, expected.Body, expected.Note);
-
                 foreach (var tag in expected.Tags)
                 {
                     repo.Tag(tag);

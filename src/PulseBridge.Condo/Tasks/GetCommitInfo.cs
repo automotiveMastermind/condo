@@ -2,28 +2,18 @@ namespace PulseBridge.Condo.Tasks
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Runtime.InteropServices;
-
-    using static System.FormattableString;
 
     using Microsoft.Build.Framework;
-    using Microsoft.Build.Tasks;
     using Microsoft.Build.Utilities;
+
+    using PulseBridge.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about the commits within a repository.
     /// </summary>
     public class GetCommitInfo : Task
     {
-        #region Constants
-        private const string Split = "------------------------ >8 ------------------------";
-
-        private static readonly bool IsWinblows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        #endregion
-
         #region Properties
         /// <summary>
         /// Gets or sets the root of the repository.
@@ -219,83 +209,32 @@ namespace PulseBridge.Condo.Tasks
         /// </returns>
         public override bool Execute()
         {
-            // set the root
-            var root = this.RepositoryRoot;
+            // attempt to get the repository root (walking the parent until we find it)
+            var root = GetRepositoryInfo.GetRoot(this.RepositoryRoot);
 
             // determine if the root could be found
             if (string.IsNullOrEmpty(root))
             {
-                // write a warning
-                this.Log.LogWarning(Invariant($"The {nameof(RepositoryRoot)} property was not specified."));
-
                 // move on immediately
                 return true;
             }
 
-            // determine if the directory exists
-            if (!Directory.Exists(root))
+            // update the repository root
+            this.RepositoryRoot = root;
+
+            try
             {
-                // write a warning
-                this.Log.LogWarning(Invariant($"The repository root ({root}) does not exist."));
+                // get the commits
+                this.Commits = this.GetCommits().ToArray();
+            }
+            catch (Exception netEx)
+            {
+                // log a warning
+                Log.LogWarning(netEx.Message);
 
                 // move on immediately
-                return true;
+                return false;
             }
-
-            var gitconfig = Path.Combine(root, ".git");
-
-            // determine if the git config path exists
-            if (!Directory.Exists(gitconfig))
-            {
-                // write a warning
-                this.Log.LogWarning(Invariant($"The repository root ({root}) is not a git repository."));
-
-                // move on immediately
-                return true;
-            }
-
-            // create an exec task for retrieving the version
-            var exec = this.CreateExecTask("--version", root);
-
-            // execute the command and ensure that the output exists
-            if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
-            {
-                // write a warning
-                this.Log.LogWarning(Invariant($"Git cannot be found on the current path."));
-
-                // move on immediately
-                return true;
-            }
-
-            // set the client version
-            this.ClientVersion = exec.ConsoleOutput[0].ItemSpec;
-
-            // determine if the latest tag commit is empty
-            if (string.IsNullOrEmpty(this.LatestTagCommit))
-            {
-                // create the command used to get the latest tag commit
-                exec = this.CreateExecTask("rev-list --tags --max-count=1", root);
-
-                // execute the command and ensure that the output contains a result
-                if (exec.Execute() && exec.ConsoleOutput.Length == 1)
-                {
-                    // set the tag commit
-                    this.LatestTagCommit = exec.ConsoleOutput[0].ItemSpec;
-
-                    // create the command used to describe the commit
-                    exec = this.CreateExecTask(Invariant($"describe --tags {this.LatestTagCommit}"), root);
-
-                    // execute the command and ensure that the output contains a result
-                    if (exec.Execute() && exec.ConsoleOutput.Length == 1)
-                    {
-                        // set the tag
-                        this.LatestTag = exec.ConsoleOutput[0].ItemSpec;
-                    }
-                }
-            }
-
-            // get the commits
-            this.Commits = this.GetCommits().ToArray();
 
             // we were successful
             return true;
@@ -303,155 +242,40 @@ namespace PulseBridge.Condo.Tasks
 
         private IEnumerable<ITaskItem> GetCommits()
         {
-            // create the range
-            var range = string.IsNullOrEmpty(this.From) ? this.To : $"{this.From}..{this.To}";
+            var factory = new GitRepositoryFactory();
 
-            // create the command used to get the history of commits
-            var exec = this.CreateExecTask($@"log {range} --format=""%H%n%h%n%s%n%b%n{Split}%n""", this.RepositoryRoot);
+            // load the repository
+            var repository = factory.Load(this.RepositoryRoot);
 
-            // execute the command and ensure results
-            if (!exec.Execute() || exec.ConsoleOutput.Length == 0)
+            // set the client version
+            this.ClientVersion = repository.ClientVersion;
+
+            // get the options and parser
+            var options = new AngularGitLogOptions();
+            var parser = new GitLogParser();
+
+            // get the commits
+            var log = repository.Log(this.From, this.To, options, parser);
+
+            // iterate over each commit
+            foreach (var commit in log.Commits)
             {
-                // move on immediately
-                return new ITaskItem[0];
+                // create a new task item
+                var item = new TaskItem(commit.ShortHash);
+
+                // set well-known metadata
+                item.SetMetadata(nameof(commit.Hash), commit.Hash);
+                item.SetMetadata(nameof(commit.ShortHash), commit.ShortHash);
+                item.SetMetadata(nameof(commit.Header), commit.Header);
+                item.SetMetadata(nameof(commit.Body), commit.Body);
+                item.SetMetadata(nameof(commit.Raw), commit.Raw);
+                item.SetMetadata(nameof(commit.Branches), string.Join(";", commit.Branches));
+                item.SetMetadata(nameof(commit.Tags), string.Join(";", commit.Tags));
+                item.SetMetadata(nameof(commit.References), string.Join(";", commit.References.Select(reference => reference.Raw)));
+
+                // return the item
+                yield return item;
             }
-
-            // capture the lines from the console output
-            var lines = exec.ConsoleOutput.Select(item => item.ItemSpec);
-
-            // parse the lines
-            return this.ParseCommits(lines);
-        }
-
-        private IEnumerable<ITaskItem> ParseCommits(IEnumerable<string> output)
-        {
-            // determine if the output is null
-            if (output == null)
-            {
-                // break the iterator
-                yield break;
-            }
-
-            // get the lines
-            var lines = output.ToList();
-
-            // create the regex's
-            var header = string.IsNullOrEmpty(this.HeaderPattern) ? null : new Regex(this.HeaderPattern);
-            var revert = string.IsNullOrEmpty(this.RevertPattern) ? null : new Regex(this.RevertPattern);
-            var merge = string.IsNullOrEmpty(this.MergePattern) ? null : new Regex(this.MergePattern);
-            var field = string.IsNullOrEmpty(this.FieldPattern) ? null : new Regex(this.FieldPattern);
-
-            // define the match variable used to track regex matches
-            var match = default(Match);
-
-            // iterate over each line of output
-            for (var i = 0; i < lines.Count; i++)
-            {
-                // get the hash
-                var hash = lines[i++];
-
-                // get the abbreviated hash
-                var spec = lines[i++];
-
-                // get the subject
-                var subject = lines[i++];
-
-                // create an empty string to retain the body
-                var body = string.Empty;
-
-                // get the next line
-                var line = lines[i++];
-
-                // continue processing until the split marker
-                while (!Split.Equals(line))
-                {
-                    body += body.Length > 0 ? $"{Environment.NewLine}{line}" : line;
-                    line = lines[i++];
-                }
-
-                // tricky: decrement by one since the for loop will once again skip
-                // over this value
-                i--;
-
-                // create the commit
-                var commit = new TaskItem(spec);
-                commit.SetMetadata("Hash", $"{hash}");
-                commit.SetMetadata("Message", $"{subject}{Environment.NewLine}{body}");
-                commit.SetMetadata("Body", body);
-
-                // tricky: subject may be overwritten below, which is why we set the header metadata to retain the
-                // full header before splicing
-                commit.SetMetadata("Header", subject);
-                commit.SetMetadata("Subject", subject);
-
-                // determine if a header regex exists
-                if (header != null)
-                {
-                    // get the match
-                    match = header.Match(subject);
-
-                    // get the total matches
-                    // tricky: match[0] will always be the entire string in .net, which we ignore
-                    var matches = match.Groups.Count + 1;
-
-                    // iterate over each header correspondence
-                    for (var j = 0; j < this.HeaderCorrespondence.Length && j < matches; j++)
-                    {
-                        // get the associated match group
-                        var group = match.Groups[j+1];
-
-                        // get the correspondence metadata
-                        var correspondence = this.HeaderCorrespondence[j];
-
-                        // get the name of the metadata
-                        var name = correspondence.GetMetadata("Name") ?? correspondence.ItemSpec;
-
-                        // get the value of the match
-                        var value = group.Value;
-
-                        // set the metadata
-                        commit.SetMetadata(name, value);
-                    }
-                }
-
-                // yield the commit
-                yield return commit;
-            }
-        }
-
-        /// <summary>
-        /// Creates a Microsoft Build execution task used to execute a git command.
-        /// </summary>
-        /// <param name="command">
-        /// The git command that should be executed.
-        /// </param>
-        /// <param name="root">
-        /// The root path in which to execute the git command.
-        /// </param>
-        /// <returns>
-        /// The execution task that can be used to execute the git command.
-        /// </returns>
-        private Exec CreateExecTask(string command, string root)
-        {
-            // determine if we are on windows
-            if (IsWinblows)
-            {
-                // escape the '%' to ensure that the temporary response file created by Exec doesn't
-                // attempt to parse environment variables in format string
-                command = command.Replace("%", "%%");
-            }
-
-            // create a new exec
-            return new QuietExec
-            {
-                Command = Invariant($"git {command}"),
-                WorkingDirectory = root,
-                BuildEngine = this.BuildEngine,
-                ConsoleToMSBuild = true,
-                UseCommandProcessor = false,
-                IgnoreExitCode = true,
-                EchoOff = true
-            };
         }
         #endregion
     }

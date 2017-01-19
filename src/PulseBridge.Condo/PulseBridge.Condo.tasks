@@ -5,6 +5,7 @@
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetNodeScripts" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetPlatformInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetProjectMetadata" />
+  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.RestoreSubmodules" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetRepositoryInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetServerTime" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetVstsPackageFeeds" />

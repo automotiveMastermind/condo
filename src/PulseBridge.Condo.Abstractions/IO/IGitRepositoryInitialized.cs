@@ -100,6 +100,17 @@ namespace PulseBridge.Condo.IO
         IGitRepositoryInitialized Tag(string name);
 
         /// <summary>
+        /// Restores all available submodules within the current repository.
+        /// </summary>
+        /// <param name="recursive">
+        /// A value indicating whether or not to recursively restore submodules.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized RestoreSubmodules(bool recursive);
+
+        /// <summary>
         /// Initializes condo within the current repository using the specified <paramref name="root"/> path to locate
         /// the source for condo and configuring the build system.
         /// </summary>
@@ -110,6 +121,20 @@ namespace PulseBridge.Condo.IO
         /// The current repository instance.
         /// </returns>
         IGitRepositoryInitialized Condo(string root);
+
+        /// <summary>
+        /// Pushes all staged changes to the specified <paramref name="remote"/> and optionally includes tags.
+        /// </summary>
+        /// <param name="remote">
+        /// The remote to which to push the staged changes.
+        /// </param>
+        /// <param name="tags">
+        /// A value indicating whether or not to include tags.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized Push(string remote, bool tags);
 
         /// <summary>
         /// Gets the git log using the specified <paramref name="options"/>

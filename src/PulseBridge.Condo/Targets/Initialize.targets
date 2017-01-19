@@ -52,6 +52,7 @@
     <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
     <BuildOn>$(AGENT_NAME)</BuildOn>
     <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
+    <RepositoryProvider Condition=" '$(RepositoryProvider)' == 'TfsGit' ">git</RepositoryProvider>
     <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
     <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
     <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
@@ -62,6 +63,23 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+  </PropertyGroup>
+
+  <!-- capture details from a continuous integration build hosted by Travis-CI -->
+  <PropertyGroup Condition = " '$(TRAVIS)' != '' ">
+    <BuildHost>Travis-CI</BuildHost>
+    <CI>true</CI>
+    <Branch>$(TRAVIS_PULL_REQUEST_BRANCH)</Branch>
+    <Branch Condition=" '$(Branch)' == '' ">$(TRAVIS_BRANCH)</Branch>
+    <CommitId>$(TRAVIS_COMMIT)</CommitId>
+    <BuildId>$(TRAVIS_BUILD_NUMBER)</BuildId>
+    <JobId>$(TRAVIS_JOB_ID)</JobId>
+    <PullRequestId Condition=" '$(TRAVIS_PULL_REQUEST)' != 'false' ">$(TRAVIS_PULL_REQUEST)</PullRequestId>
+    <BuildOn>Travis-CI: $(TRAVIS_OS_NAME)</BuildOn>
+    <RepositoryProvider>Git</RepositoryProvider>
+    <TeamProject>$(TRAVIS_REPO_SLUG)</TeamProject>
+    <BuildUri>https://travis-ci.org/$(TeamProject)/jobs/$(JobId)</BuildUri>
+    <BuildName>$(TeamProject) - $(Branch) - $(JobId)</BuildName>
   </PropertyGroup>
 
   <!-- determine if the repository is managed by git -->
@@ -102,9 +120,6 @@
       <Output TaskParameter="IsWindows" PropertyName="IsWindows" />
       <Output TaskParameter="IsMacOS" PropertyName="IsMacOS" />
     </GetPlatformInfo>
-    <PropertyGroup>
-      <NuGetPath>$([System.IO.Path]::Combine('$(MSBuildBinPath)', 'corerun')) $([System.IO.Path]::Combine('$(MSBuildBinPath)', 'NuGet.CommandLine.XPlat.dll'))</NuGetPath>
-    </PropertyGroup>
   </Target>
 
   <!-- get repository information -->
@@ -124,7 +139,8 @@
     </GetRepositoryInfo>
   </Target>
 
-  <Target Name="GetCommitInfo">
+  <!-- get information about the commits within the repository -->
+  <Target Name="GetCommitInfo" Condition=" '$(RepositoryProvider)' == 'git' ">
     <GetCommitInfo
         RepositoryRoot="$(RepositoryRoot)"
         From="$(CommitFrom)"
@@ -249,8 +265,12 @@
   </Target>
 
   <!-- print commit information -->
-  <Target Name="PrintCommits">
-    <LogItemMetadata Items="@(Commits)" Name="Commit" />
+  <Target Name="PrintCommitInfo" Condition=" '$(RepositoryProvider)' == 'git' ">
+    <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
+    <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
+    <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />
+    <Message Importance="High" Text="From               : @(CommitFrom)" />
+    <Message Importance="High" Text="To                 : @(CommitTo)" />
   </Target>
 
   <PropertyGroup>
@@ -268,6 +288,7 @@
       PrintProjects;
       PrintBuildInfo;
       PrintPaths;
+      PrintCommitInfo;
     </InitializeDependsOn>
   </PropertyGroup>
 

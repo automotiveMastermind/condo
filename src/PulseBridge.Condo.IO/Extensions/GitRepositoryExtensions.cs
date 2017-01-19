@@ -5,9 +5,43 @@ namespace PulseBridge.Condo.IO
     /// </summary>
     public static class GitRepositoryExtensions
     {
+        #region Private Fields
         private static readonly IGitLogOptions Angular = new AngularGitLogOptions();
 
         private static readonly IGitLogParser Parser = new GitLogParser();
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Pushes any staged changes to the "origin" remote and includes tags.
+        /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        public static IGitRepositoryInitialized Push(this IGitRepositoryInitialized repository)
+        {
+            return repository.Push(remote: "origin", tags: true);
+        }
+
+        /// <summary>
+        /// Pushes any staged changes to the "origin" remote and optionally includes tags.
+        /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
+        /// <param name="tags">
+        /// A value indicating whether or not to include tags.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        public static IGitRepositoryInitialized Push(this IGitRepositoryInitialized repository, bool tags)
+        {
+            return repository.Push(remote: "origin", tags: tags);
+        }
 
         /// <summary>
         /// Gets the log of commmits from a repository using the default log options, which are based on the AngularJS
@@ -24,5 +58,6 @@ namespace PulseBridge.Condo.IO
         {
             return repository.Log(from: null, to: null, options: Angular, parser: Parser);
         }
+        #endregion
     }
 }

@@ -11,7 +11,7 @@ namespace PulseBridge.Condo.Tasks
     /// <summary>
     /// Represents a Microsoft Build task that gets information about a repository.
     /// </summary>
-    public class GetRepositoryInfo : Task
+    public class RestoreSubmodules : Task
     {
         #region Properties
         /// <summary>
@@ -22,34 +22,10 @@ namespace PulseBridge.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets the URI of the repository that is identified by the source control server.
-        /// </summary>
-        [Output]
-        public string RepositoryUri { get; set; }
-
-        /// <summary>
-        /// Gets the name of the branch used to build the repository.
-        /// </summary>
-        [Output]
-        public string Branch { get; set; }
-
-        /// <summary>
-        /// Gets the commit hash or checkin number used to build the repository.
-        /// </summary>
-        [Output]
-        public string CommitId { get; set; }
-
-        /// <summary>
         /// Gets the version of the client used to access the repository.
         /// </summary>
         [Output]
         public string ClientVersion { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether or not the repository supports git.
-        /// </summary>
-        [Output]
-        public bool HasGit { get; set; }
         #endregion
 
         #region Methods
@@ -74,30 +50,8 @@ namespace PulseBridge.Condo.Tasks
             // update the repository root
             this.RepositoryRoot = root;
 
-            // set the has git flag
-            this.HasGit = true;
-
             // attempt to use the command line first
-            var result = this.TryCommandLine(root);
-
-            // determine if we were successful and the repository url ends with a ".git" extension
-            if (this.RepositoryUri != null && this.RepositoryUri.EndsWith(".git"))
-            {
-                // strip the '.git' from the uri
-                // tricky: this is done to support browsing to the repository from
-                // a browser rather than just cloning directly for github
-                this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
-            }
-
-            // determine if the branch is set and starts with /refs/heads
-            if (this.Branch != null && this.Branch.ToLower().StartsWith("refs/heads/"))
-            {
-                // remove the /refs/heads reference from the branch name
-                this.Branch = this.Branch.Substring(11);
-            }
-
-            // return the result
-            return result;
+            return this.TryCommandLine(root);
         }
 
         /// <summary>
@@ -109,6 +63,13 @@ namespace PulseBridge.Condo.Tasks
         /// </returns>
         public bool TryCommandLine(string root)
         {
+            // determine if the root is specified
+            if (root == null)
+            {
+                // set the root
+                root = this.RepositoryRoot;
+            }
+
             var factory = new GitRepositoryFactory();
 
             try
@@ -119,26 +80,9 @@ namespace PulseBridge.Condo.Tasks
                 // set the client version
                 this.ClientVersion = repository.ClientVersion;
 
-                // determine if the repository uri is not already set
-                if (string.IsNullOrEmpty(this.RepositoryUri))
-                {
-                    // set the repository uri
-                    this.RepositoryUri = repository.OriginUri;
-                }
+                // restore submodules
+                repository.RestoreSubmodules();
 
-                // determine if the branch is not already set
-                if (string.IsNullOrEmpty(this.Branch))
-                {
-                    // set the branch
-                    this.Branch = repository.CurrentBranch;
-                }
-
-                // determine if the commit is not already set
-                if (string.IsNullOrEmpty(this.CommitId))
-                {
-                    // set the current commit id
-                    this.CommitId = repository.LatestCommit;
-                }
             }
             catch (Exception netEx)
             {
