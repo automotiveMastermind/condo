@@ -1,0 +1,10 @@
+<a name="{{version}}"></a>
+{{#if isPatch~}}
+  ##
+{{~else~}}
+  #
+{{~/if}} {{version}}
+  {{~#if title}} "{{title}}"
+  {{~/if}}
+  {{~#if date}} ({{date}})
+  {{~/if}}
