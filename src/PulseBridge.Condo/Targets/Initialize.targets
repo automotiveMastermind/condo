@@ -140,7 +140,7 @@
   </Target>
 
   <!-- get information about the commits within the repository -->
-  <Target Name="GetCommitInfo" Condition=" '$(RepositoryProvider)' == 'git' ">
+  <Target Name="GetCommitInfo" Condition=" '$(HashGit)' == 'true' ">
     <GetCommitInfo
         RepositoryRoot="$(RepositoryRoot)"
         From="$(CommitFrom)"
@@ -265,7 +265,7 @@
   </Target>
 
   <!-- print commit information -->
-  <Target Name="PrintCommitInfo" Condition=" '$(RepositoryProvider)' == 'git' ">
+  <Target Name="PrintCommitInfo" Condition=" '$(HashGit)' == 'true' ">
     <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
     <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
     <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />

@@ -202,7 +202,7 @@ namespace PulseBridge.Condo.Tasks
             var root = default(string);
             var engine = MSBuildMocks.CreateEngine();
 
-           using (var temp = new TemporaryPath())
+            using (var temp = new TemporaryPath())
             {
                 root = temp.FullPath;
             }
@@ -221,7 +221,7 @@ namespace PulseBridge.Condo.Tasks
             Assert.Null(actual.RepositoryUri);
             Assert.Null(actual.Branch);
             Assert.Null(actual.CommitId);
-    }
+        }
 
         [Fact]
         [Priority(2)]
@@ -241,7 +241,7 @@ namespace PulseBridge.Condo.Tasks
                 };
 
                 // act
-                var result = actual.TryCommandLine(null);
+                var result = actual.TryCommandLine(root);
 
                 // assert
                 Assert.True(result);
@@ -273,7 +273,7 @@ namespace PulseBridge.Condo.Tasks
                 };
 
                 // act
-                var result = actual.TryCommandLine(null);
+                var result = actual.TryCommandLine(root);
 
                 // assert
                 Assert.True(result);

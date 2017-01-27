@@ -22,7 +22,6 @@ namespace PulseBridge.Condo.Tasks
             // arrange
             var root = default(string);
             var engine = new Mock<IBuildEngine>();
-            engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
             var actual = new GetCommitInfo
             {
@@ -52,7 +51,6 @@ namespace PulseBridge.Condo.Tasks
             // arrange
             var root = default(string);
             var engine = new Mock<IBuildEngine>();
-            engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
             using (var temp = new TemporaryPath())
             {
@@ -75,8 +73,6 @@ namespace PulseBridge.Condo.Tasks
             Assert.Null(actual.LatestTag);
             Assert.Null(actual.LatestTagCommit);
             Assert.Null(actual.Commits);
-
-            engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
         }
 
         [Fact]
@@ -89,8 +85,6 @@ namespace PulseBridge.Condo.Tasks
                 // arrange
                 var root = temp.FullPath;
                 var engine = new Mock<IBuildEngine>();
-                engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
-
 
                 var actual = new GetCommitInfo
                 {
@@ -108,8 +102,6 @@ namespace PulseBridge.Condo.Tasks
                 Assert.Null(actual.LatestTag);
                 Assert.Null(actual.LatestTagCommit);
                 Assert.Null(actual.Commits);
-
-                engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
             }
         }
 
@@ -129,12 +121,16 @@ namespace PulseBridge.Condo.Tasks
                     {
                         new
                         {
-                            Message = $"chore(kansas): somewhere over the rainbow{Environment.NewLine}where skies are blue.",
+                            Raw = $"chore(kansas): somewhere over the rainbow{Environment.NewLine}where skies are blue.{Environment.NewLine}{Environment.NewLine}BREAKING CHANGE: something bad happened{Environment.NewLine}{Environment.NewLine}Closes: #34, #22",
                             Header = "chore(kansas): somewhere over the rainbow",
                             Body = "where skies are blue.",
                             Type = "chore",
                             Scope = "kansas",
-                            Subject = "somewhere over the rainbow"
+                            Subject = "somewhere over the rainbow",
+                            Footer = $"BREAKING CHANGE: something bad happened{Environment.NewLine}{Environment.NewLine}Closes: #34, #22",
+                            Notes = "1",
+                            Close = "34;22",
+                            References = "34;22"
                         }
                     },
                     LatestTag = "latest"
@@ -144,7 +140,7 @@ namespace PulseBridge.Condo.Tasks
                 {
                     repo.Save(Path.GetRandomFileName())
                         .Add()
-                        .Commit(commit.Type, commit.Scope, commit.Subject, commit.Body);
+                        .Commit(commit.Raw);
                 }
 
                 repo.Tag(expected.LatestTag);
@@ -176,21 +172,31 @@ namespace PulseBridge.Condo.Tasks
                     var actual = new
                     {
                         Header = commit.GetMetadata(nameof(current.Header)),
-                        Message = commit.GetMetadata(nameof(current.Message)),
+                        Raw = commit.GetMetadata(nameof(current.Raw)),
                         Body = commit.GetMetadata(nameof(current.Body)),
 
                         Type = commit.GetMetadata(nameof(current.Type)),
                         Scope = commit.GetMetadata(nameof(current.Scope)),
-                        Subject = commit.GetMetadata(nameof(current.Subject))
+                        Subject = commit.GetMetadata(nameof(current.Subject)),
+
+                        Notes = commit.GetMetadata(nameof(current.Notes)),
+
+                        References = commit.GetMetadata(nameof(current.References)),
+                        Close = commit.GetMetadata(nameof(current.Close))
                     };
 
                     Assert.Equal(current.Header, actual.Header);
-                    Assert.Equal(current.Message, actual.Message);
+                    Assert.Equal(current.Raw, actual.Raw);
                     Assert.Equal(current.Body, actual.Body);
 
                     Assert.Equal(current.Type, actual.Type);
                     Assert.Equal(current.Scope, actual.Scope);
                     Assert.Equal(current.Subject, actual.Subject);
+
+                    Assert.Equal(current.Notes, actual.Notes);
+
+                    Assert.Equal(current.References, actual.References);
+                    Assert.Equal(current.Close, actual.Close);
                 }
             }
         }

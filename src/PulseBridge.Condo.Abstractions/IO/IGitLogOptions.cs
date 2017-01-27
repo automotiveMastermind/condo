@@ -35,7 +35,7 @@ namespace PulseBridge.Condo.IO
         /// This collection should contain the same number of elements as there are capture groups in the related
         /// <see cref="HeaderPattern"/>.
         /// </remarks>
-        IList<string> HeaderCorrespondence { get; }
+        List<string> HeaderCorrespondence { get; }
 
         /// <summary>
         /// Gets the correspondence that should be contained within a revert commit.
@@ -44,7 +44,7 @@ namespace PulseBridge.Condo.IO
         /// This collection should contain the same number of elements as there are capture groups in the related
         /// <see cref="RevertPattern"/>.
         /// </remarks>
-        IList<string> RevertCorrespondence { get; }
+        List<string> RevertCorrespondence { get; }
 
         /// <summary>
         /// Gets the correspondence that should be contained within a merge commit.
@@ -53,27 +53,27 @@ namespace PulseBridge.Condo.IO
         /// This collection should contain the same number of elements as there are capture groups in the related
         /// <see cref="MergePattern"/>.
         /// </remarks>
-        IList<string> MergeCorrespondence { get; }
+        List<string> MergeCorrespondence { get; }
 
         /// <summary>
         /// Gets the prefixes used to denote a reference within a git commit message.
         /// </summary>
-        IList<string> ReferencePrefixes { get; }
+        List<string> ReferencePrefixes { get; }
 
         /// <summary>
         /// Gets the prefixes used to denote a mention within a git commit message.
         /// </summary>
-        IList<string> MentionPrefixes { get; }
+        List<string> MentionPrefixes { get; }
 
         /// <summary>
         /// Gets the actions used to denote why a reference within the git commit exists.
         /// </summary>
-        IList<string> ActionKeywords { get; }
+        List<string> ActionKeywords { get; }
 
         /// <summary>
         /// Gets the keywords used to denote a note or breaking change within a commit.
         /// </summary>
-        IList<string> NoteKeywords { get; }
+        List<string> NoteKeywords { get; }
 
         /// <summary>
         /// Gets a value indicating whether or not to include invalid commits.

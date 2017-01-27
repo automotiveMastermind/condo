@@ -6,7 +6,7 @@ namespace PulseBridge.Condo.IO
     public static class GitRepositoryExtensions
     {
         #region Private Fields
-        private static readonly IGitLogOptions Angular = new AngularGitLogOptions();
+        private static readonly IGitLogOptions Options = new GitLogOptions();
 
         private static readonly IGitLogParser Parser = new GitLogParser();
         #endregion
@@ -56,7 +56,7 @@ namespace PulseBridge.Condo.IO
         /// </returns>
         public static GitLog Log(this IGitRepositoryInitialized repository)
         {
-            return repository.Log(from: null, to: null, options: Angular, parser: Parser);
+            return repository.Log(from: null, to: null, options: Options, parser: Parser);
         }
         #endregion
     }

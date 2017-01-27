@@ -109,15 +109,13 @@ namespace PulseBridge.Condo.Tasks
                 var result = actual.Execute();
 
                 // assert
-                Assert.True(result);
-
-                // todo: assert warning
+                Assert.False(result);
             }
         }
 
         [Fact]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenRepositoryHasNoCommits_SucceedsWithWarning()
+        public void Execute_WhenRepositoryHasNoCommits_Fails()
         {
             using (var repo = repository.Initialize())
             {
@@ -138,9 +136,7 @@ namespace PulseBridge.Condo.Tasks
                 var result = actual.Execute();
 
                 // assert
-                Assert.True(result);
-
-                // todo: assert warning
+                Assert.False(result);
             }
         }
 

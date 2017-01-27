@@ -47,7 +47,7 @@ namespace PulseBridge.Condo.IO
                 ? NoMatchRegex
                 : new Regex(options.FieldPattern, RegexOptions.IgnoreCase);
 
-            var mentionRegex = GetMentionRegex(options.MentionPrefixes);
+            // var mentionRegex = GetMentionRegex(options.MentionPrefixes);
             var noteRegex = GetNotesRegex(options.NoteKeywords);
             var actionRegex = GetActionsRegex(options.ActionKeywords);
             var referenceRegex = GetReferenceRegex(options.ReferencePrefixes);
@@ -107,7 +107,7 @@ namespace PulseBridge.Condo.IO
 
                         // add the tag
                         commit.Tags.Add(label);
-                        log.Tags.Add(label);
+                        log.Tags.Add(new GitTag { Name = label, Hash = hash, ShortHash = shortHash });
 
                         // move on immediately
                         continue;
@@ -159,7 +159,7 @@ namespace PulseBridge.Condo.IO
                 var note = default(GitNote);
 
                 // continue processing lines (in the body)
-                while(lines.MoveNext())
+                while (lines.MoveNext())
                 {
                     // capture the line
                     var line = lines.Current;
@@ -187,7 +187,7 @@ namespace PulseBridge.Condo.IO
                         commit.Notes.Add(note);
 
                         // append the footer line
-                        footer.Append(line);
+                        footer.AppendLine(line);
 
                         // break from parsing the body
                         break;
@@ -213,7 +213,7 @@ namespace PulseBridge.Condo.IO
                     section.AppendLine(line);
 
                     // append the footer line
-                    footer.Append(line);
+                    footer.AppendLine(line);
 
                     // append the raw line
                     raw.AppendLine(line);
@@ -228,7 +228,7 @@ namespace PulseBridge.Condo.IO
                     if (match.Success)
                     {
                         // set the note body to the current section content
-                        note.Body += section.ToString().Trim(newline);
+                        note.Body += section.ToString().TrimEnd(newline);
 
                         // clear the section
                         section.Clear();
@@ -249,7 +249,7 @@ namespace PulseBridge.Condo.IO
                 if (section.Length > 0)
                 {
                     // set the note body
-                    note.Body += section.ToString().Trim(newline);
+                    note.Body += section.ToString().TrimEnd(newline);
                 }
 
                 // set the raw and footer
@@ -378,7 +378,7 @@ namespace PulseBridge.Condo.IO
             for (var j = 0; j < source.Count && j < matches; j++)
             {
                 // get the group
-                var group = match.Groups[j+1];
+                var group = match.Groups[j + 1];
 
                 // get the name of the header
                 var name = source[j];

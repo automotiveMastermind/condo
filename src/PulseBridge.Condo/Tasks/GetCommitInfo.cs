@@ -16,6 +16,11 @@ namespace PulseBridge.Condo.Tasks
     {
         #region Properties
         /// <summary>
+        /// Gets the git log if previously retrieved.
+        /// </summary>
+        public static GitLog GitLog { get; private set; }
+
+        /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
         [Output]
@@ -42,24 +47,17 @@ namespace PulseBridge.Condo.Tasks
         public string To { get; set; } = "HEAD";
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not to include invalid commits.
+        /// </summary>
+        public bool IncludeInvalidCommits { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the actions used to track references that resolve an issue (work item).
         /// </summary>
         /// <remarks>
-        /// The item specification of each task item within the collection will be used to determine whether an issue
-        /// (work item) is resolved by the commit. If an issue (work item) reference is not found on a line that starts
-        /// with one of these terms, it will not be included as a resolution.
+        /// The list is semi-colon delimited.
         /// </remarks>
-        public ITaskItem[] Actions { get; set; } = new[]
-            {
-                new TaskItem("close"),
-                new TaskItem("closes"),
-                new TaskItem("closed"),
-                new TaskItem("fix"),
-                new TaskItem("fixed"),
-                new TaskItem("resolve"),
-                new TaskItem("resolves"),
-                new TaskItem("resolved")
-            };
+        public string ActionKeywords { get; set; } = "Close;Closes;Closed;Fix;Fixed;Resolve;Resolves;Resolved";
 
         /// <summary>
         /// Gets or sets the regular expression pattern used to parse the header.
@@ -89,42 +87,59 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the correspondence for a header.
         /// </summary>
-        public ITaskItem[] HeaderCorrespondence { get; set; } = new[]
-            {
-                new TaskItem("type", new Dictionary<string, string> { { "Name", "Type" } }),
-                new TaskItem("scope", new Dictionary<string, string> { { "Name", "Scope" } }),
-                new TaskItem("subject", new Dictionary<string, string> { { "Name", "Subject" } }),
-            };
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string HeaderCorrespondence { get; set; } = "Type;Scope;Subject";
 
         /// <summary>
         /// Gets or sets the correspondence for a merge.
         /// </summary>
-        public ITaskItem[] MergeCorrespondence { get; set; }
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string MergeCorrespondence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the correspondence for a reversion.
+        /// </summary>
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string RevertCorrespondence { get; set; }
 
         /// <summary>
         /// Gets or sets the prefixes used to reference an issue (work item) within a commit message.
         /// </summary>
-        public ITaskItem[] IssuePrefixes { get; set; } = new[]
-            {
-                new TaskItem("#")
-            };
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string ReferencePrefixes { get; set; } = "#";
+
+        /// <summary>
+        /// Gets or sets the prefixes used to reference an an individual or group within a commit message.
+        /// </summary>
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string MentionPrefixes { get; set; } = "@";
 
         /// <summary>
         /// Gets or sets the keywords used to reference a breaking change within a commit message.
         /// </summary>
-        public ITaskItem[] NoteKeywords { get; set; } = new[]
-            {
-                new TaskItem("BREAKING CHANGE")
-            };
+        /// <remarks>
+        /// The list is semi-colon delimited.
+        /// </remarks>
+        public string NoteKeywords { get; set; } = "BREAKING CHANGE;BREAKING CHANGES";
 
         /// <summary>
         /// Gets the commits that belong to the current release.
         /// </summary>
         /// <remarks>
-        /// This list contains the commit SHA's of all commits that have occurred after the commit associated with
-        /// the <see cref="LatestTag"/> property. The SHA value will be the <see cref="ITaskItem.ItemSpec"/>. In
-        /// addition, the task items will contain metadata that describes any commit that follows the
-        /// conventional-changelog style guide. This metadata includes the following:
+        /// Will contain a list of all commits that comply with the indicated format.
+        /// The SHA value will be the <see cref="ITaskItem.ItemSpec"/>. In addition, the task items will contain
+        /// metadata that describes any commit that follows the conventional-changelog style guide. This metadata
+        /// includes the following:
         /// <list type="bullet">
         /// <item>
         ///     <term>Type</term>
@@ -215,6 +230,9 @@ namespace PulseBridge.Condo.Tasks
             // determine if the root could be found
             if (string.IsNullOrEmpty(root))
             {
+                // log a warning
+                this.Log.LogWarning("The repository root was not specified.");
+
                 // move on immediately
                 return true;
             }
@@ -230,7 +248,7 @@ namespace PulseBridge.Condo.Tasks
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarning(netEx.Message);
+                this.Log.LogWarning(netEx.Message);
 
                 // move on immediately
                 return false;
@@ -250,15 +268,46 @@ namespace PulseBridge.Condo.Tasks
             // set the client version
             this.ClientVersion = repository.ClientVersion;
 
+            var headers = this.HeaderCorrespondence.PropertySplit().ToList();
+            var merges = this.MergeCorrespondence.PropertySplit().ToList();
+            var reversions = this.RevertCorrespondence.PropertySplit().ToList();
+
+            var references = this.ReferencePrefixes.PropertySplit().ToList();
+            var mentions = this.MentionPrefixes.PropertySplit().ToList();
+
+            var actionKeywords = this.ActionKeywords.PropertySplit().ToList();
+            var noteKeywords = this.NoteKeywords.PropertySplit().ToList();
+
             // get the options and parser
-            var options = new AngularGitLogOptions();
+            var options = new GitLogOptions()
+            {
+                HeaderPattern = this.HeaderPattern,
+                HeaderCorrespondence = headers,
+
+                MergePattern = this.MergePattern,
+                MergeCorrespondence = merges,
+
+                RevertPattern = this.RevertPattern,
+                RevertCorrespondence = reversions,
+
+                FieldPattern = this.FieldPattern,
+
+                ActionKeywords = actionKeywords,
+                NoteKeywords = noteKeywords,
+
+                MentionPrefixes = mentions,
+                ReferencePrefixes = references,
+
+                IncludeInvalidCommits = this.IncludeInvalidCommits
+            };
+
             var parser = new GitLogParser();
 
             // get the commits
-            var log = repository.Log(this.From, this.To, options, parser);
+            GitLog = repository.Log(this.From, this.To, options, parser);
 
             // iterate over each commit
-            foreach (var commit in log.Commits)
+            foreach (var commit in GitLog.Commits)
             {
                 // create a new task item
                 var item = new TaskItem(commit.ShortHash);
@@ -269,13 +318,49 @@ namespace PulseBridge.Condo.Tasks
                 item.SetMetadata(nameof(commit.Header), commit.Header);
                 item.SetMetadata(nameof(commit.Body), commit.Body);
                 item.SetMetadata(nameof(commit.Raw), commit.Raw);
-                item.SetMetadata(nameof(commit.Branches), string.Join(";", commit.Branches));
-                item.SetMetadata(nameof(commit.Tags), string.Join(";", commit.Tags));
-                item.SetMetadata(nameof(commit.References), string.Join(";", commit.References.Select(reference => reference.Raw)));
+                item.SetMetadata(nameof(commit.Branches), commit.Branches.PropertyJoin());
+                item.SetMetadata(nameof(commit.Tags), commit.Tags.PropertyJoin());
+                item.SetMetadata(nameof(commit.References), commit.References.Select(reference => reference.Id).PropertyJoin());
+
+                var count = noteKeywords.Sum(keyword => commit.Notes
+                    .Count(note => note.Header.StartsWith(keyword, StringComparison.OrdinalIgnoreCase)));
+
+                // set the metadata
+                item.SetMetadata(nameof(commit.Notes), count.ToString());
+
+                // add header correspondence
+                foreach (var correspondence in commit.HeaderCorrespondence)
+                {
+                    item.SetMetadata(correspondence.Key, correspondence.Value);
+                }
+
+                // add merge correspondence
+                foreach (var correspondence in commit.MergeCorrespondence)
+                {
+                    item.SetMetadata(correspondence.Key, correspondence.Value);
+                }
+
+                // iterate over actions
+                foreach (var action in actionKeywords)
+                {
+                    item.SetMetadata
+                    (
+                        action,
+                        commit.References
+                            .Where(reference => reference.Action.Equals(action, StringComparison.OrdinalIgnoreCase))
+                            .Select(reference => reference.Id)
+                            .PropertyJoin()
+                    );
+                }
 
                 // return the item
                 yield return item;
             }
+
+            var tag = GitLog.Tags.FirstOrDefault();
+
+            this.LatestTag = tag.Name;
+            this.LatestTagCommit = tag.Hash;
         }
         #endregion
     }

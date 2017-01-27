@@ -1,6 +1,5 @@
 namespace PulseBridge.Condo.IO
 {
-    using System;
     using System.Collections.Generic;
     using System.Text;
 
@@ -28,7 +27,7 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets or sets the tag contained within the log.
         /// </summary>
-        public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+        public ICollection<GitTag> Tags { get; } = new SortedSet<GitTag>();
         #endregion
 
         /// <inheritdoc />

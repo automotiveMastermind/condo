@@ -57,7 +57,7 @@ namespace PulseBridge.Condo.Tasks
             if (string.IsNullOrEmpty(root))
             {
                 // move on immediately
-                return true;
+                return false;
             }
 
             // determine if the tag is set

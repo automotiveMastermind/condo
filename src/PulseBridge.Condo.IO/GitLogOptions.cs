@@ -5,7 +5,7 @@ namespace PulseBridge.Condo.IO
     /// <summary>
     /// Represents git log options that uses the AngularJS conventions for commits.
     /// </summary>
-    public class AngularGitLogOptions : IGitLogOptions
+    public class GitLogOptions : IGitLogOptions
     {
         /// <inheritdoc />
         public string HeaderPattern { get; set; } = @"^(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$";
@@ -20,26 +20,26 @@ namespace PulseBridge.Condo.IO
         public string FieldPattern { get; set; } = @"^-(.*?)-$";
 
         /// <inheritdoc />
-        public IList<string> HeaderCorrespondence { get; } = new List<string> { "type", "scope", "subject" };
+        public List<string> HeaderCorrespondence { get; set; } = new List<string> { "Type", "Scope", "Subject" };
 
         /// <inheritdoc />
-        public IList<string> MergeCorrespondence { get; } = new List<string>();
+        public List<string> MergeCorrespondence { get; set; } = new List<string>();
 
         /// <inheritdoc />
-        public IList<string> RevertCorrespondence { get; } = new List<string> { "header", "hash" };
+        public List<string> RevertCorrespondence { get; set; } = new List<string> { "Header", "Hash" };
 
         /// <inheritdoc />
-        public IList<string> ReferencePrefixes { get; } = new List<string> { "#" };
+        public List<string> ReferencePrefixes { get; set; } = new List<string> { "#" };
 
         /// <inheritdoc />
-        public IList<string> MentionPrefixes { get; } = new List<string> { "@" };
+        public List<string> MentionPrefixes { get; set; } = new List<string> { "@" };
 
         /// <inheritdoc />
-        public IList<string> ActionKeywords { get; }
-            = new List<string> { "close", "closes", "closed", "fix", "fixes", "fixed", "resolve", "resolves", "resolved" };
+        public List<string> ActionKeywords { get; set; }
+            = new List<string> { "Close", "Closes", "Closed", "Fix", "Fixes", "Fixed", "Resolve", "Resolves", "Resolved" };
 
         /// <inheritdoc />
-        public IList<string> NoteKeywords { get; } = new List<string> { "BREAKING CHANGE", "BREAKING CHANGES" };
+        public List<string> NoteKeywords { get; set; } = new List<string> { "BREAKING CHANGE", "BREAKING CHANGES" };
 
         /// <inheritdoc />
         public bool IncludeInvalidCommits { get; set; } = false;
