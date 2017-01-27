@@ -30,8 +30,9 @@
     <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">$(DOTNET_BUILD_VERSION)</SemanticVersion>
     <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">1.0.0</SemanticVersion>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
-    <BuildHost Condition=" '$(BuildHost)' == '' ">Local</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
     <CI Condition=" '$(CI)' == '' ">false</CI>
+    <HasGit Condition=" '$(HasGit)' == '' ">false</HasGit>
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
@@ -42,7 +43,7 @@
 
   <!-- capture details from a continuous integration build hosted by TFS -->
   <PropertyGroup Condition=" '$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '' ">
-    <BuildHost>TFS</BuildHost>
+    <BuildHost>tfs</BuildHost>
     <CI>true</CI>
     <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
     <Branch>$(BUILD_SOURCEBRANCH)</Branch>
@@ -67,7 +68,7 @@
 
   <!-- capture details from a continuous integration build hosted by Travis-CI -->
   <PropertyGroup Condition = " '$(TRAVIS)' != '' ">
-    <BuildHost>Travis-CI</BuildHost>
+    <BuildHost>travis</BuildHost>
     <CI>true</CI>
     <Branch>$(TRAVIS_PULL_REQUEST_BRANCH)</Branch>
     <Branch Condition=" '$(Branch)' == '' ">$(TRAVIS_BRANCH)</Branch>
@@ -139,42 +140,6 @@
     </GetRepositoryInfo>
   </Target>
 
-  <!-- get information about the commits within the repository -->
-  <Target Name="GetCommitInfo" Condition=" '$(HashGit)' == 'true' ">
-    <GetCommitInfo
-        RepositoryRoot="$(RepositoryRoot)"
-        From="$(CommitFrom)"
-        To="$(CommitTo)">
-      <Output TaskParameter="From" PropertyName="CommitFrom" />
-      <Output TaskParameter="To" PropertyName="CommitTo" />
-      <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
-      <Output TaskParameter="LatestTagCommit" PropertyName="LatestTagCommit" />
-      <Output TaskParameter="Commits" ItemName="Commits" />
-    </GetCommitInfo>
-  </Target>
-
-  <!-- get assembly info based on the repository -->
-  <Target Name="GetAssemblyInfo">
-    <GetAssemblyInfo
-        CI="$(CI)"
-        SemanticVersion="$(SemanticVersion)"
-        AssemblyVersion="$(AssemblyVersion)"
-        Branch="$(Branch)"
-        BuildId="$(BuildId)"
-        CommitId="$(CommitId)"
-        StartDateUtc="$(StartDateUtc)"
-        BuildDateUtc="$(BuildDateUtc)">
-      <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
-      <Output TaskParameter="FileVersion" PropertyName="FileVersion" />
-      <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
-      <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion" />
-      <Output TaskParameter="BuildId" PropertyName="BuildId" />
-      <Output TaskParameter="CommitId" PropertyName="CommitId" />
-      <Output TaskParameter="BuildDateUtc" PropertyName="BuildDateUtc" />
-      <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
-    </GetAssemblyInfo>
-  </Target>
-
   <!-- get project metadata based on its location -->
   <Target Name="GetProjectMetadata">
     <GetProjectMetadata Projects="@(DotNetPaths)">
@@ -214,16 +179,7 @@
     <Message Importance="High" Text="Configuration      : $(Configuration)" />
     <Message Importance="High" Text="Platform           : $(Platform)" />
     <Message Importance="High" Text="Authors            : $(Authors)" />
-    <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
-    <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
-    <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
-    <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
-    <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
-
-    <Message Importance="High"
-             Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
-             Condition=" '$(BuildHost)' == 'TFS' " />
   </Target>
 
   <!-- print project information -->
@@ -264,31 +220,21 @@
     <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
   </Target>
 
-  <!-- print commit information -->
-  <Target Name="PrintCommitInfo" Condition=" '$(HashGit)' == 'true' ">
-    <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
-    <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
-    <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />
-    <Message Importance="High" Text="From               : @(CommitFrom)" />
-    <Message Importance="High" Text="To                 : @(CommitTo)" />
-  </Target>
-
   <PropertyGroup>
     <InitializeDependsOn>
-      $(InitializeDependsOn);
+      $(BeforeInitialize);
       GetServerTime;
       GetPlatformInfo;
       GetRepositoryInfo;
-      GetCommitInfo;
       GetProjectMetadata;
-      GetAssemblyInfo;
       BootstrapVstsFeeds;
       PrintProperties;
       PrintRepositoryInfo;
       PrintProjects;
       PrintBuildInfo;
       PrintPaths;
-      PrintCommitInfo;
+      $(InitializeDependsOn);
+      $(AfterInitialize);
     </InitializeDependsOn>
   </PropertyGroup>
 

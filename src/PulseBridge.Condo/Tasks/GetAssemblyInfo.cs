@@ -37,6 +37,82 @@ namespace PulseBridge.Condo.Tasks
         public bool CI { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets the prefix used to identify a feature that is in development.
+        /// </summary>
+        public string FeatureBranchPrefix { get; set; } = "feature";
+
+        /// <summary>
+        /// Gets or sets the prefix used to identify a bug fix that is in development.
+        /// </summary>
+        public string BugfixBranchPrefix { get; set; } = "bugfix";
+
+        /// <summary>
+        /// Gets or sets the prefix used to identify a release branch for finalization.
+        /// </summary>
+        public string ReleaseBranchPrefix { get; set; } = "release";
+
+        /// <summary>
+        /// Gets or sets the prefix used to identify a support branch for long-term support.
+        /// </summary>
+        public string SupportBranchPrefix { get; set; } = "support";
+
+        /// <summary>
+        /// Gets or sets the prefix used to identify a hotfix branch for real-time patch development.
+        /// </summary>
+        public string HotfixBranchPrefix { get; set; } = "hotfix";
+
+        /// <summary>
+        /// Gets or sets the name used to identify the integration branch for development.
+        /// </summary>
+        public string DevelopBranch { get; set; } = "develop";
+
+        /// <summary>
+        /// Gets or sets the name used to identify the integration branch for production.
+        /// </summary>
+        public string MasterBranch { get; set; } = "master";
+
+        /// <summary>
+        /// Gets or sets the default build quality, which is used whenever a branch specific build quality is not set
+        /// or when a branch purpose cannot be determined.
+        /// </summary>
+        public string DefaultBuildQuality { get; set; } = "alpha";
+
+        /// <summary>
+        /// Gets or sets the build quality to use for the develop branch.
+        /// </summary>
+        public string DevelopBranchBuildQuality { get; set; } = "beta";
+
+        /// <summary>
+        /// Gets or sets the build quality to use for the master branch.
+        /// </summary>
+        public string MasterBranchBuildQuality { get; set; }
+
+        /// <summary>
+        /// Gets or sets the build quality to use for feature branches.
+        /// </summary>
+        public string FeatureBranchBuildQuality { get; set; }
+
+        /// <summary>
+        /// Gets or sets the build quality to use for bug fix branches.
+        /// </summary>
+        public string BugfixBranchBuildQuality { get; set; }
+
+        /// <summary>
+        /// Gets or sets the build quality to use for release branches.
+        /// </summary>
+        public string ReleaseBranchBuildQuality { get; set; } = "rc";
+
+        /// <summary>
+        /// Gets or sets the build quality to use for support branches.
+        /// </summary>
+        public string SupportBranchBuildQuality { get; set; } = "servicing";
+
+        /// <summary>
+        /// Gets or sets the build quality to use for hotfix branches.
+        /// </summary>
+        public string HotfixBranchBuildQuality { get; set; } = "hotfix";
+
+        /// <summary>
         /// Gets the pre-release tag (semantic version suffix) used by dotnet projects.
         /// </summary>
         [Output]
@@ -196,33 +272,64 @@ namespace PulseBridge.Condo.Tasks
             if (string.IsNullOrEmpty(this.BuildQuality))
             {
                 // set the prelrease tag to alpha by default
-                this.BuildQuality = "alpha";
+                this.BuildQuality = this.DefaultBuildQuality;
 
-                // only allow the prerelease tag to be set to anything other than alpha
-                // on CI servers
+                // only inspect the current branch when running on a build server
                 if (this.CI)
                 {
-                    // determine if the branch is a dev branch
-                    if (this.Branch.StartsWith("dev", StringComparison.OrdinalIgnoreCase))
+                    // determine if the branch is the master branch
+                    if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
                     {
-                        // set the prerelease tag to beta
-                        this.BuildQuality = "beta";
+                        // set the build quality to the master branch build quality
+                        this.BuildQuality = this.MasterBranchBuildQuality;
                     }
 
-                    // determine if this is a release branch
-                    else if (this.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase)
-                        || this.Branch.StartsWith("hotfix", StringComparison.OrdinalIgnoreCase))
+                    // determine if the branch is a develop branch
+                    else if (!string.IsNullOrEmpty(this.DevelopBranchBuildQuality)
+                        && this.Branch.Equals(this.DevelopBranch, StringComparison.OrdinalIgnoreCase))
                     {
-                        // set the prerelease tag as a release candidate
-                        this.BuildQuality = "rc";
+                        // set the build quality to the develop branch build quality
+                        this.BuildQuality = this.DevelopBranchBuildQuality;
                     }
 
-                    // determine if the branch is master or main
-                    else if (this.Branch.StartsWith("master", StringComparison.OrdinalIgnoreCase)
-                        || this.Branch.StartsWith("main", StringComparison.OrdinalIgnoreCase))
+                    // determine if the branch is a feature branch
+                    else if (!string.IsNullOrEmpty(this.FeatureBranchBuildQuality)
+                        && this.Branch.StartsWith(this.FeatureBranchPrefix, StringComparison.OrdinalIgnoreCase))
                     {
-                        // this should not have a prerelease tag
-                        this.BuildQuality = null;
+                        // set the build quality to the feature branch build quality
+                        this.BuildQuality = this.FeatureBranchBuildQuality;
+                    }
+
+                    // determine if the branch is a bugfix branch
+                    else if (!string.IsNullOrEmpty(this.BugfixBranchBuildQuality)
+                        && this.Branch.StartsWith(this.BugfixBranchPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the build quality to the bugfix branch build quality
+                        this.BuildQuality = this.BugfixBranchBuildQuality;
+                    }
+
+                    // determine if the branch is a release branch
+                    else if (!string.IsNullOrEmpty(this.ReleaseBranchBuildQuality)
+                        && this.Branch.StartsWith(this.ReleaseBranchPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the build quality to the release branch build quality
+                        this.BuildQuality = this.ReleaseBranchBuildQuality;
+                    }
+
+                    // determine if the branch is a support branch
+                    else if (!string.IsNullOrEmpty(this.SupportBranchBuildQuality)
+                        && this.Branch.StartsWith(this.SupportBranchPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the build quality to the support branch build quality
+                        this.BuildQuality = this.SupportBranchBuildQuality;
+                    }
+
+                    // determine if the branch is a hotfix branch
+                    else if (!string.IsNullOrEmpty(this.HotfixBranchBuildQuality)
+                        && this.Branch.StartsWith(this.HotfixBranchPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // set the build quality to the hotfix branch build quality
+                        this.BuildQuality = this.HotfixBranchBuildQuality;
                     }
                 }
             }
@@ -234,7 +341,7 @@ namespace PulseBridge.Condo.Tasks
             if (!string.IsNullOrEmpty(this.BuildQuality))
             {
                 // append the build id
-                this.PreReleaseTag = Invariant($"{this.BuildQuality}-{this.BuildId.PadLeft(5,'0')}");
+                this.PreReleaseTag = Invariant($"{this.BuildQuality}-{this.BuildId.PadLeft(5, '0')}");
 
                 // determine if this is not a CI build
                 if (!this.CI)

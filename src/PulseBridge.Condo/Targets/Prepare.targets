@@ -46,50 +46,23 @@
     <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 
-  <Target Name="SaveAssemblyInfo" Condition=" '@(Projects->Count())' != '0' ">
-    <SaveAssemblyInfo
-        AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
-        SemanticVersion="$(SemanticVersion)"
-        Company="$(Company)"
-        Product="$(Product)"
-        ProjectName="%(Projects.ProjectName)"
-        Copyright="$(Copyright)"
-        AssemblyVersion="$(AssemblyVersion)"
-        FileVersion="$(FileVersion)"
-        InformationalVersion="$(InformationalVersion)"
-        Configuration="$(Configuration)"
-        BuildDateUtc="$(BuildDateUtc)"
-        Platform="$(Platform)"
-        Authors="$(Authors)"
-        Branch="$(Branch)"
-        BuildQuality="$(BuildQuality)"
-        BuildId="$(BuildId)"
-        CommitId="$(CommitId)"
-        PullRequestId="$(PullRequestId)"
-        BuildOn="$(BuildOn)"
-        BuildFor="$(BuildFor)"
-        BuildName="$(BuildName)"
-        TeamUri="$(TeamUri)"
-        RepositoryUri="$(RepositoryUri)"
-        BuildUri="$(BuildUri)"
-        License="$(License)"
-        LicenseUri="$(LicenseUri)" />
-  </Target>
-
   <PropertyGroup>
     <RestoreDependsOn>
+      $(BeforeRestore);
       NpmInstall;
       BowerInstall;
       DotNetRestore;
       $(RestoreDependsOn);
+      $(AfterRestore);
     </RestoreDependsOn>
 
     <PrepareDependsOn>
+      $(BeforePrepare);
       CreateOutputPaths;
       SubmoduleRestore;
       Restore;
-      SaveAssemblyInfo;
       $(PrepareDependsOn);
+      $(AfterPrepare);
     </PrepareDependsOn>
   </PropertyGroup>
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- detect convention strategy -->
+  <PropertyGroup Condition=" '$(ConventionStrategyTargets)' == '' ">
+    <ConventionStrategy Condition=" '$(ConventionStrategy)' == '' ">Angular</ConventionStrategy>
+
+    <ConventionStrategyTargets>$(CondoTargetsPath)\Versioning\$(ConventionStrategy).targets</ConventionStrategyTargets>
+  </PropertyGroup>
+
+  <!-- import the convention strategy -->
+  <Import Project="$(ConventionStrategyTargets)" />
+
+  <!-- get information about the commits within the repository -->
+  <Target Name="GetCommitInfo" Condition=" '$(HasGit.ToLower())' == 'true' ">
+    <GetCommitInfo
+        RepositoryRoot="$(RepositoryRoot)"
+        From="$(CommitFrom)"
+        To="$(CommitTo)">
+      <Output TaskParameter="From" PropertyName="CommitFrom" />
+      <Output TaskParameter="To" PropertyName="CommitTo" />
+      <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
+      <Output TaskParameter="LatestTagCommit" PropertyName="LatestTagCommit" />
+      <Output TaskParameter="Commits" ItemName="Commits" />
+    </GetCommitInfo>
+  </Target>
+
+  <!-- print commit information -->
+  <Target Name="PrintCommitInfo" Condition=" '$(HasGit.ToLower())' == 'true' ">
+    <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
+    <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
+    <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />
+    <Message Importance="High" Text="From               : @(CommitFrom)" />
+    <Message Importance="High" Text="To                 : @(CommitTo)" />
+  </Target>
+
+  <PropertyGroup>
+    <VersioningDependsOn>
+      GetCommitInfo;
+      $(VersioningDependsOn);
+      PrintCommitInfo;
+    </VersioningDependsOn>
+  </PropertyGroup>
+</Project>

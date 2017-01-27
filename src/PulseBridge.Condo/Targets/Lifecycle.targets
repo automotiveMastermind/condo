@@ -12,8 +12,11 @@
   <!-- developer bootstrapping -->
   <Target Name="Bootstrap" DependsOnTargets="Initialize" />
 
+  <!-- semantic versioning -->
+  <Target Name="Version" DependsOnTargets="Initialize" />
+
   <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
-  <Target Name="Prepare" DependsOnTargets="Initialize" />
+  <Target Name="Prepare" DependsOnTargets="Version" />
 
   <!-- compile the project -->
   <Target Name="Compile" DependsOnTargets="Prepare" />

@@ -3,8 +3,6 @@
          InitialTargets="Clean" DefaultTargets="Build">
     <PropertyGroup>
         <Product>PulseBridge.Condo</Product>
-        <SemanticVersion>2.0.0</SemanticVersion>
-        <Versioning>Conventional</Versioning>
         <StartDateUtc>2015-05-28</StartDateUtc>
 
         <Company>PulseBridge, Inc.</Company>
@@ -16,4 +14,5 @@
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
     <Import Project="$(CondoTargetsPath)\Goals.targets" />
+    <Import Project="$(CondoTargetsPath)\Version.targets" />
 </Project>

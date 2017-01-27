@@ -534,7 +534,7 @@ namespace PulseBridge.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenMainBranch_Succeeds()
+        public void Execute_WhenHotfixBranch_Succeeds()
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
@@ -542,7 +542,7 @@ namespace PulseBridge.Condo.Tasks
 
             var buildId = default(string);
             var commitId = default(string);
-            var branch = "main";
+            var branch = "hotfix/1.0.0";
             var ci = true;
 
             var expected = new
@@ -550,9 +550,9 @@ namespace PulseBridge.Condo.Tasks
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.01002.2359",
-                InformationalVersion = "1.0.0",
-                PreReleaseTag = default(string),
-                BuildQuality = default(string),
+                InformationalVersion = "1.0.0-hotfix-01002",
+                PreReleaseTag = "hotfix-01002",
+                BuildQuality = "hotfix",
                 BuildDateUtc = now,
                 CI = ci,
                 Branch = branch,
@@ -593,7 +593,7 @@ namespace PulseBridge.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenHotfixBranch_Succeeds()
+        public void Execute_WhenSupportBranch_Succeeds()
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
@@ -601,7 +601,7 @@ namespace PulseBridge.Condo.Tasks
 
             var buildId = default(string);
             var commitId = default(string);
-            var branch = "hotfix/1.0.0";
+            var branch = "support/1.0.0";
             var ci = true;
 
             var expected = new
@@ -609,9 +609,9 @@ namespace PulseBridge.Condo.Tasks
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.01002.2359",
-                InformationalVersion = "1.0.0-rc-01002",
-                PreReleaseTag = "rc-01002",
-                BuildQuality = "rc",
+                InformationalVersion = "1.0.0-servicing-01002",
+                PreReleaseTag = "servicing-01002",
+                BuildQuality = "servicing",
                 BuildDateUtc = now,
                 CI = ci,
                 Branch = branch,
