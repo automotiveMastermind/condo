@@ -4,6 +4,7 @@
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetCommitInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.RecommendVersion" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetNodeScripts" />
+  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.UpdateProjectJson" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetPlatformInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.RestoreSubmodules" />

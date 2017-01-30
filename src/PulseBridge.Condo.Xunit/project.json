@@ -1,20 +1,16 @@
 {
-  "version": "2.0.0-*",
-
+  "version": "2.0.0",
   "buildOptions": {
     "debugType": "portable",
     "xmlDoc": true
   },
-
   "dependencies": {
     "NETStandard.Library": "[1.6.1, 2.0.0)",
     "System.Diagnostics.Process": "[4.3.0, 5.0.0)",
     "System.Net.NameResolution": "[4.3.0, 5.0.0)",
-
     "xunit": "2.2.0-*"
   },
-
   "frameworks": {
-    "netstandard1.3": { }
+    "netstandard1.3": {}
   }
 }

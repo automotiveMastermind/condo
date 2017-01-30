@@ -1,21 +1,17 @@
 {
-  "version": "2.0.0-*",
+  "version": "2.0.0",
   "testRunner": "xunit",
-
   "buildOptions": {
     "debugType": "portable"
   },
-
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.1.0",
       "type": "platform"
     },
-
     "xunit": "2.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
-    "Moq":  "4.6.38-*",
-
+    "Moq": "4.6.38-*",
     "PulseBridge.Condo.IO": {
       "target": "project"
     },
@@ -23,8 +19,7 @@
       "target": "project"
     }
   },
-
   "frameworks": {
-    "netcoreapp1.1": { }
+    "netcoreapp1.1": {}
   }
 }
