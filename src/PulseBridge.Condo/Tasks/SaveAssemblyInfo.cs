@@ -23,7 +23,7 @@ namespace PulseBridge.Condo.Tasks
         private const string ValueFormat = @"${{1}}{0}${{3}}";
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the assembly info path.
         /// </summary>

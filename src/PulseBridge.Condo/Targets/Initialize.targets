@@ -64,6 +64,8 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(BuildHost)</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(AccessToken)</PackageFeedPassword>
   </PropertyGroup>
 
   <!-- capture details from a continuous integration build hosted by Travis-CI -->
@@ -100,6 +102,7 @@
     <BowerInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)bower.json" />
     <GulpPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gulpfile.*" />
     <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
+    <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
 
     <!-- locate all dotnet projects -->
     <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />

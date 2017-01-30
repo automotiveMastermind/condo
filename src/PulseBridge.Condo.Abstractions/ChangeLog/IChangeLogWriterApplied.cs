@@ -9,8 +9,6 @@ namespace PulseBridge.Condo.ChangeLog
     using System;
     using System.IO;
 
-    using PulseBridge.Condo.IO;
-
     /// <summary>
     /// Defines the properties and methods required to implement a change log that has already been loaded and
     /// processed.
@@ -26,7 +24,7 @@ namespace PulseBridge.Condo.ChangeLog
         /// <summary>
         /// Gets the git log that has been applied to the template.
         /// </summary>
-        GitLog Log { get; }
+        ChangeLog Log { get; }
         #endregion
 
         #region Methods

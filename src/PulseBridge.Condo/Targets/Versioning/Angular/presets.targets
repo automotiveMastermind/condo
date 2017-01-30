@@ -21,5 +21,19 @@
     <IncludeInvalidCommits  Condition=" '$(IncludeInvalidCommits)'  == '' ">false</IncludeInvalidCommits>
 
     <ReleaseMessage         Condition=" '$(ReleaseMessage)'         == '' ">chore(release): </ReleaseMessage>
+
+    <HeaderPartial          Condition=" '$(HeaderPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)header.hbs</HeaderPartial>
+    <FooterPartial          Condition=" '$(FooterPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)footer.hbs</FooterPartial>
+    <CommitPartial          Condition=" '$(CommitPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)commit.hbs</CommitPartial>
+    <ChangeLogTemplate      Condition=" '$(ChangeLogTemplate)'      == '' ">$(MSBuildThisFileDirectory)$(slash)template.hbs</ChangeLogTemplate>
+
+    <GroupByHeader          Condition=" '$(GroupByHeader)'          == '' ">Type</GroupByHeader>
+    <SortByHeader           Condition=" '$(SortByHeader)'           == '' ">Scope</SortByHeader>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ChangeLogPartials Include="$(HeaderPartial)" Condition=" Exists('$(HeaderPartial)') " />
+    <ChangeLogPartials Include="$(FooterPartial)" Condition=" Exists('$(FooterPartial)') " />
+    <ChangeLogPartials Include="$(CommitPartial)" Condition=" Exists('$(CommitPartial)') " />
+  </ItemGroup>
 </Project>

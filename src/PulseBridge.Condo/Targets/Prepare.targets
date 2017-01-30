@@ -30,7 +30,7 @@
   </Target>
 
   <Target Name="SubmoduleRestore" Condition=" '$(SubmoduleRestore)' != 'skip' AND '@(SubmodulePaths->Count())' != '0' AND '$(HasGit)' == 'true' ">
-    <RestoreSubmodule RepositoryRoot="$(RepositoryRoot)" />
+    <RestoreSubmodules RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 
   <Target Name="CreateOutputPaths">

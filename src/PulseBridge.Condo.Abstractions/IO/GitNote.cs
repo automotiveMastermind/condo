@@ -11,9 +11,8 @@ namespace PulseBridge.Condo.IO
         public string Header { get; set; }
 
         /// <summary>
-        /// Gets or set s
-        /// </summary>
-        /// <returns></returns>
+        /// Gets or sets the body of the note.
+        /// /// </summary>
         public string Body { get; set; }
 
         /// <inheritdoc />

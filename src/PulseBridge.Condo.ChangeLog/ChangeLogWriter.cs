@@ -14,7 +14,7 @@ namespace PulseBridge.Condo.ChangeLog
         #region Private Fields
         private string template;
 
-        private GitLog log;
+        private ChangeLog log = new ChangeLog();
 
         private string changelog;
 
@@ -29,12 +29,12 @@ namespace PulseBridge.Condo.ChangeLog
         string IChangeLogWriterApplied.ChangeLog => this.changelog;
 
         /// <inheritdoc />
-        GitLog IChangeLogWriterApplied.Log => this.log;
+        ChangeLog IChangeLogWriterApplied.Log => this.log;
         #endregion
 
         #region Methods
         /// <inheritdoc />
-        IChangeLogWriterCompiled IChangeLogWriterCanCompile.Load(string path)
+        public IChangeLogWriterCompiled Load(string path)
         {
             if (path == null)
             {
@@ -54,7 +54,7 @@ namespace PulseBridge.Condo.ChangeLog
         }
 
         /// <inheritdoc />
-        IChangeLogWriterCompiled IChangeLogWriterCanCompile.Template(string template)
+        public IChangeLogWriterCompiled Template(string template)
         {
             if (template == null)
             {
@@ -101,6 +101,57 @@ namespace PulseBridge.Condo.ChangeLog
 
             // attempt to write the text
             File.WriteAllText(path, this.changelog);
+        }
+
+        /// <inheritdoc />
+        public IChangeLogWriterCanCompile LoadPartial(string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (path.Length == 0)
+            {
+                throw new ArgumentException($"The {nameof(path)} must not be empty", nameof(path));
+            }
+
+            var name = Path.GetFileNameWithoutExtension(path);
+            var partial = File.ReadAllText(path);
+
+            return this.Partial(name, partial);
+        }
+
+        /// <inheritdoc />
+        public IChangeLogWriterCanCompile Partial(string name, string partial)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (partial == null)
+            {
+                throw new ArgumentNullException(nameof(partial));
+            }
+
+            if (name.Length == 0)
+            {
+                throw new ArgumentException($"The {nameof(name)} must not be empty", nameof(name));
+            }
+
+            if (partial.Length == 0)
+            {
+                throw new ArgumentException($"The {nameof(partial)} must not be empty", nameof(partial));
+            }
+
+            using (var reader = new StringReader(partial))
+            {
+                var template = Handlebars.Compile(reader);
+                Handlebars.RegisterTemplate(name, template);
+            }
+
+            return this;
         }
         #endregion
     }

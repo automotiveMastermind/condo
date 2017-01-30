@@ -43,5 +43,11 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc />
         public bool IncludeInvalidCommits { get; set; } = false;
+
+        /// <inheritdoc />
+        public string GroupBy { get; set; } = "Type";
+
+        /// <inheritdoc />
+        public string SortBy { get; set; } = "Scope";
     }
 }

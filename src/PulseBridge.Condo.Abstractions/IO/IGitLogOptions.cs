@@ -79,6 +79,16 @@ namespace PulseBridge.Condo.IO
         /// Gets a value indicating whether or not to include invalid commits.
         /// </summary>
         bool IncludeInvalidCommits { get; set; }
+
+        /// <summary>
+        /// Gets or sets the header correspondence used to group commits by type.
+        /// </summary>
+        string GroupBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the header correspondence used to sort commits by scope.
+        /// </summary>
+        string SortBy { get; set; }
         #endregion
     }
 }

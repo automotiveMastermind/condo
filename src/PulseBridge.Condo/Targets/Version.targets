@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <!-- import the branch and version strategy -->
-  <Import Project="$(BranchStrategyTargets)" />
-  <Import Project="$(VersionStrategyTargets)" />
+  <Import Project="$(BranchStrategyTargets)" Condition=" Exists('$(BranchStrategyTargets)') "/>
+  <Import Project="$(VersionStrategyTargets)" Condition=" Exists('$(VersionStrategyTargets)') "/>
 
   <!-- get assembly info based on the repository -->
   <Target Name="GetAssemblyInfo">

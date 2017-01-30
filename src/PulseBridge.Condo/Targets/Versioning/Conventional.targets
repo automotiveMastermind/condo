@@ -5,7 +5,7 @@
   <PropertyGroup Condition=" '$(ConventionStrategyTargets)' == '' ">
     <ConventionStrategy Condition=" '$(ConventionStrategy)' == '' ">Angular</ConventionStrategy>
 
-    <ConventionStrategyTargets>$(CondoTargetsPath)\Versioning\$(ConventionStrategy).targets</ConventionStrategyTargets>
+    <ConventionStrategyTargets>$(CondoTargetsPath)$(slash)Versioning$(slash)$(ConventionStrategy)$(slash)presets.targets</ConventionStrategyTargets>
   </PropertyGroup>
 
   <!-- import the convention strategy -->
