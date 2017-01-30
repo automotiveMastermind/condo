@@ -23,7 +23,7 @@
   <Target Name="GetAssemblyInfo">
     <GetAssemblyInfo
         CI="$(CI)"
-        SemanticVersion="$(SemanticVersion)"
+        CurrentRelease="$(CurrentRelease)"
         AssemblyVersion="$(AssemblyVersion)"
         Branch="$(Branch)"
         BuildId="$(BuildId)"
@@ -64,7 +64,7 @@
   <Target Name="SaveAssemblyInfo" Condition=" '@(Projects->Count())' != '0' ">
     <SaveAssemblyInfo
         AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
-        SemanticVersion="$(SemanticVersion)"
+        CurrentRelease="$(CurrentRelease)"
         Company="$(Company)"
         Product="$(Product)"
         ProjectName="%(Projects.ProjectName)"
@@ -92,11 +92,13 @@
   </Target>
 
     <Target Name="PrintVersionInfo">
-    <Message Importance="High" Text="Semantic Version   : $(SemanticVersion)" />
+    <Message Importance="High" Text="Build Version      : $(InformationalVersion)" />
+    <Message Importance="High" Text="Current Version    : $(LatestVersion)" Condition=" '$(LatestVersion)' != '' " />
+    <Message Importance="High" Text="Current Release    : $(CurrentRelease)" />
+    <Message Importance="High" Text="Next Release       : $(NextRelease)" Condition=" '$(NextRelease)' != '' " />
+    <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
     <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
-    <Message Importance="High" Text="Info Version       : $(InformationalVersion)" />
-    <Message Importance="High" Text="File Version       : $(FileVersion)" />
 
     <Message Importance="High"
              Text="##vso[build.updatebuildnumber]$(InformationalVersion)"

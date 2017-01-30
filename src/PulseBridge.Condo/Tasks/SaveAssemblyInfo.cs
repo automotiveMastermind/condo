@@ -34,7 +34,7 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the semantic version of the product.
         /// </summary>
         [Required]
-        public string SemanticVersion { get; set; }
+        public string CurrentRelease { get; set; }
 
         /// <summary>
         /// Gets or sets the company responsible for the build.
@@ -183,7 +183,7 @@ namespace PulseBridge.Condo.Tasks
             Version version;
 
             // attempt to parse the file version
-            if (!Version.TryParse(this.SemanticVersion, out version))
+            if (!Version.TryParse(this.CurrentRelease, out version))
             {
                 // log an error
                 this.Log.LogError("A semantic version must be supplied in order to save version info.");

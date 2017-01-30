@@ -430,21 +430,15 @@ namespace PulseBridge.Condo.IO
             var range = from ?? (from = string.Empty);
 
             // determine if to is specified
-            if (string.IsNullOrEmpty(to))
+            if (!string.IsNullOrEmpty(to))
             {
-                // set it
-                to = "HEAD";
-            }
+                if (range.Length > 0)
+                {
+                    range += "..";
+                }
 
-            // determine if the start range is specified
-            if (range.Length > 0)
-            {
-                // add the separator
-                range += "..";
+                range += to;
             }
-
-            // add to the range
-            range += to;
 
             var cmd = $@"log {range} --format=""{Format}""";
 
@@ -461,8 +455,8 @@ namespace PulseBridge.Condo.IO
             var log = parser.Parse(GetCommits(exec.Output), options);
 
             // set the from/to ranges
-            log.From = from;
-            log.To = to;
+            log.From = from ?? "<earliest>";
+            log.To = to ?? "<latest>";
 
             // return the log
             return log;

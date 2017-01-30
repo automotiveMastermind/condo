@@ -27,8 +27,8 @@
   <!-- provide reasonable defaults for required attributes -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">$(DOTNET_BUILD_VERSION)</SemanticVersion>
-    <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">1.0.0</SemanticVersion>
+    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">$(DOTNET_BUILD_VERSION)</CurrentRelease>
+    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">1.0.0</CurrentRelease>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
     <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
     <CI Condition=" '$(CI)' == '' ">false</CI>

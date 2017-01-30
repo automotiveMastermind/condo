@@ -2,6 +2,7 @@
   <!-- include the individual tasks provided by condo -->
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetAssemblyInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetCommitInfo" />
+  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.RecommendVersion" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetNodeScripts" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetPlatformInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetProjectMetadata" />

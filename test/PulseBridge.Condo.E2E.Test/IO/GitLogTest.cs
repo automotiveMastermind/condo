@@ -50,7 +50,7 @@ namespace PulseBridge.Condo.IO
                 Assert.Equal(expected.Raw, actual.Raw);
 
                 var references = actual.References.Select(a => a.Raw).ToList();
-                var tags = actual.Tags;
+                var tags = actual.Tags.Select(t => t.Name);
 
                 Assert.All(expected.References, reference => Assert.Contains(reference, references));
                 Assert.All(expected.Tags, tag => Assert.Contains(tag, tags));

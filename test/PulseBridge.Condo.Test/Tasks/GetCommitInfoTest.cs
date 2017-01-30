@@ -36,8 +36,8 @@ namespace PulseBridge.Condo.Tasks
             Assert.True(result);
             Assert.Equal(root, actual.RepositoryRoot);
             Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.LatestTag);
-            Assert.Null(actual.LatestTagCommit);
+            Assert.Null(actual.LatestVersion);
+            Assert.Null(actual.LatestVersionCommit);
             Assert.Null(actual.Commits);
 
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
@@ -70,8 +70,8 @@ namespace PulseBridge.Condo.Tasks
             Assert.True(result);
             Assert.Equal(root, actual.RepositoryRoot);
             Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.LatestTag);
-            Assert.Null(actual.LatestTagCommit);
+            Assert.Null(actual.LatestVersion);
+            Assert.Null(actual.LatestVersionCommit);
             Assert.Null(actual.Commits);
         }
 
@@ -99,8 +99,8 @@ namespace PulseBridge.Condo.Tasks
                 Assert.True(result);
                 Assert.Equal(root, actual.RepositoryRoot);
                 Assert.Equal(root, actual.RepositoryRoot);
-                Assert.Null(actual.LatestTag);
-                Assert.Null(actual.LatestTagCommit);
+                Assert.Null(actual.LatestVersion);
+                Assert.Null(actual.LatestVersionCommit);
                 Assert.Null(actual.Commits);
             }
         }
@@ -108,7 +108,7 @@ namespace PulseBridge.Condo.Tasks
         [Fact]
         [Priority(2)]
         [Purpose(PurposeType.Integration)]
-        public void Execute_WhenRepositoryRootValid_Succeeds()
+        public void Execute_WhenRepositoryRootValidWithNonVersionTag_Succeeds()
         {
             using (var repo = repository.Initialize())
             {
@@ -133,7 +133,7 @@ namespace PulseBridge.Condo.Tasks
                             References = "34;22"
                         }
                     },
-                    LatestTag = "latest"
+                    LatestVersion = "0.0.0"
                 };
 
                 foreach (var commit in expected.Commits)
@@ -143,7 +143,7 @@ namespace PulseBridge.Condo.Tasks
                         .Commit(commit.Raw);
                 }
 
-                repo.Tag(expected.LatestTag);
+                repo.Tag(expected.LatestVersion);
 
                 var engine = MSBuildMocks.CreateEngine();
 
@@ -159,10 +159,10 @@ namespace PulseBridge.Condo.Tasks
                 // assert
                 Assert.True(result);
                 Assert.Equal(expected.RepositoryRoot, instance.RepositoryRoot);
-                Assert.Equal(expected.LatestTag, instance.LatestTag);
+                Assert.Equal(expected.LatestVersion, instance.LatestVersion);
                 Assert.Equal(expected.Commits.Length, instance.Commits.Length);
 
-                Assert.Equal(instance.Commits[0].GetMetadata("Hash"), instance.LatestTagCommit);
+                Assert.Equal(instance.Commits[0].GetMetadata("Hash"), instance.LatestVersionCommit);
 
                 for (var i = 0; i < expected.Commits.Length; i++)
                 {

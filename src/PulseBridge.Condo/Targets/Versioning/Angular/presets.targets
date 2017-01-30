@@ -29,6 +29,9 @@
 
     <GroupByHeader          Condition=" '$(GroupByHeader)'          == '' ">Type</GroupByHeader>
     <SortByHeader           Condition=" '$(SortByHeader)'           == '' ">Scope</SortByHeader>
+
+    <MinorCorrespondence    Condition=" '$(MinorCorrespondence)'    == '' ">Type</MinorCorrespondence>
+    <MinorValue             Condition=" '$(MinorValue)'             == '' ">feat</MinorValue>
   </PropertyGroup>
 
   <ItemGroup>

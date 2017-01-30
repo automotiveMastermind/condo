@@ -3,6 +3,8 @@ namespace PulseBridge.Condo.IO
     using System.Collections.Generic;
     using System.Text;
 
+    using NuGet.Versioning;
+
     /// <summary>
     /// Represents a log of git commits.
     /// </summary>
@@ -22,7 +24,13 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the collection of commits contained within the log.
         /// </summary>
-        public ICollection<GitCommit> Commits { get; } = new List<GitCommit>();
+        public IList<GitCommit> Commits { get; } = new List<GitCommit>();
+
+        /// <summary>
+        /// Gets the collection of commits with their associated versions.
+        /// </summary>
+        public IDictionary<SemanticVersion, ICollection<GitCommit>> Versions { get; }
+            = new SortedDictionary<SemanticVersion, ICollection<GitCommit>>(new VersionComparer());
 
         /// <summary>
         /// Gets or sets the tag contained within the log.

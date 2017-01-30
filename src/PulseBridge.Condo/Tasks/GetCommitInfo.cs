@@ -200,13 +200,13 @@ namespace PulseBridge.Condo.Tasks
         /// Gets the latest release tag contained within the repository.
         /// </summary>
         [Output]
-        public string LatestTag { get; private set; }
+        public string LatestVersion { get; private set; }
 
         /// <summary>
         /// Gets the commit hash of the latest tag commit.
         /// </summary>
         [Output]
-        public string LatestTagCommit { get; private set; }
+        public string LatestVersionCommit { get; private set; }
 
         /// <summary>
         /// Gets the version of the client used to access the repository.
@@ -319,7 +319,7 @@ namespace PulseBridge.Condo.Tasks
                 item.SetMetadata(nameof(commit.Body), commit.Body);
                 item.SetMetadata(nameof(commit.Raw), commit.Raw);
                 item.SetMetadata(nameof(commit.Branches), commit.Branches.PropertyJoin());
-                item.SetMetadata(nameof(commit.Tags), commit.Tags.PropertyJoin());
+                item.SetMetadata(nameof(commit.Tags), commit.Tags.Select(t => t.Name).PropertyJoin());
                 item.SetMetadata(nameof(commit.References), commit.References.Select(reference => reference.Id).PropertyJoin());
 
                 var count = noteKeywords.Sum(keyword => commit.Notes
@@ -357,12 +357,12 @@ namespace PulseBridge.Condo.Tasks
                 yield return item;
             }
 
-            var tag = GitLog.Tags.FirstOrDefault();
-
-            if (tag != null)
+            if (GitLog.Versions.Any())
             {
-                this.LatestTag = tag.Name;
-                this.LatestTagCommit = tag.Hash;
+                var version = GitLog.Versions.Last();
+
+                this.LatestVersion = version.Key.ToString();
+                this.LatestVersionCommit = version.Value.First().Hash;
             }
 
             this.From = GitLog.From;

@@ -29,26 +29,29 @@
       NoteKeywords="$(NoteKeywords)">
       <Output TaskParameter="From" PropertyName="CommitFrom" />
       <Output TaskParameter="To" PropertyName="CommitTo" />
-      <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
-      <Output TaskParameter="LatestTagCommit" PropertyName="LatestTagCommit" />
+      <Output TaskParameter="LatestVersion" PropertyName="LatestVersion" />
+      <Output TaskParameter="LatestVersionCommit" PropertyName="LatestVersionCommit" />
       <Output TaskParameter="Commits" ItemName="Commits" />
     </GetCommitInfo>
   </Target>
 
-  <!-- print commit information -->
-  <Target Name="PrintCommitInfo" Condition=" '$(HasGit.ToLower())' == 'true' ">
-    <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
-    <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
-    <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />
-    <Message Importance="High" Text="From               : $(CommitFrom)" />
-    <Message Importance="High" Text="To                 : $(CommitTo)" />
+  <!-- update semantic version -->
+  <Target Name="RecommendVersion">
+    <RecommendVersion
+      LatestVersion="$(LatestVersion)"
+      LatestVersionCommit="$(LatestVersionCommit)"
+      MinorCorrespondence="$(MinorCorrespondence)"
+      MinorValue="$(MinorValue)">
+      <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
+      <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
+    </RecommendVersion>
   </Target>
 
   <PropertyGroup>
     <VersioningDependsOn>
       GetCommitInfo;
+      RecommendVersion;
       $(VersioningDependsOn);
-      PrintCommitInfo;
     </VersioningDependsOn>
   </PropertyGroup>
 </Project>

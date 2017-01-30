@@ -46,7 +46,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -59,7 +59,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -103,7 +103,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -117,7 +117,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -160,7 +160,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -173,7 +173,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -215,7 +215,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -228,7 +228,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -270,7 +270,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -283,7 +283,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -327,7 +327,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -341,7 +341,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -386,7 +386,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -400,7 +400,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -445,7 +445,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -459,7 +459,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -504,7 +504,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -518,7 +518,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -563,7 +563,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -577,7 +577,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -622,7 +622,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                SemanticVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,
@@ -636,7 +636,7 @@ namespace PulseBridge.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.SemanticVersion);
+            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);

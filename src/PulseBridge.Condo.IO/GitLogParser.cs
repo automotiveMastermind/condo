@@ -8,6 +8,8 @@ namespace PulseBridge.Condo.IO
 
     using static System.FormattableString;
 
+    using NuGet.Versioning;
+
     /// <summary>
     /// Represents a parser for git logs.
     /// </summary>
@@ -67,6 +69,9 @@ namespace PulseBridge.Condo.IO
             // create an empty string builder to retain the raw commit
             var raw = new StringBuilder();
 
+            // capture the semantic version of the commits
+            var version = default(SemanticVersion);
+
             // iterate over each commit
             foreach (var item in commits)
             {
@@ -105,9 +110,19 @@ namespace PulseBridge.Condo.IO
                         // get the label
                         var label = match.Groups[1].Value;
 
+                        // get the current tag
+                        var current = new GitTag { Name = label, Hash = hash, ShortHash = shortHash };
+
+                        // determine if the version is not null
+                        if (current.Version != null)
+                        {
+                            // set the version
+                            version = current.Version;
+                        }
+
                         // add the tag
-                        commit.Tags.Add(label);
-                        log.Tags.Add(new GitTag { Name = label, Hash = hash, ShortHash = shortHash });
+                        commit.Tags.Add(current);
+                        log.Tags.Add(current);
 
                         // move on immediately
                         continue;
@@ -151,6 +166,28 @@ namespace PulseBridge.Condo.IO
 
                 // add the commit to the log
                 log.Commits.Add(commit);
+
+                // determine if the version exists
+                if (version != null)
+                {
+                    // set the commit version
+                    commit.Version = version;
+
+                    // get or add the commit to the log versions
+                    ICollection<GitCommit> versioned;
+
+                    if (!log.Versions.TryGetValue(version, out versioned))
+                    {
+                        // create a new versioned list
+                        versioned = new List<GitCommit>();
+
+                        // add the list to the versions dictionary
+                        log.Versions.Add(version, versioned);
+                    }
+
+                    // add the commit to the versioned collection
+                    versioned.Add(commit);
+                }
 
                 // add references from the header
                 AddReferences(actionRegex.Match(commit.Header), referenceRegex, commit.References);

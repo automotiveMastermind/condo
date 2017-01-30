@@ -4,6 +4,8 @@ namespace PulseBridge.Condo.IO
     using System.Collections.Generic;
     using System.Text;
 
+    using NuGet.Versioning;
+
     /// <summary>
     /// Represents a git commit.
     /// </summary>
@@ -41,6 +43,11 @@ namespace PulseBridge.Condo.IO
         public string Footer { get; set; }
 
         /// <summary>
+        /// Gets or sets the semantic version associated with the commit.
+        /// </summary>
+        public SemanticVersion Version { get; set; }
+
+        /// <summary>
         /// Gets the notes associated with the git commit.
         /// </summary>
         public IList<GitNote> Notes { get; } = new List<GitNote>();
@@ -65,7 +72,7 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the collection of tags associated with the commit.
         /// </summary>
-        public ICollection<string> Tags { get; } = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+        public ICollection<GitTag> Tags { get; } = new HashSet<GitTag>();
 
         /// <summary>
         /// Gets the collection of branches associated with the commit.

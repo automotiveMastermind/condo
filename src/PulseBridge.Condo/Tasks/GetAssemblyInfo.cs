@@ -18,7 +18,7 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the semantic version of the product.
         /// </summary>
         [Required]
-        public string SemanticVersion { get; set; }
+        public string CurrentRelease { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time (UTC) that the project was first started.
@@ -232,10 +232,10 @@ namespace PulseBridge.Condo.Tasks
             Version version;
 
             // attempt to parse the version
-            if (!Version.TryParse(this.SemanticVersion, out version))
+            if (!Version.TryParse(this.CurrentRelease, out version))
             {
                 // emit an error if the version is not parsable
-                this.Log.LogError(Invariant($"Could not parse {nameof(this.SemanticVersion)} {this.SemanticVersion} -- it is not in the expected format."));
+                this.Log.LogError(Invariant($"Could not parse {nameof(this.CurrentRelease)} {this.CurrentRelease} -- it is not in the expected format."));
 
                 // move on immediately
                 return false;
@@ -335,7 +335,7 @@ namespace PulseBridge.Condo.Tasks
             }
 
             // get the semantic version
-            this.InformationalVersion = this.SemanticVersion;
+            this.InformationalVersion = this.CurrentRelease;
 
             // determine if the prerelease tag is now set
             if (!string.IsNullOrEmpty(this.BuildQuality))
