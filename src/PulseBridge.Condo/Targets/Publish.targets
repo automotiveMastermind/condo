@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
+
+    <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
+    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
+
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
+  </PropertyGroup>
+
+  <Target Name="TagVersion" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+    <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
+  </Target>
+
+  <Target Name="PushChanges" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+    <PushChanges RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
+  <Target Name="InstallPackages">
+    <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
+  </Target>
+
+  <Target Name="PublishPackages" Condition=" '$(CI)' == 'true' AND '$(PackageFeedUri)' != '' ">
+    <PushNuGetPackage
+      RepositoryRoot="$(RepositoryRoot)"
+      Packages="@(Packages)"
+      Uri="$(PackageFeedUri)"
+      ApiKey="$(PackageFeedApiKey)"
+      Username="$(PackageFeedUsername)"
+      Password="$(PackageFeedPassword)"
+      SymbolUri="$(PackageSymbolUri)"
+      SymbolApiKey="$(PackageSymbolApiKey)"
+      NoSymbols="$(PackageNoSymbols)" />
+  </Target>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      $(BeforePublish);
+      InstallPackages;
+      PublishPackages;
+      $(PublishDependsOn);
+      TagVersion;
+      $(AfterPublish);
+    </PublishDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Publishing" DependsOnTargets="$(PublishDependsOn)" BeforeTargets="Publish" />
+</Project>

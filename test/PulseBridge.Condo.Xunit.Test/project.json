@@ -16,9 +16,6 @@
     "dotnet-test-xunit": "2.2.0-*",
     "Moq":  "4.6.38-*",
 
-    "PulseBridge.Condo": {
-      "target": "project"
-    },
     "PulseBridge.Condo.Xunit": {
       "target": "project"
     }

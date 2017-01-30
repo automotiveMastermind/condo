@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "xmlDoc": true
+  },
+  "dependencies": {
+    "System.Diagnostics.Process": "[4.3.0, 5.0.0)",
+    "Handlebars.NetStandard": "[1.0.1, 2.0.0)",
+    "Newtonsoft.Json": "[9.0.1, 10.0.0)",
+    "PulseBridge.Condo.Abstractions": {
+      "target": "project"
+    }
+  },
+  "frameworks": {
+    "netstandard1.5": {}
+  }
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)$(slash)changelog.md</ChangeLogInitialize>
+  </PropertyGroup>
+
+  <!-- detect convention strategy -->
+  <PropertyGroup Condition=" '$(ConventionStrategyTargets)' == '' ">
+    <ConventionStrategy Condition=" '$(ConventionStrategy)' == '' ">Angular</ConventionStrategy>
+
+    <ConventionStrategyTargets>$(MSBuildThisFileDirectory)$(slash)$(ConventionStrategy)$(slash)presets.targets</ConventionStrategyTargets>
+  </PropertyGroup>
+
+  <!-- import the convention strategy -->
+  <Import Project="$(ConventionStrategyTargets)" />
+
+  <!-- get information about the commits within the repository -->
+  <Target Name="GetCommitInfo" Condition=" '$(HasGit)' == 'true' ">
+    <GetCommitInfo
+      RepositoryRoot="$(RepositoryRoot)"
+      IncludeInvalidCommits="$(IncludeInvalidCommits)"
+      ActionKeywords="$(ActionKeywords)"
+      HeaderPattern="$(HeaderPattern)"
+      FieldPattern="$(FieldPattern)"
+      RevertPattern="$(RevertPattern)"
+      MergePattern="$(MergePattern)"
+      HeaderCorrespondence="$(HeaderCorrespondence)"
+      MergeCorrespondence="$(MergeCorrespondence)"
+      RevertCorrespondence="$(RevertCorrespondence)"
+      ReferencePrefixes="$(ReferencePrefixes)"
+      MentionPrefixes="$(MentionPrefixes)"
+      NoteKeywords="$(NoteKeywords)">
+      <Output TaskParameter="From" PropertyName="CommitFrom" />
+      <Output TaskParameter="To" PropertyName="CommitTo" />
+      <Output TaskParameter="LatestVersion" PropertyName="LatestVersion" />
+      <Output TaskParameter="LatestVersionCommit" PropertyName="LatestVersionCommit" />
+      <Output TaskParameter="Commits" ItemName="Commits" />
+    </GetCommitInfo>
+  </Target>
+
+  <!-- update semantic version -->
+  <Target Name="RecommendVersion">
+    <RecommendVersion
+      LatestVersion="$(LatestVersion)"
+      LatestVersionCommit="$(LatestVersionCommit)"
+      MinorCorrespondence="$(MinorCorrespondence)"
+      MinorValue="$(MinorValue)">
+      <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
+      <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
+    </RecommendVersion>
+  </Target>
+
+  <!-- write the changelog -->
+  <Target Name="SaveChangeLog" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+    <SaveChangeLog
+      RepositoryRoot="$(RepositoryRoot)"
+      RepositoryUri="$(RepositoryUri)"
+      GroupByHeader="$(GroupByHeader)"
+      SortByHeader="$(SortByHeader)"
+      ChangeLogInitialize="$(ChangeLogInitialize)"
+      Partials="@(ChangeLogPartials)"
+      Template="$(ChangeLogTemplate)"
+      ChangeLogTypes="$(ChangeLogTypes)"
+      ChangeLogNames="$(ChangeLogNames)">
+    </SaveChangeLog>
+  </Target>
+
+  <PropertyGroup>
+    <VersionDependsOn>
+      GetCommitInfo;
+      RecommendVersion;
+      $(VersionDependsOn);
+    </VersionDependsOn>
+
+    <AfterPublish>
+      $(AfterPublish);
+      SaveChangeLog;
+    </AfterPublish>
+  </PropertyGroup>
+</Project>

@@ -24,7 +24,7 @@ namespace PulseBridge.Condo
             this.output = output;
         }
 
-        [Fact]
+        [Fact(Skip = "skip until merged")]
         [Priority(2)]
         [Platform(PlatformType.MacOS)]
         public async Task Initialize_OnTfsMacAgent_Succeeds()
@@ -42,7 +42,7 @@ namespace PulseBridge.Condo
                 var buildFor = "E2E_User";
                 var agent = "E2E_Machine";
                 var provider = "TfsGit";
-                var project = "PulseBridge.Condo.Build";
+                var project = "PulseBridge.Condo";
                 var teamUri = "https://pulsebridge.visualstudio.com/";
                 var repoUri = "https://pulsebridge.visualstudio.com/_git/condo";
                 var buildUri = "vstfs:///pulsebridge/Build/1430";
@@ -62,7 +62,7 @@ namespace PulseBridge.Condo
 
                 repo.Condo(root);
 
-                var args = $@"--source ""{root}/src/PulseBridge.Condo.Build"" --no-color --verbosity minimal -t:initialize "
+                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -t:initialize "
                     + $"-p:TF_BUILD={ci} "
                     + $"-p:BUILD_VERSION={version} "
                     + $"-p:BUILD_SOURCEBRANCH={branch} "
@@ -80,7 +80,7 @@ namespace PulseBridge.Condo
 
                 var start = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(working, "condo.sh"),
+                    FileName = Path.Combine(working, cmd),
                     Arguments = args,
                     WorkingDirectory = working,
                     UseShellExecute = false,
@@ -118,7 +118,7 @@ namespace PulseBridge.Condo
             }
         }
 
-        [Fact]
+        [Fact(Skip = "skip until merged")]
         [Priority(2)]
         [Platform(PlatformType.Windows)]
         public async Task Initialize_OnTfsWindowsAgent_Succeeds()
@@ -136,7 +136,7 @@ namespace PulseBridge.Condo
                 var buildFor = "E2E_User";
                 var agent = "E2E_Machine";
                 var provider = "TfsGit";
-                var project = "PulseBridge.Condo.Build";
+                var project = "PulseBridge.Condo";
                 var teamUri = "https://pulsebridge.visualstudio.com/";
                 var repoUri = "https://pulsebridge.visualstudio.com/_git/condo";
                 var buildUri = "vstfs:///pulsebridge/Build/1430";
@@ -144,7 +144,7 @@ namespace PulseBridge.Condo
                 var platform = "Windows";
                 var configuration = "release";
 
-                var cmd = "condo.sh";
+                var cmd = "condo.cmd";
                 var working = repo.RepositoryPath;
 
                 var root = Directory.GetCurrentDirectory();
@@ -156,25 +156,25 @@ namespace PulseBridge.Condo
 
                 repo.Condo(root);
 
-                var args = $@"-Source ""{root}\src\PulseBridge.Condo.Build"" -NoColor -Verbosity minimal /t:initialize "
-                    + $"/p:TF_BUILD={ci} "
-                    + $"/p:BUILD_VERSION={version} "
-                    + $"/p:BUILD_SOURCEBRANCH={branch} "
-                    + $"/p:BUILD_SOURCEVERSION={commitId} "
-                    + $"/p:BUILD_BUILDID={buildId} "
-                    + $"/p:BUILD_REQUESTEDFOR={buildFor} "
-                    + $"/p:AGENT_NAME={agent} "
-                    + $"/p:BUILD_REPOSITORY_PROVIDER={provider} "
-                    + $"/p:SYSTEM_TEAMPROJECT={project} "
-                    + $"/p:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI={teamUri} "
-                    + $"/p:BUILD_REPOSITORY_URI={repoUri} "
-                    + $"/p:BUILD_BUILDURI={buildUri} "
-                    + $"/p:BUILD_BUILDNUMBER={buildName} "
-                    + $"/p:CONFIGURATION={configuration}";
+                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -t:initialize "
+                    + $"-p:TF_BUILD={ci} "
+                    + $"-p:BUILD_VERSION={version} "
+                    + $"-p:BUILD_SOURCEBRANCH={branch} "
+                    + $"-p:BUILD_SOURCEVERSION={commitId} "
+                    + $"-p:BUILD_BUILDID={buildId} "
+                    + $"-p:BUILD_REQUESTEDFOR={buildFor} "
+                    + $"-p:AGENT_NAME={agent} "
+                    + $"-p:BUILD_REPOSITORY_PROVIDER={provider} "
+                    + $"-p:SYSTEM_TEAMPROJECT={project} "
+                    + $"-p:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI={teamUri} "
+                    + $"-p:BUILD_REPOSITORY_URI={repoUri} "
+                    + $"-p:BUILD_BUILDURI={buildUri} "
+                    + $"-p:BUILD_BUILDNUMBER={buildName} "
+                    + $"-p:CONFIGURATION={configuration}";
 
                 var start = new ProcessStartInfo
                 {
-                    FileName = Path.Combine(working, "condo.cmd"),
+                    FileName = Path.Combine(working, cmd),
                     Arguments = args,
                     WorkingDirectory = working,
                     UseShellExecute = false,
@@ -183,9 +183,11 @@ namespace PulseBridge.Condo
                     RedirectStandardError = true
                 };
 
+                this.output.WriteLine(Invariant($"REPOSITORY PATH: ${working}"));
+
                 // act
                 var process = Process.Start(start);
-                process.WaitForExit(60 * 1000);
+                process.WaitForExit();
 
                 var actual = await process.StandardOutput.ReadToEndAsync();
 

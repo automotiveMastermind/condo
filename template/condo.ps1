@@ -166,7 +166,7 @@ $RootPath = $PSScriptRoot
 
 $BuildRoot = Join-Path $RootPath ".build"
 $CondoRoot = Join-Path $BuildRoot "condo"
-$CondoScript = Join-Path $CondoRoot "Scripts\condo.ps1"
+$CondoScript = Join-Path $CondoRoot "PulseBridge.Condo\Scripts\condo.ps1"
 
 if ($PSCmdlet.ParameterSetName -eq "ByBranch") {
     $Uri = "https://github.com/pulsebridge/condo/archive/$Branch.zip"
@@ -178,7 +178,7 @@ if ($Reset -and (Test-Path $BuildRoot)) {
 }
 
 if ($Local) {
-    $Source = Join-Path $RootPath "src\PulseBridge.Condo.Build"
+    $Source = Join-Path $RootPath "src"
 }
 
 if (!(Test-Path $CondoRoot)) {
@@ -203,7 +203,7 @@ if (!(Test-Path $CondoRoot)) {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
-        pushd "$CondoExtract\*\src\PulseBridge.Condo.Build"
+        pushd "$CondoExtract\*\src"
         cp -Recurse * $CondoRoot
         popd
 
