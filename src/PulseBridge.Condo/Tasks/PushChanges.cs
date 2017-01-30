@@ -7,9 +7,9 @@ namespace PulseBridge.Condo.Tasks
     using PulseBridge.Condo.IO;
 
     /// <summary>
-    /// Represents a Microsoft Build task that sets a tag for the current commit with git.
+    /// Represents a Microsoft Build task that pushes changes, including tags, to a remote branch.
     /// </summary>
-    public class SetGitTag : Task
+    public class PushChanges : Task
     {
         #region Properties
         /// <summary>
@@ -20,25 +20,11 @@ namespace PulseBridge.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets or sets the tag that should be created with git.
-        /// </summary>
-        [Required]
-        [Output]
-        public string Tag { get; set; }
-
-        /// <summary>
         /// Gets or sets the remote that should be used to push the tag.
         /// </summary>
         /// <returns></returns>
         [Output]
         public string Remote { get; set; } = "origin";
-
-        /// <summary>
-        /// Gets or sets the annotation for the tag. If no annotation is specified, the annotation will be set to the
-        /// tag value, which includes additional data about who created the tag and when.
-        /// </summary>
-        [Output]
-        public string Annotation { get; set; }
         #endregion
 
         #region Methods
@@ -60,16 +46,6 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            // determine if the tag is set
-            if (string.IsNullOrEmpty(this.Tag))
-            {
-                // log the error
-                this.Log.LogError("The tag must be set to a non-empty value.");
-
-                // move on immediately
-                return false;
-            }
-
             // determine if the remote is set
             if (string.IsNullOrEmpty(this.Remote))
             {
@@ -80,16 +56,6 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            // determine if the annotation is not set
-            if (string.IsNullOrEmpty(this.Annotation))
-            {
-                // set the annotation to the tag
-                this.Annotation = this.Tag;
-            }
-
-            // replace whitespace characters in the tag
-            this.Tag = this.Tag.Replace(' ', '-').Replace(Environment.NewLine, "-");
-
             // create a new git repository factory
             var factory = new GitRepositoryFactory();
 
@@ -98,8 +64,8 @@ namespace PulseBridge.Condo.Tasks
                 // load the repository
                 var repository = factory.Load(root);
 
-                // set the repository tag
-                repository.Tag(this.Tag);
+                // push changes to the remote repository
+                repository.Add().Push(this.Remote, tags: true);
             }
             catch (Exception netEx)
             {

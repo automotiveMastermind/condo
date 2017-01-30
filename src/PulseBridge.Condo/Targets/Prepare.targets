@@ -29,7 +29,7 @@
           WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
   </Target>
 
-  <Target Name="SubmoduleRestore" Condition=" '$(SubmoduleRestore)' != 'skip' AND '@(SubmodulePaths->Count())' != '0' AND '$(HasGit)' == 'true' ">
+  <Target Name="SubmoduleRestore" Condition=" '$(SubmoduleRestore)' != 'skip' AND '@(SubmodulePaths->Count())' != '0' AND $(HasGit) ">
     <RestoreSubmodules RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 

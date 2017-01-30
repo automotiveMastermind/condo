@@ -16,7 +16,7 @@
   <Import Project="$(ConventionStrategyTargets)" />
 
   <!-- get information about the commits within the repository -->
-  <Target Name="GetCommitInfo" Condition=" '$(HasGit)' == 'true' ">
+  <Target Name="GetCommitInfo" Condition="$(HasGit)">
     <GetCommitInfo
       RepositoryRoot="$(RepositoryRoot)"
       IncludeInvalidCommits="$(IncludeInvalidCommits)"
@@ -52,7 +52,7 @@
   </Target>
 
   <!-- write the changelog -->
-  <Target Name="SaveChangeLog" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+  <Target Name="SaveChangeLog">
     <SaveChangeLog
       RepositoryRoot="$(RepositoryRoot)"
       RepositoryUri="$(RepositoryUri)"

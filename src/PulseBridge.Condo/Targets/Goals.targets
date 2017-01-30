@@ -6,6 +6,7 @@
   <!-- import the task targets -->
   <Import Project="$(MSBuildThisFileDirectory)Clean.targets" />
   <Import Project="$(MSBuildThisFileDirectory)Initialize.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)Version.targets" />
   <Import Project="$(MSBuildThisFileDirectory)Prepare.targets" />
   <Import Project="$(MSBuildThisFileDirectory)Compile.targets" />
   <Import Project="$(MSBuildThisFileDirectory)Test.targets" />
