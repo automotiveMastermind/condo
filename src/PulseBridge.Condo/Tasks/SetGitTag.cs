@@ -100,6 +100,9 @@ namespace PulseBridge.Condo.Tasks
 
                 // set the repository tag
                 repository.Tag(this.Tag);
+
+                // log a message
+                Log.LogMessage(MessageImportance.High, $"Created tag {this.Tag}");
             }
             catch (Exception netEx)
             {
