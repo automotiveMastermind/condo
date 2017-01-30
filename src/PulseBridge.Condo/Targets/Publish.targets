@@ -11,19 +11,19 @@
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
   </PropertyGroup>
 
-  <Target Name="TagVersion" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+  <Target Name="TagVersion" Condition=" $(CI) AND $(HasGit) ">
     <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
-  </Target>
-
-  <Target Name="PushChanges" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
-    <PushChanges RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
 
-  <Target Name="PublishPackages" Condition=" '$(CI)' == 'true' AND '$(PackageFeedUri)' != '' ">
+  <Target Name="PushChanges" Condition=" $(CI) AND $(HasGit) ">
+    <PushChanges RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
+  <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' ">
     <PushNuGetPackage
       RepositoryRoot="$(RepositoryRoot)"
       Packages="@(Packages)"
@@ -44,6 +44,7 @@
       $(PublishDependsOn);
       TagVersion;
       $(AfterPublish);
+      PushChanges;
     </PublishDependsOn>
   </PropertyGroup>
 

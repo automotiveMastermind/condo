@@ -31,8 +31,9 @@
     <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">1.0.0</CurrentRelease>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
     <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
-    <CI Condition=" '$(CI)' == '' ">false</CI>
-    <HasGit Condition=" '$(HasGit)' == '' ">false</HasGit>
+    <CI Condition=" '$(CI)' != '' ">True</CI>
+    <CI Condition=" '$(CI)' == '' ">False</CI>
+    <HasGit Condition=" '$(HasGit)' == '' ">False</HasGit>
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
@@ -44,7 +45,7 @@
   <!-- capture details from a continuous integration build hosted by TFS -->
   <PropertyGroup Condition=" '$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '' ">
     <BuildHost>tfs</BuildHost>
-    <CI>true</CI>
+    <CI>True</CI>
     <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
     <Branch>$(BUILD_SOURCEBRANCH)</Branch>
     <CommitId>$(BUILD_SOURCEVERSION)</CommitId>
@@ -71,7 +72,7 @@
   <!-- capture details from a continuous integration build hosted by Travis-CI -->
   <PropertyGroup Condition = " '$(TRAVIS)' != '' ">
     <BuildHost>travis</BuildHost>
-    <CI>true</CI>
+    <CI>True</CI>
     <Branch>$(TRAVIS_PULL_REQUEST_BRANCH)</Branch>
     <Branch Condition=" '$(Branch)' == '' ">$(TRAVIS_BRANCH)</Branch>
     <CommitId>$(TRAVIS_COMMIT)</CommitId>
@@ -197,6 +198,7 @@
     <Message Importance="High" Text="Commit ID          : $(CommitId)" />
     <Message Importance="High" Text="Pull Request ID    : $(PullRequestId)" Condition=" '$(PullRequestId)' != '' " />
     <Message Importance="High" Text="Provider           : $(RepositoryProvider)" Condition=" '$(RepositoryProvider)' != '' " />
+    <Message Importance="High" Text="Git Support        : $(HasGit)" />
   </Target>
 
   <!-- print build information -->
@@ -207,6 +209,7 @@
     <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
     <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
+    <Message Importance="High" Text="CI Build           : $(CI)" />
   </Target>
 
   <!-- print all of the paths used to create the build -->

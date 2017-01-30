@@ -18,7 +18,7 @@ namespace PulseBridge.Condo.IO
         #region Private Fields
         private const string Split = "------------------------ >8< ------------------------";
 
-        private const string Format = "%H%n%h%n%cI%n%D%n%B" + Split;
+        private const string Format = "%H%n%h%n%cI%n%D%n%B%n" + Split;
 
         private readonly IPathManager path;
 
@@ -359,6 +359,9 @@ namespace PulseBridge.Condo.IO
 
                 // wait for exit
                 process.WaitForExit();
+
+                // wait for the process to truly end
+                while (!process.HasExited) { }
 
                 // capture the exit code
                 exitCode = process.ExitCode;

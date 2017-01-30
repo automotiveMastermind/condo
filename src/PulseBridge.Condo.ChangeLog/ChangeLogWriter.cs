@@ -46,6 +46,9 @@ namespace PulseBridge.Condo.ChangeLog
 
             // set the changelog to empty
             this.changelog = string.Empty;
+
+            // no encoding
+            Handlebars.Configuration.TextEncoder = null;
         }
         #endregion
 
@@ -198,7 +201,7 @@ namespace PulseBridge.Condo.ChangeLog
                     }
 
                     // get the notes
-                    var notes = group["commits"] as List<IDictionary<string, object>>;
+                    var notes = group["notes"] as List<IDictionary<string, object>>;
 
                     // add the note
                     notes.Add(note);

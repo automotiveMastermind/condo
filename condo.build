@@ -14,5 +14,4 @@
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
     <Import Project="$(CondoTargetsPath)\Goals.targets" />
-    <Import Project="$(CondoTargetsPath)\Version.targets" />
 </Project>
