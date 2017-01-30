@@ -60,6 +60,10 @@
     </GetAssemblyInfo>
   </Target>
 
+  <Target Name="UpdateProjectJson">
+    <UpdateProjectJson Projects="@(Projects)" Version="$(CurrentRelease)" />
+  </Target>
+
   <!-- save assembly info files -->
   <Target Name="SaveAssemblyInfo" Condition=" '@(Projects->Count())' != '0' ">
     <SaveAssemblyInfo
@@ -110,6 +114,7 @@
       $(BeforeVersion);
       $(VersionDependsOn);
       GetAssemblyInfo;
+      UpdateProjectJson;
       PrintVersionInfo;
       SaveAssemblyInfo;
       $(AfterVersion);
