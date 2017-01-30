@@ -427,7 +427,24 @@ namespace PulseBridge.Condo.IO
         public GitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser)
         {
             // create the range
-            var range = string.IsNullOrEmpty(from) ? to : $"{from}..{to}";
+            var range = from ?? (from = string.Empty);
+
+            // determine if to is specified
+            if (string.IsNullOrEmpty(to))
+            {
+                // set it
+                to = "HEAD";
+            }
+
+            // determine if the start range is specified
+            if (range.Length > 0)
+            {
+                // add the separator
+                range += "..";
+            }
+
+            // add to the range
+            range += to;
 
             var cmd = $@"log {range} --format=""{Format}""";
 

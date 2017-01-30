@@ -359,8 +359,14 @@ namespace PulseBridge.Condo.Tasks
 
             var tag = GitLog.Tags.FirstOrDefault();
 
-            this.LatestTag = tag.Name;
-            this.LatestTagCommit = tag.Hash;
+            if (tag != null)
+            {
+                this.LatestTag = tag.Name;
+                this.LatestTagCommit = tag.Hash;
+            }
+
+            this.From = GitLog.From;
+            this.To = GitLog.To;
         }
         #endregion
     }

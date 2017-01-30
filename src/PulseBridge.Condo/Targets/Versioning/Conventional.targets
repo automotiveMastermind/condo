@@ -14,9 +14,19 @@
   <!-- get information about the commits within the repository -->
   <Target Name="GetCommitInfo" Condition=" '$(HasGit.ToLower())' == 'true' ">
     <GetCommitInfo
-        RepositoryRoot="$(RepositoryRoot)"
-        From="$(CommitFrom)"
-        To="$(CommitTo)">
+      RepositoryRoot="$(RepositoryRoot)"
+      IncludeInvalidCommits="$(IncludeInvalidCommits)"
+      ActionKeywords="$(ActionKeywords)"
+      HeaderPattern="$(HeaderPattern)"
+      FieldPattern="$(FieldPattern)"
+      RevertPattern="$(RevertPattern)"
+      MergePattern="$(MergePattern)"
+      HeaderCorrespondence="$(HeaderCorrespondence)"
+      MergeCorrespondence="$(MergeCorrespondence)"
+      RevertCorrespondence="$(RevertCorrespondence)"
+      ReferencePrefixes="$(ReferencePrefixes)"
+      MentionPrefixes="$(MentionPrefixes)"
+      NoteKeywords="$(NoteKeywords)">
       <Output TaskParameter="From" PropertyName="CommitFrom" />
       <Output TaskParameter="To" PropertyName="CommitTo" />
       <Output TaskParameter="LatestTag" PropertyName="LatestTag" />
@@ -30,8 +40,8 @@
     <Message Importance="High" Text="Latest Tag         : $(LatestTag)" />
     <Message Importance="High" Text="Latest Tag Commit  : $(LatestTagCommit)" />
     <Message Importance="High" Text="Commits (Count)    : @(Commits->Count())" />
-    <Message Importance="High" Text="From               : @(CommitFrom)" />
-    <Message Importance="High" Text="To                 : @(CommitTo)" />
+    <Message Importance="High" Text="From               : $(CommitFrom)" />
+    <Message Importance="High" Text="To                 : $(CommitTo)" />
   </Target>
 
   <PropertyGroup>
