@@ -55,6 +55,22 @@
 
   <!-- write the changelog -->
   <Target Name="SaveChangeLog" Condition="$(HasGit)">
+    <!-- rerun here to force pickup from recommended version bump and associated tag -->
+    <GetCommitInfo
+      RepositoryRoot="$(RepositoryRoot)"
+      IncludeInvalidCommits="$(IncludeInvalidCommits)"
+      ActionKeywords="$(ActionKeywords)"
+      HeaderPattern="$(HeaderPattern)"
+      FieldPattern="$(FieldPattern)"
+      RevertPattern="$(RevertPattern)"
+      MergePattern="$(MergePattern)"
+      HeaderCorrespondence="$(HeaderCorrespondence)"
+      MergeCorrespondence="$(MergeCorrespondence)"
+      RevertCorrespondence="$(RevertCorrespondence)"
+      ReferencePrefixes="$(ReferencePrefixes)"
+      MentionPrefixes="$(MentionPrefixes)"
+      NoteKeywords="$(NoteKeywords)" />
+
     <SaveChangeLog
       RepositoryRoot="$(RepositoryRoot)"
       RepositoryUri="$(RepositoryUri)"
@@ -64,8 +80,7 @@
       Partials="@(ChangeLogPartials)"
       Template="$(ChangeLogTemplate)"
       ChangeLogTypes="$(ChangeLogTypes)"
-      ChangeLogNames="$(ChangeLogNames)">
-    </SaveChangeLog>
+      ChangeLogNames="$(ChangeLogNames)" />
   </Target>
 
   <PropertyGroup>
