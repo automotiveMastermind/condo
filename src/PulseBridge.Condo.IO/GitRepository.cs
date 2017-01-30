@@ -18,7 +18,7 @@ namespace PulseBridge.Condo.IO
         #region Private Fields
         private const string Split = "------------------------ >8< ------------------------";
 
-        private const string Format = "%H%n%h%n%D%n%B" + Split;
+        private const string Format = "%H%n%h%n%cI%n%D%n%B" + Split;
 
         private readonly IPathManager path;
 

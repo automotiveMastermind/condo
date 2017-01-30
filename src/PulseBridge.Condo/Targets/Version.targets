@@ -106,16 +106,16 @@
   </Target>
 
   <PropertyGroup>
-    <VersioningDependsOn>
+    <VersionDependsOn>
       $(BeforeVersion);
-      $(VersioningDependsOn);
+      $(VersionDependsOn);
       GetAssemblyInfo;
       PrintVersionInfo;
       SaveAssemblyInfo;
       $(AfterVersion);
-    </VersioningDependsOn>
+    </VersionDependsOn>
   </PropertyGroup>
 
   <!-- process the versioning -->
-  <Target Name="Versioning" DependsOnTargets="$(VersioningDependsOn)" BeforeTargets="Version" />
+  <Target Name="Versioning" DependsOnTargets="$(VersionDependsOn)" BeforeTargets="Version" />
 </Project>

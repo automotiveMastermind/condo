@@ -29,8 +29,8 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the collection of commits with their associated versions.
         /// </summary>
-        public IDictionary<SemanticVersion, ICollection<GitCommit>> Versions { get; }
-            = new SortedDictionary<SemanticVersion, ICollection<GitCommit>>(new VersionComparer());
+        public IDictionary<SemanticVersion, IList<GitCommit>> Versions { get; }
+            = new SortedDictionary<SemanticVersion, IList<GitCommit>>(new VersionComparer());
 
         /// <summary>
         /// Gets or sets the tag contained within the log.

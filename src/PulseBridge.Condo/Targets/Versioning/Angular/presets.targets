@@ -32,6 +32,9 @@
 
     <MinorCorrespondence    Condition=" '$(MinorCorrespondence)'    == '' ">Type</MinorCorrespondence>
     <MinorValue             Condition=" '$(MinorValue)'             == '' ">feat</MinorValue>
+
+    <ChangeLogTypes         Condition=" '$(ChangeLogTypes)'         == '' ">feat;fix;perf;revert</ChangeLogTypes>
+    <ChangeLogNames         Condition=" '$(ChangeLogNames)'         == '' ">Features;Bug Fixes;Performance Improvements;Reverts</ChangeLogNames>
   </PropertyGroup>
 
   <ItemGroup>

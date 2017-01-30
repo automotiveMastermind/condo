@@ -87,11 +87,17 @@ namespace PulseBridge.Condo.IO
                 var shortHash = lines.Current;
                 lines.MoveNext();
 
+                // get the committer date
+                DateTime date;
+                DateTime.TryParse(lines.Current, out date);
+                lines.MoveNext();
+
                 // create the commit
                 var commit = new GitCommit
                 {
                     Hash = hash,
-                    ShortHash = shortHash
+                    ShortHash = shortHash,
+                    Date = date
                 };
 
                 // get the tags
@@ -174,7 +180,7 @@ namespace PulseBridge.Condo.IO
                     commit.Version = version;
 
                     // get or add the commit to the log versions
-                    ICollection<GitCommit> versioned;
+                    IList<GitCommit> versioned;
 
                     if (!log.Versions.TryGetValue(version, out versioned))
                     {

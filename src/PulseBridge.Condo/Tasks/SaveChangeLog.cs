@@ -7,6 +7,7 @@ namespace PulseBridge.Condo.Tasks
     using Microsoft.Build.Utilities;
 
     using PulseBridge.Condo.ChangeLog;
+    using PulseBridge.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task used to save an automatically generated changelog to the repository root.
@@ -17,7 +18,6 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the path of the repository root.
         /// </summary>
-        [Output]
         [Required]
         public string RepositoryRoot { get; set; }
 
@@ -37,6 +37,40 @@ namespace PulseBridge.Condo.Tasks
         /// </summary>
         [Required]
         public string Template { get; set; } = "Targets/Versioning/Angular/template.hbs";
+
+        /// <summary>
+        /// Gets or sets the types to include in the change log.
+        /// </summary>
+        [Required]
+        public string ChangeLogTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display names of the change log types to include in the change log.
+        /// </summary>
+        [Required]
+        public string ChangeLogNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path containing the initialization template for the change log.
+        /// </summary>
+        [Required]
+        public string ChangeLogInitialize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URI of the repository.
+        /// </summary>
+        /// <returns></returns>
+        public string RepositoryUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the group by header correspondence field.
+        /// </summary>
+        public string GroupByHeader { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sort by header correspondence fields.
+        /// </summary>
+        public string SortByHeader { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the changelog.
@@ -72,20 +106,62 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
+            var log = GetCommitInfo.GitLog;
+
+            if (log == null)
+            {
+                Log.LogError($"You must call the {nameof(GetCommitInfo)} task before calling this task.");
+
+                return false;
+            }
+
             var path = Path.Combine(this.RepositoryRoot, this.Name);
+
+            var types = this.ChangeLogTypes.PropertySplit();
+            var names = this.ChangeLogNames.PropertySplit();
+
+            if (types.Length != names.Length)
+            {
+                Log.LogError($"The number of change log types {types.Length} must match the number of change log names {names.Length}.");
+
+                return false;
+            }
+
+            var options = new ChangeLogOptions
+            {
+                RepositoryUri = this.RepositoryUri,
+                GroupBy = this.GroupByHeader,
+                SortBy = this.SortByHeader.PropertySplit()
+            };
+
+            // clear the change log types
+            options.ChangeLogTypes.Clear();
+
+            // iterate over available types
+            for (var i = 0; i < types.Length; i++)
+            {
+                options.ChangeLogTypes.Add(types[i], names[i]);
+            }
 
             try
             {
-                var writer = new ChangeLogWriter();
+                var content = File.ReadAllText(this.ChangeLogInitialize);
+
+                var writer = new ChangeLogWriter(options).Initialize(path, content);
 
                 foreach (var partial in this.Partials)
                 {
                     writer.LoadPartial(partial.ItemSpec);
                 }
 
-                writer.Load(this.Template)
-                    .Apply(GetCommitInfo.GitLog)
-                    .Save(path);
+                // write the changelog
+                writer.Load(this.Template).Apply(log).Save();
+
+                // create a new git repository factory
+                var factory = new GitRepositoryFactory();
+
+                // save changes to the repository
+                var repository = factory.Load(this.RepositoryRoot).Add(this.Name).Push();
             }
             catch (Exception netEx)
             {

@@ -27,9 +27,9 @@ namespace PulseBridge.Condo
         /// <returns>
         /// An array of individual values retrieved from the semi-colon delimited list.
         /// </returns>
-        public static IEnumerable<string> PropertySplit(this string values)
+        public static string[] PropertySplit(this string values)
         {
-            return (values ?? string.Empty).Trim(Delimiter).Split(Delimiter).Where(value => value.Length > 0);
+            return (values ?? string.Empty).Trim(Delimiter).Split(Delimiter).Where(value => value.Length > 0).ToArray();
         }
 
         /// <summary>

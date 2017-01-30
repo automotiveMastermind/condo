@@ -23,6 +23,11 @@ namespace PulseBridge.Condo.IO
         public string ShortHash { get; set; }
 
         /// <summary>
+        /// Gets or sets the date of the commit.
+        /// </summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>
         /// Gets or sets the raw message of the git commit.
         /// </summary>
         public string Raw { get; set; }

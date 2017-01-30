@@ -10,13 +10,6 @@ namespace PulseBridge.Condo.ChangeLog
     /// </summary>
     public interface IChangeLogWriterCompiled
     {
-        #region Properties and Indexers
-        /// <summary>
-        /// Gets the template that has been loaded.
-        /// </summary>
-        string Template { get; }
-        #endregion
-
         #region Methods
         /// <summary>
         /// Applies the template to the specified <paramref name="log"/>.

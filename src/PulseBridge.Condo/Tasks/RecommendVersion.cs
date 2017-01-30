@@ -25,6 +25,16 @@ namespace PulseBridge.Condo.Tasks
         public string LatestVersionCommit { get; set; }
 
         /// <summary>
+        /// Gets or sets the current branch.
+        /// </summary>
+        public string Branch { get; set; }
+
+        /// <summary>
+        /// Gets or sets the master branch.
+        /// </summary>
+        public string MasterBranch { get; set; }
+
+        /// <summary>
         /// Gets or sets the current semantic version.
         /// </summary>
         [Output]
@@ -79,6 +89,15 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
+            if (version.Major == 0 && this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+            {
+                // set the version to 1.0.0
+                this.SetVersion(version, level: 0);
+
+                // move on immediately
+                return true;
+            }
+
             var level = 2;
 
             var commits = log.Commits;
@@ -110,6 +129,22 @@ namespace PulseBridge.Condo.Tasks
                 }
             }
 
+            // determine if this is a development version that has not yet been released
+            if (version.Major == 0 && level == 0)
+            {
+                // down-level to 1
+                level = 1;
+            }
+
+            // set the version
+            this.SetVersion(version, level);
+
+            // move on immediately
+            return true;
+        }
+
+        private void SetVersion(SemanticVersion version, int level)
+        {
             switch (level)
             {
                 case 0:
@@ -124,9 +159,6 @@ namespace PulseBridge.Condo.Tasks
             }
 
             this.NextRelease = version.ToString();
-
-            // move on immediately
-            return true;
         }
         #endregion
     }

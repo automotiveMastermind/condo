@@ -16,7 +16,9 @@ namespace PulseBridge.Condo.ChangeLog
         /// <param name="template">
         /// The handlebars template used to generate the change log.
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        /// The current change log writer.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the specified <paramref name="template"/> is <see langword="null"/>.
         /// </exception>
@@ -76,7 +78,9 @@ namespace PulseBridge.Condo.ChangeLog
         /// <param name="partial">
         /// The handlebars partial template used to generate the change log.
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        /// The current change log writer.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown if the specified <paramref name="partial"/> is <see langword="null"/>.
         /// </exception>

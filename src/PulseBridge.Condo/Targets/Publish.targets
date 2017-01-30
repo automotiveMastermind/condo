@@ -15,6 +15,10 @@
     <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
   </Target>
 
+  <Target Name="PushChanges" Condition=" '$(CI)' == 'true' AND '$(HasGit)' == 'true' ">
+    <PushChanges RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
   </Target>
