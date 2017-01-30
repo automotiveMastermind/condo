@@ -27,6 +27,12 @@ namespace PulseBridge.Condo.Tasks
         /// </summary>
         [Required]
         public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the build quality of the current build.
+        /// </summary>
+        [Required]
+        public string BuildQuality { get; set; }
         #endregion
 
         #region Methods
@@ -46,7 +52,14 @@ namespace PulseBridge.Condo.Tasks
             }
 
             // normalize the version
-            version = new SemanticVersion(version.Major, version.Minor, version.Patch);
+            this.Version = new SemanticVersion(version.Major, version.Minor, version.Patch).ToString();
+
+            // determine if the build quality is specified
+            if (!string.IsNullOrEmpty(this.BuildQuality))
+            {
+                // append the prerelease marker
+                this.Version += "-*";
+            }
 
             try
             {
@@ -60,7 +73,7 @@ namespace PulseBridge.Condo.Tasks
                     var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
 
                     // change the version
-                    dictionary["version"] = version.ToString();
+                    dictionary["version"] = this.Version;
 
                     // serialize the content
                     content = JsonConvert.SerializeObject(dictionary, Formatting.Indented);
