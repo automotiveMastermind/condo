@@ -91,10 +91,21 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            if (version.Major == 0 && this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+            if (version.Major == 0)
             {
-                // set the version to 1.0.0
-                this.SetVersion(version, level: 0);
+                if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+                {
+                    // set the version to 1.0.0
+                    this.SetVersion(version, level: 0);
+                }
+                else
+                {
+                    // set the version to 0.x+1.0
+                    this.SetVersion(version, level: 1);
+                }
+
+                // set the current release to the next release
+                this.CurrentRelease = this.NextRelease;
 
                 // move on immediately
                 return true;
@@ -140,6 +151,13 @@ namespace PulseBridge.Condo.Tasks
 
             // set the version
             this.SetVersion(version, level);
+
+            // determine if we should bump now
+            if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+            {
+                // move to the next release
+                this.CurrentRelease = this.NextRelease;
+            }
 
             // move on immediately
             return true;
