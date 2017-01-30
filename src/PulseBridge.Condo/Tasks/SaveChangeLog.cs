@@ -161,7 +161,10 @@ namespace PulseBridge.Condo.Tasks
                 var factory = new GitRepositoryFactory();
 
                 // save changes to the repository
-                var repository = factory.Load(this.RepositoryRoot).Add(this.Name);
+                var repository = factory.Load(this.RepositoryRoot).Add(path);
+
+                // write a message
+                this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog to {path}.");
             }
             catch (Exception netEx)
             {
