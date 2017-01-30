@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.0-beta-00356"></a>
+## [2.0.0-beta-00356](https://github.com/pulsebridge/condo/compare/2.0.0-beta-00354...2.0.0-beta-00356) (2017-01-30)
+
+
+### Bug Fixes
+
+* **changelog:** resolve issue with tags (#32) ([774651c](https://github.com/pulsebridge/condo/commits/774651c)), closes [#32](https://github.com/pulsebridge/condo/issues/32)
+
+
 <a name="2.0.0-beta-00354"></a>
 ## [2.0.0-beta-00354](https://github.com/pulsebridge/condo/compare/2.0.0-beta-00287...2.0.0-beta-00354) (2017-01-30)
 
