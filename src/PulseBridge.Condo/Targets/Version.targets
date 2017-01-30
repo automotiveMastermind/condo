@@ -61,7 +61,10 @@
   </Target>
 
   <Target Name="UpdateProjectJson">
-    <UpdateProjectJson Projects="@(Projects)" Version="$(CurrentRelease)" />
+    <UpdateProjectJson
+      Projects="@(Projects)"
+      Version="$(CurrentRelease)"
+      BuildQuality="$(BuildQuality)" />
   </Target>
 
   <!-- save assembly info files -->
