@@ -40,19 +40,21 @@
   </Target>
 
   <!-- update semantic version -->
-  <Target Name="RecommendVersion">
+  <Target Name="RecommendVersion" Condition="$(HasGit)">
     <RecommendVersion
       LatestVersion="$(LatestVersion)"
       LatestVersionCommit="$(LatestVersionCommit)"
       MinorCorrespondence="$(MinorCorrespondence)"
-      MinorValue="$(MinorValue)">
+      MinorValue="$(MinorValue)"
+      Branch="$(Branch)"
+      MasterBranch="$(MasterBranch)">
       <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
       <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
     </RecommendVersion>
   </Target>
 
   <!-- write the changelog -->
-  <Target Name="SaveChangeLog">
+  <Target Name="SaveChangeLog" Condition="$(HasGit)">
     <SaveChangeLog
       RepositoryRoot="$(RepositoryRoot)"
       RepositoryUri="$(RepositoryUri)"

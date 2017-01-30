@@ -27,11 +27,13 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the current branch.
         /// </summary>
+        [Required]
         public string Branch { get; set; }
 
         /// <summary>
         /// Gets or sets the master branch.
         /// </summary>
+        [Required]
         public string MasterBranch { get; set; }
 
         /// <summary>
