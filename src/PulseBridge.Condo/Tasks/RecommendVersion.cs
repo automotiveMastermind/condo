@@ -15,6 +15,12 @@ namespace PulseBridge.Condo.Tasks
     {
         #region Properties and Indexers
         /// <summary>
+        /// Gets or sets the build quality of the release.
+        /// </summary>
+        [Required]
+        public string BuildQuality { get; set; }
+
+        /// <summary>
         /// Gets or sets the current (latest) version.
         /// </summary>
         public string LatestVersion { get; set; }
@@ -23,18 +29,6 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the latest commit included in the current (latest) version.
         /// </summary>
         public string LatestVersionCommit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current branch.
-        /// </summary>
-        [Required]
-        public string Branch { get; set; }
-
-        /// <summary>
-        /// Gets or sets the master branch.
-        /// </summary>
-        [Required]
-        public string MasterBranch { get; set; }
 
         /// <summary>
         /// Gets or sets the current semantic version.
@@ -93,7 +87,7 @@ namespace PulseBridge.Condo.Tasks
 
             if (version.Major == 0)
             {
-                if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(this.BuildQuality))
                 {
                     // set the version to 1.0.0
                     this.SetVersion(version, level: 0);
@@ -153,7 +147,7 @@ namespace PulseBridge.Condo.Tasks
             this.SetVersion(version, level);
 
             // determine if we should bump now
-            if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(this.BuildQuality))
             {
                 // move to the next release
                 this.CurrentRelease = this.NextRelease;

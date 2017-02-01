@@ -8,6 +8,7 @@ namespace PulseBridge.Condo.IO
     using Xunit;
 
     [Purpose(PurposeType.Integration)]
+    [Agent(AgentType.CI)]
     public class GitLogTest
     {
         private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();

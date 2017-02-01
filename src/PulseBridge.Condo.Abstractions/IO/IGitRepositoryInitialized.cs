@@ -1,5 +1,7 @@
 namespace PulseBridge.Condo.IO
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Defines the properties and methods required to implement a git repository that has already been initialized.
     /// </summary>
@@ -19,11 +21,26 @@ namespace PulseBridge.Condo.IO
         /// <summary>
         /// Gets the URI of the origin remote.
         /// </summary>
-        /// <returns></returns>
         string OriginUri { get; }
+
+        /// <summary>
+        /// Gets the list of tags associated with the repository.
+        /// </summary>
+        IEnumerable<string> Tags { get; }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Attempts to pick out and massage the specified reference.
+        /// </summary>
+        /// <param name="reference">
+        /// The reference to pick out and massage.
+        /// </param>
+        /// <returns>
+        /// The SHA1 of the specified <paramref name="reference"/>.
+        /// </returns>
+        string RevParse(string reference);
+
         /// <summary>
         /// Saves a file at the specified <paramref name="relativePath"/> with the specified
         /// <paramref name="contents"/>.

@@ -7,9 +7,9 @@ namespace PulseBridge.Condo.Tasks
     using PulseBridge.Condo.IO;
 
     /// <summary>
-    /// Represents a Microsoft Build task that pushes changes, including tags, to a remote branch.
+    /// Represents a Microsoft Build task that is used to create a release.
     /// </summary>
-    public class PushChanges : Task
+    public class CreateRelease : Task
     {
         #region Properties
         /// <summary>
@@ -20,10 +20,20 @@ namespace PulseBridge.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
+        /// Gets or sets the version that is being released.
+        /// </summary>
+        [Required]
+        public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the release message.
+        /// </summary>
+        [Required]
+        public string ReleaseMessage { get; set; } = "chore(release): ";
+
+        /// <summary>
         /// Gets or sets the remote that should be used to push the tag.
         /// </summary>
-        /// <returns></returns>
-        [Output]
         public string Remote { get; set; } = "origin";
         #endregion
 
@@ -64,16 +74,19 @@ namespace PulseBridge.Condo.Tasks
                 // load the repository
                 var repository = factory.Load(root);
 
+                // create a release message
+                var message = this.ReleaseMessage + this.Version;
+
                 // push changes to the remote repository
-                repository.Add().Push(this.Remote, tags: true);
+                repository.Add().Commit(message);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}");
+                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}.");
             }
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarning(netEx.Message);
+                Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

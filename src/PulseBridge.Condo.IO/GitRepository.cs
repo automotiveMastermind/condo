@@ -22,7 +22,9 @@ namespace PulseBridge.Condo.IO
 
         private readonly IPathManager path;
 
-        private readonly string version;
+        private readonly ILogger logger;
+
+        private readonly Version version;
 
         private bool disposed;
         #endregion
@@ -35,19 +37,52 @@ namespace PulseBridge.Condo.IO
         /// The path manager that is responsible for managing the path.
         /// </param>
         public GitRepository(IPathManager path)
+            : this(path, new NoOpLogger())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GitRepository"/> class.
+        /// </summary>
+        /// <param name="path">
+        /// The path manager that is responsible for managing the path.
+        /// </param>
+        /// <param name="log">
+        /// The logger that is responsible for logging.
+        /// </param>
+        public GitRepository(IPathManager path, ILogger log)
         {
             if (path == null)
             {
-                throw new ArgumentNullException(nameof(path), Invariant($"The {nameof(path)} cannot be null."));
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
             }
 
             this.path = path;
+            this.logger = log;
 
             try
             {
-                var version = this.Execute("--version");
+                // get the version outut
+                var output = this.Execute("--version");
 
-                this.version = version.Output.First();
+                // capture the version string
+                var values = output.Output.FirstOrDefault()?.Split(' ');
+
+                // iterate over each value
+                foreach (var value in values)
+                {
+                    // attempt to parse the version
+                    if (Version.TryParse(value, out this.version))
+                    {
+                        // break from the iteration
+                        break;
+                    }
+                }
             }
             catch (Exception netEx)
             {
@@ -69,6 +104,9 @@ namespace PulseBridge.Condo.IO
                 // determine if we were not successful
                 if (!result.Success)
                 {
+                    // log the output as a warning
+                    this.logger.LogWarning(result.Error);
+
                     // return null
                     return null;
                 }
@@ -83,10 +121,10 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <inheritdoc/>
-        public string ClientVersion => this.version;
+        public string ClientVersion => this.version?.ToString();
 
         /// <inheritdoc/>
-        public string RepositoryPath => this.path.FullPath;
+        public string RepositoryPath => this.path?.FullPath;
 
         /// <inheritdoc/>
         public string Username
@@ -155,6 +193,19 @@ namespace PulseBridge.Condo.IO
                 return result.Success ? result.Output.FirstOrDefault() : null;
             }
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<string> Tags
+        {
+            get
+            {
+                var cmd = this.version?.Major > 1 ? "tag --sort version:refname" : "tag";
+
+                var result = this.Execute(cmd);
+
+                return result.Success ? result.Output : new List<string>();
+            }
+        }
         #endregion
 
         #region Methods
@@ -187,7 +238,14 @@ namespace PulseBridge.Condo.IO
                 cmd += " --tags";
             }
 
-            this.Execute(cmd);
+            var output = this.Execute(cmd);
+
+            this.logger.LogMessage(output.Output);
+
+            if (!output.Success)
+            {
+                this.logger.LogWarning(output.Error);
+            }
 
             return this;
         }
@@ -212,7 +270,14 @@ namespace PulseBridge.Condo.IO
             var cmd = $"clone {uri} .";
 
             // execute the cmd
-            this.Execute(cmd);
+            var output = this.Execute(cmd);
+
+            this.logger.LogMessage(output.Output);
+
+            if (!output.Success)
+            {
+                this.logger.LogWarning(output.Error);
+            }
 
             return this;
         }
@@ -289,6 +354,8 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Tag(string name)
         {
             var exec = this.Execute($"tag {name}");
+
+            logger.LogMessage(exec.Output);
 
             if (!exec.Success)
             {
@@ -448,6 +515,9 @@ namespace PulseBridge.Condo.IO
             // create the command used to get the history of commits
             var exec = this.Execute(cmd);
 
+            // log the output
+            this.logger.LogMessage(exec.Output);
+
             // determine if we were successful
             if (!exec.Success)
             {
@@ -524,6 +594,19 @@ namespace PulseBridge.Condo.IO
                 RedirectStandardError = true,
                 RedirectStandardInput = true
             };
+        }
+
+        /// <inheritdoc />
+        public string RevParse(string reference)
+        {
+            var output = this.Execute($"rev-parse {reference}");
+
+            if (output.Success)
+            {
+                return output.Output.FirstOrDefault();
+            }
+
+            return string.Empty;
         }
         #endregion
     }

@@ -88,6 +88,8 @@ install_dotnet() {
             sleep 10s
         done
 
+        success "Retrieved dotnet-install script..."
+
         chmod +x $DOTNET_INSTALL
         safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
         safe-exec rm -rf $DOTNET_TEMP

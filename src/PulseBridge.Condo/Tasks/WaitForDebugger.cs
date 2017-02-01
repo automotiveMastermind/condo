@@ -30,8 +30,6 @@ namespace PulseBridge.Condo.Tasks
                 Thread.Sleep(250);
             }
 
-            Debugger.Break();
-
             return true;
         }
         #endregion

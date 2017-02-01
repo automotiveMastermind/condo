@@ -44,7 +44,7 @@ namespace PulseBridge.Condo.Tasks
         /// The default value is HEAD, which is the most recent commit.
         /// </remarks>
         [Output]
-        public string To { get; set; } = "HEAD";
+        public string To { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to include invalid commits.
@@ -197,18 +197,6 @@ namespace PulseBridge.Condo.Tasks
         public ITaskItem[] Commits { get; set; }
 
         /// <summary>
-        /// Gets the latest release tag contained within the repository.
-        /// </summary>
-        [Output]
-        public string LatestVersion { get; private set; }
-
-        /// <summary>
-        /// Gets the commit hash of the latest tag commit.
-        /// </summary>
-        [Output]
-        public string LatestVersionCommit { get; private set; }
-
-        /// <summary>
         /// Gets the version of the client used to access the repository.
         /// </summary>
         [Output]
@@ -248,7 +236,7 @@ namespace PulseBridge.Condo.Tasks
             catch (Exception netEx)
             {
                 // log a warning
-                this.Log.LogWarning(netEx.Message);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;
@@ -355,14 +343,6 @@ namespace PulseBridge.Condo.Tasks
 
                 // return the item
                 yield return item;
-            }
-
-            if (GitLog.Versions.Any())
-            {
-                var version = GitLog.Versions.Last();
-
-                this.LatestVersion = version.Key.ToString();
-                this.LatestVersionCommit = version.Value.First().Hash;
             }
 
             this.From = GitLog.From;

@@ -28,12 +28,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">$(DOTNET_BUILD_VERSION)</CurrentRelease>
-    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">1.0.0</CurrentRelease>
+    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">0.0.0</CurrentRelease>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
     <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
     <CI Condition=" '$(CI)' != '' ">True</CI>
     <CI Condition=" '$(CI)' == '' ">False</CI>
     <HasGit Condition=" '$(HasGit)' == '' ">False</HasGit>
+    <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">False</IsPullRequest>
+
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
@@ -88,6 +90,7 @@
 
   <!-- determine if the repository is managed by git -->
   <PropertyGroup>
+    <IsPullRequest Condition=" '$(PullRequestId)' != '' ">True</IsPullRequest>
     <RepositoryProvider Condition=" '$(RepositoryProvider)' == '' AND Exists('$(RepositoryRoot)$(slash).git') ">git</RepositoryProvider>
   </PropertyGroup>
 
@@ -134,10 +137,14 @@
         RepositoryRoot="$(RepositoryRoot)"
         RepositoryUri="$(RepositoryUri)"
         Branch="$(Branch)"
+        VersionTag="$(VersionTag)"
         CommitId="$(CommitId)">
       <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot" />
       <Output TaskParameter="RepositoryUri" PropertyName="RepositoryUri" />
       <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
+      <Output TaskParameter="LatestVersionTag" PropertyName="LatestVersionTag" />
+      <Output TaskParameter="LatestVersion" PropertyName="LatestVersion" />
+      <Output TaskParameter="LatestVersionCommit" PropertyName="LatestVersionCommit" />
       <Output TaskParameter="Branch" PropertyName="Branch" />
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="HasGit" PropertyName="HasGit" />
@@ -199,6 +206,9 @@
     <Message Importance="High" Text="Pull Request ID    : $(PullRequestId)" Condition=" '$(PullRequestId)' != '' " />
     <Message Importance="High" Text="Provider           : $(RepositoryProvider)" Condition=" '$(RepositoryProvider)' != '' " />
     <Message Importance="High" Text="Git Support        : $(HasGit)" />
+    <Message Importance="High" Text="Latest Version     : $(LatestVersion)" />
+    <Message Importance="High" Text="Latest Version Tag : $(LatestVersionTag)" />
+    <Message Importance="High" Text="Latest Vesion Hash : $(LatestVersionCommit)" />
   </Target>
 
   <!-- print build information -->

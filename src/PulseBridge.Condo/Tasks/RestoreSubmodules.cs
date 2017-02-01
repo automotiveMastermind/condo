@@ -87,7 +87,7 @@ namespace PulseBridge.Condo.Tasks
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarning(netEx.Message);
+                Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;
