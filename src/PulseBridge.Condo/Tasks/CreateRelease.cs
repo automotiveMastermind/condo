@@ -78,7 +78,7 @@ namespace PulseBridge.Condo.Tasks
                 var message = this.ReleaseMessage + this.Version;
 
                 // push changes to the remote repository
-                repository.Add().Commit(message);
+                repository.Add().Commit(message).Push(this.Remote, tags: true);
 
                 // log a message
                 Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}.");
