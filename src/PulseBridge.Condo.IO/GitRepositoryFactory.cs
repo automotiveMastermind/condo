@@ -1,5 +1,7 @@
 namespace PulseBridge.Condo.IO
 {
+    using PulseBridge.Condo.Diagnostics;
+
     /// <summary>
     /// Represents a default implementation of a git repository factory.
     /// </summary>
@@ -7,29 +9,29 @@ namespace PulseBridge.Condo.IO
     {
         #region Methods
         /// <inheritdoc />
-        public IGitRepositoryInitialized Clone(IPathManager path, string uri)
+        public IGitRepositoryInitialized Clone(IPathManager path, string uri, ILogger logger)
         {
             // clone the git repository
-            return new GitRepository(path).Clone(uri);
+            return new GitRepository(path, logger).Clone(uri);
         }
 
         /// <inheritdoc />
-        public IGitRepositoryBare Bare(IPathManager path)
+        public IGitRepositoryBare Bare(IPathManager path, ILogger logger)
         {
             // create a bare repository
-            return new GitRepository(path).Bare();
+            return new GitRepository(path, logger).Bare();
         }
 
         /// <inheritdoc />
-        public IGitRepositoryInitialized Load(IPathManager path)
+        public IGitRepositoryInitialized Load(IPathManager path, ILogger logger)
         {
-            return new GitRepository(path) as IGitRepositoryInitialized;
+            return new GitRepository(path, logger) as IGitRepositoryInitialized;
         }
 
         /// <inheritdoc />
-        public IGitRepositoryInitialized Initialize(IPathManager path)
+        public IGitRepositoryInitialized Initialize(IPathManager path, ILogger logger)
         {
-            return new GitRepository(path).Initialize();
+            return new GitRepository(path, logger).Initialize();
         }
         #endregion
     }

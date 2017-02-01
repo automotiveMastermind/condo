@@ -1,5 +1,7 @@
 namespace PulseBridge.Condo.IO
 {
+    using PulseBridge.Condo.Diagnostics;
+
     /// <summary>
     /// Defines the properties and methods required to implement a factory for creating git repositories.
     /// </summary>
@@ -16,10 +18,13 @@ namespace PulseBridge.Condo.IO
         /// <param name="uri">
         /// The URI of the git repository that should be cloned.
         /// </param>
+        /// <param name="logger">
+        /// The logger to use with the repository.
+        /// </param>
         /// <returns>
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
-        IGitRepositoryInitialized Clone(IPathManager path, string uri);
+        IGitRepositoryInitialized Clone(IPathManager path, string uri, ILogger logger);
 
         /// <summary>
         /// Initializes a new bare repository.
@@ -27,10 +32,13 @@ namespace PulseBridge.Condo.IO
         /// <param name="path">
         /// The path manager in which to create the bare repository.
         /// </param>
+        /// <param name="logger">
+        /// The logger to use with the repository.
+        /// </param>
         /// <returns>
         /// A newly initialized git repository.
         /// </returns>
-        IGitRepositoryBare Bare(IPathManager path);
+        IGitRepositoryBare Bare(IPathManager path, ILogger logger);
 
         /// <summary>
         /// Initializes a new git repository.
@@ -38,10 +46,13 @@ namespace PulseBridge.Condo.IO
         /// <param name="path">
         /// The path manager in which to create the bare repository.
         /// </param>
+        /// <param name="logger">
+        /// The logger to use with the repository.
+        /// </param>
         /// <returns>
         /// A newly initialized git repository.
         /// </returns>
-        IGitRepositoryInitialized Initialize(IPathManager path);
+        IGitRepositoryInitialized Initialize(IPathManager path, ILogger logger);
 
         /// <summary>
         /// Loads an existing git repository.
@@ -49,10 +60,13 @@ namespace PulseBridge.Condo.IO
         /// <param name="path">
         /// The path manager in which to create the bare repository.
         /// </param>
+        /// <param name="logger">
+        /// The logger to use with the repository.
+        /// </param>
         /// <returns>
         /// An existing git repository.
         /// </returns>
-        IGitRepositoryInitialized Load(IPathManager path);
+        IGitRepositoryInitialized Load(IPathManager path, ILogger logger);
         #endregion
     }
 }

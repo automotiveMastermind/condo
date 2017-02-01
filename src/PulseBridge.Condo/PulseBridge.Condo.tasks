@@ -1,5 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- include the individual tasks provided by condo -->
+  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetBuildQuality" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetAssemblyInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.GetCommitInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.RecommendVersion" />
@@ -17,7 +18,7 @@
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.SaveChangeLog" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.SaveAssemblyInfo" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.SetGitTag" />
-  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.PushChanges" />
+  <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.CreateRelease" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.SetNuGetCredentials" />
   <UsingTask AssemblyName="PulseBridge.Condo" TaskName="PulseBridge.Condo.Tasks.WaitForDebugger" />
 </Project>

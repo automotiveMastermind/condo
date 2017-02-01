@@ -19,17 +19,11 @@
   <Import Project="$(BranchStrategyTargets)" Condition=" Exists('$(BranchStrategyTargets)') "/>
   <Import Project="$(VersionStrategyTargets)" Condition=" Exists('$(VersionStrategyTargets)') "/>
 
-  <!-- get assembly info based on the repository -->
-  <Target Name="GetAssemblyInfo">
-    <GetAssemblyInfo
-        CI="$(CI)"
-        CurrentRelease="$(CurrentRelease)"
-        AssemblyVersion="$(AssemblyVersion)"
+  <!-- gets the build quality based on the current convention -->
+  <Target Name="GetBuildQuality">
+    <GetBuildQuality
         Branch="$(Branch)"
-        BuildId="$(BuildId)"
-        CommitId="$(CommitId)"
-        StartDateUtc="$(StartDateUtc)"
-        BuildDateUtc="$(BuildDateUtc)"
+        CI="$(CI)"
 
         FeatureBranchPrefix="$(FeatureBranchPrefix)"
         BugfixBranchPrefix="$(BugfixBranchPrefix)"
@@ -49,9 +43,23 @@
         HotfixBranchBuildQuality="$(HotfixBranchBuildQuality)"
         DevelopBranchBuildQuality="$(DevelopBranchBuildQuality)"
         MasterBranchBuildQuality="$(MasterBranchBuildQuality)">
+      <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
+    </GetBuildQuality>
+  </Target>
+
+  <!-- get assembly info based on the repository -->
+  <Target Name="GetAssemblyInfo">
+    <GetAssemblyInfo
+        CI="$(CI)"
+        CurrentRelease="$(CurrentRelease)"
+        AssemblyVersion="$(AssemblyVersion)"
+        BuildId="$(BuildId)"
+        CommitId="$(CommitId)"
+        BuildQuality="$(BuildQuality)"
+        StartDateUtc="$(StartDateUtc)"
+        BuildDateUtc="$(BuildDateUtc)">
       <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
       <Output TaskParameter="FileVersion" PropertyName="FileVersion" />
-      <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
       <Output TaskParameter="InformationalVersion" PropertyName="InformationalVersion" />
       <Output TaskParameter="BuildId" PropertyName="BuildId" />
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
@@ -98,7 +106,7 @@
         LicenseUri="$(LicenseUri)" />
   </Target>
 
-    <Target Name="PrintVersionInfo">
+  <Target Name="PrintVersionInfo">
     <Message Importance="High" Text="Build Version      : $(InformationalVersion)" />
     <Message Importance="High" Text="Current Version    : $(LatestVersion)" Condition=" '$(LatestVersion)' != '' " />
     <Message Importance="High" Text="Current Release    : $(CurrentRelease)" />
@@ -113,13 +121,18 @@
   </Target>
 
   <PropertyGroup>
+    <BeforeVersion>
+      GetBuildQuality;
+      $(BeforeVersion);
+    </BeforeVersion>
+
     <VersionDependsOn>
       $(BeforeVersion);
-      $(VersionDependsOn);
       GetAssemblyInfo;
-      UpdateProjectJson;
       PrintVersionInfo;
       SaveAssemblyInfo;
+      UpdateProjectJson;
+      $(VersionDependsOn);
       $(AfterVersion);
     </VersionDependsOn>
   </PropertyGroup>

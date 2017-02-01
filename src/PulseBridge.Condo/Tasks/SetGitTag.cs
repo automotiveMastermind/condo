@@ -4,6 +4,8 @@ namespace PulseBridge.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+
+    using PulseBridge.Condo.Diagnostics;
     using PulseBridge.Condo.IO;
 
     /// <summary>
@@ -96,7 +98,7 @@ namespace PulseBridge.Condo.Tasks
             try
             {
                 // load the repository
-                var repository = factory.Load(root);
+                var repository = factory.Load(root, new CondoMSBuildLogger(this.Log));
 
                 // set the repository tag
                 repository.Tag(this.Tag);
@@ -107,7 +109,7 @@ namespace PulseBridge.Condo.Tasks
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarning(netEx.Message);
+                Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

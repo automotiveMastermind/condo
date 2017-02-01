@@ -8,7 +8,8 @@
       <DotNetTestPlatformOptions Condition=" $(IsMacOS) ">$(DotNetTestPlatformOptions) -notrait platform=not-macos</DotNetTestPlatformOptions>
       <DotNetTestPlatformOptions Condition=" $(IsLinux) ">$(DotNetTestPlatformOptions) -notrait platform=not-linux</DotNetTestPlatformOptions>
 
-      <DotNetTestPlatformOptions Condition=" '$(CI)' != '' And '$(CI.ToLower())' != 'false' ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
+      <DotNetTestPlatformOptions Condition=" $(CI) ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
+      <DotNetTestPlatformOptions Condition=" !$(CI) ">$(DotNetTestPlatformOptions) -notrait agent=not-local</DotNetTestPlatformOptions>
     </PropertyGroup>
 
     <ItemGroup>

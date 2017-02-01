@@ -36,8 +36,6 @@ namespace PulseBridge.Condo.Tasks
             Assert.True(result);
             Assert.Equal(root, actual.RepositoryRoot);
             Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.LatestVersion);
-            Assert.Null(actual.LatestVersionCommit);
             Assert.Null(actual.Commits);
 
             engine.Verify(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>()), Times.Once);
@@ -70,8 +68,6 @@ namespace PulseBridge.Condo.Tasks
             Assert.True(result);
             Assert.Equal(root, actual.RepositoryRoot);
             Assert.Equal(root, actual.RepositoryRoot);
-            Assert.Null(actual.LatestVersion);
-            Assert.Null(actual.LatestVersionCommit);
             Assert.Null(actual.Commits);
         }
 
@@ -99,8 +95,6 @@ namespace PulseBridge.Condo.Tasks
                 Assert.True(result);
                 Assert.Equal(root, actual.RepositoryRoot);
                 Assert.Equal(root, actual.RepositoryRoot);
-                Assert.Null(actual.LatestVersion);
-                Assert.Null(actual.LatestVersionCommit);
                 Assert.Null(actual.Commits);
             }
         }
@@ -159,10 +153,7 @@ namespace PulseBridge.Condo.Tasks
                 // assert
                 Assert.True(result);
                 Assert.Equal(expected.RepositoryRoot, instance.RepositoryRoot);
-                Assert.Equal(expected.LatestVersion, instance.LatestVersion);
                 Assert.Equal(expected.Commits.Length, instance.Commits.Length);
-
-                Assert.Equal(instance.Commits[0].GetMetadata("Hash"), instance.LatestVersionCommit);
 
                 for (var i = 0; i < expected.Commits.Length; i++)
                 {

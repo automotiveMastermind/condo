@@ -8,19 +8,11 @@
     <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
 
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
-    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
   </PropertyGroup>
-
-  <Target Name="TagVersion" Condition=" $(CI) AND $(HasGit) ">
-    <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
-  </Target>
 
   <Target Name="InstallPackages">
     <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
-  </Target>
-
-  <Target Name="PushChanges" Condition=" $(CI) AND $(HasGit) ">
-    <PushChanges RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 
   <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' ">
@@ -42,9 +34,7 @@
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);
-      TagVersion;
       $(AfterPublish);
-      PushChanges;
     </PublishDependsOn>
   </PropertyGroup>
 

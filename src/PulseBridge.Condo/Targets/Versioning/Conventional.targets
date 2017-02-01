@@ -30,12 +30,10 @@
       RevertCorrespondence="$(RevertCorrespondence)"
       ReferencePrefixes="$(ReferencePrefixes)"
       MentionPrefixes="$(MentionPrefixes)"
-      NoteKeywords="$(NoteKeywords)">
+      NoteKeywords="$(NoteKeywords)"
+      From="$(LatestVersionTag)">
       <Output TaskParameter="From" PropertyName="CommitFrom" />
       <Output TaskParameter="To" PropertyName="CommitTo" />
-      <Output TaskParameter="LatestVersion" PropertyName="LatestVersion" />
-      <Output TaskParameter="LatestVersionCommit" PropertyName="LatestVersionCommit" />
-      <Output TaskParameter="Commits" ItemName="Commits" />
     </GetCommitInfo>
   </Target>
 
@@ -46,8 +44,7 @@
       LatestVersionCommit="$(LatestVersionCommit)"
       MinorCorrespondence="$(MinorCorrespondence)"
       MinorValue="$(MinorValue)"
-      Branch="$(Branch)"
-      MasterBranch="$(MasterBranch)">
+      BuildQuality="$(BuildQuality)">
       <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
       <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
     </RecommendVersion>
@@ -55,10 +52,9 @@
 
   <!-- write the changelog -->
   <Target Name="SaveChangeLog" Condition="$(HasGit)">
-    <!-- rerun here to force pickup from recommended version bump and associated tag -->
     <GetCommitInfo
       RepositoryRoot="$(RepositoryRoot)"
-      IncludeInvalidCommits="$(IncludeInvalidCommits)"
+      IncludeInvalidCommits="false"
       ActionKeywords="$(ActionKeywords)"
       HeaderPattern="$(HeaderPattern)"
       FieldPattern="$(FieldPattern)"
@@ -83,16 +79,29 @@
       ChangeLogNames="$(ChangeLogNames)" />
   </Target>
 
+  <Target Name="TagVersion" Condition=" $(CI) AND $(HasGit) ">
+    <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
+  </Target>
+
+  <Target Name="CreateRelease" Condition=" $(CI) AND $(HasGit) AND !$(IsPullRequest) ">
+    <CreateRelease
+      RepositoryRoot="$(RepositoryRoot)"
+      Version="$(VersionTag)$(InformationalVersion)"
+      ReleaseMessage="$(ReleaseMessage)" />
+  </Target>
+
   <PropertyGroup>
-    <VersionDependsOn>
+    <BeforeVersion>
+      $(BeforeVersion);
       GetCommitInfo;
       RecommendVersion;
-      $(VersionDependsOn);
-    </VersionDependsOn>
+    </BeforeVersion>
 
     <AfterPublish>
       $(AfterPublish);
+      TagVersion;
       SaveChangeLog;
+      CreateRelease;
     </AfterPublish>
   </PropertyGroup>
 </Project>

@@ -99,7 +99,6 @@ fi
 if [[ -d "$BUILD_ROOT" && "$CONDO_RESET" = "1" ]]; then
     info "Resetting condo build system..."
     rm -rf "$BUILD_ROOT"
-    rm -rf "$DOTNET_INSTALL_DIR"
 fi
 
 if [ "$CONDO_LOCAL" = "1" ]; then
