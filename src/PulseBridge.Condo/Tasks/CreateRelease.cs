@@ -104,7 +104,7 @@ namespace PulseBridge.Condo.Tasks
                 repository.Add().Commit(message).Push(this.Remote, tags: true);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}.");
+                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}:{this.Branch}.");
             }
             catch (Exception netEx)
             {
