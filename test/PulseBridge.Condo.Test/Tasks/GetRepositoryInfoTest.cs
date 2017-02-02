@@ -102,8 +102,15 @@ namespace PulseBridge.Condo.Tasks
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = repository.Initialize().Commit("initial"))
+            using (var repo = repository.Initialize())
             {
+                // set the username and email
+                repo.Username = "condo";
+                repo.Email = "condo@pulsebridge";
+
+                // commit
+                repo.Commit("initial");
+
                 // arrange
                 var root = repo.RepositoryPath;
                 var engine = MSBuildMocks.CreateEngine();
@@ -136,8 +143,15 @@ namespace PulseBridge.Condo.Tasks
         [Purpose(PurposeType.Integration)]
         public void Execute_WhenBranchRefSet_UsesAbbreviatedBranch()
         {
-            using (var repo = repository.Initialize().Commit("initial"))
+            using (var repo = repository.Initialize())
             {
+                // set the username and email
+                repo.Username = "condo";
+                repo.Email = "condo@pulsebridge";
+
+                // commit
+                repo.Commit("initial");
+
                 // arrange
                 var root = repo.RepositoryPath;
                 var engine = MSBuildMocks.CreateEngine();
@@ -254,8 +268,15 @@ namespace PulseBridge.Condo.Tasks
         [Purpose(PurposeType.Unit)]
         public void TryCommandLine_WhenRepositoryRootValid_Succeeds()
         {
-            using (var repo = repository.Initialize().Commit("initial"))
+            using (var repo = repository.Initialize())
             {
+                // set the username and email
+                repo.Username = "condo";
+                repo.Email = "condo@pulsebridge";
+
+                // commit
+                repo.Commit("initial");
+
                 // arrange
                 var root = repo.RepositoryPath;
                 var engine = MSBuildMocks.CreateEngine();

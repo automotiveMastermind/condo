@@ -84,10 +84,22 @@
   </Target>
 
   <Target Name="CreateRelease" Condition=" $(CI) AND $(HasGit) AND !$(IsPullRequest) ">
+    <PropertyGroup>
+      <AuthorName Condition=" '$(AuthorName)' == '' ">$(GIT_AUTHOR_NAME)</AuthorName>
+      <AuthorName Condition=" '$(AuthorName)' == '' ">$(Company)</AuthorName>
+      <AuthorName Condition=" '$(AuthorName)' == '' ">$(Authors)</AuthorName>
+      <AuthorName Condition=" '$(AuthorName)' == '' ">condo</AuthorName>
+
+      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">$(GIT_AUTHOR_EMAIL)</AuthorEmail>
+      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">condo@pulsebridge</AuthorEmail>
+    </PropertyGroup>
+
     <CreateRelease
       RepositoryRoot="$(RepositoryRoot)"
       Version="$(VersionTag)$(InformationalVersion)"
-      ReleaseMessage="$(ReleaseMessage)" />
+      ReleaseMessage="$(ReleaseMessage)"
+      AuthorName="$(AuthorName)"
+      AuthorEmail="$(AuthorEmail)" />
   </Target>
 
   <PropertyGroup>

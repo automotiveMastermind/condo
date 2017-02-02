@@ -146,8 +146,15 @@ namespace PulseBridge.Condo.Tasks
         {
             using (var bare = repository.Bare())
             {
-                using (var repo = repository.Clone(bare.RepositoryPath).Commit("initial"))
+                using (var repo = repository.Clone(bare.RepositoryPath))
                 {
+                    // set the username and email
+                    repo.Username = "condo";
+                    repo.Email = "condo@pulsebridge";
+
+                    // commit
+                    repo.Commit("initial");
+
                     // arrange
                     var root = repo.RepositoryPath;
                     var tag = "tag-1-2-3";

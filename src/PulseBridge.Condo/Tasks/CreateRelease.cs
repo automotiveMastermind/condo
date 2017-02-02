@@ -35,6 +35,16 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the remote that should be used to push the tag.
         /// </summary>
         public string Remote { get; set; } = "origin";
+
+        /// <summary>
+        /// Gets or sets the author name used for git commits.
+        /// </summary>
+        public string AuthorName { get; set; } = "condo";
+
+        /// <summary>
+        /// Gets or sets the author email used for git commits.
+        /// </summary>
+        public string AuthorEmail { get; set; } = "condo@pulsebridge";
         #endregion
 
         #region Methods
@@ -73,6 +83,10 @@ namespace PulseBridge.Condo.Tasks
             {
                 // load the repository
                 var repository = factory.Load(root);
+
+                // set the username and email
+                repository.Username = this.AuthorName;
+                repository.Email = this.AuthorEmail;
 
                 // create a release message
                 var message = this.ReleaseMessage + this.Version;

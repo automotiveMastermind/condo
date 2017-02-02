@@ -19,8 +19,15 @@ namespace PulseBridge.Condo.IO
         [Theory]
         public void GitLog_WhenSimple_Succeeds(CommitMessage expected)
         {
-            using (var repo = this.repository.Initialize().Commit(expected.Raw))
+            using (var repo = this.repository.Initialize())
             {
+                // set the username and email
+                repo.Username = "condo";
+                repo.Email = "condo@pulsebridge";
+
+                // commit
+                repo.Commit(expected.Raw);
+
                 // arrange
                 foreach (var tag in expected.Tags)
                 {
