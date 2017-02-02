@@ -96,6 +96,7 @@
 
     <CreateRelease
       RepositoryRoot="$(RepositoryRoot)"
+      Branch="$(Branch)"
       Version="$(VersionTag)$(InformationalVersion)"
       ReleaseMessage="$(ReleaseMessage)"
       AuthorName="$(AuthorName)"
