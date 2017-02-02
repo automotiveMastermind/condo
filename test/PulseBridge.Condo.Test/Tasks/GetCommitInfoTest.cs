@@ -106,6 +106,10 @@ namespace PulseBridge.Condo.Tasks
         {
             using (var repo = repository.Initialize())
             {
+                // set the username and email
+                repo.Username = "condo";
+                repo.Email = "condo@pulsebridge";
+
                 // arrange
                 var root = repo.RepositoryPath;
                 var expected = new
