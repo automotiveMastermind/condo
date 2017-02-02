@@ -32,6 +32,12 @@ namespace PulseBridge.Condo.Tasks
         public string ReleaseMessage { get; set; } = "chore(release): ";
 
         /// <summary>
+        /// Gets or sets the branch associated with the release.
+        /// </summary>
+        [Required]
+        public string Branch { get; set; }
+
+        /// <summary>
         /// Gets or sets the remote that should be used to push the tag.
         /// </summary>
         public string Remote { get; set; } = "origin";
@@ -90,6 +96,9 @@ namespace PulseBridge.Condo.Tasks
 
                 // create a release message
                 var message = this.ReleaseMessage + this.Version;
+
+                // checkout the expected branch (in case we are in a detached state)
+                repository.Checkout(this.Branch);
 
                 // push changes to the remote repository
                 repository.Add().Commit(message).Push(this.Remote, tags: true);
