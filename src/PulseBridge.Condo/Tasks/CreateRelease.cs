@@ -40,9 +40,10 @@ namespace PulseBridge.Condo.Tasks
         public string Branch { get; set; }
 
         /// <summary>
-        /// Gets or sets the remote that should be used to push the tag.
+        /// Gets or sets the URI of the repository to which to push the release.
         /// </summary>
-        public string Remote { get; set; } = "origin";
+        [Required]
+        public string RepositoryUri { get; set; }
 
         /// <summary>
         /// Gets or sets the author name used for git commits.
@@ -75,10 +76,10 @@ namespace PulseBridge.Condo.Tasks
             }
 
             // determine if the remote is set
-            if (string.IsNullOrEmpty(this.Remote))
+            if (string.IsNullOrEmpty(this.RepositoryUri))
             {
                 // log the error
-                this.Log.LogError("The remote must be specified.");
+                this.Log.LogError("The remote URI must be specified.");
 
                 // move on immediately
                 return false;
@@ -96,17 +97,27 @@ namespace PulseBridge.Condo.Tasks
                 repository.Username = this.AuthorName;
                 repository.Email = this.AuthorEmail;
 
+                // get the remote URI
+                var uri = repository.OriginUri;
+
+                // determine if the remote URI is set
+                if (!string.IsNullOrEmpty(uri))
+                {
+                    // log a message
+                    Log.LogMessage(MessageImportance.High, $"Remote URI: {uri}");
+                }
+
+                // checkout the expected branch (in case we are in a detached state)
+                repository.AddRemote("release", this.RepositoryUri).Checkout(this.Branch);
+
                 // create a release message
                 var message = this.ReleaseMessage + this.Version;
 
-                // checkout the expected branch (in case we are in a detached state)
-                repository.Checkout(this.Branch);
-
                 // push changes to the remote repository
-                repository.Add().Commit(message).Push(this.Remote, tags: true);
+                repository.Add().Commit(message).Push("release", tags: true);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}:{this.Branch}.");
+                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RepositoryUri}:{this.Branch}.");
             }
             catch (Exception netEx)
             {

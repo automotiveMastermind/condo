@@ -608,6 +608,22 @@ namespace PulseBridge.Condo.IO
 
             return string.Empty;
         }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized AddRemote(string name, string uri)
+        {
+            // create the cmd
+            var cmd = $"remote add {name} {uri}";
+
+            // execute the cmd
+            var output = this.Execute(cmd);
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // return self
+            return this;
+        }
         #endregion
     }
 }
