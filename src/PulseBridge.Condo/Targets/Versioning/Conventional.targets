@@ -98,6 +98,7 @@
       RepositoryRoot="$(RepositoryRoot)"
       Branch="$(Branch)"
       Version="$(VersionTag)$(InformationalVersion)"
+      RepositoryUri="$(RepositoryUri)"
       ReleaseMessage="$(ReleaseMessage)"
       AuthorName="$(AuthorName)"
       AuthorEmail="$(AuthorEmail)" />
