@@ -347,6 +347,9 @@ namespace PulseBridge.Condo.IO
                 throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
             }
 
+            this.logger.LogMessage("---> OUTPUT COMMIT <---");
+            this.logger.LogMessage(output.Output);
+
             return this;
         }
 
