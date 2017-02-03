@@ -228,14 +228,14 @@ namespace PulseBridge.Condo.IO
         {
             var cmd = "push";
 
-            if (!string.IsNullOrEmpty(remote))
-            {
-                cmd += $" {remote}";
-            }
-
             if (tags)
             {
                 cmd += " --tags";
+            }
+
+            if (!string.IsNullOrEmpty(remote))
+            {
+                cmd += $"--set-upstream {remote} {this.CurrentBranch}";
             }
 
             var output = this.Execute(cmd);
