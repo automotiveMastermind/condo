@@ -96,6 +96,10 @@ namespace PulseBridge.Condo.Tasks
                 repository.Username = this.AuthorName;
                 repository.Email = this.AuthorEmail;
 
+                // set the username and email
+                repository.Username = this.AuthorName;
+                repository.Email = this.AuthorEmail;
+
                 // create a release message
                 var message = this.ReleaseMessage + this.Version;
 
