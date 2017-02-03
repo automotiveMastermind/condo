@@ -68,6 +68,7 @@
       NoteKeywords="$(NoteKeywords)" />
 
     <SaveChangeLog
+      Name="keith-harris.txt"
       RepositoryRoot="$(RepositoryRoot)"
       RepositoryUri="$(RepositoryUri)"
       GroupByHeader="$(GroupByHeader)"
