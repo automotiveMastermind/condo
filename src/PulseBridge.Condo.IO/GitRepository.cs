@@ -235,7 +235,7 @@ namespace PulseBridge.Condo.IO
 
             if (!string.IsNullOrEmpty(remote))
             {
-                cmd += $"--set-upstream {remote} {this.CurrentBranch}";
+                cmd += $"--set-upstream {remote}";
             }
 
             var output = this.Execute(cmd);
