@@ -168,6 +168,10 @@ namespace PulseBridge.Condo.Tasks
                 // write the changelog
                 writer.Load(this.Template).Apply(log).Save();
 
+                // write out the content
+                var a = File.ReadAllText(path);
+                this.Log.LogMessage(MessageImportance.High, a);
+
                 // write a message
                 this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog to {path}.");
             }
