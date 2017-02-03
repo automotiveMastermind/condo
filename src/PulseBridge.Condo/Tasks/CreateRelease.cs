@@ -4,7 +4,9 @@ namespace PulseBridge.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+
     using PulseBridge.Condo.IO;
+    using PulseBridge.Condo.Diagnostics;
 
     /// <summary>
     /// Represents a Microsoft Build task that is used to create a release.
@@ -88,7 +90,7 @@ namespace PulseBridge.Condo.Tasks
             try
             {
                 // load the repository
-                var repository = factory.Load(root);
+                var repository = factory.Load(root, new CondoMSBuildLogger(this.Log));
 
                 // set the username and email
                 repository.Username = this.AuthorName;
