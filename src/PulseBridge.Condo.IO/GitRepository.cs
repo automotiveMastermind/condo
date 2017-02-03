@@ -240,12 +240,13 @@ namespace PulseBridge.Condo.IO
 
             var output = this.Execute(cmd);
 
-            this.logger.LogMessage(output.Output);
-
             if (!output.Success)
             {
                 this.logger.LogWarning(output.Error);
             }
+
+            this.logger.LogWarning(output.Error);
+            this.logger.LogMessage(output.Output);
 
             return this;
         }
@@ -271,8 +272,6 @@ namespace PulseBridge.Condo.IO
 
             // execute the cmd
             var output = this.Execute(cmd);
-
-            this.logger.LogMessage(output.Output);
 
             if (!output.Success)
             {
@@ -347,9 +346,6 @@ namespace PulseBridge.Condo.IO
                 throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
             }
 
-            this.logger.LogMessage("---> OUTPUT COMMIT <---");
-            this.logger.LogMessage(output.Output);
-
             return this;
         }
 
@@ -357,8 +353,6 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Tag(string name)
         {
             var exec = this.Execute($"tag {name}");
-
-            logger.LogMessage(exec.Output);
 
             if (!exec.Success)
             {
