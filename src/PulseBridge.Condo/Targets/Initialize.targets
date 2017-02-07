@@ -67,6 +67,7 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+
     <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(BuildHost)</PackageFeedUsername>
     <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(AccessToken)</PackageFeedPassword>
   </PropertyGroup>
@@ -220,6 +221,8 @@
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
     <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
     <Message Importance="High" Text="CI Build           : $(CI)" />
+    <Message Importance="High" Text="Package Username   : $(PackageFeedUsername)" Condition=" '$(PackageFeedUsername)' != '' " />
+    <Message Importance="High" Text="Package Password   : $(PackageFeedPassword)" Condition=" '$(PackageFeedPassword)' != '' " />
   </Target>
 
   <!-- print all of the paths used to create the build -->
