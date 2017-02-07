@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WaitForMarker.cs" company="PulseBridge, Inc.">
+// <copyright file="WaitForFile.cs" company="PulseBridge, Inc.">
 //   © PulseBridge, Inc. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------

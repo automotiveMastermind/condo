@@ -68,9 +68,8 @@
       NoteKeywords="$(NoteKeywords)" />
 
     <SaveChangeLog
-      Name="keith-harris.txt"
+      Name="changelog.md"
       RepositoryRoot="$(RepositoryRoot)"
-      RepositoryUri="$(RepositoryUri)"
       GroupByHeader="$(GroupByHeader)"
       SortByHeader="$(SortByHeader)"
       ChangeLogInitialize="$(ChangeLogInitialize)"

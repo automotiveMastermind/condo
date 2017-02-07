@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition=" '$(CONDO_DEBUG)' == 'true' ">
-    <BeforeInitialize>
+  <PropertyGroup>
+    <BeforeInitialize Condition=" '$(CONDO_DEBUG)' == 'true' ">
       Debugging;
       $(BeforeInitialize);
     </BeforeInitialize>
 
-    <AfterPublish>
+    <AfterPublish Condition=" '$(CONDO_WAIT)' == 'true' ">
       $(AfterPublish);
       Waiting;
     </AfterPublish>
@@ -18,10 +18,10 @@
     <WaitForDebugger />
   </Target>
 
-  <!-- allow waiting for a marker -->
+  <!-- allow waiting for a file -->
   <Target Name="Waiting">
-    <Message Importance="High" Text="Waiting for marker to be created..." />
-    <WaitForMarker />
+    <Message Importance="High" Text="Waiting for marker file to be created..." />
+    <WaitForFile />
   </Target>
 
   <!-- initialize dynamic properties -->
