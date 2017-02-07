@@ -150,12 +150,16 @@ namespace PulseBridge.Condo.Tasks
 
             try
             {
+                // read the initialization of the changelog
                 var content = File.ReadAllText(this.ChangeLogInitialize);
 
+                // initialize a writer
                 var writer = new ChangeLogWriter(options).Initialize(path, content);
 
+                // iterate over each partial that is defined
                 foreach (var partial in this.Partials)
                 {
+                    // load the partial
                     writer.LoadPartial(partial.ItemSpec);
                 }
 
@@ -171,15 +175,12 @@ namespace PulseBridge.Condo.Tasks
                 // add the changelog path to the repository
                 repository.Add(path);
 
-                // write out the content
-                var a = File.ReadAllText(path);
-                this.Log.LogMessage(MessageImportance.High, a);
-
                 // write a message
                 this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog to {path}.");
             }
             catch (Exception netEx)
             {
+                // log an exception
                 Log.LogErrorFromException(netEx);
 
                 return false;

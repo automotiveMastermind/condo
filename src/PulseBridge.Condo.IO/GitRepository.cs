@@ -326,12 +326,18 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Checkout(string name)
         {
-            var output = this.Execute($"checkout {name}");
+            // checkout the branch
+            var output = this.Execute($"checkout -b {name}");
 
+            // determine if the operation was successful
             if (!output.Success)
             {
                 throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
             }
+
+            // write the message and warning
+            this.logger.LogMessage(output.Output);
+            this.logger.LogWarning(output.Error);
 
             return this;
         }
