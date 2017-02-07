@@ -31,7 +31,7 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the release message.
         /// </summary>
         [Required]
-        public string ReleaseMessage { get; set; } = "chore(release): ";
+        public string ReleaseMessage { get; set; } = "chore(release):";
 
         /// <summary>
         /// Gets or sets the branch associated with the release.
@@ -42,7 +42,6 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the URI of the repository to which to push the release.
         /// </summary>
-        [Required]
         public string RepositoryUri { get; set; }
 
         /// <summary>
@@ -97,27 +96,21 @@ namespace PulseBridge.Condo.Tasks
                 repository.Username = this.AuthorName;
                 repository.Email = this.AuthorEmail;
 
-                // get the remote URI
-                var uri = repository.OriginUri;
-
-                // determine if the remote URI is set
-                if (!string.IsNullOrEmpty(uri))
+                // determine if the repository uri is not empty
+                if (!string.IsNullOrEmpty(this.RepositoryUri))
                 {
-                    // log a message
-                    Log.LogMessage(MessageImportance.High, $"Remote URI: {uri}");
+                    // set the remote url
+                    repository.SetRemoteUrl("origin", this.RepositoryUri);
                 }
 
-                // checkout the expected branch (in case we are in a detached state)
-                repository.AddRemote("release", this.RepositoryUri).Checkout(this.Branch);
-
                 // create a release message
-                var message = this.ReleaseMessage + this.Version;
+                var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
 
                 // push changes to the remote repository
-                repository.Add().Commit(message).Push("release", tags: true);
+                repository.Add().Commit(message).Push(tags: true);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RepositoryUri}:{this.Branch}.");
+                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RepositoryUri} @ {this.Branch}.");
             }
             catch (Exception netEx)
             {

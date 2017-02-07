@@ -154,6 +154,21 @@ namespace PulseBridge.Condo.IO
         IGitRepositoryInitialized Push(string remote, bool tags);
 
         /// <summary>
+        /// Sets the URL of the remote with the specified <paramref name="name"/> to the specified
+        /// <paramref name="uri"/>.
+        /// </summary>
+        /// <param name="name">
+        /// The name of the remote to set.
+        /// </param>
+        /// <param name="uri">
+        /// The URI of the remote.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized SetRemoteUrl(string name, string uri);
+
+        /// <summary>
         /// Adds a remote with the specified <paramref name="name"/> and <paramref name="uri"/> to the repository.
         /// </summary>
         /// <param name="name">

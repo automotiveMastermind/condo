@@ -112,10 +112,10 @@
     </BeforeVersion>
 
     <AfterPublish>
-      $(AfterPublish);
       TagVersion;
       SaveChangeLog;
       CreateRelease;
+      $(AfterPublish);
     </AfterPublish>
   </PropertyGroup>
 </Project>

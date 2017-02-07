@@ -163,10 +163,13 @@ namespace PulseBridge.Condo.Tasks
                 var factory = new GitRepositoryFactory();
 
                 // save changes to the repository
-                var repository = factory.Load(this.RepositoryRoot).Checkout(this.Branch).Add(path);
+                var repository = factory.Load(this.RepositoryRoot).Checkout(this.Branch);
 
                 // write the changelog
                 writer.Load(this.Template).Apply(log).Save();
+
+                // add the changelog path to the repository
+                repository.Add(path);
 
                 // write out the content
                 var a = File.ReadAllText(path);

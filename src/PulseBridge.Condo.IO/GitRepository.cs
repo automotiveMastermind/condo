@@ -554,6 +554,61 @@ namespace PulseBridge.Condo.IO
             // execute the cmd
             var output = this.Execute(cmd);
 
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // return self
+                return this;
+            }
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized SetRemoteUrl(string name, string uri)
+        {
+            // create the cmd
+            var cmd = $"remote set-url {name} {uri}";
+
+            // execute the cmd
+            var output = this.Execute(cmd);
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // move on immediately
+                return this;
+            }
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // set the push url
+            cmd = $"remote set-url --push {name} {uri}";
+
+            // execute the cmd
+            output = this.Execute(cmd);
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // move on immediately
+                return this;
+            }
+
             // log the output
             this.logger.LogMessage(output.Output);
 
