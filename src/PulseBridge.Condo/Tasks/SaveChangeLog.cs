@@ -76,11 +76,6 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the name of the changelog.
         /// </summary>
         public string Name { get; set; } = "changelog.md";
-
-        /// <summary>
-        /// Gets or sets the branch in which to save the change log.
-        /// </summary>
-        public string Branch { get; set; }
         #endregion
 
         #region Methods
@@ -167,7 +162,7 @@ namespace PulseBridge.Condo.Tasks
                 var factory = new GitRepositoryFactory();
 
                 // save changes to the repository
-                var repository = factory.Load(this.RepositoryRoot).Checkout(this.Branch);
+                var repository = factory.Load(this.RepositoryRoot);
 
                 // write the changelog
                 writer.Load(this.Template).Apply(log).Save();

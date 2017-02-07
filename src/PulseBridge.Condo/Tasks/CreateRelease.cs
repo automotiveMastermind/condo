@@ -34,15 +34,19 @@ namespace PulseBridge.Condo.Tasks
         public string ReleaseMessage { get; set; } = "chore(release):";
 
         /// <summary>
-        /// Gets or sets the branch associated with the release.
+        /// Gets or sets the name of the remote.
         /// </summary>
-        [Required]
-        public string Branch { get; set; }
+        public string Remote { get; set; } = "origin";
 
         /// <summary>
-        /// Gets or sets the URI of the repository to which to push the release.
+        /// Gets or sets the URI of the remote to which to push the release.
         /// </summary>
-        public string RepositoryUri { get; set; }
+        public string RemoteUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the branch associated with the release.
+        /// </summary>
+        public string Branch { get; set; }
 
         /// <summary>
         /// Gets or sets the author name used for git commits.
@@ -75,7 +79,7 @@ namespace PulseBridge.Condo.Tasks
             }
 
             // determine if the remote is set
-            if (string.IsNullOrEmpty(this.RepositoryUri))
+            if (string.IsNullOrEmpty(this.RemoteUri))
             {
                 // log the error
                 this.Log.LogError("The remote URI must be specified.");
@@ -97,10 +101,17 @@ namespace PulseBridge.Condo.Tasks
                 repository.Email = this.AuthorEmail;
 
                 // determine if the repository uri is not empty
-                if (!string.IsNullOrEmpty(this.RepositoryUri))
+                if (!string.IsNullOrEmpty(this.RemoteUri))
                 {
                     // set the remote url
-                    repository.SetRemoteUrl("origin", this.RepositoryUri);
+                    repository.SetRemoteUrl(this.Remote ?? "origin", this.RemoteUri);
+                }
+
+                // determine if the branch is specified
+                if (!string.IsNullOrEmpty(this.Branch))
+                {
+                    // check out the branch
+                    repository.Checkout(this.Branch);
                 }
 
                 // create a release message
@@ -110,7 +121,7 @@ namespace PulseBridge.Condo.Tasks
                 repository.Add().Commit(message).Push(tags: true);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RepositoryUri} @ {this.Branch}.");
+                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RemoteUri} @ {this.Branch}.");
             }
             catch (Exception netEx)
             {
