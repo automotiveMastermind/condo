@@ -532,6 +532,41 @@ namespace PulseBridge.Condo.IO
             return log;
         }
 
+        /// <inheritdoc />
+        public string RevParse(string reference)
+        {
+            var output = this.Execute($"rev-parse {reference}");
+
+            if (output.Success)
+            {
+                return output.Output.FirstOrDefault();
+            }
+
+            return string.Empty;
+        }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized AddRemote(string name, string uri)
+        {
+            // create the cmd
+            var cmd = $"remote add {name} {uri}";
+
+            // execute the cmd
+            var output = this.Execute(cmd);
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
         {
             var set = new List<string>();
@@ -549,12 +584,6 @@ namespace PulseBridge.Condo.IO
 
                 set.Add(line);
             }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            this.Dispose(true);
         }
 
         /// <summary>
@@ -591,35 +620,6 @@ namespace PulseBridge.Condo.IO
                 RedirectStandardError = true,
                 RedirectStandardInput = true
             };
-        }
-
-        /// <inheritdoc />
-        public string RevParse(string reference)
-        {
-            var output = this.Execute($"rev-parse {reference}");
-
-            if (output.Success)
-            {
-                return output.Output.FirstOrDefault();
-            }
-
-            return string.Empty;
-        }
-
-        /// <inheritdoc />
-        public IGitRepositoryInitialized AddRemote(string name, string uri)
-        {
-            // create the cmd
-            var cmd = $"remote add {name} {uri}";
-
-            // execute the cmd
-            var output = this.Execute(cmd);
-
-            // log the output
-            this.logger.LogMessage(output.Output);
-
-            // return self
-            return this;
         }
         #endregion
     }
