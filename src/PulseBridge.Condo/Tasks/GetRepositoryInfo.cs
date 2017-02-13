@@ -56,10 +56,10 @@ namespace PulseBridge.Condo.Tasks
         /// Gets a value indicating whether or not the repository supports git.
         /// </summary>
         [Output]
-        public bool HasGit { get; set; }
+        public bool HasGit { get; private set; }
 
         /// <summary>
-        ///
+        /// Gets or sets the version tag used to identify a version string.
         /// </summary>
         public string VersionTag { get; set; }
 

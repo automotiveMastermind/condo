@@ -17,7 +17,6 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
-        [Output]
         [Required]
         public string RepositoryRoot { get; set; }
 
@@ -34,21 +33,6 @@ namespace PulseBridge.Condo.Tasks
         public string ReleaseMessage { get; set; } = "chore(release):";
 
         /// <summary>
-        /// Gets or sets the name of the remote.
-        /// </summary>
-        public string Remote { get; set; } = "origin";
-
-        /// <summary>
-        /// Gets or sets the URI of the remote to which to push the release.
-        /// </summary>
-        public string RemoteUri { get; set; }
-
-        /// <summary>
-        /// Gets or sets the branch associated with the release.
-        /// </summary>
-        public string Branch { get; set; }
-
-        /// <summary>
         /// Gets or sets the author name used for git commits.
         /// </summary>
         public string AuthorName { get; set; } = "condo";
@@ -57,6 +41,11 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the author email used for git commits.
         /// </summary>
         public string AuthorEmail { get; set; } = "condo@pulsebridge";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to push the release to the remote.
+        /// </summary>
+        public bool Push { get; set; } = false;
         #endregion
 
         #region Methods
@@ -78,16 +67,6 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            // determine if the remote is set
-            if (string.IsNullOrEmpty(this.RemoteUri))
-            {
-                // log the error
-                this.Log.LogError("The remote URI must be specified.");
-
-                // move on immediately
-                return false;
-            }
-
             // create a new git repository factory
             var factory = new GitRepositoryFactory();
 
@@ -100,28 +79,24 @@ namespace PulseBridge.Condo.Tasks
                 repository.Username = this.AuthorName;
                 repository.Email = this.AuthorEmail;
 
-                // determine if the repository uri is not empty
-                if (!string.IsNullOrEmpty(this.RemoteUri))
-                {
-                    // set the remote url
-                    repository.SetRemoteUrl(this.Remote ?? "origin", this.RemoteUri);
-                }
-
-                // determine if the branch is specified
-                if (!string.IsNullOrEmpty(this.Branch))
-                {
-                    // check out the branch
-                    repository.Checkout(this.Branch);
-                }
-
                 // create a release message
                 var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
 
-                // push changes to the remote repository
-                repository.Add().Commit(message).Push(tags: true);
+                // create the commit and tag the release
+                repository.Add().Commit(message).Tag(this.Version);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.RemoteUri} @ {this.Branch}.");
+                Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
+
+                // determine if we should push
+                if (this.Push)
+                {
+                    // push the changes to the remote
+                    repository.Push(tags: true);
+
+                    // log a message
+                    Log.LogMessage(MessageImportance.High, $"Pushed the release for version: {this.Version}...");
+                }
             }
             catch (Exception netEx)
             {

@@ -2,29 +2,50 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="DotNetTest">
     <PropertyGroup>
+      <ProjectJsonTestOptions Condition=" '$(ProjectJsonTestOptions)' == '' ">$(DOTNET_PROJECTJSON_TEST_OPTIONS)</ProjectJsonTestOptions>
+
+      <ProjectJsonTestFilterOptions Condition=" $(IsWIndows) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-windows</ProjectJsonTestFilterOptions>
+      <ProjectJsonTestFilterOptions Condition=" $(IsMacOS) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-macos</ProjectJsonTestFilterOptions>
+      <ProjectJsonTestFilterOptions Condition=" $(IsLinux) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-linux</ProjectJsonTestFilterOptions>
+
+      <ProjectJsonTestFilterOptions Condition=" $(CI) ">$(ProjectJsonTestFilterOptions) -notrait agent=not-ci</ProjectJsonTestFilterOptions>
+      <ProjectJsonTestFilterOptions Condition=" !$(CI) ">$(ProjectJsonTestFilterOptions) -notrait agent=not-local</ProjectJsonTestFilterOptions>
+
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
 
-      <DotNetTestPlatformOptions Condition=" $(IsWIndows) ">$(DotNetTestPlatformOptions) -notrait platform=not-windows</DotNetTestPlatformOptions>
-      <DotNetTestPlatformOptions Condition=" $(IsMacOS) ">$(DotNetTestPlatformOptions) -notrait platform=not-macos</DotNetTestPlatformOptions>
-      <DotNetTestPlatformOptions Condition=" $(IsLinux) ">$(DotNetTestPlatformOptions) -notrait platform=not-linux</DotNetTestPlatformOptions>
+      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Platform!=not-windows</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Platform!=not-macos</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Platform=not-linux</DotNetTestFilterOptions>
 
-      <DotNetTestPlatformOptions Condition=" $(CI) ">$(DotNetTestPlatformOptions) -notrait agent=not-ci</DotNetTestPlatformOptions>
-      <DotNetTestPlatformOptions Condition=" !$(CI) ">$(DotNetTestPlatformOptions) -notrait agent=not-local</DotNetTestPlatformOptions>
+      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Agent=not-ci</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Agent=not-local</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quote;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quote;</DotNetTestFilterOptions>
     </PropertyGroup>
 
-    <ItemGroup>
-      <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) Or '%(NetCoreFramework)' != '' ">
-        <DotNetTestOptions Condition="  $(IsWindows) ">$(DotNetTestOptions) $(DotNetTestPlatformOptions.Trim())</DotNetTestOptions>
-        <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(DotNetTestOptions) $(DotNetTestPlatformOptions.Trim())</DotNetTestOptions>
+    <ItemGroup Condition=" $(IsWindows) Or '%(NetCoreFramework)' != '' ">
+      <_ProjectJsonTestProjects Include="@(TestProjects)" Condition=" '%(TestProjects.DotNetType)' == 'ProjectJson' ">
+        <DotNetTestOptions Condition="  $(IsWindows) ">$(ProjectJsonTestOptions) $(ProjectJsonTestFilterOptions.Trim())</DotNetTestOptions>
+        <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(ProjectJsonTestOptions) $(ProjectJsonTestFilterOptions.Trim())</DotNetTestOptions>
         <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
-      </_DotNetTestProjects>
+      </_ProjectJsonTestProjects>
+
+
+      <_MSBuildTestProjects Include="@(TestProjects)" Condition=" '%(TestProjects.DotNetType)' == 'MSBuild' ">
+        <DotNetTestOptions Condition="  $(IsWindows) ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>
+        <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>
+        <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
+      </_ProjectJsonTestProjects>
     </ItemGroup>
 
     <Exec
-        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_DotNetTestProjects.DotNetTestOptions) -xml &quot;%(_DotNetTestProjects.TestResultsPath)&quot;"
-        WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
-        Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
+        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_ProjectJsonTestProjects.DotNetTestOptions) -xml &quot;%(_ProjectJsonTestProjects.TestResultsPath)&quot;"
+        WorkingDirectory="%(_ProjectJsonTestProjects.ProjectDir)" />
+
+    <Exec
+        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_MSBuildTestProjects.DotNetTestOptions) --logger:trx;LogFileName=&quot;%(_MSBuildTestProjects.TestResultsPath)&quot;"
+        WorkingDirectory="%(_MSBuildTestProjects.ProjectDir)" />
   </Target>
+
 
   <PropertyGroup>
     <TestDependsOn>

@@ -4,16 +4,16 @@
     <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
   </PropertyGroup>
 
-  <Target Name="DotNetBuild" Condition=" '@(Projects->Count())' != '0' ">
+  <Target Name="DotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
     <Exec
-        Command="dotnet build --version-suffix &quot;$(PreReleaseTag)&quot; --configuration &quot;$(Configuration)&quot; $(DotNetBuildOptions) @(Projects->'&quot;%(FullPath)&quot;', ' ')"
+        Command="dotnet build --version-suffix &quot;$(PreReleaseTag)&quot; --configuration &quot;$(Configuration)&quot; $(DotNetBuildOptions) @(DotNetProjects->'&quot;%(FullPath)&quot;', ' ')"
         WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 
-  <Target Name="CopyDotNetBuild" AfterTargets="DotNetBuild" Condition=" '@(Projects->Count())' != '0' ">
+  <Target Name="CopyDotNetBuild" AfterTargets="DotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
     <ItemGroup>
-      <_CopyDotNetBuild Include="%(Projects.ProjectDir)bin$(Slash)**">
-        <ProjectName>%(Projects.ProjectName)</ProjectName>
+      <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(Slash)**">
+        <ProjectName>%(DotNetProjects.ProjectName)</ProjectName>
       </_CopyDotNetBuild>
     </ItemGroup>
 

@@ -5,6 +5,7 @@ namespace PulseBridge.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+    using NuGet.Versioning;
 
     using PulseBridge.Condo.ChangeLog;
     using PulseBridge.Condo.IO;
@@ -57,9 +58,14 @@ namespace PulseBridge.Condo.Tasks
         public string ChangeLogInitialize { get; set; }
 
         /// <summary>
+        /// Gets or sets the version for the changelog.
+        /// </summary>
+        [Required]
+        public string Version { get; set; }
+
+        /// <summary>
         /// Gets or sets the URI of the repository.
         /// </summary>
-        /// <returns></returns>
         public string RepositoryUri { get; set; }
 
         /// <summary>
@@ -127,24 +133,25 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            var options = new ChangeLogOptions
-            {
-                RepositoryUri = this.RepositoryUri,
-                GroupBy = this.GroupByHeader,
-                SortBy = this.SortByHeader.PropertySplit()
-            };
-
-            // clear the change log types
-            options.ChangeLogTypes.Clear();
-
-            // iterate over available types
-            for (var i = 0; i < types.Length; i++)
-            {
-                options.ChangeLogTypes.Add(types[i], names[i]);
-            }
-
             try
             {
+                var options = new ChangeLogOptions
+                {
+                    RepositoryUri = this.RepositoryUri,
+                    GroupBy = this.GroupByHeader,
+                    SortBy = this.SortByHeader.PropertySplit(),
+                    Version = SemanticVersion.Parse(this.Version)
+                };
+
+                // clear the change log types
+                options.ChangeLogTypes.Clear();
+
+                // iterate over available types
+                for (var i = 0; i < types.Length; i++)
+                {
+                    options.ChangeLogTypes.Add(types[i], names[i]);
+                }
+
                 // read the initialization of the changelog
                 var content = File.ReadAllText(this.ChangeLogInitialize);
 
@@ -167,17 +174,18 @@ namespace PulseBridge.Condo.Tasks
                 // write the changelog
                 writer.Load(this.Template).Apply(log).Save();
 
-                // add the changelog path to the repository
-                repository.Add(path);
+                // track changes for the changelog path
+                repository.Add(this.Name);
 
                 // write a message
-                this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog to {path}.");
+                this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog: {this.Name}...");
             }
             catch (Exception netEx)
             {
                 // log an exception
                 Log.LogErrorFromException(netEx);
 
+                // move on immediately
                 return false;
             }
 

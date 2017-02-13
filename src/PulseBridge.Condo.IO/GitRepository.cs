@@ -327,7 +327,7 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Checkout(string name)
         {
             // checkout the branch
-            var output = this.Execute($"checkout -b {name}");
+            var output = this.Execute($"checkout {name}");
 
             // determine if the operation was successful
             if (!output.Success)

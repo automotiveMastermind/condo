@@ -49,5 +49,8 @@ namespace PulseBridge.Condo.IO
 
         /// <inheritdoc />
         public string SortBy { get; set; } = "Scope";
+
+        /// <inheritdoc />
+        public string VersionTag { get; set; } = string.Empty;
     }
 }

@@ -2,6 +2,8 @@ namespace PulseBridge.Condo.ChangeLog
 {
     using System.Collections.Generic;
 
+    using NuGet.Versioning;
+
     /// <summary>
     /// Represents the configuration options for the change log writer.
     /// </summary>
@@ -22,6 +24,11 @@ namespace PulseBridge.Condo.ChangeLog
         /// Gets or sets the owner of the repository.
         /// </summary>
         public string Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version of the current release.
+        /// </summary>
+        public SemanticVersion Version { get; set; }
 
         /// <summary>
         /// Gets or sets the repository URI.

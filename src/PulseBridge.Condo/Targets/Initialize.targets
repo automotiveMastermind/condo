@@ -118,9 +118,13 @@
     <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
     <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
 
-    <!-- locate all dotnet projects -->
+    <!-- locate all dotnet project.json projects -->
     <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />
     <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)project.json" />
+
+    <!-- locate all dotnet msbuild projects -->
+    <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)*.*proj" />
+    <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
   </ItemGroup>
 
   <!-- get server time from NIST -->

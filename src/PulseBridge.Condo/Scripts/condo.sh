@@ -137,11 +137,11 @@ install_msbuild() {
 # continue testing for arguments
 while [[ $# > 0 ]]; do
     case $1 in
-        --verbosity)
+        -v|--verbosity)
             CONDO_VERBOSITY=$2
             shift
             ;;
-        --no-color)
+        -nc|--no-color)
             CLR_INFO=
             CLR_SUCCESS=
             CLR_FAILURE=
