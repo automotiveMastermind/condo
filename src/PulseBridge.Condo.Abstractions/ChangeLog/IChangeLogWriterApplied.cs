@@ -1,9 +1,3 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IChangeLogWriterApplied.cs" company="PulseBridge, Inc.">
-//   © PulseBridge, Inc. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace PulseBridge.Condo.ChangeLog
 {
     /// <summary>

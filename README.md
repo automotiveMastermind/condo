@@ -75,7 +75,7 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; PulseBridge, Inc. and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for details.
+&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for details.
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
