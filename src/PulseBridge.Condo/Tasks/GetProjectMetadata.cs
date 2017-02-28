@@ -38,10 +38,10 @@ namespace PulseBridge.Condo.Tasks
             foreach (var project in this.Projects)
             {
                 // set the metadata on the project
-                SetMetadata(project);
+                this.SetMetadata(project);
 
                 // log a message
-                Log.LogMessage
+                this.Log.LogMessage
                     (
                         MessageImportance.Low,
                         $"Updated project metadata for project: {project.GetMetadata("ProjectName")}"
@@ -58,7 +58,7 @@ namespace PulseBridge.Condo.Tasks
         /// <param name="project">
         /// The project item on which to set additional project metadata.
         /// </param>
-        private static void SetMetadata(ITaskItem project)
+        private void SetMetadata(ITaskItem project)
         {
             // get the extension
             var extension = project.GetMetadata("Extension");
@@ -92,22 +92,23 @@ namespace PulseBridge.Condo.Tasks
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
 
-            if (extension.Equals("json", StringComparison.OrdinalIgnoreCase))
+            if (extension.EndsWith("json", StringComparison.OrdinalIgnoreCase))
             {
                 // set project json metadata
-                SetProjectJsonMetadata(project, path);
+                this.SetProjectJsonMetadata(project, path);
 
+                // move on immediately
                 return;
             }
 
             if (extension.EndsWith("proj", StringComparison.OrdinalIgnoreCase))
             {
                 // set msbuild metadata
-                SetMSBuildMetadata(project, path);
+                this.SetMSBuildMetadata(project, path);
             }
         }
 
-        private static void SetProjectJsonMetadata(ITaskItem project, string path)
+        private void SetProjectJsonMetadata(ITaskItem project, string path)
         {
             // set the dotnet build type
             project.SetMetadata("DotNetType", "ProjectJson");
@@ -121,6 +122,9 @@ namespace PulseBridge.Condo.Tasks
             // determine if the frameworks node did not exist
             if (frameworks == null)
             {
+                // log a warning
+                this.Log.LogWarning("No frameworks were specified.");
+
                 // move on immediately
                 return;
             }
@@ -137,7 +141,7 @@ namespace PulseBridge.Condo.Tasks
             project.SetMetadata("NetCoreFramework", tfm);
         }
 
-        private static void SetMSBuildMetadata(ITaskItem project, string path)
+        private void SetMSBuildMetadata(ITaskItem project, string path)
         {
             // set the dotnet build type
             project.SetMetadata("DotNetType", "MSBuild");

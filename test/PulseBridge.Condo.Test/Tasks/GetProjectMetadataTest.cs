@@ -8,14 +8,22 @@ namespace PulseBridge.Condo.Tasks
     using Moq;
 
     using Xunit;
+    using Xunit.Abstractions;
 
     [Class(nameof(GetProjectMetadata))]
     public class GetProjectMetadataTest
     {
+        private readonly ITestOutputHelper output;
+
+        public GetProjectMetadataTest(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WithValidProject_Succeeds()
+        public void Execute_WithValidProjectJson_Succeeds()
         {
             // arrange
             var temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -30,6 +38,7 @@ namespace PulseBridge.Condo.Tasks
             var netcore10 = "netcoreapp1.0";
             var netcore11 = "netcoreapp1.1";
             var frameworks = $"{netcore11};{netcore10}";
+            var extension = Path.GetExtension(path);
 
             var expected = new Dictionary<string, string>
             {
@@ -40,7 +49,9 @@ namespace PulseBridge.Condo.Tasks
                 { "SharedSourcesDir", shared + Path.DirectorySeparatorChar },
                 { "CondoAssemblyInfo", info },
                 { "TargetFrameworks", frameworks },
-                { "NetCoreFramework", netcore11 }
+                { "NetCoreFramework", netcore11 },
+                { "Extension", extension },
+                { "DotNetType", "ProjectJson" }
             };
 
             var json = $"{{ \"frameworks\": {{ \"{netcore10}\": {{ }}, \"{netcore11}\": {{ }} }} }}";
@@ -49,6 +60,7 @@ namespace PulseBridge.Condo.Tasks
 
             var actual = new Dictionary<string, string>();
             actual.Add("FullPath", path);
+            actual.Add("Extension", extension);
 
             var engine = MSBuildMocks.CreateEngine();
 
@@ -56,7 +68,7 @@ namespace PulseBridge.Condo.Tasks
             item.Setup(mock => mock.SetMetadata(It.IsAny<string>(), It.IsAny<string>()))
                 .Callback<string, string>((key, value) => actual[key] = value);
             item.Setup(mock => mock.GetMetadata(It.IsAny<string>()))
-                .Returns<string>(key => actual[key]);
+                .Returns<string>(key => actual.ContainsKey(key) ? actual[key] : null);
 
             var instance = new GetProjectMetadata
             {
@@ -66,6 +78,11 @@ namespace PulseBridge.Condo.Tasks
 
             // act
             var result = instance.Execute();
+
+            foreach (var line in engine.Log)
+            {
+                this.output.WriteLine(line);
+            }
 
             // assert
             Assert.True(result);

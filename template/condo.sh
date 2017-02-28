@@ -10,6 +10,11 @@ CURRENT_PATH=$(pwd)
 # find the script path
 ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
+# setup well-known condo paths
+CONDO_ROOT="$HOME/.am/condo"
+SRC_ROOT="$CONDO_ROOT/.src"
+CONDO_SHELL="$SRC_ROOT/src/PulseBridge.Condo/Scripts/condo.sh"
+
 # change to the root path
 cd $ROOT_PATH
 
@@ -80,10 +85,6 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-BUILD_ROOT="$ROOT_PATH/.build"
-CONDO_ROOT="$BUILD_ROOT/condo"
-CONDO_SHELL="$CONDO_ROOT/PulseBridge.Condo/Scripts/condo.sh"
-
 if [ -z "$DOTNET_INSTALL_DIR" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
 fi
@@ -93,25 +94,25 @@ if [ -z "$CONDO_BRANCH" ]; then
 fi
 
 if [ -z "$CONDO_URI" ]; then
-    CONDO_URI="https://github.com/pulsebridge/condo/tarball/$CONDO_BRANCH"
+    CONDO_URI="https://github.com/automotivemastermind/condo/tarball/$CONDO_BRANCH"
 fi
 
-if [[ -d "$BUILD_ROOT" && "$CONDO_RESET" = "1" ]]; then
+if [[ -d "$CONDO_ROOT" && "$CONDO_RESET" = "1" ]]; then
     info "Resetting condo build system..."
-    rm -rf "$BUILD_ROOT"
+    rm -rf "$CONDO_ROOT"
 fi
 
 if [ "$CONDO_LOCAL" = "1" ]; then
-    CONDO_SOURCE="$ROOT_PATH/src"
+    CONDO_SOURCE="$ROOT_PATH"
 fi
 
-if [ ! -d "$CONDO_ROOT" ]; then
+if [ ! -d "$SRC_ROOT" ]; then
     info "Creating path for condo at $CONDO_ROOT..."
-    mkdir -p $CONDO_ROOT
+    mkdir -p $SRC_ROOT
 
     if [ ! -z $CONDO_SOURCE ]; then
         info "Using condo build system from $CONDO_SOURCE..."
-        cp -r $CONDO_SOURCE/* $CONDO_ROOT/
+        cp -r $CONDO_SOURCE/* $SRC_ROOT/
     else
         info "Using condo build system from $CONDO_URI..."
 
@@ -133,11 +134,11 @@ if [ ! -d "$CONDO_ROOT" ]; then
         done
 
         CONDO_EXTRACT="$CONDO_TEMP/extract"
-        CONDO_SOURCE="$CONDO_EXTRACT/src"
+        CONDO_SOURCE="$CONDO_EXTRACT"
 
         mkdir -p $CONDO_EXTRACT
         tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
-        cp -r $CONDO_SOURCE/* $CONDO_ROOT/
+        cp -r $CONDO_SOURCE/* $SRC_ROOT/
         rm -Rf $CONDO_TEMP
     fi
 fi

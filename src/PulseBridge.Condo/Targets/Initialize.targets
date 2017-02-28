@@ -106,10 +106,11 @@
 
   <ItemGroup>
     <!-- locate all dotnet project paths -->
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(SrcRoot)') " />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(TestRoot)') " />
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(SrcRoot)') " />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(TestRoot)') " />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" />
+    <DotNetRestorePaths Include="$(RepositoryRoot)$(slash)*.sln" />
 
     <!-- locate all npm, bower, gulp, and grunt projects -->
     <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />

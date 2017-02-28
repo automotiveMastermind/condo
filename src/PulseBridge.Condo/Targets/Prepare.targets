@@ -15,8 +15,8 @@
       <Output TaskParameter="Filtered" ItemName="_DotNetToRestore" />
     </RemoveDuplicates>
 
-    <Exec Command="dotnet restore @(_DotNetToRestore, ' ') $(DotNetRestoreOptions)"
-          WorkingDirectory="$(RepositoryRoot)" />
+    <Exec Command="dotnet restore $(DotNetRestoreOptions)"
+          WorkingDirectory="%(_DotNetToRestore.RootDir)%(_DotNetToRestore.Directory)" />
   </Target>
 
   <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' AND '@(NpmInstallPaths->Count())' != '0' ">

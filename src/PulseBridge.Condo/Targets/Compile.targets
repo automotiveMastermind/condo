@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
+    <DotNetBuildOptions Condition=" '$(PreReleaseTag)' != '' ">$(DotNetBuildOptions) --version-suffix &quot;$(PreReleaseTag)&quot;</DotNetBuildOptions>
+    <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
+    <DotNetBuildOptions Condition=" '$(DOTNET_BUILD_OPTIONS)' != '' ">$(DotNetBuildOptions) $(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
+
+    <DotNetBuildProperties>/p:GenerateAssemblyInfo=false</DotNetBuildProperties>
   </PropertyGroup>
 
-  <Target Name="DotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
+  <Target Name="DotNetBuild" Condition=" '@(DotNetProjects->)' != '0' ">
     <Exec
-        Command="dotnet build --version-suffix &quot;$(PreReleaseTag)&quot; --configuration &quot;$(Configuration)&quot; $(DotNetBuildOptions) @(DotNetProjects->'&quot;%(FullPath)&quot;', ' ')"
+        Command="dotnet build @(DotNetProjects->'&quot;%(FullPath)&quot;', ' ') $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
         WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 
-  <Target Name="CopyDotNetBuild" AfterTargets="DotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
+  <Target Name="CopyDotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
     <ItemGroup>
       <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(Slash)**">
         <ProjectName>%(DotNetProjects.ProjectName)</ProjectName>
@@ -24,8 +28,16 @@
 
   <PropertyGroup>
     <CompileDependsOn>
+      $(BeforeCompile);
       DotNetBuild;
+      $(CompileDependsOn);
+      $(AfterCompile);
     </CompileDependsOn>
+
+    <AfterCompile>
+      CopyDotNetBuild;
+      $(AfterCompile);
+    </AfterCompile>
   </PropertyGroup>
 
   <Target Name="Compilation" DependsOnTargets="$(CompileDependsOn)" BeforeTargets="Compile" />

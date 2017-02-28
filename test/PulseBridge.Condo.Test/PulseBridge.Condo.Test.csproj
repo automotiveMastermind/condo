@@ -8,6 +8,7 @@
     <PackageId>PulseBridge.Condo.Test</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

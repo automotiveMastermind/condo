@@ -18,13 +18,7 @@ x86/
 [Oo]bj/
 [Aa]rtifacts/
 
-# package manager artifacts
-[Pp]ackages/
-[Nn]ode_[Mm]odules/
-[Bb]ower_[Cc]omponents/
-
-# visual studio 2015 cache/options
-[Pp]roject.lock.json
+# condo files
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
 
 # jetbrains
@@ -37,17 +31,11 @@ _TeamCity*
 # include solution based resharper settings
 !*.[Dd]ot[Ss]ettings
 
-# mstest results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-[Bb]uild.[Ll]og
-
 # nuget packages
 *.nupkg
 *.nuget.props
 
 # include self (tfignore)
-!.tfignore
 !.gitignore
 !.gitattributes
 
@@ -59,10 +47,6 @@ _TeamCity*
 
 # log files
 *.log
-
-# docs
-vnd/
-docs/src/
 
 #vscode
 !.vscode/settings.json
