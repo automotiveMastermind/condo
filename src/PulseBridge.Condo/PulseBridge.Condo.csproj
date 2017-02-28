@@ -6,7 +6,6 @@
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>PulseBridge.Condo</AssemblyName>
-    <OutputType>Exe</OutputType>
     <PackageId>PulseBridge.Condo</PackageId>
     <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
   </PropertyGroup>

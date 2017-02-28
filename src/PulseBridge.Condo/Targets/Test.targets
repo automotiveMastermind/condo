@@ -44,12 +44,12 @@
         <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(DotNetTestOptions.Trim())</DotNetTestOptions>
         <!-- removing traits for now as it causes issues with the current implementation of dotnet test -->
         <!--<DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>-->
-        <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
+        <TestResultsFileName>%(TestProjects.ProjectName).dotnet.xml</TestResultsFileName>
       </_MSBuildTestProjects>
     </ItemGroup>
 
     <Exec
-        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_MSBuildTestProjects.DotNetTestOptions) --logger:trx;LogFileName=&quot;%(_MSBuildTestProjects.TestResultsPath)&quot;"
+        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_MSBuildTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_MSBuildTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
         WorkingDirectory="%(_MSBuildTestProjects.ProjectDir)" Condition=" '@(_MSBuildTestProjects->Count())' != '0' " />
   </Target>
 

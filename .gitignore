@@ -17,6 +17,7 @@ x86/
 [Bb]in/
 [Oo]bj/
 [Aa]rtifacts/
+[Tt]est[Rr]esults/
 
 # condo files
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
