@@ -85,15 +85,15 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-if [ -z "$DOTNET_INSTALL_DIR" ]; then
+if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
 fi
 
-if [ -z "$CONDO_BRANCH" ]; then
+if [ -z "${CONDO_BRANCH:-}" ]; then
     CONDO_BRANCH="develop"
 fi
 
-if [ -z "$CONDO_URI" ]; then
+if [ -z "${CONDO_URI:-}" ]; then
     CONDO_URI="https://github.com/automotivemastermind/condo/tarball/$CONDO_BRANCH"
 fi
 

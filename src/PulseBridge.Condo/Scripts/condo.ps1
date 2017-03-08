@@ -126,15 +126,15 @@ function Install-DotNet() {
     $dotnetVersion = $env:DOTNET_VERSION
 
     if (!$dotnetUrl) {
-        $dotnetUrl = "https://github.com/dotnet/cli/raw/rel/1.0.0-preview2.1/scripts/obtain/dotnet-install.ps1"
+        $dotnetUrl = "https://github.com/dotnet/cli/raw/rel/1.0.1/scripts/obtain/dotnet-install.ps1"
     }
 
     if (!$dotnetChannel) {
-        $dotnetChannel = "preview"
+        $dotnetChannel = "rel-1.0.1"
     }
 
     if (!$dotnetVersion) {
-        $dotnetVersion = "1.0.0-preview2-1-003177"
+        $dotnetVersion = "1.0.1"
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {

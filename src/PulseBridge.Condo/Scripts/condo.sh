@@ -175,7 +175,7 @@ done
 # determine if the dotnet version is not already set
 if [ -z "$DOTNET_VERSION" ]; then
     # set the dotnet version
-    DOTNET_VERSION="1.0.0-rc4-004771"
+    DOTNET_VERSION="1.0.1"
 fi
 
 # set the dotnet install path
@@ -185,14 +185,14 @@ fi
 
 # determine if the dotnet install url is not already set
 if [ -z "$DOTNET_INSTALL_URL" ]; then
-    # set the dotnet install url to the 1.0.0 release
-    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.0-rc3/scripts/obtain/dotnet-install.sh"
+    # set the dotnet install url to the 1.0.1 release
+    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.1/scripts/obtain/dotnet-install.sh"
 fi
 
 # determine if the dotnet install channel is not already set
-if [ -z "$DOTNET_CHANNEL" ]; then
+if [ -z "${DOTNET_CHANNEL:-}" ]; then
     # set the dotnet channel
-    DOTNET_CHANNEL="preview"
+    DOTNET_CHANNEL="rel-1.0.1"
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT

@@ -24,6 +24,15 @@
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ArtifactPaths Include="$(BuildArtifactsRoot)" />
+    <ArtifactPaths Include="$(TestArtifactsRoot)" />
+    <ArtifactPaths Include="$(PublishArtifactsRoot)" />
+    <ArtifactPaths Include="$(PackageArtifactsRoot)" />
+    <ArtifactPaths Include="$(FeedArtifactsRoot)" />
+    <ArtifactPaths Include="$(DocsArtifactsRoot)" />
+  </ItemGroup>
+
   <!-- provide reasonable defaults for required attributes -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,6 +59,8 @@
 
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
+
+    <UseServerTime Condition=" '$(UseServerTime)' == '' ">False</UseServerTime>
   </PropertyGroup>
 
   <!-- capture details from a continuous integration build hosted by TFS -->
@@ -129,7 +140,7 @@
   </ItemGroup>
 
   <!-- get server time from NIST -->
-  <Target Name="GetServerTime">
+  <Target Name="GetServerTime" Condition="$(UseServerTime)">
     <GetServerTime>
       <Output TaskParameter="DateTimeUtc" PropertyName="BuildDateUtc" />
     </GetServerTime>

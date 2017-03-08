@@ -34,15 +34,6 @@
   </Target>
 
   <Target Name="CreateOutputPaths">
-    <ItemGroup>
-      <ArtifactPaths Include="$(ArtifactsRoot)" />
-      <ArtifactPaths Include="$(BuildArtifactsRoot)" />
-      <ArtifactPaths Include="$(TestArtifactsRoot)" />
-      <ArtifactPaths Include="$(PublishArtifactsRoot)" />
-      <ArtifactPaths Include="$(PackageArtifactsRoot)" />
-      <ArtifactPaths Include="$(FeedArtifactsRoot)" />
-      <ArtifactPaths Include="$(DocsArtifactsRoot)" />
-    </ItemGroup>
     <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 

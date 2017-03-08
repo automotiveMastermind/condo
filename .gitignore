@@ -36,7 +36,7 @@ _TeamCity*
 *.nupkg
 *.nuget.props
 
-# include self (tfignore)
+# include self
 !.gitignore
 !.gitattributes
 
