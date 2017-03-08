@@ -6,13 +6,11 @@ default working_path = '${ Directory.GetCurrentDirectory() }'
 default verify_assembly = ''
 default verify_hash = ''
 
-log log_header='verify-hash'
-log log_line='-'
-
-log log_name='assembly' log_value='${ verify_assembly }'
-log log_name='hash' log_value='${ verify_hash }'
-
 @{
+    Build.Log.Header("verify-hash");
+    Build.Log.Argument("assembly", verify_assembly);
+    Build.Log.Argument("hash", verify_hash);
+
     if (string.IsNullOrEmpty(verify_assembly))
     {
         Log.Warn("verify-hash: no assembly was specified.");
@@ -46,7 +44,7 @@ log log_name='hash' log_value='${ verify_hash }'
                 RedirectStandardOutput = true,
                 Arguments = "verify /pa /v \"" + verify_assembly + "\""
             };
-    
+
         var process = Process.Start(start);
         var output = process.StandardOutput.ReadToEnd();
 
@@ -75,6 +73,6 @@ log log_name='hash' log_value='${ verify_hash }'
 
         Log.Info("verify-hash: authenticode signature successfully verified.");
     }
-}
 
-log log_line='-'
+    Build.Log.Header();
+}

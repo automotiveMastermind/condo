@@ -27,10 +27,9 @@ default brew_install_formula    = ''
 default brew_install_options    = ''
 default brew_install_path       = '${ working_path }'
 
-log log_header='brew-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("brew-install");
+
     if (string.IsNullOrEmpty(brew_install_formula))
     {
         throw new ArgumentException("brew-install: required formula was not specified.", "brew_install_formula");
@@ -38,11 +37,11 @@ log log_line='-'
 
     brew_install_formula = brew_install_formula.Trim();
     brew_install_options = string.IsNullOrEmpty(brew_install_options) ? string.Empty : brew_install_options.Trim();
-}
 
-log log_name='formula'  log_value='${ brew_install_formula }'
-log log_name='options'  log_value='${ brew_install_options }'
-log log_name='path'     log_value='${ brew_install_path }'
-log log_line='-'
+    Build.Log.Argument("formula", brew_install_formula);
+    Build.Log.Argument("options", brew_install_options);
+    Build.Log.Argument("path", brew_install_path);
+    Build.Log.Header();
+}
 
 brew brew_args='${ brew_install_formula }' brew_options='install ${ brew_install_options }' brew_path='${ brew_install_path }'

@@ -8,6 +8,9 @@ use namespace = 'Sake.Engine.Logging'
 
 default Quiet = '${ false }'
 
+macro name='ExecuteRuby' args='string'
+    ruby ruby_args='${ args }'
+
 @{
     // set the log instance on the helper class
     Build.Log = new QuietLog(this.Log, Quiet);
@@ -23,11 +26,12 @@ functions @{
 
         bool Secure { get; set; }
 
+        void Header(string value = null, string line = "-");
         void Info(object value, bool secure);
         void Warn(object value, bool secure);
         void Error(object value, bool secure);
         void Verbose(object value, bool secure);
-        void Argument(string name, object value, bool secure);
+        void Argument(string name, object value, bool secure = false);
     }
 
     public class QuietLog : IQuietLog
@@ -40,6 +44,16 @@ functions @{
         {
             this.Quiet = quiet;
             this.log = log;
+        }
+
+        public void Header(string name, string line)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.Info(name.ToUpper());
+            }
+
+            this.Verbose(string.Empty.PadLeft(105, line[0]));
         }
 
         public void Info(object value)
@@ -94,8 +108,13 @@ functions @{
             this.Verbose(this.Secure && secure ? "<secured>" : value);
         }
 
-        public void Argument(string name, object value, bool secure)
+        public void Argument(string name, object value, bool secure = false)
         {
+            if (string.IsNullOrEmpty(name) || value == null || string.IsNullOrEmpty(value.ToString()))
+            {
+                return;
+            }
+
             if (this.Secure && secure)
             {
                 value = "<secured>";
@@ -105,7 +124,7 @@ functions @{
         }
 
         public bool Quiet { get; set; }
-        public bool Secure {get; set; }
+        public bool Secure { get; set; }
     }
 
     public class InstallPath
@@ -160,6 +179,54 @@ functions @{
 
                 // determine if the platform is OS X
                 return id == 4;
+            }
+        }
+
+        public static bool Windows
+        {
+            get
+            {
+                return !Build.Unix;
+            }
+        }
+
+        public static bool CI
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("CI"));
+            }
+        }
+
+        public static bool TFS
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("SYSTEM_DEFINITIONID")) && !string.IsNullOrEmpty(Build.Get("TF_BUILD"));
+            }
+        }
+
+        public static bool TFSAgent
+        {
+            get
+            {
+                return TFS && !string.IsNullOrEmpty(Build.Get("AGENT_ID"));
+            }
+        }
+
+        public static bool Travis
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("TRAVIS"));
+            }
+        }
+
+        public static bool AppVeyor
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Build.Get("APPVEYOR"));
             }
         }
 
@@ -588,7 +655,7 @@ functions @{
                 var error = string.Empty;
 
                 process.OutputDataReceived += (sender, eventArgs) => {
-                    standard += eventArgs.Data;
+                    standard += eventArgs.Data + Environment.NewLine;
 
                     if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
                     {
@@ -597,7 +664,7 @@ functions @{
                 };
 
                 process.ErrorDataReceived += (sender, eventArgs) => {
-                    error += eventArgs.Data;
+                    error += eventArgs.Data + Environment.NewLine;
 
                     if (!quiet && !string.IsNullOrEmpty(eventArgs.Data))
                     {
@@ -624,14 +691,14 @@ functions @{
                     if (process.ExitCode == 0)
                     {
                         // set the result to the standard out
-                        result = standard;
+                        result = standard.TrimEnd(Environment.NewLine.ToCharArray());
 
                         // move on immediately
                         return 0;
                     }
 
                     // set the result to the standard error
-                    result = error;
+                    result = error.TrimEnd(Environment.NewLine.ToCharArray());
 
                     // set the exit code
                     exitCode = process.ExitCode;
@@ -753,15 +820,22 @@ functions @{
                 return;
             }
 
-            var dir = new DirectoryInfo(path);
-            dir.Attributes &= ~FileAttributes.ReadOnly;
-
-            foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+            try
             {
-                info.Attributes &= ~FileAttributes.ReadOnly;
-            }
+                var dir = new DirectoryInfo(path);
+                dir.Attributes &= ~FileAttributes.ReadOnly;
 
-            dir.Delete(true);
+                foreach (var info in dir.GetFileSystemInfos("*", SearchOption.AllDirectories))
+                {
+                    info.Attributes &= ~FileAttributes.ReadOnly;
+                }
+
+                dir.Delete(true);
+            }
+            catch (Exception netEx)
+            {
+                Build.Log.Warn("remove directory: " + netEx.Message);
+            }
         }
 
         public static bool TryGetRepositoryRoot(ref string root)

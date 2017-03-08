@@ -44,12 +44,11 @@ default dnx_options     = '${ Build.Get("DNX_OPTIONS") }'
 default dnx_wait        = '${ true }'
 default dnx_quiet       = '${ Build.Log.Quiet }'
 
-log log_header='dnx'
-log log_line='-'
-
-var dnx_exec_cmd        = 'dnx'
-
 @{
+    Build.Log.Header("dnx");
+
+    var dnx_exec_cmd    = "dnx";
+
     if (string.IsNullOrEmpty(dnx_args))
     {
         throw new ArgumentException("dnx: arguments must be specified.", "dnx_args");
@@ -61,16 +60,14 @@ var dnx_exec_cmd        = 'dnx'
     {
         dnx_options = dnx_options.Trim();
     }
-}
 
-log log_name='arguments'    log_value='${ dnx_args }'
-log log_name='options'      log_value='${ dnx_options }'
-log log_name='path'         log_value='${ dnx_path }'
-log log_name='wait'         log_value='${ dnx_wait }'
-log log_name='quiet'        log_value='${ dnx_quiet }'
-log log_line='-'
+    Build.Log.Argument("arguments", dnx_args);
+    Build.Log.Argument("options", dnx_options);
+    Build.Log.Argument("path", dnx_path);
+    Build.Log.Argument("wait", dnx_wait);
+    Build.Log.Argument("quiet", dnx_quiet);
+    Build.Log.Header();
 
-@{
     if (!string.IsNullOrEmpty(dnx_runtime))
     {
         if (Build.Unix)

@@ -45,26 +45,23 @@ default mocha_path              = '${ working_path }'
 
 mocha-download once='mocha-download'
 
-log log_header='mocha'
-log log_line='-'
-
-var mocha_cmd                 = '${ Build.GetPath("mocha") }'
-
 @{
+    Build.Log.Header("mocha");
+
+    var mocha_cmd               = Build.GetPath("mocha");
+
     // trim the arguments
     mocha_args = mocha_args.Trim();
     mocha_options = mocha_options.Trim();
-}
 
-log log_name='cli'          log_value='${ mocha_cmd.Path }'
-log log_name='arguments'    log_value='${ mocha_args }'
-log log_name='options'      log_value='${ mocha_options }'
-log log_name='reporter'     log_value='${ mocha_reporter }'
-log log_name='reporter opt' log_value='${ mocha_reporter_options }'
-log log_name='path'         log_value='${ mocha_path }'
-log log_line='-'
+    Build.Log.Argument("cli", mocha_cmd.Path);
+    Build.Log.Argument("arguments", mocha_args);
+    Build.Log.Argument("options", mocha_options);
+    Build.Log.Argument("reporter", mocha_reporter);
+    Build.Log.Argument("reporter opt", mocha_reporter_options);
+    Build.Log.Argument("path", mocha_path);
+    Build.Log.Header();
 
-@{
     if (!string.IsNullOrEmpty(mocha_reporter))
     {
         mocha_options = mocha_options + " --reporter " + mocha_reporter;

@@ -67,8 +67,7 @@ fi
 
 # set the URL to nuget
 nugeturi=https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-appdata=~/.config
-nugetpath=$appdata/NuGet
+nugetpath=$HOME/.nuget
 nugetcmd=$nugetpath/nuget.exe
 
 # determine if the nuget directory exists
@@ -84,7 +83,7 @@ fi
 
 # define the path for nuget
 nugetpath=$root/.nuget
-nuget=$root/.nuget/nuget.exe
+nuget=$nugetpath/nuget.exe
 
 # determine if the .nuget directory exists
 if ! test -f "$nugetpath"; then
@@ -109,22 +108,40 @@ sake=$sakepkg/tools/Sake.exe
 condopkg=$root/src
 includes=$condopkg/build
 
-make=make.shade
+make=condo.shade
 
 # determine if sake exists
-if ! test "$sake"; then
-  # remove the sake directory
-  rm -rRf "$sake"
+if ! test -f "$sake"; then
+    # install sake using nuget (so we have additional options not supported by DNU)
+    mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 fi
-
-# install sake using nuget (so we have additional options not supported by DNU)
-mono "$nuget" install Sake -pre -o packages -ExcludeVersion -NonInteractive
 
 # write a newline for separation
 echo
 
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
+
+# determine if this is a call to update self
+if test "$1" == "update-self"; then
+    # remove the sake package
+    rm -rRf "%sakepkg" 1>&- 2>&-
+
+    # remove local nuget
+    rm -rf "$nuget"
+
+    # remove cache nuget
+    rm -rf "$nugetcmd"
+
+    # change to the original path
+    cd $path
+
+    # exit
+    exit 0
+fi
+
+# write a newline for separation
+echo
 
 # change to the original path
 cd $path

@@ -25,18 +25,17 @@ default base_path               = '${ Directory.GetCurrentDirectory() }'
 default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
 default nuget_version           = '3.2.0'
 
-log log_header='nuget-download'
-log log_line='-'
-
-var nuget_exe       = 'nuget.exe'
-var nuget_dist      = 'https://dist.nuget.org/win-x86-commandline/latest/'
-var nuget_url       = '${ nuget_dist }/${ nuget_exe }'
-var nuget_download  = '${ Path.Combine(nuget_download_path, nuget_exe) }'
-
-log log_name='path'                 log_value='${ nuget_download }'
-log log_name='version (minimum)'    log_value='${ nuget_version }'
-
 @{
+    Build.Log.Header("nuget-download");
+
+    var nuget_exe       = "nuget.exe";
+    var nuget_dist      = "https://dist.nuget.org/win-x86-commandline/latest";
+    var nuget_url       = nuget_dist + "/" + nuget_exe;
+    var nuget_download  = Path.Combine(nuget_download_path, nuget_exe);
+
+    Build.Log.Argument("path", nuget_download);
+    Build.Log.Argument("version (minimum)", nuget_version);
+
     Version minimum;
 
     if (!Version.TryParse(nuget_version, out minimum))
@@ -50,7 +49,7 @@ log log_name='version (minimum)'    log_value='${ nuget_version }'
 
         Version nuget_download_current;
 
-        if (nuget_download_version == null || nuget_download_version.ProductVersion == null || !Version.TryParse(nuget_download_version.ProductVersion, out nuget_download_current))
+        if (nuget_download_version == null || nuget_download_version.FileVersion == null || !Version.TryParse(nuget_download_version.FileVersion, out nuget_download_current))
         {
             nuget_download_current = new Version(0, 0);
         }
@@ -65,15 +64,13 @@ log log_name='version (minimum)'    log_value='${ nuget_version }'
     {
         Build.MakeDirectory(Path.GetDirectoryName(nuget_download));
 
-        Log.Verbose("nuget-download: downloading the latest version of nuget.exe");
-
         var client = new WebClient();
 
         client.DownloadFile(nuget_url, nuget_download);
     }
 
     nuget_version = FileVersionInfo.GetVersionInfo(nuget_download).ProductVersion.ToString();
-}
 
-log log_name='version (actual)'  log_value='${ nuget_version }'
-log log_line='-'
+    Build.Log.Argument("version (actual)", nuget_version);
+    Build.Log.Header();
+}

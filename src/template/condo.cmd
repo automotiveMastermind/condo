@@ -1,9 +1,32 @@
-@echo off
-cd %~dp0
+@ECHO OFF
+PUSHD %~dp0
 
 ECHO.
 
 SETLOCAL
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+    IF NOT DEFINED VisualStudioVersion (
+        IF DEFINED VS140COMNTOOLS (
+            CALL "%VS140COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2015 TOOLS
+            GOTO :EnvironmentReady
+        )
+
+        IF DEFINED VS120COMNTOOLS (
+            CALL "%VS120COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2013 TOOLS
+            GOTO :EnvironmentReady
+        )
+
+        IF DEFINED VS110COMNTOOLS (
+            CALL "%VS110COMNTOOLS%\VsDevCmd.bat"
+            ECHO USING VISUAL STUDIO 2012 TOOLS
+            GOTO :EnvironmentReady
+        )
+    )
+
+    :EnvironmentReady
     SET DNXPATH=%USERPROFILE%\.dnx
     SET DNVMPATH=%DNXPATH%\dnvm
     SET DNVMCMD=%DNVMPATH%\dnvm.cmd
@@ -13,7 +36,7 @@ SETLOCAL
     SET DNVMPS1URI="https://raw.githubusercontent.com/aspnet/Home/dev/dnvm.ps1"
 
     IF NOT EXIST "%DNVMPATH%" (
-        mkdir "%DNVMPATH%"
+        MKDIR "%DNVMPATH%"
     )
 
     IF NOT EXIST "%DNVMPS1%" (
@@ -26,17 +49,17 @@ SETLOCAL
         CALL "%DNVMCMD%" update-self
     )
 
-    SET NUGETPATH=%AGENT_BUILDDIRECTORY%\NuGet
+    SET NUGETPATH=%AGENT_BUILDDIRECTORY%\.nuget
 
     IF [%AGENT_BUILDDIRECTORY%] == [] (
-        SET NUGETPATH=%LOCALAPPDATA%\NuGet
+        SET NUGETPATH=%USERPROFILE%\.nuget
     )
 
     SET NUGETCMD=%NUGETPATH%\nuget.exe
     SET NUGETURI="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
     IF NOT EXIST "%NUGETPATH%" (
-        mkdir "%NUGETPATH%"
+        MKDIR "%NUGETPATH%"
     )
 
     IF NOT EXIST "%NUGETCMD%" (
@@ -47,11 +70,11 @@ SETLOCAL
     SET NUGET=%NUGETROOT%\nuget.exe
 
     IF NOT EXIST "%NUGETROOT%" (
-        mkdir "%NUGETROOT%"
+        MKDIR "%NUGETROOT%"
     )
 
     IF NOT EXIST "%NUGET%" (
-        copy "%NUGETCMD%" "%NUGET%"
+        COPY "%NUGETCMD%" "%NUGET%"
     )
 
     CALL "%DNVMCMD%" install latest -r coreclr -a x86 -nonative -alias default
@@ -63,7 +86,7 @@ SETLOCAL
     SET CONDOPKG=packages\PulseBridge.Condo
     SET CONDO=%CONDOPKG%\PulseBridge.Condo.nuspec
     SET INCLUDES=%CONDOPKG%\build
-    SET MAKE=make.shade
+    SET MAKE=condo.shade
 
     IF [%FEEDSRC%] == [] (
         SET FEEDSRC=https://api.nuget.org/v3/index.json
@@ -80,4 +103,14 @@ SETLOCAL
     ECHO.
 
     "%SAKE%" -I "%INCLUDES%" -f "%MAKE%" %*
+
+    IF ["%1"] == ["update-self"] (
+        RMDIR /S /Q "%SAKEPKG%" 1>NUL 2>&1
+        RMDIR /S /Q "%CONDOPKG%" 1>NUL 2>&1
+        DEL /Q "%NUGETCMD%"
+        DEL /Q "%NUGET%"
+    )
 ENDLOCAL
+
+POPD
+ECHO.

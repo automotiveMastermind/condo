@@ -1,6 +1,6 @@
 # condo
 
-> A build system for [DNX][dnx-url] projects.
+> A build system for \<any\> project.
 
 ## Vitals
 
@@ -8,7 +8,6 @@ Info          | Badges
 --------------|--------------
 Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nuget-v-image]][nuget-url]
 License       | [![License][license-image]][license]
-Downloads     | [![NuGet Downloads][nuget-d-image]][nuget-url]
 Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 
@@ -16,14 +15,14 @@ Chat          | [![Join Chat][gitter-image]][gitter-url]
 
 ### What is Condo?
 
-Condo is a cross-platform command line interface (CLI) build system for projects using the .NET Core Framework. It is capable of automatically detecting and executing all of the steps
-necessary to make a DNX project function correctly, including, but not limited to:
+Condo is a cross-platform command line interface (CLI) build system for projects using NodeJS, CoreCLR, .NET Framework, or... well, anything.
+It is capable of automatically detecting and executing all of the steps necessary to make <any> project function correctly, including, but not limited to:
 
 * Automatic semantic versioning
 * Restoring package manager dependencies (NuGet, NPM, Bower)
 * Executing default task runner commands (Grunt, Gulp)
-* Compiling projects and test projects
-* Executing unit tests
+* Compiling projects and test projects (package.json and msbuild)
+* Executing unit tests (xunit, mocha, jasmine, karma, protractor)
 * Packing NuGet packages
 * Pushing (Publishing) NuGet packages
 
@@ -76,9 +75,9 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; PulseBridge, Inc. and contributors. Distributed under the APACHE 2.0 license. See [LICENSE][] and [CREDITS][] for details.
+&copy; PulseBridge, Inc. and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for details.
 
-[license-image]: https://img.shields.io/badge/license-APACHE%202.0-blue.svg
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
 [credits]: CREDITS
 
@@ -97,8 +96,7 @@ For more information, please refer to the [official documentation][docs-url].
 
 [yo-url]: //www.npmjs.com/package/generator-condo
 
-[dnx-url]: http://docs.asp.net/en/latest/dnx/index.html
-[docs-url]: http://open.pulsebridge.com/condo
+[docs-url]: //pulsebridge.github.io/condo
 
 [gitter-url]: //gitter.im/pulsebridge/condo
 [gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg

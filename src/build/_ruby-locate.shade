@@ -1,0 +1,108 @@
+@{/*
+
+ruby-locate
+    Locates the ruby command line utility available on the current path.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+@{
+    var ruby_locate_path        = Build.Get("RUBY_INSTALL_PATH");
+    var ruby_locate_where_cmd   = Build.Unix ? "which" : "where";
+
+    var ruby_locate_name        = Build.Unix ? "ruby" : "ruby.exe";
+    var gem_locate_name         = Build.Unix ? "gem" : "gem.bat";
+    var bundle_locate_name      = Build.Unix ? "bundle" : "bundle.bat";
+
+    var ruby_locate_cmd         = ruby_locate_name;
+    var gem_locate_cmd          = gem_locate_name;
+    var bundle_locate_cmd       = bundle_locate_name;
+
+    var ruby_locate_version     = string.Empty;
+    var gem_locate_version      = string.Empty;
+    var bundle_locate_version   = '';
+
+    var ruby_locate_found       = false;
+    var gem_locate_found        = false;
+    var bundle_locate_found     = false;
+
+    Build.Log.Header("ruby-locate");
+
+    if (!string.IsNullOrEmpty(ruby_locate_path))
+    {
+        ruby_locate_cmd = Path.Combine(ruby_locate_path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), ruby_locate_name);
+
+        ruby_locate_found = Build.TryExecute(ruby_locate_cmd, out ruby_locate_version, "--version");
+
+        if (ruby_locate_found)
+        {
+            Build.Set("PATH", Path.GetDirectoryName(ruby_locate_cmd) + ";" + Build.Get("PATH"));
+        }
+    }
+
+    if (!ruby_locate_found)
+    {
+        ruby_locate_found = Build.TryExecute(ruby_locate_where_cmd, out ruby_locate_cmd, ruby_locate_name);
+
+        if (ruby_locate_found)
+        {
+            ruby_locate_cmd = ruby_locate_cmd.Split(new char[0])[0];
+
+            Build.TryExecute(ruby_locate_cmd, out ruby_locate_version, "--version");
+        }
+        else
+        {
+            ruby_locate_cmd = string.Empty;
+        }
+    }
+
+    if (!gem_locate_found)
+    {
+        gem_locate_found = Build.TryExecute(ruby_locate_where_cmd, out gem_locate_cmd, gem_locate_name);
+
+        if (gem_locate_found)
+        {
+            gem_locate_cmd = gem_locate_cmd.Split(new char[0])[0];
+
+            Build.TryExecute(gem_locate_cmd, out gem_locate_version, "--version");
+        }
+        else
+        {
+            gem_locate_cmd = string.Empty;
+        }
+    }
+
+    if (!bundle_locate_found)
+    {
+        bundle_locate_found = Build.TryExecute(ruby_locate_where_cmd, out bundle_locate_cmd, bundle_locate_name);
+
+        if (bundle_locate_found)
+        {
+            bundle_locate_cmd = bundle_locate_cmd.Split(new char[0])[0];
+
+            Build.TryExecute(bundle_locate_cmd, out bundle_locate_version, "--version");
+        }
+        else
+        {
+            bundle_locate_cmd = string.Empty;
+        }
+    }
+
+    Build.SetPath("ruby", ruby_locate_cmd, ruby_locate_found);
+    Build.SetPath("gem", gem_locate_cmd, gem_locate_found);
+    Build.SetPath("bundle", bundle_locate_cmd, bundle_locate_found);
+
+    Build.Log.Argument("ruby path", ruby_locate_cmd);
+    Build.Log.Argument("ruby version", ruby_locate_version);
+    Build.Log.Header();
+    Build.Log.Argument("gem path", gem_locate_cmd);
+    Build.Log.Argument("gem version", gem_locate_version);
+    Build.Log.Header();
+    Build.Log.Argument("bundle path", bundle_locate_cmd);
+    Build.Log.Argument("bundle version", bundle_locate_version);
+    Build.Log.Header();
+}

@@ -20,7 +20,6 @@ x86/
 [Bb]ower_[Cc]omponents/
 
 # visual studio 2015 cache/options
-.vs/
 [Pp]roject.lock.json
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
 
@@ -93,3 +92,31 @@ nuget.exe
 
 # log files
 *.log
+
+# tsd
+[Tt]sd/
+_tsd
+tsd
+tsd.cmd
+
+# mocha
+_mocha
+mocha
+mocha.cmd
+
+# bower
+bower
+_bower
+bower.cmd
+
+# gem
+[Gg]emfile.lock
+
+# docs
+vnd/
+
+# hidden folders
+.*/
+
+# condo files
+Condo.AssemblyInfo.cs

@@ -28,6 +28,7 @@ gulp_quiet='$(Build.Log.Quiet)'
 
 use namespace = 'System'
 use namespace = 'System.IO'
+use namespace = 'System.Linq'
 
 use import = 'Condo.Build'
 
@@ -42,12 +43,11 @@ default gulp_quiet          = '${ Build.Log.Quiet }'
 
 gulp-download once='gulp-download'
 
-log log_header='gulp'
-log log_line='-'
-
-var gulp_cmd = '${ Build.GetPath("gulp") }'
-
 @{
+    Build.Log.Header("gulp");
+
+    var gulp_cmd = Build.GetPath("gulp");
+
     if (!string.IsNullOrEmpty(gulp_args))
     {
         gulp_args = gulp_args.Trim();
@@ -57,15 +57,14 @@ var gulp_cmd = '${ Build.GetPath("gulp") }'
     {
         gulp_options = gulp_options.Trim();
     }
-}
 
-log log_name='cli'          log_value='${ gulp_cmd.Path }'
-log log_name='arguments'    log_value='${ gulp_args }'
-log log_name='options'      log_value='${ gulp_options }'
-log log_name='path'         log_value='${ gulp_path }'
-log log_name='wait'         log_value='${ gulp_wait }'
-log log_name='quiet'        log_value='${ gulp_quiet }'
-log log_line='-'
+    Build.Log.Argument("arguments", gulp_args);
+    Build.Log.Argument("options", gulp_options);
+    Build.Log.Argument("path", gulp_path);
+    Build.Log.Argument("wait", gulp_wait);
+    Build.Log.Argument("quiet", gulp_quiet);
+    Build.Log.Header();
+}
 
 exec exec_cmd='${ gulp_cmd.Path }' exec_args='${ gulp_args } ${ gulp_options }' exec_path='${ gulp_path }' exec_wait='${ gulp_wait }' exec_quiet='${ gulp_quiet }' exec_redirect='${ false }' if='gulp_cmd.Global'
 node node_args='"${ gulp_cmd.Path }" ${ gulp_args } ${ gulp_options }' node_path='${ gulp_path }' node_wait='${ gulp_wait }' node_quiet='${ gulp_quiet }' if='!gulp_cmd.Global'

@@ -29,7 +29,7 @@ if ! type mono > /dev/null 2>&1; then
     uname=$(uname)
 
     # determine if the kernel is OS X
-    if [[ $uname == "Darwin" ]]; then
+    if test $uname == "Darwin"; then
         echo 'The recommended way to install Mono on OS X is to use Homebrew. Install Homebrew from: http://brew.sh then execute the following command to install mono.'
         echo
         echo 'brew install mono'
@@ -67,8 +67,7 @@ fi
 
 # set the URL to nuget
 nugeturi=https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-appdata=~/.config
-nugetpath=$appdata/NuGet
+nugetpath=$HOME/.nuget
 nugetcmd=$nugetpath/nuget.exe
 
 # determine if the nuget directory exists
@@ -111,10 +110,10 @@ condopkg=$root/packages/PulseBridge.Condo
 includes=$condopkg/build
 condo=$condopkg/PulseBridge.Condo.nupkg
 
-make=make.shade
+make=condo.shade
 
 # determine if the feed was set from an environment variable
-if [ -z "$feedsrc" ]; then
+if test -z "$feedsrc"; then
     # set the feed
     feedsrc=https://api.nuget.org/v3/index.json
 fi
@@ -135,6 +134,27 @@ echo
 
 # execute the build with sake
 mono "$sake" -I "$includes" -f "$make" "$@"
+
+# determine if this is a call to update self
+if test "$1" == "update-self"; then
+    # remove the sake package
+    rm -rRf "%sakepkg" 1>&- 2>&-
+
+    # remove local nuget
+    rm -rf "$nuget"
+
+    # remove cache nuget
+    rm -rf "$nugetcmd"
+
+    # change to the original path
+    cd $path
+
+    # exit
+    exit 0
+fi
+
+# write a newline for separation
+echo
 
 # change to the original path
 cd $path

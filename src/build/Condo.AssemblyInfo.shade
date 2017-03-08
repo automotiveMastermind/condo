@@ -430,6 +430,28 @@ functions @{
             }
         }
 
+        private static string teamProject = null;
+
+        public static string TeamProject
+        {
+            get
+            {
+                // return the value
+                return teamProject;
+            }
+
+            set
+            {
+                // set the value
+                teamProject = value;
+
+                // update the environment variables
+                Build.Set("SYSTEM_TEAMPROJECT", value);
+            }
+        }
+
+        public static string BuildName { get; set; }
+
         /// <summary>
         /// The URI of the repository from which the code is derived.
         /// </summary>

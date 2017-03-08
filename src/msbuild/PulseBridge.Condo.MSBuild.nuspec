@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PulseBridge.Condo.MSBuild</id>
+    <title>PulseBridge.Condo.MSBuild</title>
+    <version>0.0</version>
+    <authors>PulseBridge, Inc.</authors>
+    <owners>PulseBridge, Inc.</owners>
+    <description>Tooling support for cross-platform build automation. Apply this package to projects using MSBuild, such as a C# project (MSBuild).</description>
+    <language>en-US</language>
+    <projectUrl>http://open.pulsebridge.com/condo</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/pulsebridge/condo/develop/logo.png</iconUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <tags>build dotnet-cli msbuild dotnet xplat ci</tags>
+    <copyright>©. PulseBridge, Inc. and contributors. All Rights Reserved.</copyright>
+    <developmentDependency>true</developmentDependency>
+  </metadata>
+
+  <files>
+    <file src="build/**" />
+    <file src="tools/**" />
+  </files>
+</package>

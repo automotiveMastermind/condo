@@ -1,0 +1,66 @@
+
+@{/*
+
+nuget-push-symbols
+    Executes a nuget push manager command to push all available symbol packages.
+
+nuget_push_package=''
+    Required. The path to the nuget package that should be pushed to the feed.
+
+nuget_symbol_feed='' (Environment Variable: NUGET_SYMBOL_FEED)
+    The feed to which nuget should push symbol packages.
+
+    NOTE: This can be a list of feeds that are separated by a semi-colon (;).
+
+nuget_symbol_apikey='' (Environment Variable: NUGET_SYMBOL_APIKEY)
+    The API key to use when pushing symbol packages to the nuget feed.
+
+nuget_push_options='' (Environment Variable: NUGET_PUSH_OPTIONS)
+    Additional options to include when executing the nuget command line tool for the push operation.
+
+nuget_config_path='$(nuget_download_path)/nuget.config'
+    The path to the nuget configuration file to use when executing nuget commands.
+
+nuget_push_path='$(working_path)'
+    The path in which to execute the nuget command line tool.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute the nuget command line tool.
+
+working_path='$(base_path)'
+    The working path in which to execute the nuget command line tool.
+
+nuget_download_path='$(base_path)/.nuget'
+    The path in which to install nuget.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+default base_path               = '${ Directory.GetCurrentDirectory() }'
+default working_path            = '${ base_path }'
+
+default nuget_push_path         = '${ working_path }'
+default nuget_symbol_feed       = '${ Build.Get("NUGET_SYMBOL_FEED") }'
+default nuget_symbol_apikey     = '${ Build.Get("NUGET_SYMBOL_APIKEY") }'
+default nuget_push_package      = ''
+default nuget_push_options      = '${ Build.Get("NUGET_PUSH_OPTIONS") }'
+default nuget_push_retries      = '${ 3 }' type='int'
+default nuget_download_path     = '${ Path.Combine(base_path, ".nuget") }'
+
+default nuget_root_config_path  = '${ Path.Combine(base_path, "nuget.config" }'
+default nuget_config_path       = '${ Path.Combine(nuget_download_path, "nuget.config") }'
+
+@{
+    Build.Log.Header("nuget-push-symbols");
+    Build.Log.Argument("api key", nuget_symbol_apikey, true);
+    Build.Log.Argument("push feed", nuget_symbol_feed);
+    Build.Log.Argument("arguments", nuget_push_package);
+    Build.Log.Argument("options", nuget_push_options);
+    Build.Log.Argument("retries", nuget_push_retries);
+}
+
+nuget-push nuget_push_feed='${ nuget_symbol_feed }' nuget_push_apikey='${ nuget_symbol_apikey }'

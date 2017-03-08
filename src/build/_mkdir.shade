@@ -25,6 +25,8 @@ default mkdir_name = ''
 default mkdir_path = ''
 
 @{
+    Build.Log.Header("mkdir");
+
     if (string.IsNullOrEmpty(mkdir_path))
     {
         if (string.IsNullOrEmpty(mkdir_name))
@@ -34,6 +36,9 @@ default mkdir_path = ''
 
         mkdir_path = Path.Combine(base_path, mkdir_name);
     }
+
+    Build.Log.Argument("path", mkdir_name);
+    Build.Log.Header();
 
     Build.MakeDirectory(mkdir_path);
 }

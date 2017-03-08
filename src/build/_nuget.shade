@@ -3,8 +3,8 @@
 nuget
     Executes the nuget package manager command.
 
-nuget_args=''
-    Required. The arguments to pass to the nuget package manager command line tool.
+nuget_args='restore'
+    The arguments to pass to the nuget package manager command line tool.
 
 nuget_options='' (Environment Variable: NUGET_OPTIONS)
     Additional options to include when executuing the nuget package manager command line tool.
@@ -51,12 +51,11 @@ default nuget_retries       = '${ 1 }' type='int'
 
 nuget-download once='nuget-download'
 
-log log_header='nuget'
-log log_line='-'
-
-var nuget_cmd               = '${ Path.Combine(nuget_download_path, "nuget.exe") }'
-
 @{
+    Build.Log.Header("nuget");
+
+    var nuget_cmd           = Path.Combine(nuget_download_path, "nuget.exe");
+
     if (string.IsNullOrEmpty(nuget_args))
     {
         throw new ArgumentException("nuget: arguments must be specified when executing the nuget command line tool.", "nuget_args");
@@ -68,14 +67,14 @@ var nuget_cmd               = '${ Path.Combine(nuget_download_path, "nuget.exe")
     {
         nuget_options = nuget_options.Trim();
     }
-}
 
-log log_name='path'         log_value='${ nuget_path }'
-log log_name='arguments'    log_value='${ nuget_args }'       log_secure='${ nuget_secure }'
-log log_name='options'      log_value='${ nuget_options }'    log_secure='${ nuget_secure }'
-log log_name='wait'         log_value='${ nuget_wait }'
-log log_name='quiet'        log_value='${ nuget_quiet }'
-log log_name='retries'      log_value='${ nuget_retries }'
-log log_line='-'
+    Build.Log.Argument("path", nuget_path);
+    Build.Log.Argument("arguments", nuget_args, nuget_secure);
+    Build.Log.Argument("options", nuget_options, nuget_secure);
+    Build.Log.Argument("wait", nuget_wait);
+    Build.Log.Argument("quiet", nuget_quiet);
+    Build.Log.Argument("retries", nuget_retries);
+    Build.Log.Header();
+}
 
 run run_args='"${ nuget_cmd }"' run_options = '${ nuget_args } ${ nuget_options }' run_path='${ nuget_path }' run_wait='${ nuget_wait }' run_quiet='${ nuget_quiet }' run_secure='${ nuget_secure }' run_retries='${ nuget_retries }'

@@ -46,10 +46,9 @@ default dnu_runtime         = ''
 
 var dnu_exec_cmd            = 'dnu'
 
-log log_header='dnu'
-log log_line='-'
-
 @{
+    Build.Log.Header("dnu");
+
     if (string.IsNullOrEmpty(dnu_args))
     {
         throw new ArgumentException("dnu: arguments must be specified when executing the dnu command line tool.", "dnu_args");
@@ -61,16 +60,14 @@ log log_line='-'
     {
         dnu_options = dnu_options.Trim();
     }
-}
 
-log log_name='arguments'    log_value='${ dnu_args }'
-log log_name='options'      log_value='${ dnu_options }'
-log log_name='path'         log_value='${ dnu_path }'
-log log_name='wait'         log_value='${ dnu_wait }'
-log log_name='quiet'        log_value='${ dnu_quiet }'
-log log_line='-'
+    Build.Log.Argument("arguments", dnu_args);
+    Build.Log.Argument("options", dnu_options);
+    Build.Log.Argument("path", dnu_path);
+    Build.Log.Argument("wait", dnu_wait);
+    Build.Log.Argument("quiet", dnu_quiet);
+    Build.Log.Header();
 
-@{
     if (!string.IsNullOrEmpty(dnu_runtime))
     {
         dnu_args = (dnu_args + " \"" + dnu_path + "\"").Trim();

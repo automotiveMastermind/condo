@@ -1,0 +1,31 @@
+.docs-callout {
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #eee;
+  border-left-width: .25rem;
+  border-radius: .25rem;
+}
+.docs-callout h4 {
+  margin-top: 0;
+  margin-bottom: .25rem;
+}
+.docs-callout p:last-child {
+  margin-bottom: 0;
+}
+.docs-callout code {
+  border-radius: .25rem;
+}
+
+.docs-callout + .docs-callout {
+  margin-top: -.25rem;
+}
+
+@mixin bs-callout-variant($color) {
+  border-left-color: $color;
+
+  h4 { color: $color; }
+}
+.docs-callout-info    { @include bs-callout-variant($docs-info); }
+.docs-callout-warning { @include bs-callout-variant($docs-warning); }
+.docs-callout-danger  { @include bs-callout-variant($docs-danger); }

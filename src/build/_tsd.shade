@@ -1,0 +1,68 @@
+@{/*
+
+tsd
+    Executes a DefinitlyTyped typings manager.
+
+tsd_args=''
+    Required. The arguments to pass to the tsd command line tool.
+
+tsd_options='' (Environment Variable: TSD_OPTIONS)
+    Additional options to use when executing the tsd command.
+
+tsd_path='$(base_path)'
+    The path in which to execute tsd.
+
+tsd_wait='true'
+    A value indicating whether or not to wait for exit.
+
+tsd_quiet='$(Build.Log.Quiet)'
+    A value indicating whether or not to avoid printing output.
+
+base_path='$(CurrentDirectory)'
+    The base path in which to execute tsd.
+
+working_path='$(base_path)'
+    The working path in which to execute tsd.
+
+*/}
+
+use namespace = 'System'
+use namespace = 'System.IO'
+
+use import = 'Condo.Build'
+
+default base_path       = '${ Directory.GetCurrentDirectory() }'
+default working_path    = '${ base_path }'
+
+default tsd_args        = ''
+default tsd_options     = '${ Build.Get("TSD_OPTIONS") }'
+
+default tsd_path        = '${ working_path }'
+default tsd_wait        = '${ true }'
+default tsd_quiet       = '${ Build.Log.Quiet }'
+
+tsd-download once='tsd-download'
+
+@{
+    var tsd_cmd         = Build.GetPath("tsd");
+
+    Build.Log.Header("tsd");
+
+    if (string.IsNullOrEmpty(tsd_args))
+    {
+        throw new ArgumentException("tsd: cannot execute without arguments.", "tsd_args");
+    }
+
+    // trim the arguments
+    tsd_args = tsd_args.Trim();
+    tsd_options = tsd_options.Trim();
+
+    Build.Log.Argument("options", tsd_args);
+    Build.Log.Argument("path", tsd_path);
+    Build.Log.Argument("wait", tsd_wait);
+    Build.Log.Argument("quiet", tsd_quiet);
+    Build.Log.Header();
+}
+
+exec exec_cmd='${ tsd_cmd.Path }' exec_args='${ tsd_args } ${ tsd_options }' exec_path='${ tsd_path }' exec_quiet='${ tsd_quiet }' exec_redirect='${ false }' if='tsd_cmd.Global'
+node node_args='"${ tsd_cmd.Path }" ${ tsd_args } ${ tsd_options }' node_path='${ tsd_path }' node_wait='${ tsd_wait }' node_quiet='${ tsd_quiet }' if='!tsd_cmd.Global'

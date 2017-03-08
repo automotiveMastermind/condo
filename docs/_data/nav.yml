@@ -1,0 +1,83 @@
+- title: Start
+  pages:
+    - title: Overview
+    - title: Prerequisites
+    - title: Default Lifecycle
+    - title: Default Goals
+    - title: Best Practices
+    - title: Semantic Versioning
+
+- title: Shades
+  pages:
+    - title: bower
+    - title: bower-download
+    - title: bower-install
+    - title: brew
+    - title: brew-download
+    - title: brew-install
+    - title: bundle
+    - title: bundle-download
+    - title: bundle-install
+    - title: copy
+    - title: dnu
+    - title: dnvm-locate
+    - title: dnx
+    - title: dotnet-run
+    - title: dotnet-test
+    - title: dotnet-watch
+    - title: dotnet-watch-download
+    - title: dotnet-build
+    - title: dotnet-clean
+    - title: dotnet-cover
+    - title: dotnet-cover-report
+    - title: dotnet-pack
+    - title: dotnet-restore
+    - title: exec
+    - title: gem
+    - title: gem-install
+    - title: git
+    - title: git-config
+    - title: git-tag
+    - title: gm-download
+    - title: grunt
+    - title: grunt-download
+    - title: gulp
+    - title: gulp-download
+    - title: gulp-list
+    - title: gulp-task
+    - title: info
+    - title: info-collect
+    - title: log
+    - title: mkdir
+    - title: mocha
+    - title: mocha-download
+    - title: node
+    - title: node-download
+    - title: npm
+    - title: npm-install
+    - title: nuget
+    - title: nuget-download
+    - title: nuget-install
+    - title: nuget-pack
+    - title: nuget-push
+    - title: nuget-restore
+    - title: rimraf
+    - title: rimraf-download
+    - title: ruby
+    - title: ruby-locate
+    - title: run
+    - title: tsd
+    - title: tsd-download
+    - title: update-self
+    - title: verify-hash
+
+- title: Utilities
+  pages:
+    - title: Build Tools
+    - title: Assembly Info
+
+- title: About
+  pages:
+    - title: History
+    - title: Team
+    - title: License

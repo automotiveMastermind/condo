@@ -5,23 +5,50 @@ dnvm-locate
 
 */}
 
-var dnvm_locate_where_cmd   = '${ Build.Unix ? "which" : "where" }'
-var dnvm_locate_cmd         = '${ Build.Unix ? "dnvm.sh" : "dnvm.cmd" }'
-var dnvm_locate_found       = '${ false }' type='bool'
-
-log log_header='dnvm-locate'
-log log_line='-'
+use namespace = 'System'
+use namespace = 'System.IO'
 
 @{
-    dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, dnvm_locate_cmd);
+    var dnvm_locate_where_cmd = Build.Unix ? "which" : "where";
+    var dnvm_locate_cmd = Build.Get("DNVMCMD");
+    var dnvm_locate_found = false;
+
+    if (string.IsNullOrEmpty(dnvm_locate_cmd))
+    {
+        dnvm_locate_cmd = Build.Unix ? "dnvm.sh" : "dnvm.cmd";
+        dnvm_locate_found = false;
+    }
+
+    var dnvm_locate_path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".dnx", "dnvm", dnvm_locate_cmd);
+
+    Build.Log.Header("dnvm-locate");
 
     if (!dnvm_locate_found)
     {
-        throw new NotSupportedException("dnvm-locate: could not find an instance of dnvm. The build process cannot continue");
+        dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, dnvm_locate_cmd);
     }
 
-    Build.SetPath("dnvm", dnvm_locate_cmd, true);
-}
+    if (!dnvm_locate_found)
+    {
+        dnvm_locate_found = Build.TryExecute(dnvm_locate_where_cmd, out dnvm_locate_cmd, "dnvm");
+    }
 
-log log_name='path' log_value='${ dnvm_locate_cmd }'
-log log_line='-'
+    if (!dnvm_locate_found)
+    {
+        dnvm_locate_cmd = dnvm_locate_path;
+        dnvm_locate_found = File.Exists(dnvm_locate_cmd);
+    }
+
+    if (!dnvm_locate_found)
+    {
+        throw new NotSupportedException("dnvm-locate: could not find an instance of dnvm -- the build process cannot continue.");
+    }
+
+    var dnvm_multiple_paths = dnvm_locate_cmd.Split(Environment.NewLine.ToArray());
+    dnvm_locate_cmd = dnvm_multiple_paths[dnvm_multiple_paths.Length-1];
+
+    Build.SetPath("dnvm", dnvm_locate_cmd, true);
+
+    Build.Log.Argument("path", dnvm_locate_cmd);
+    Build.Log.Header();
+}

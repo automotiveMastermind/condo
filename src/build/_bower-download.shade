@@ -17,21 +17,21 @@ default base_path               = '${ Directory.GetCurrentDirectory() }'
 
 default bower_download_path     = '${ base_path }'
 
-log log_header='bower-download'
-log log_line='-'
+@{
+    Build.Log.Header("bower-download");
 
-var bower_install               = '${ Path.Combine(bower_download_path, "node_modules", "bower", "bin", "bower") }'
+    var bower_install = Path.Combine(bower_download_path, "node_modules", "bower", "bin", "bower");
+    var bower_locally_installed = File.Exists(bower_install);
+    var bower_version = string.Empty;
+    var bower_globally_installed = !bower_locally_installed && Build.TryExecute("bower", out bower_version, "--version --config.interactive=false");
+    var bower_installed = bower_locally_installed || bower_globally_installed;
 
-var bower_locally_installed     = '${ File.Exists(bower_install) }'
-var bower_version               = ''
-var bower_globally_installed    = '${ !bower_locally_installed && Build.TryExecute("bower", out bower_version, "--version --config.interactive=false") }'
-var bower_installed             = '${ bower_locally_installed || bower_globally_installed }'
+    bower_install = bower_globally_installed ? "bower" : bower_install;
 
-- bower_install = bower_globally_installed ? "bower" : bower_install;
-
-log log_name='path'     log_value='${ bower_install }'
-log log_name='version'  log_value='${ bower_version }' if='bower_globally_installed'
-log log_line='-'
+    Build.Log.Argument("path", bower_install);
+    Build.Log.Argument("version", bower_version);
+    Build.Log.Header();
+}
 
 npm-install npm_install_id='bower' npm_install_prefix='${ bower_download_path }' if='!bower_installed'
 

@@ -35,23 +35,19 @@ default npm_install_options = '${ Build.Get("NPM_INSTALL_OPTIONS") }'
 default npm_install_path    = '${ working_path }'
 default npm_install_prefix  = '${ working_path }'
 
-log log_header='npm-install'
-log log_line='-'
-
 @{
+    Build.Log.Header("npm-install");
+
     // trim variables
     npm_install_id = npm_install_id.Trim();
-
-    // add no-bin-links (for windows -- stupid)
-    npm_install_options += " --no-bin-links";
     npm_install_options = npm_install_options.Trim();
-}
 
-log log_name='module id'    log_value='${ npm_install_id }'
-log log_name='prefix'       log_value='${ npm_install_prefix }'
-log log_name='options'      log_value='${ npm_install_options }'
-log log_name='path'         log_value='${ npm_install_path }'
-log log_line='-'
+    Build.Log.Argument("module id", npm_install_id);
+    Build.Log.Argument("prefix", npm_install_prefix);
+    Build.Log.Argument("options", npm_install_options);
+    Build.Log.Argument("path", npm_install_path);
+    Build.Log.Header();
+}
 
 npm npm_args='install ${ npm_install_id }' npm_options='--prefix "${ npm_install_prefix }" ${ npm_install_options }' npm_path='${ npm_install_path }' if='!string.IsNullOrEmpty(npm_install_id)'
 npm npm_args='install' npm_options='${ npm_install_options }' npm_path='${ npm_install_path }' if='string.IsNullOrEmpty(npm_install_id)'

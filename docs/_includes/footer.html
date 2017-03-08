@@ -1,0 +1,26 @@
+<footer class="docs-footer text-muted" role="contentinfo">
+  <div class="container">
+    <ul class="docs-footer-links">
+      <li><a href="{{ site.repo }}">GitHub</a></li>
+      <li><a href="https://twitter.com/pulsebridge">Twitter</a></li>
+      <li><a href="{{ site.baseurl }}/examples/">Examples</a></li>
+      <li><a href="{{ site.baseurl }}/about/history/">About</a></li>
+    </ul>
+    <p>Designed and built primarily by <a href="https://twitter.com/dmccaffery" target="_blank">@dmccaffery</a>. Maintained by the <a href="https://github.com/orgs/pulsebridge/people">PulseBridge team</a> with the help of <a href="https://github.com/pulsebridge/condo/graphs/contributors">our contributors</a>. Originally envisioned and designed by <a href="http://www.pulsebridge.com">PulseBridge, Inc.</a>.</p>
+    <p>Currently v{{ site.current_version }}. Code licensed <a rel="license" href="{{ site.baseurl }}/about/license" >MIT</a>, docs <a rel="license" href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
+    <br>
+    <p>See an issue on this page?  <a href="https://github.com/pulsebridge/condo/issues/new?title=Docs%20-%20{{ page.title | replace: ' ', '%20' }}&body=Why%20you%20no%20work?&labels[]=docs" target="_new">Report it on GitHub</a></p>
+  </div>
+</footer>
+
+<script src="{{ site.cdn.jquery }}"></script>
+<script>window.jQuery || document.write('<script src="{{ site.baseurl }}/assets/js/vnd/jquery/jquery.min.js"><\/script>')</script>
+
+{% if site.github %}
+<script src="{{ site.baseurl }}/assets/js/docs.min.js"></script>
+{% else %}
+<script src="{{ site.baseurl }}/assets/js/docs.js"></script>
+{% endif %}
+{% if page.layout == "docs" %}
+<script src="{{ site.baseurl }}/assets/js/search.min.js"></script>
+{% endif %}

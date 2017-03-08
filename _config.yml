@@ -1,0 +1,39 @@
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+kramdown:
+  auto_ids: true
+
+# Permalinks
+permalink:        pretty
+
+# Server
+source:           docs
+destination:      .docs_jekyll
+host:             0.0.0.0
+port:             9001
+baseurl:          "/condo"
+url:              http://open.pulsebridge.com
+encoding:         UTF-8
+exclude:          [assets/]
+github:           true
+
+gems:
+  - jekyll-redirect-from
+  - jekyll-sitemap
+
+sass:
+  sass_dir: _sass
+  compressed: true
+
+# Custom vars
+current_version:  1.0.0-rc
+repo:             https://github.com/pulsebridge/condo
+
+cdn:
+  css:            https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css
+  css_hash:       "sha384-XXXXXXXX"
+  js:             https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js
+  js_hash:        "sha384-XXXXXXXX"
+  jquery:         https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js

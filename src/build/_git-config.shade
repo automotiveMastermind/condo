@@ -27,21 +27,20 @@ use namespace = 'System'
 
 use import = 'Condo.Build'
 
-default base_path       = '${ Directory.GetCurrentDirectory() }'
-default working_path    = '${ base_path }'
+default base_path           = '${ Directory.GetCurrentDirectory() }'
+default working_path        = '${ base_path }'
 
-default git_config_path = '${ working_path }'
-default git_config_user   = '${ Build.Get("GIT_USER_NAME") }'
-default git_config_email  = '${ Build.Get("GIT_USER_EMAIL") }'
-default git_config_quiet  = '${ Build.Log.Quiet }'
-
-log log_header='git-config'
-log log_line='-'
-
-var git_version         = ''
-var git_installed       = '${ Build.TryExecute("git", out git_version, "--version") }'
+default git_config_path     = '${ working_path }'
+default git_config_user     = '${ Build.Get("GIT_USER_NAME") }'
+default git_config_email    = '${ Build.Get("GIT_USER_EMAIL") }'
+default git_config_quiet    = '${ Build.Log.Quiet }'
 
 @{
+    Build.Log.Header("git-config");
+
+    var git_version         = string.Empty;
+    var git_installed       = Build.TryExecute("git", out git_version, "--version");
+
     if (!git_installed)
     {
         throw new Exception("git: git must be manually installed in order to use the git cmd.");
@@ -90,12 +89,12 @@ var git_installed       = '${ Build.TryExecute("git", out git_version, "--versio
     {
         throw new ArgumentException("git-config: an email address is required.", "git_config_email");
     }
+
+    Build.Log.Argument("version", git_version);
+    Build.Log.Argument("user", git_config_user, Build.Log.Secure);
+    Build.Log.Argument("email", git_config_email, Build.Log.Secure);
+    Build.Log.Header();
 }
 
-log log_name='version'  log_value='${ git_version }'
-log log_name='user'     log_value='${ git_config_user }'
-log log_name='email'    log_value='${ git_config_email }'
-log log_line='-'
-
-exec exec_cmd='git' exec_args='config user.name "${ git_config_user }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }'
-exec exec_cmd='git' exec_args='config user.email "${ git_config_email }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }'
+exec exec_cmd='git' exec_args='config user.name "${ git_config_user }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }' exec_secure='${ Build.Log.Secure }'
+exec exec_cmd='git' exec_args='config user.email "${ git_config_email }"' exec_path='${ git_config_path }' exec_quiet='${ git_config_quiet }' exec_secure='${ Build.Log.Secure }'
