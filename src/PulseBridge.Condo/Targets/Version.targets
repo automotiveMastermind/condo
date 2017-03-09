@@ -69,8 +69,12 @@
   </Target>
 
   <Target Name="UpdateProjectJson" Condition="$(CI)">
+    <ItemGroup>
+      <ProjectJsonProjects Include="@(Projects)" Condition=" '%(Projects.DotNetType)' == 'ProjectJson' " />
+    </ItemGroup>
+
     <UpdateProjectJson
-      Projects="@(Projects)"
+      Projects="@(ProjectJsonProjects)"
       Version="$(CurrentRelease)"
       BuildQuality="$(BuildQuality)" />
   </Target>
