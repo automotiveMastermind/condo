@@ -180,9 +180,6 @@ function Install-MSBuild() {
         $contents = [System.IO.File]::ReadAllText((Convert-Path "$ScriptsPath\msbuild.json"))
         [System.IO.File]::WriteAllText($MSBuildProj, $contents.Replace("RUNTIME", $runtime))
 
-        # copy nuget to the build root
-        cp "$ScriptsPath\nuget.config" $BuildRoot | Out-Null
-
         # restore msbuild
         Write-Info "condo: restoring condo packages..."
         Invoke-Cmd dotnet restore $BuildRoot --verbosity minimal

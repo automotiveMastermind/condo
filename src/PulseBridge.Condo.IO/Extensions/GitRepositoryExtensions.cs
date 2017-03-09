@@ -314,6 +314,20 @@ namespace PulseBridge.Condo.IO
         }
 
         /// <summary>
+        /// Pulls the changes for the current branch.
+        /// </summary>
+        /// <param name="repository">
+        /// The current repository instance.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        public static IGitRepositoryInitialized Pull(this IGitRepositoryInitialized repository)
+        {
+            return repository.Pull(all: false);
+        }
+
+        /// <summary>
         /// Pushes any staged changes to the "origin" remote and optionally includes tags.
         /// </summary>
         /// <param name="repository">

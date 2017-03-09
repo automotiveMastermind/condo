@@ -154,6 +154,17 @@ namespace PulseBridge.Condo.IO
         IGitRepositoryInitialized Push(string remote, bool tags);
 
         /// <summary>
+        /// Pulls the current branch or all branches from the remote repository.
+        /// </summary>
+        /// <param name="all">
+        /// A value indicating whether or not to pull all branches.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized Pull(bool all);
+
+        /// <summary>
         /// Sets the URL of the remote with the specified <paramref name="name"/> to the specified
         /// <paramref name="uri"/>.
         /// </summary>

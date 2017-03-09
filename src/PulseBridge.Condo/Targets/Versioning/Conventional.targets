@@ -53,7 +53,7 @@
   </Target>
 
   <!-- checkout the release branch -->
-  <Target Name="CheckoutReleaseBranch" Condition=" $(HasGit) AND  $(CI) ">
+  <Target Name="CheckoutReleaseBranch" Condition=" $(HasGit) AND $(CI) AND !$(IsPullRequest) ">
     <CheckoutBranch
       RepositoryRoot="$(RepositoryRoot)"
       Branch="$(Branch)"

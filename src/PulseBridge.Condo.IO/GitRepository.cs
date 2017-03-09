@@ -245,7 +245,28 @@ namespace PulseBridge.Condo.IO
                 this.logger.LogWarning(output.Error);
             }
 
-            this.logger.LogWarning(output.Error);
+            this.logger.LogMessage(output.Output);
+
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGitRepositoryInitialized Pull(bool all)
+        {
+            var cmd = "pull";
+
+            if (all)
+            {
+                cmd += " --all";
+            }
+
+            var output = this.Execute(cmd);
+
+            if (!output.Success)
+            {
+                this.logger.LogWarning(output.Error);
+            }
+
             this.logger.LogMessage(output.Output);
 
             return this;
@@ -599,25 +620,6 @@ namespace PulseBridge.Condo.IO
             // log the output
             this.logger.LogMessage(output.Output);
 
-            // set the push url
-            cmd = $"remote set-url --push {name} {uri}";
-
-            // execute the cmd
-            output = this.Execute(cmd);
-
-            // determine if we were not successful
-            if (!output.Success)
-            {
-                // log the output
-                this.logger.LogWarning(output.Error);
-
-                // move on immediately
-                return this;
-            }
-
-            // log the output
-            this.logger.LogMessage(output.Output);
-
             // return self
             return this;
         }
@@ -626,25 +628,6 @@ namespace PulseBridge.Condo.IO
         public void Dispose()
         {
             this.Dispose(true);
-        }
-
-        private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
-        {
-            var set = new List<string>();
-
-            foreach (var line in lines)
-            {
-                if (Split.Equals(line))
-                {
-                    yield return set;
-
-                    set = new List<string>();
-
-                    continue;
-                }
-
-                set.Add(line);
-            }
         }
 
         /// <summary>
@@ -668,6 +651,25 @@ namespace PulseBridge.Condo.IO
             }
 
             // this.path.Dispose();
+        }
+
+        private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
+        {
+            var set = new List<string>();
+
+            foreach (var line in lines)
+            {
+                if (Split.Equals(line))
+                {
+                    yield return set;
+
+                    set = new List<string>();
+
+                    continue;
+                }
+
+                set.Add(line);
+            }
         }
 
         private ProcessStartInfo CreateProcessInfo(string command)

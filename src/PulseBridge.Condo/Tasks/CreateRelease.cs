@@ -50,7 +50,7 @@ namespace PulseBridge.Condo.Tasks
 
         #region Methods
         /// <summary>
-        /// Executes the <see cref="GetRepositoryInfo"/> task.
+        /// Executes the <see cref="CreateRelease"/> task.
         /// </summary>
         /// <returns>
         /// A value indicating whether or not the task executed successfully.
