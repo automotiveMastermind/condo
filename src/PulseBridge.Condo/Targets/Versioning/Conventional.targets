@@ -75,7 +75,7 @@
 
     <!-- save the change log -->
     <SaveChangeLog
-      Name="changelog.md"
+      Name="CHANGELOG.md"
       Version="$(CurrentReleaseTag)"
       RepositoryRoot="$(RepositoryRoot)"
       GroupByHeader="$(GroupByHeader)"

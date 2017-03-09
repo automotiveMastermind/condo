@@ -81,7 +81,7 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the name of the changelog.
         /// </summary>
-        public string Name { get; set; } = "changelog.md";
+        public string Name { get; set; } = "CHANGELOG.md";
         #endregion
 
         #region Methods
