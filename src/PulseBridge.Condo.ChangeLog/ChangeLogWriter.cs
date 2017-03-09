@@ -101,6 +101,20 @@ namespace PulseBridge.Condo.ChangeLog
         /// <inheritdoc />
         IChangeLogWriterApplied IChangeLogWriterCompiled.Apply(GitLog log)
         {
+            // determine if the options contains a version
+            if (this.options.Version != null)
+            {
+                // iterate over each commit in the unversioned history
+                foreach (var commit in log.Unversioned)
+                {
+                    // set the version of the commit
+                    commit.Version = this.options.Version;
+                }
+
+                // add the unversioned commits as a new version
+                log.Versions.Add(this.options.Version, log.Unversioned);
+            }
+
             // convert the versions to a list
             var versions = log.Versions.ToList();
 
@@ -111,7 +125,7 @@ namespace PulseBridge.Condo.ChangeLog
             this.ApplyVersion(current.Key, null, current.Value);
 
             // iterate over each version
-            for (var i = 1; i < versions.Count; i++)
+            for (var i = 0; i < versions.Count; i++)
             {
                 // capture the previous
                 var previous = current;
@@ -129,6 +143,13 @@ namespace PulseBridge.Condo.ChangeLog
 
         private void ApplyVersion(SemanticVersion version, string previous, IList<GitCommit> log)
         {
+            // determine if the log does not contain any commits
+            if (log.Count == 0)
+            {
+                // move on immediately
+                return;
+            }
+
             var first = log[0];
 
             // setup the root dictionary

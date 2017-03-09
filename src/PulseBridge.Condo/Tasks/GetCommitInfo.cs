@@ -133,6 +133,11 @@ namespace PulseBridge.Condo.Tasks
         public string NoteKeywords { get; set; } = "BREAKING CHANGE;BREAKING CHANGES";
 
         /// <summary>
+        /// Gets or sets the tag used to indicate a version.
+        /// </summary>
+        public string VersionTag { get; set; }
+
+        /// <summary>
         /// Gets the commits that belong to the current release.
         /// </summary>
         /// <remarks>
@@ -267,7 +272,7 @@ namespace PulseBridge.Condo.Tasks
             var noteKeywords = this.NoteKeywords.PropertySplit().ToList();
 
             // get the options and parser
-            var options = new GitLogOptions()
+            var options = new GitLogOptions
             {
                 HeaderPattern = this.HeaderPattern,
                 HeaderCorrespondence = headers,
@@ -286,7 +291,9 @@ namespace PulseBridge.Condo.Tasks
                 MentionPrefixes = mentions,
                 ReferencePrefixes = references,
 
-                IncludeInvalidCommits = this.IncludeInvalidCommits
+                IncludeInvalidCommits = this.IncludeInvalidCommits,
+
+                VersionTag = this.VersionTag
             };
 
             var parser = new GitLogParser();

@@ -2,6 +2,10 @@
 *.user
 *.suo
 
+# hidden folders
+.*/**
+.*/*
+
 # build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -13,23 +17,10 @@ x86/
 [Bb]in/
 [Oo]bj/
 [Aa]rtifacts/
+[Tt]est[Rr]esults/
 
-# package manager artifacts
-[Pp]ackages/
-[Nn]ode_[Mm]odules/
-[Bb]ower_[Cc]omponents/
-
-# visual studio 2015 cache/options
-[Pp]roject.lock.json
+# condo files
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
-
-# ria/silverlight projects
-Generated_Code/
-
-# sql server files
-*.mdf
-*.ndf
-*.ldf
 
 # jetbrains
 _ReSharper*/
@@ -41,46 +32,11 @@ _TeamCity*
 # include solution based resharper settings
 !*.[Dd]ot[Ss]ettings
 
-# stylecop
-[Ss]tyle[Cc]op.[Cc]ache
-
-# mstest results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-[Bb]uild.[Ll]og
-
-# business intelligence projects
-*.rdl.data
-*.bim.layout
-*.bim_*.settings
-
-# microsoft fakes
-FakesAssemblies/
-
-# azure build output
-csx/
-*.build.csdef
-
-# windows store app package directory
-AppPackages/
-
-# nuget exe
-nuget.exe
-
 # nuget packages
 *.nupkg
+*.nuget.props
 
-# include msbuild targets in nuget
-!**/packages/**/build/
-
-# include repositories.config for nuget
-!**/packages/repositories.config
-
-# include config file for nuget
-![Nn]u[Gg]et.config
-
-# include self (tfignore)
-!.tfignore
+# include self
 !.gitignore
 !.gitattributes
 
@@ -93,31 +49,7 @@ nuget.exe
 # log files
 *.log
 
-# tsd
-[Tt]sd/
-_tsd
-tsd
-tsd.cmd
-
-# mocha
-_mocha
-mocha
-mocha.cmd
-
-# bower
-bower
-_bower
-bower.cmd
-
-# gem
-[Gg]emfile.lock
-
-# docs
-vnd/
-docs/src/
-
-# hidden folders
-.*/
-
-# condo files
-Condo.AssemblyInfo.cs
+#vscode
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json

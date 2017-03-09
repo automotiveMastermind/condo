@@ -89,6 +89,11 @@ namespace PulseBridge.Condo.IO
         /// Gets or sets the header correspondence used to sort commits by scope.
         /// </summary>
         string SortBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the prefix used for version tags.
+        /// </summary>
+        string VersionTag { get; set; }
         #endregion
     }
 }

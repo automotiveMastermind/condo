@@ -30,7 +30,7 @@ namespace PulseBridge.Condo.Tasks
                         test = "echo this is a test script",
                         ci = "echo this is a ci script"
                     },
-                    author = "PulseBridge, Inc.",
+                    author = "automotiveMastermind",
                     license = "MIT"
                 };
 

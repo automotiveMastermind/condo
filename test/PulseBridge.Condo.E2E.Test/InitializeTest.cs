@@ -24,7 +24,7 @@ namespace PulseBridge.Condo
             this.output = output;
         }
 
-        [Fact(Skip = "skip until merged")]
+        [Fact(Skip = "Trait filtering is currently broken...")]
         [Priority(2)]
         [Platform(PlatformType.MacOS)]
         public async Task Initialize_OnTfsMacAgent_Succeeds()
@@ -125,7 +125,7 @@ namespace PulseBridge.Condo
             }
         }
 
-        [Fact(Skip = "skip until merged")]
+        [Fact(Skip = "Trait filtering is currently broken...")]
         [Priority(2)]
         [Platform(PlatformType.Windows)]
         public async Task Initialize_OnTfsWindowsAgent_Succeeds()

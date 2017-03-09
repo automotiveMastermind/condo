@@ -24,6 +24,15 @@
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ArtifactPaths Include="$(BuildArtifactsRoot)" />
+    <ArtifactPaths Include="$(TestArtifactsRoot)" />
+    <ArtifactPaths Include="$(PublishArtifactsRoot)" />
+    <ArtifactPaths Include="$(PackageArtifactsRoot)" />
+    <ArtifactPaths Include="$(FeedArtifactsRoot)" />
+    <ArtifactPaths Include="$(DocsArtifactsRoot)" />
+  </ItemGroup>
+
   <!-- provide reasonable defaults for required attributes -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -40,8 +49,18 @@
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
     <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
 
+    <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
+    <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
+
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
+    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
     <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(PACKAGE_FEED_USERNAME)</PackageFeedUsername>
     <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
+
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
+
+    <UseServerTime Condition=" '$(UseServerTime)' == '' ">False</UseServerTime>
   </PropertyGroup>
 
   <!-- capture details from a continuous integration build hosted by TFS -->
@@ -67,6 +86,8 @@
     <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
     <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
     <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">VSTS</PackageFeedApiKey>
     <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(BuildHost)</PackageFeedUsername>
     <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(AccessToken)</PackageFeedPassword>
   </PropertyGroup>
@@ -96,10 +117,11 @@
 
   <ItemGroup>
     <!-- locate all dotnet project paths -->
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(SrcRoot)') " />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" Condition=" Exists('$(TestRoot)') " />
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(SrcRoot)') " />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" Condition=" Exists('$(TestRoot)') " />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" />
+    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" />
+    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" />
+    <DotNetRestorePaths Include="$(RepositoryRoot)$(slash)*.sln" />
 
     <!-- locate all npm, bower, gulp, and grunt projects -->
     <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
@@ -108,13 +130,17 @@
     <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
     <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
 
-    <!-- locate all dotnet projects -->
+    <!-- locate all dotnet project.json projects -->
     <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />
     <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)project.json" />
+
+    <!-- locate all dotnet msbuild projects -->
+    <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)*.*proj" />
+    <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
   </ItemGroup>
 
   <!-- get server time from NIST -->
-  <Target Name="GetServerTime">
+  <Target Name="GetServerTime" Condition="$(UseServerTime)">
     <GetServerTime>
       <Output TaskParameter="DateTimeUtc" PropertyName="BuildDateUtc" />
     </GetServerTime>
@@ -214,12 +240,18 @@
   <!-- print build information -->
   <Target Name="PrintBuildInfo">
     <Message Importance="High" Text="Build Name         : $(BuildName)" Condition=" '$(BuildName)' != '' " />
-    <Message Importance="High" Text="Build ID           : $(BuildId)" />
+    <Message Importance="High" Text="Build ID           : $(BuildId)" Condition=" '$(BuildId)' != '' " />
     <Message Importance="High" Text="Build For          : $(BuildFor)" Condition=" '$(BuildFor)' != '' " />
     <Message Importance="High" Text="Build On (Agent)   : $(BuildOn)" Condition=" '$(BuildOn)' != '' " />
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
     <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
     <Message Importance="High" Text="CI Build           : $(CI)" />
+    <Message Importance="High" Text="Package Feed URI   : $(PackageFeedUri)" Condition=" '$(PackageFeedUri)' != '' " />
+    <Message Importance="High" Text="Package Symbol URI : $(PackageSymbolUri)" Condition=" '$(PackageSymbolUri)' != '' " />
+    <Message Importance="High" Text="Package Feed Key   : $(PackageFeedApiKey)" Condition=" '$(PackageFeedApiKey)' != '' " />
+    <Message Importance="High" Text="Package Symbol Key : $(PackageSymbolApiKey)" Condition=" '$(PackageSymbolApiKey)' != '' " />
+    <Message Importance="High" Text="Package Username   : $(PackageFeedUsername)" Condition=" '$(PackageFeedUsername)' != '' " />
+    <Message Importance="High" Text="Package Password   : $(PackageFeedPassword)" Condition=" '$(PackageFeedPassword)' != '' " />
   </Target>
 
   <!-- print all of the paths used to create the build -->

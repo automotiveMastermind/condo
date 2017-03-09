@@ -68,7 +68,7 @@
     </GetAssemblyInfo>
   </Target>
 
-  <Target Name="UpdateProjectJson">
+  <Target Name="UpdateProjectJson" Condition="$(CI)">
     <UpdateProjectJson
       Projects="@(Projects)"
       Version="$(CurrentRelease)"

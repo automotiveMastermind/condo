@@ -17,7 +17,6 @@ namespace PulseBridge.Condo.Tasks
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
-        [Output]
         [Required]
         public string RepositoryRoot { get; set; }
 
@@ -31,18 +30,7 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the release message.
         /// </summary>
         [Required]
-        public string ReleaseMessage { get; set; } = "chore(release): ";
-
-        /// <summary>
-        /// Gets or sets the branch associated with the release.
-        /// </summary>
-        [Required]
-        public string Branch { get; set; }
-
-        /// <summary>
-        /// Gets or sets the remote that should be used to push the tag.
-        /// </summary>
-        public string Remote { get; set; } = "origin";
+        public string ReleaseMessage { get; set; } = "chore(release):";
 
         /// <summary>
         /// Gets or sets the author name used for git commits.
@@ -53,6 +41,11 @@ namespace PulseBridge.Condo.Tasks
         /// Gets or sets the author email used for git commits.
         /// </summary>
         public string AuthorEmail { get; set; } = "condo@pulsebridge";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to push the release to the remote.
+        /// </summary>
+        public bool Push { get; set; } = false;
         #endregion
 
         #region Methods
@@ -74,16 +67,6 @@ namespace PulseBridge.Condo.Tasks
                 return false;
             }
 
-            // determine if the remote is set
-            if (string.IsNullOrEmpty(this.Remote))
-            {
-                // log the error
-                this.Log.LogError("The remote must be specified.");
-
-                // move on immediately
-                return false;
-            }
-
             // create a new git repository factory
             var factory = new GitRepositoryFactory();
 
@@ -97,16 +80,23 @@ namespace PulseBridge.Condo.Tasks
                 repository.Email = this.AuthorEmail;
 
                 // create a release message
-                var message = this.ReleaseMessage + this.Version;
+                var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
 
-                // checkout the expected branch (in case we are in a detached state)
-                repository.Checkout(this.Branch);
-
-                // push changes to the remote repository
-                repository.Add().Commit(message).Push(this.Remote, tags: true);
+                // create the commit and tag the release
+                repository.Add().Commit(message).Tag(this.Version);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Pushed changes to remote: {this.Remote}:{this.Branch}.");
+                Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
+
+                // determine if we should push
+                if (this.Push)
+                {
+                    // push the changes to the remote
+                    repository.Push(tags: true);
+
+                    // log a message
+                    Log.LogMessage(MessageImportance.High, $"Pushed the release for version: {this.Version}...");
+                }
             }
             catch (Exception netEx)
             {

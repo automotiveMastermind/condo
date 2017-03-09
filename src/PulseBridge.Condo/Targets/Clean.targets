@@ -2,11 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Target Name="CleanArtifacts">
-    <ItemGroup>
-      <ArtifactsToRemove Include="$(ArtifactsRoot)/*/" />
-    </ItemGroup>
-    
-    <RemoveDir Directories="@(ArtifactsToRemove)" ContinueOnError="true" />
+    <RemoveDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 
   <Target Name="CleanIntermediateArtifacts">

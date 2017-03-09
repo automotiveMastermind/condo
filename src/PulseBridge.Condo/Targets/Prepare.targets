@@ -15,8 +15,8 @@
       <Output TaskParameter="Filtered" ItemName="_DotNetToRestore" />
     </RemoveDuplicates>
 
-    <Exec Command="dotnet restore @(_DotNetToRestore, ' ') $(DotNetRestoreOptions)"
-          WorkingDirectory="$(RepositoryRoot)" />
+    <Exec Command="dotnet restore $(DotNetRestoreOptions)"
+          WorkingDirectory="%(_DotNetToRestore.RootDir)%(_DotNetToRestore.Directory)" />
   </Target>
 
   <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' AND '@(NpmInstallPaths->Count())' != '0' ">
@@ -34,15 +34,6 @@
   </Target>
 
   <Target Name="CreateOutputPaths">
-    <ItemGroup>
-      <ArtifactPaths Include="$(ArtifactsRoot)" />
-      <ArtifactPaths Include="$(BuildArtifactsRoot)" />
-      <ArtifactPaths Include="$(TestArtifactsRoot)" />
-      <ArtifactPaths Include="$(PublishArtifactsRoot)" />
-      <ArtifactPaths Include="$(PackageArtifactsRoot)" />
-      <ArtifactPaths Include="$(FeedArtifactsRoot)" />
-      <ArtifactPaths Include="$(DocsArtifactsRoot)" />
-    </ItemGroup>
     <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 

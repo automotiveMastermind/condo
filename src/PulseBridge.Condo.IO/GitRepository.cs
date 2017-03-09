@@ -228,24 +228,25 @@ namespace PulseBridge.Condo.IO
         {
             var cmd = "push";
 
-            if (!string.IsNullOrEmpty(remote))
-            {
-                cmd += $" {remote}";
-            }
-
             if (tags)
             {
                 cmd += " --tags";
             }
 
-            var output = this.Execute(cmd);
+            if (!string.IsNullOrEmpty(remote))
+            {
+                cmd += $" --set-upstream {remote}";
+            }
 
-            this.logger.LogMessage(output.Output);
+            var output = this.Execute(cmd);
 
             if (!output.Success)
             {
                 this.logger.LogWarning(output.Error);
             }
+
+            this.logger.LogWarning(output.Error);
+            this.logger.LogMessage(output.Output);
 
             return this;
         }
@@ -271,8 +272,6 @@ namespace PulseBridge.Condo.IO
 
             // execute the cmd
             var output = this.Execute(cmd);
-
-            this.logger.LogMessage(output.Output);
 
             if (!output.Success)
             {
@@ -327,12 +326,18 @@ namespace PulseBridge.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Checkout(string name)
         {
+            // checkout the branch
             var output = this.Execute($"checkout {name}");
 
+            // determine if the operation was successful
             if (!output.Success)
             {
                 throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
             }
+
+            // write the message and warning
+            this.logger.LogMessage(output.Output);
+            this.logger.LogWarning(output.Error);
 
             return this;
         }
@@ -354,8 +359,6 @@ namespace PulseBridge.Condo.IO
         public IGitRepositoryInitialized Tag(string name)
         {
             var exec = this.Execute($"tag {name}");
-
-            logger.LogMessage(exec.Output);
 
             if (!exec.Success)
             {
@@ -535,6 +538,96 @@ namespace PulseBridge.Condo.IO
             return log;
         }
 
+        /// <inheritdoc />
+        public string RevParse(string reference)
+        {
+            var output = this.Execute($"rev-parse {reference}");
+
+            if (output.Success)
+            {
+                return output.Output.FirstOrDefault();
+            }
+
+            return string.Empty;
+        }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized AddRemote(string name, string uri)
+        {
+            // create the cmd
+            var cmd = $"remote add {name} {uri}";
+
+            // execute the cmd
+            var output = this.Execute(cmd);
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // return self
+                return this;
+            }
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized SetRemoteUrl(string name, string uri)
+        {
+            // create the cmd
+            var cmd = $"remote set-url {name} {uri}";
+
+            // execute the cmd
+            var output = this.Execute(cmd);
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // move on immediately
+                return this;
+            }
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // set the push url
+            cmd = $"remote set-url --push {name} {uri}";
+
+            // execute the cmd
+            output = this.Execute(cmd);
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // log the output
+                this.logger.LogWarning(output.Error);
+
+                // move on immediately
+                return this;
+            }
+
+            // log the output
+            this.logger.LogMessage(output.Output);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
         {
             var set = new List<string>();
@@ -552,12 +645,6 @@ namespace PulseBridge.Condo.IO
 
                 set.Add(line);
             }
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            this.Dispose(true);
         }
 
         /// <summary>
@@ -594,19 +681,6 @@ namespace PulseBridge.Condo.IO
                 RedirectStandardError = true,
                 RedirectStandardInput = true
             };
-        }
-
-        /// <inheritdoc />
-        public string RevParse(string reference)
-        {
-            var output = this.Execute($"rev-parse {reference}");
-
-            if (output.Success)
-            {
-                return output.Output.FirstOrDefault();
-            }
-
-            return string.Empty;
         }
         #endregion
     }

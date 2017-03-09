@@ -9,27 +9,13 @@ namespace PulseBridge.Condo.IO
     /// </summary>
     public class GitTag : IComparable<GitTag>
     {
-        private string name;
         private SemanticVersion version;
 
         #region Properties and Indexers
         /// <summary>
         /// Gets or sets the name of the tag.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-
-            set
-            {
-                this.name = value;
-
-                SemanticVersion.TryParse(this.name, out version);
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the full hash of the commit associated with the tag.
@@ -40,11 +26,33 @@ namespace PulseBridge.Condo.IO
         /// Gets or sets the short hash of the tag.
         /// </summary>
         public string ShortHash { get; set; }
+        #endregion
 
+        #region Methods
         /// <summary>
-        /// Gets the semantic version of the tag.
+        /// Gets the version of the tag based on the specified <paramref name="versionTag"/>.
         /// </summary>
-        public SemanticVersion Version => this.version;
+        /// <param name="versionTag">
+        /// The version tag prefix used for version tags.
+        /// </param>
+        public SemanticVersion Version(string versionTag)
+        {
+            // capture the tag name
+            var tag = this.Name;
+
+            // determine if we need to trim the version
+            if (!string.IsNullOrEmpty(versionTag) && tag.StartsWith(versionTag))
+            {
+                // trim the version
+                tag = tag.Substring(versionTag.Length);
+            }
+
+            // attempt to parse the tags
+            SemanticVersion.TryParse(tag, out version);
+
+            // return the version
+            return this.version;
+        }
 
         /// <summary>
         /// Determines if the current tag is equal to, less then, or greater than the specified <paramref name="other"/>
@@ -64,9 +72,9 @@ namespace PulseBridge.Condo.IO
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (this.Version != null && other.Version != null)
+            if (this.version != null && other.version != null)
             {
-                return this.Version.CompareTo(other.Version);
+                return this.version.CompareTo(other.version);
             }
 
             return string.Compare(this.Name, 0, other.Name, 0, int.MaxValue, StringComparison.OrdinalIgnoreCase);

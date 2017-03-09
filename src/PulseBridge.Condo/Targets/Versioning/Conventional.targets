@@ -3,6 +3,8 @@
 
   <PropertyGroup>
     <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)$(slash)changelog.md</ChangeLogInitialize>
+    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CONDO_PUSH_COMMITS)</AllowPushCommits>
+    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">True</AllowPushCommits>
   </PropertyGroup>
 
   <!-- detect convention strategy -->
@@ -31,14 +33,14 @@
       ReferencePrefixes="$(ReferencePrefixes)"
       MentionPrefixes="$(MentionPrefixes)"
       NoteKeywords="$(NoteKeywords)"
-      From="$(LatestVersionTag)">
+      VersionTag="$(VersionTag)">
       <Output TaskParameter="From" PropertyName="CommitFrom" />
       <Output TaskParameter="To" PropertyName="CommitTo" />
     </GetCommitInfo>
   </Target>
 
   <!-- update semantic version -->
-  <Target Name="RecommendVersion" Condition="$(HasGit)">
+  <Target Name="RecommendVersion">
     <RecommendVersion
       LatestVersion="$(LatestVersion)"
       LatestVersionCommit="$(LatestVersionCommit)"
@@ -50,40 +52,16 @@
     </RecommendVersion>
   </Target>
 
-  <!-- write the changelog -->
-  <Target Name="SaveChangeLog" Condition="$(HasGit)">
-    <GetCommitInfo
+  <!-- checkout the release branch -->
+  <Target Name="CheckoutReleaseBranch" Condition=" $(HasGit) AND  $(CI) ">
+    <CheckoutBranch
       RepositoryRoot="$(RepositoryRoot)"
-      IncludeInvalidCommits="false"
-      ActionKeywords="$(ActionKeywords)"
-      HeaderPattern="$(HeaderPattern)"
-      FieldPattern="$(FieldPattern)"
-      RevertPattern="$(RevertPattern)"
-      MergePattern="$(MergePattern)"
-      HeaderCorrespondence="$(HeaderCorrespondence)"
-      MergeCorrespondence="$(MergeCorrespondence)"
-      RevertCorrespondence="$(RevertCorrespondence)"
-      ReferencePrefixes="$(ReferencePrefixes)"
-      MentionPrefixes="$(MentionPrefixes)"
-      NoteKeywords="$(NoteKeywords)" />
-
-    <SaveChangeLog
-      RepositoryRoot="$(RepositoryRoot)"
-      RepositoryUri="$(RepositoryUri)"
-      GroupByHeader="$(GroupByHeader)"
-      SortByHeader="$(SortByHeader)"
-      ChangeLogInitialize="$(ChangeLogInitialize)"
-      Partials="@(ChangeLogPartials)"
-      Template="$(ChangeLogTemplate)"
-      ChangeLogTypes="$(ChangeLogTypes)"
-      ChangeLogNames="$(ChangeLogNames)" />
+      Branch="$(Branch)"
+      RemoteUri="$(RepositoryUri)" />
   </Target>
 
-  <Target Name="TagVersion" Condition=" $(CI) AND $(HasGit) ">
-    <SetGitTag RepositoryRoot="$(RepositoryRoot)" Tag="$(InformationalVersion)" />
-  </Target>
-
-  <Target Name="CreateRelease" Condition=" $(CI) AND $(HasGit) AND !$(IsPullRequest) ">
+  <!-- create a release commit -->
+  <Target Name="CreateRelease" Condition=" $(HasGit) AND $(CI) AND !$(IsPullRequest) ">
     <PropertyGroup>
       <AuthorName Condition=" '$(AuthorName)' == '' ">$(GIT_AUTHOR_NAME)</AuthorName>
       <AuthorName Condition=" '$(AuthorName)' == '' ">$(Company)</AuthorName>
@@ -91,16 +69,30 @@
       <AuthorName Condition=" '$(AuthorName)' == '' ">condo</AuthorName>
 
       <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">$(GIT_AUTHOR_EMAIL)</AuthorEmail>
-      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">condo@pulsebridge</AuthorEmail>
+      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">open@amastermind.com</AuthorEmail>
+      <CurrentReleaseTag>$(VersionTag)$(InformationalVersion)</CurrentReleaseTag>
     </PropertyGroup>
 
-    <CreateRelease
+    <!-- save the change log -->
+    <SaveChangeLog
+      Name="changelog.md"
+      Version="$(CurrentReleaseTag)"
       RepositoryRoot="$(RepositoryRoot)"
-      Branch="$(Branch)"
-      Version="$(VersionTag)$(InformationalVersion)"
+      GroupByHeader="$(GroupByHeader)"
+      SortByHeader="$(SortByHeader)"
+      ChangeLogInitialize="$(ChangeLogInitialize)"
+      Partials="@(ChangeLogPartials)"
+      Template="$(ChangeLogTemplate)"
+      ChangeLogTypes="$(ChangeLogTypes)"
+      ChangeLogNames="$(ChangeLogNames)" />
+
+    <!-- create the release -->
+    <CreateRelease
+      Version="$(CurrentReleaseTag)"
       ReleaseMessage="$(ReleaseMessage)"
       AuthorName="$(AuthorName)"
-      AuthorEmail="$(AuthorEmail)" />
+      AuthorEmail="$(AuthorEmail)"
+      Push="$(AllowPushCommits)" />
   </Target>
 
   <PropertyGroup>
@@ -108,12 +100,11 @@
       $(BeforeVersion);
       GetCommitInfo;
       RecommendVersion;
+      CheckoutReleaseBranch;
     </BeforeVersion>
 
     <AfterPublish>
       $(AfterPublish);
-      TagVersion;
-      SaveChangeLog;
       CreateRelease;
     </AfterPublish>
   </PropertyGroup>

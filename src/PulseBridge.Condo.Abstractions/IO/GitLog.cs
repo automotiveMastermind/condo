@@ -10,7 +10,7 @@ namespace PulseBridge.Condo.IO
     /// </summary>
     public class GitLog
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the git item specification from which to start the log.
         /// </summary>
@@ -25,6 +25,11 @@ namespace PulseBridge.Condo.IO
         /// Gets the collection of commits contained within the log.
         /// </summary>
         public IList<GitCommit> Commits { get; } = new List<GitCommit>();
+
+        /// <summary>
+        /// Gets the collection of unversioned commits within the log.
+        /// </summary>
+        public IList<GitCommit> Unversioned { get; } = new List<GitCommit>();
 
         /// <summary>
         /// Gets the collection of commits with their associated versions.

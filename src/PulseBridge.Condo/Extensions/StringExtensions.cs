@@ -1,9 +1,3 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringExtensions.cs" company="PulseBridge, Inc.">
-//   © PulseBridge, Inc. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace PulseBridge.Condo
 {
     using System.Collections.Generic;

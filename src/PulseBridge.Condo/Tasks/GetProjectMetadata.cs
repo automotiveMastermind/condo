@@ -3,6 +3,7 @@ namespace PulseBridge.Condo.Tasks
     using System;
     using System.IO;
     using System.Linq;
+    using System.Xml.Linq;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -37,10 +38,10 @@ namespace PulseBridge.Condo.Tasks
             foreach (var project in this.Projects)
             {
                 // set the metadata on the project
-                SetMetadata(project);
+                this.SetMetadata(project);
 
                 // log a message
-                Log.LogMessage
+                this.Log.LogMessage
                     (
                         MessageImportance.Low,
                         $"Updated project metadata for project: {project.GetMetadata("ProjectName")}"
@@ -57,10 +58,60 @@ namespace PulseBridge.Condo.Tasks
         /// <param name="project">
         /// The project item on which to set additional project metadata.
         /// </param>
-        private static void SetMetadata(ITaskItem project)
+        private void SetMetadata(ITaskItem project)
         {
+            // get the extension
+            var extension = project.GetMetadata("Extension");
+
+            // determine if the extension is null
+            if (string.IsNullOrEmpty(extension))
+            {
+                // move on immediately
+                return;
+            }
+
             // get the full path of the project file
             var path = project.GetMetadata("FullPath");
+
+            // get the directory name from the path
+            var directory = Path.GetDirectoryName(path);
+            var group = Path.GetFileName(Path.GetDirectoryName(directory));
+
+            // set the project directory path
+            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+
+            // set the project group
+            project.SetMetadata("ProjectGroup", group);
+
+            // set the name of the project (using the directory name by convention)
+            project.SetMetadata("ProjectName", Path.GetFileName(directory));
+
+            // set the shared sources directory
+            project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
+
+            // set the condo assembly info path
+            project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
+
+            if (extension.EndsWith("json", StringComparison.OrdinalIgnoreCase))
+            {
+                // set project json metadata
+                this.SetProjectJsonMetadata(project, path);
+
+                // move on immediately
+                return;
+            }
+
+            if (extension.EndsWith("proj", StringComparison.OrdinalIgnoreCase))
+            {
+                // set msbuild metadata
+                this.SetMSBuildMetadata(project, path);
+            }
+        }
+
+        private void SetProjectJsonMetadata(ITaskItem project, string path)
+        {
+            // set the dotnet build type
+            project.SetMetadata("DotNetType", "ProjectJson");
 
             // parse the file
             var json = JObject.Parse(File.ReadAllText(path));
@@ -71,6 +122,9 @@ namespace PulseBridge.Condo.Tasks
             // determine if the frameworks node did not exist
             if (frameworks == null)
             {
+                // log a warning
+                this.Log.LogWarning("No frameworks were specified.");
+
                 // move on immediately
                 return;
             }
@@ -85,27 +139,36 @@ namespace PulseBridge.Condo.Tasks
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", names));
             project.SetMetadata("NetCoreFramework", tfm);
+        }
 
-            // get the directory name from the path
-            var directory = Path.GetDirectoryName(path);
-            var group = Path.GetFileName(Path.GetDirectoryName(directory));
+        private void SetMSBuildMetadata(ITaskItem project, string path)
+        {
+            // set the dotnet build type
+            project.SetMetadata("DotNetType", "MSBuild");
 
-            // set the project directory path
-            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+            // parse the file
+            var xml = XDocument.Load(path);
 
-            // set the project group
-            project.SetMetadata("ProjectGroup", group);
+            // get the target framework node
+            var frameworks = xml.Descendants("TargetFramework");
 
-            // set the name of the project (using the directory name by convention)
-            // todo: parse the name from the project.json file
-            project.SetMetadata("ProjectName", Path.GetFileName(directory));
+            // determine if the frameworks node did not exist
+            if (frameworks == null || !frameworks.Any())
+            {
+                // move on immediately
+                return;
+            }
 
-            // set the shared sources directory
-            // todo: parse this from the project.json file
-            project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
+            // get the name properties ordered by name
+            var names = frameworks.SelectMany(node => node.Value.Split(';'))
+                .OrderByDescending(name => name);
 
-            // set the condo assembly info path
-            project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
+            // get the highest netcore tfm
+            var tfm = names.FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+
+            // set the target frameworks property
+            project.SetMetadata("TargetFrameworks", string.Join(";", names));
+            project.SetMetadata("NetCoreFramework", tfm);
         }
         #endregion
     }

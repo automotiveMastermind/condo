@@ -119,11 +119,14 @@ namespace PulseBridge.Condo.IO
                         // get the current tag
                         var current = new GitTag { Name = label, Hash = hash, ShortHash = shortHash };
 
+                        // get the version sample
+                        var sample = current.Version(options.VersionTag);
+
                         // determine if the version is not null
-                        if (current.Version != null)
+                        if (sample != null)
                         {
                             // set the version
-                            version = current.Version;
+                            version = sample;
                         }
 
                         // add the tag
@@ -193,6 +196,11 @@ namespace PulseBridge.Condo.IO
 
                     // add the commit to the versioned collection
                     versioned.Add(commit);
+                }
+                else
+                {
+                    // add the commit to the unversioned commits
+                    log.Unversioned.Add(commit);
                 }
 
                 // add references from the header
