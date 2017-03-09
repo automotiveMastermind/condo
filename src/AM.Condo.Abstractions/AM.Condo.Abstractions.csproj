@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>AM.Condo.Abstractions</AssemblyName>
+    <PackageId>AM.Condo.Abstractions</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Extensions" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="System.Collections" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="NuGet.Versioning" Version="[4.0.0, 5.0.0)" />
+  </ItemGroup>
+
+</Project>

@@ -4,6 +4,7 @@ function condo-bootstrap()
 {
     # condo branch
     local CONDO_BRANCH="master"
+    local CONDO_RESET=0
 
     # continue testing for arguments
     while [[ $# > 0 ]]; do
@@ -11,6 +12,9 @@ function condo-bootstrap()
             -b|--branch)
                 CONDO_BRANCH=$2
                 shift
+                ;;
+            -r|--reset)
+                CONDO_RESET=1
                 ;;
             --)
                 shift
@@ -28,13 +32,22 @@ function condo-bootstrap()
         CURL_OPT='$CURL_OPT -H "Authorization: token $GH_TOKEN"'
     fi
 
+    local CONDO_PATH="$HOME/.am/condo"
     local SHA_URI="https://api.github.com/repos/automotivemastermind/condo/commits/$CONDO_BRANCH"
     local CONDO_SHA=$(curl $CURL_OPT $SHA_URI | grep sha | head -n 1 | sed 's#.*\:.*"\(.*\).*",#\1#')
-    local SHA_PATH=$HOME/.am/condo/$CONDO_SHA
+    local SHA_PATH="$CONDO_PATH/$CONDO_SHA"
 
     if [ -f $SHA_PATH ]; then
         echo "condo: latest version already installed: $CONDO_SHA"
-        exit 0
+
+        if [ "${CONDO_RESET}" = "0" ]; then
+            exit 0
+        fi
+    fi
+
+    if [ -d "$CONDO_PATH" ]; then
+        echo "condo: removing existing condo path: $CONDO_PATH"
+        rm -rf $CONDO_PATH 1>/dev/null
     fi
 
     local INSTALL_URI="https://github.com/automotivemastermind/condo/archive/$CONDO_BRANCH.tar.gz"
@@ -43,7 +56,7 @@ function condo-bootstrap()
 
     pushd $INTALL_TEMP 1>/dev/null
     curl -skL $INSTALL_URI | tar zx
-    pushd "condo-$CONDO_BRANCH" 1>/dev/null
+    pushd "condo-$CONDO_BRANCH/template" 1>/dev/null
     ./install.sh
     popd 1>/dev/null
     popd 1>/dev/null
@@ -51,4 +64,4 @@ function condo-bootstrap()
     rm -rf $INTALL_TEMP 1>/dev/null
 }
 
-condo-bootstrap "$@"
+condo-bootstrap $@

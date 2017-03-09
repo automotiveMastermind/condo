@@ -39,7 +39,7 @@
 	to the underlying MSBuild runtime. These values are automatically bound from all remaining arguments. Specifying
 	the parameter as a collection is not necessary. See examples for more information.
 .EXAMPLE
-    condo -Uri https://github.com/pulsebridge/condo/releases/2.0.0.zip
+    condo -Uri https://github.com/automotivemastermind/condo/releases/2.0.0.zip
 
 	# use the specified uri to install condo (if it is not already installed)
 .EXAMPLE
@@ -66,7 +66,7 @@
     The underlying build system in use is Microsoft Build for .NET Core. Any parameters beyond those supported by this
     cmdlet will be passed to the msbuild process for consideration.
 .LINK
-	http://open.pulsebridge.com/condo
+	http://open.automotivemastermind.com/condo
 #>
 
 
@@ -87,17 +87,17 @@ Param (
     [switch]
     $NoColor,
 
-	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
-	[switch]
-	$Bootstrap,
+    [Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+    [switch]
+    $Bootstrap,
+
+    [Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+    [string]
+    $Username,
 
 	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
-	[string]
-	$Username,
-
-	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
-	[string]
-	$Password,
+    [string]
+    $Password,
 
     [Parameter(Mandatory=$false)]
     [Alias("v")]
@@ -146,8 +146,7 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
         Invoke-WebRequest $url -OutFile $path | Out-Null
     }
-    catch [System.Exception]
-    {
+    catch [System.Exception] {
         Write-Failure "Unable to retrieve file: '$url'"
 
         if ($retries -eq 0) {
@@ -166,10 +165,10 @@ $RootPath = $PSScriptRoot
 
 $BuildRoot = Join-Path $RootPath ".build"
 $CondoRoot = Join-Path $BuildRoot "condo"
-$CondoScript = Join-Path $CondoRoot "PulseBridge.Condo\Scripts\condo.ps1"
+$CondoScript = Join-Path $CondoRoot "AM.Condo\Scripts\condo.ps1"
 
 if ($PSCmdlet.ParameterSetName -eq "ByBranch") {
-    $Uri = "https://github.com/pulsebridge/condo/archive/$Branch.zip"
+    $Uri = "https://github.com/automotivemastermind/condo/archive/$Branch.zip"
 }
 
 if ($Reset -and (Test-Path $BuildRoot)) {
@@ -192,43 +191,43 @@ if (!(Test-Path $CondoRoot)) {
         Write-Info "Using condo build system from $Uri"
 
         $CondoTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
-        $CondoZip = Join-Path $CondoTemp "condo.zip"
+    $CondoZip = Join-Path $CondoTemp "condo.zip"
 
-        mkdir $CondoTemp | Out-Null
+    mkdir $CondoTemp | Out-Null
 
-        Get-File -url $Uri -Path $CondoZip
+    Get-File -url $Uri -Path $CondoZip
 
-        $CondoExtract = Join-Path $CondoTemp "extract"
+    $CondoExtract = Join-Path $CondoTemp "extract"
 
-        Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
-        pushd "$CondoExtract\*\src"
-        cp -Recurse * $CondoRoot
-        popd
+    pushd "$CondoExtract\*\src"
+    cp -Recurse * $CondoRoot
+    popd
 
-        if (Test-Path $CondoTemp) {
-            del -Recurse -Force $CondoTemp
-        }
+    if (Test-Path $CondoTemp) {
+        del -Recurse -Force $CondoTemp
     }
+}
 }
 
 try {
     # change to the root path
     pushd $RootPath
 
-	# add the bootstrap arguments
-	if ($Bootstrap) {
-		$MSBuildArgs = @(
-			$MSBuildArgs,
-			"/t:Bootstrap",
-			"/p:PackageFeedUsername=$Username",
-			"/p:PackageFeedPassword=$Password"
-		)
-	}
+    # add the bootstrap arguments
+    if ($Bootstrap) {
+        $MSBuildArgs = @(
+            $MSBuildArgs,
+            "/t:Bootstrap",
+            "/p:PackageFeedUsername=$Username",
+            "/p:PackageFeedPassword=$Password"
+        )
+    }
 
-	# execute the underlying script
-	& "$CondoScript" -Verbosity $Verbosity -NoColor:$NoColor @MSBuildArgs
+    # execute the underlying script
+    & "$CondoScript" -Verbosity $Verbosity -NoColor:$NoColor @MSBuildArgs
 }
 finally {
     popd

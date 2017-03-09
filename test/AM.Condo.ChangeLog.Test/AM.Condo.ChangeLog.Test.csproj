@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>AM.Condo.ChangeLog.Test</AssemblyName>
+    <PackageId>AM.Condo.ChangeLog.Test</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/AM.Condo.ChangeLog/AM.Condo.ChangeLog.csproj" />
+    <ProjectReference Include="../../src/AM.Condo.Xunit/AM.Condo.Xunit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="[15.0.0, 16.0.0)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="[2.2.0, 3.0.0)" />
+    <PackageReference Include="xunit" Version="[2.2.0, 3.0.0)" />
+    <PackageReference Include="Moq" Version="[4.7.1, 5.0.0)" />
+  </ItemGroup>
+
+</Project>

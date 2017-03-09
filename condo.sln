@@ -5,27 +5,27 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{815AA376-59E6-4440-868B-22143991B2ED}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo", "src\PulseBridge.Condo\PulseBridge.Condo.csproj", "{7DB9120F-FB7F-4978-8E68-C0FD24453EEC}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo", "src\AM.Condo\AM.Condo.csproj", "{7DB9120F-FB7F-4978-8E68-C0FD24453EEC}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.Abstractions", "src\PulseBridge.Condo.Abstractions\PulseBridge.Condo.Abstractions.csproj", "{3A5D130F-F686-4F61-A918-0BA20A9E08CF}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.Abstractions", "src\AM.Condo.Abstractions\AM.Condo.Abstractions.csproj", "{3A5D130F-F686-4F61-A918-0BA20A9E08CF}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.ChangeLog", "src\PulseBridge.Condo.ChangeLog\PulseBridge.Condo.ChangeLog.csproj", "{9C7102A3-496A-4E27-B337-285FEF0FC1BC}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.ChangeLog", "src\AM.Condo.ChangeLog\AM.Condo.ChangeLog.csproj", "{9C7102A3-496A-4E27-B337-285FEF0FC1BC}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.IO", "src\PulseBridge.Condo.IO\PulseBridge.Condo.IO.csproj", "{4137C85C-F3D0-4B53-BDF3-2B884B8881CF}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.IO", "src\AM.Condo.IO\AM.Condo.IO.csproj", "{4137C85C-F3D0-4B53-BDF3-2B884B8881CF}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.Xunit", "src\PulseBridge.Condo.Xunit\PulseBridge.Condo.Xunit.csproj", "{1A3D8008-4C8B-423D-8103-DA4B663AE93E}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.Xunit", "src\AM.Condo.Xunit\AM.Condo.Xunit.csproj", "{1A3D8008-4C8B-423D-8103-DA4B663AE93E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{28A3A8AB-C408-4E45-94C1-73F96DA615DA}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.ChangeLog.Test", "test\PulseBridge.Condo.ChangeLog.Test\PulseBridge.Condo.ChangeLog.Test.csproj", "{A1C066D0-F424-47D9-85A6-6E7D697463C1}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.ChangeLog.Test", "test\AM.Condo.ChangeLog.Test\AM.Condo.ChangeLog.Test.csproj", "{A1C066D0-F424-47D9-85A6-6E7D697463C1}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.E2E.Test", "test\PulseBridge.Condo.E2E.Test\PulseBridge.Condo.E2E.Test.csproj", "{386D06DD-94E0-4C60-9004-89E31D502447}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.E2E.Test", "test\AM.Condo.E2E.Test\AM.Condo.E2E.Test.csproj", "{386D06DD-94E0-4C60-9004-89E31D502447}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.IO.Test", "test\PulseBridge.Condo.IO.Test\PulseBridge.Condo.IO.Test.csproj", "{2EB490B5-1A88-47AC-875E-04075DADC72B}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.IO.Test", "test\AM.Condo.IO.Test\AM.Condo.IO.Test.csproj", "{2EB490B5-1A88-47AC-875E-04075DADC72B}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.Test", "test\PulseBridge.Condo.Test\PulseBridge.Condo.Test.csproj", "{12276277-713A-41EC-858F-EC269876BA3B}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.Test", "test\AM.Condo.Test\AM.Condo.Test.csproj", "{12276277-713A-41EC-858F-EC269876BA3B}"
 EndProject
-Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "PulseBridge.Condo.Xunit.Test", "test\PulseBridge.Condo.Xunit.Test\PulseBridge.Condo.Xunit.Test.csproj", "{1FDEDCD7-219E-4D50-B7DE-E5659A287DFC}"
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "AM.Condo.Xunit.Test", "test\AM.Condo.Xunit.Test\AM.Condo.Xunit.Test.csproj", "{1FDEDCD7-219E-4D50-B7DE-E5659A287DFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
