@@ -81,22 +81,22 @@ For more information, please refer to the [official documentation][docs-url].
 [license]: LICENSE
 [credits]: CREDITS
 
-[release-url]: //github.com/pulsebridge/condo/releases/latest
-[release-v-image]:https://img.shields.io/github/release/pulsebridge/condo.svg?style=flat-square&label=github
+[release-url]: //github.com/automotivemastermind/condo/releases/latest
+[release-v-image]:https://img.shields.io/github/release/automotivemastermind/condo.svg?style=flat-square&label=github
 
-[travis-url]: //travis-ci.org/pulsebridge/condo
-[travis-image]: https://img.shields.io/travis/pulsebridge/condo.svg?label=travis
+[travis-url]: //travis-ci.org/automotivemastermind/condo
+[travis-image]: https://img.shields.io/travis/automotivemastermind/condo.svg?label=travis
 
-[appveyor-url]: //ci.appveyor.com/project/pulsebridge/condo
-[appveyor-image]: https://img.shields.io/appveyor/ci/pulsebridge/condo.svg?label=appveyor
+[appveyor-url]: //ci.appveyor.com/project/automotivemastermind/condo
+[appveyor-image]: https://img.shields.io/appveyor/ci/automotivemastermind/condo.svg?label=appveyor
 
-[nuget-url]: //www.nuget.org/packages/pulsebridge.condo
-[nuget-v-image]: https://img.shields.io/nuget/v/pulsebridge.condo.svg?label=nuget
-[nuget-d-image]: https://img.shields.io/nuget/dt/pulsebridge.condo.svg?label=nuget
+[nuget-url]: //www.nuget.org/packages/automotivemastermind.condo
+[nuget-v-image]: https://img.shields.io/nuget/v/automotivemastermind.condo.svg?label=nuget
+[nuget-d-image]: https://img.shields.io/nuget/dt/automotivemastermind.condo.svg?label=nuget
 
 [yo-url]: //www.npmjs.com/package/generator-condo
 
-[docs-url]: //pulsebridge.github.io/condo
+[docs-url]: //automotivemastermind.github.io/condo
 
-[gitter-url]: //gitter.im/pulsebridge/condo
+[gitter-url]: //gitter.im/automotivemastermind/condo
 [gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg

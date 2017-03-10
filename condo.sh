@@ -16,7 +16,7 @@ if [ -f condo-local.sh ]; then
 fi
 
 # copy the template to the local path
-cp template/condo.sh condo-local.sh
+cp scripts/condo.sh condo-local.sh
 
 # run condo using local build
 CONDO_SHELL="$ROOT_PATH/condo-local.sh"

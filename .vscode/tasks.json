@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/src/PulseBridge.Condo/PulseBridge.Condo.csproj"
+                "${workspaceRoot}/src/AM.Condo/AM.Condo.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

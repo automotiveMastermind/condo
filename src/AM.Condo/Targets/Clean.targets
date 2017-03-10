@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CleanArtifacts">
+    <RemoveDir Directories="@(ArtifactPaths)" Condition=" Exists('%(ArtifactPaths.FullPath)') " ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CleanIntermediateArtifacts">
+    <ItemGroup>
+      <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" Condition=" Exists('%(Projects.ProjectDir)bin') " />
+      <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" Condition=" Exists('%(Projects.ProjectDir)obj') " />
+
+      <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" Condition=" Exists('%(Projects.CondoAssemblyInfo)') " />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(IntermediateArtifacts)" ContinueOnError="true" />
+    <Delete Files="@(IntermediateFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CleanRepository" Condition="$(HasGit) AND $(CI)">
+    <CleanRepository RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
+  <PropertyGroup>
+    <CleanDependsOn>
+      CleanRepository;
+      CleanArtifacts;
+      CleanIntermediateArtifacts;
+      $(CleanDependsOn);
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" />
+</Project>

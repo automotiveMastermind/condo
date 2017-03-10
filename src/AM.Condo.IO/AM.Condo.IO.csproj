@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>AM.Condo.IO</AssemblyName>
+    <PackageId>AM.Condo.IO</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AM.Condo.Abstractions/AM.Condo.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.Process" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="System.IO.FileSystem" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="System.Linq" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="NuGet.Versioning" Version="[4.0.0, 5.0.0)" />
+  </ItemGroup>
+
+</Project>
