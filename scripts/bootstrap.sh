@@ -56,7 +56,7 @@ function condo-bootstrap()
 
     pushd $INTALL_TEMP 1>/dev/null
     curl -skL $INSTALL_URI | tar zx
-    pushd "condo-$CONDO_BRANCH/template" 1>/dev/null
+    pushd "condo-$CONDO_BRANCH/scripts" 1>/dev/null
     ./install.sh
     popd 1>/dev/null
     popd 1>/dev/null

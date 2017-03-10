@@ -165,6 +165,14 @@ namespace AM.Condo.IO
         IGitRepositoryInitialized Pull(bool all);
 
         /// <summary>
+        /// Cleans the git repository.
+        /// </summary>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized Clean();
+
+        /// <summary>
         /// Sets the URL of the remote with the specified <paramref name="name"/> to the specified
         /// <paramref name="uri"/>.
         /// </summary>

@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- include the individual tasks provided by condo -->
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.CheckoutBranch" />
+  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.CleanRepository" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.CreateRelease" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetAssemblyInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetBuildQuality" />

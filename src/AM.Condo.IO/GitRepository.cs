@@ -273,6 +273,23 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc/>
+        public IGitRepositoryInitialized Clean()
+        {
+            var cmd = "clean -xdf";
+
+            var output = this.Execute(cmd);
+
+            if (!output.Success)
+            {
+                this.logger.LogWarning(output.Error);
+            }
+
+            this.logger.LogMessage(output.Output);
+
+            return this;
+        }
+
+        /// <inheritdoc/>
         public IGitRepositoryBare Bare()
         {
             var output = this.Execute("init --bare");

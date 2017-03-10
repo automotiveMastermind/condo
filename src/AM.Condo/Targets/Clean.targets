@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Target Name="CleanArtifacts">
-    <RemoveDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
+    <RemoveDir Directories="@(ArtifactPaths)" Condition=" Exists('%(ArtifactPaths.FullPath)') " ContinueOnError="true" />
   </Target>
 
   <Target Name="CleanIntermediateArtifacts">
@@ -17,8 +17,13 @@
     <Delete Files="@(IntermediateFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
   </Target>
 
+  <Target Name="CleanRepository" Condition="$(HasGit)">
+    <CleanRepository RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
   <PropertyGroup>
     <CleanDependsOn>
+      CleanRepository;
       CleanArtifacts;
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
