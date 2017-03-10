@@ -148,15 +148,12 @@ while [[ $# > 0 ]]; do
             CLR_CLEAR=
             MSBUILD_DISABLE_COLOR="DisableConsoleColor"
             ;;
-        --bootstrap)
-            BOOTSTRAP=1
-            ;;
         --username)
-            BOOTSTRAP_USERNAME=$2
+            FEED_USERNAME=$2
             shift
             ;;
         --password)
-            BOOTSTRAP_PASSWORD=$2
+            FEED_PASSWORD=$2
             shift
             ;;
         *)
@@ -172,17 +169,6 @@ done
 # delete the log paths if they exist
 [ -e "$BUILD_ROOT" ] && rm -rf $BUILD_ROOT
 
-# determine if the dotnet version is not already set
-if [ -z "$DOTNET_VERSION" ]; then
-    # set the dotnet version
-    DOTNET_VERSION="1.0.1"
-fi
-
-# set the dotnet install path
-if [ -z "$DOTNET_INSTALL_DIR/sdk/$DOTNET_VERSION" ]; then
-    export DOTNET_INSTALL_DIR=~/.dotnet
-fi
-
 # determine if the dotnet install url is not already set
 if [ -z "$DOTNET_INSTALL_URL" ]; then
     # set the dotnet install url to the 1.0.1 release
@@ -193,6 +179,17 @@ fi
 if [ -z "${DOTNET_CHANNEL:-}" ]; then
     # set the dotnet channel
     DOTNET_CHANNEL="rel-1.0.1"
+fi
+
+# determine if the dotnet version is not already set
+if [ -z "$DOTNET_VERSION" ]; then
+    # set the dotnet version
+    DOTNET_VERSION="1.0.1"
+fi
+
+# set the dotnet install path
+if [ -z "$DOTNET_INSTALL_DIR/sdk/$DOTNET_VERSION" ]; then
+    export DOTNET_INSTALL_DIR=~/.dotnet
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
@@ -209,16 +206,12 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 "$CONDO_PROJ"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
--p:PackageFeedUsername="$BOOTSTRAP_USERNAME"
--p:PackageFeedPassword="$BOOTSTRAP_PASSWORD"
+-p:PackageFeedUsername="$FEED_USERNAME"
+-p:PackageFeedPassword="$FEED_PASSWORD"
 -fl
 -flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
 -clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY
 END_MSBUILD_RSP
-
-if [ "$BOOTSTRAP" = "1" ]; then
-    safe-join $'\n' "-p:PackageFeedUsername=$BOOTSTRAP_USERNAME -p:PackageFeedPassword=$BOOTSTRAP_PASSWORD -t:Bootstrap" >> $MSBUILD_RSP
-fi
 
 # write out msbuild arguments to the rsp
 safe-join $'\n' "$@" >> $MSBUILD_RSP

@@ -3,18 +3,26 @@
 [CmdletBinding(PositionalBinding=$false, HelpUri = 'http://open.automotivemastermind.com/condo')]
 
 Param (
-    [Parameter(Mandatory=$false)]
-    [Alias("nc")]
+    [Parameter()]
+    [Alias('nc')]
     [switch]
     $NoColor,
 
-    [Parameter(Mandatory=$false)]
-    [Alias("v")]
-    [ValidateSet("Quiet", "Minimal", "Normal", "Detailed", "Diagnostic")]
+    [Parameter()]
+    [Alias('v')]
+    [ValidateSet('Quiet', 'Minimal', 'Normal', 'Detailed', 'Diagnostic')]
     [string]
-    $Verbosity = "Normal",
+    $Verbosity = 'Normal',
 
-    [Parameter(Mandatory=$false, ValueFromRemainingArguments=$true)]
+    [Parameter()]
+    [string]
+    $Username,
+
+    [Parameter()]
+    [SecureString]
+    $Password,
+
+    [Parameter(ValueFromRemainingArguments)]
     [string[]]
     $MSBuildArgs
 )
@@ -42,7 +50,7 @@ function Write-Info([string] $message) {
 
 function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
-        Invoke-WebRequest $url -OutFile $path | Out-Null
+        Invoke-WebRequest $url -OutFile $path > $null
     }
     catch [System.Exception]
     {
@@ -61,37 +69,42 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
 
 # set well-known paths
 $WorkingPath = Convert-Path (Get-Location)
-$ArtifactsRoot = Join-Path $WorkingPath "artifacts"
-$BuildRoot = Join-Path $WorkingPath ".build"
 
-$MSBuildPath = Join-Path $BuildRoot "msbuild-cli"
-$MSBuildProj = Join-Path $MSBuildPath "project.json"
-$MSBuildPublish = Join-Path (Join-Path $MSBuildPath "bin") "publish"
-$MSBuildLog = Join-Path $BuildRoot "condo.msbuild.log"
-$MSBuildRsp = Join-Path $BuildRoot "condo.msbuild.rsp"
+$ArtifactsRoot = "$WorkingPath\artifacts"
+$CondoRoot = "$HOME\.am\condo"
+$SrcRoot = "$CondoRoot\.src"
+$BuildRoot = "$CondoRoot\.build"
 
-$CondoPath = Join-Path (Join-Path $BuildRoot "condo") "AM.Condo"
-$CondoPublish = $MSBuildPublish
-$CondoLog = Join-Path $BuildRoot "condo.log"
-$ScriptsPath = Join-Path $CondoPath "Scripts"
+$MSBuildLog = "$BuildRoot\condo.msbuild.log"
+$MSBuildRsp = "$BuildRoot\condo.msbuild.rsp"
 
-if (Test-Path $ArtifactsRoot) {
-	del -Force -Recurse $ArtifactsRoot | Out-Null
+$CondoPath = "$SrcRoot\src\AM.Condo"
+$CondoPublish = "$CondoRoot\cli"
+$CondoLog = "$BuildRoot\condo.log"
+$CondoTargets = "$CondoPath\Targets"
+$CondoProj = "$WorkingPath\condo.build"
+
+if (!(Test-Path $ArtifactsRoot)) {
+    New-Item $ArtifactsRoot -ItemType Directory
 }
 
+if (Test-Path $BuildRoot) {
+    Remove-Item $BuildRoot -Recursive -Force > $null
+}
+
+New-Item $BuildRoot -ItemType Directory
+
 if (Test-Path $CondoLog) {
-    del -Force $CondoLog | Out-Null
+    Remove-Item $CondoLog -Force > $null
 }
 
 if (Test-Path $MSBuildLog) {
-    del -Force $MSBuildLog | Out-Null
+    Remove-Item $MSBuildLog -Force > $null
 }
 
 if (Test-Path $MSBuildRsp) {
-    del -Force $MSBuildRsp | Out-Null
+    Remove-Item $MSBuildRsp -Force > $null
 }
-
-mkdir $ArtifactsRoot | Out-Null
 
 $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
 $MSBuildDisableColor = ""
@@ -140,89 +153,63 @@ function Install-DotNet() {
     if ($env:SKIP_DOTNET_INSTALL) {
         Write-Info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
         $env:PATH = "$env:PATH;$DotNetPath"
-    }
-    else {
-        $dotnetTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
-        $dotnetInstall = Join-Path $dotnetTemp "dotnet-install.ps1"
-
-        try {
-            mkdir $dotnetTemp | Out-Null
-            Get-File -url $dotnetUrl -Path $dotnetInstall
-            Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
-        }
-        finally {
-            del -Recurse -Force $dotnetTemp
-        }
-
-        Write-Success "dotnet-cli was installed..."
-
-        if (!($env:Path.Split(';') -icontains $DotNetPath)) {
-            $env:PATH = "$DotNetPath;$env:PATH"
-        }
+        return
     }
 
-    $sharedPath = (Join-Path (Split-Path ((get-command dotnet.exe).Path) -Parent) "shared");
-    (Get-ChildItem $sharedPath -Recurse *dotnet.exe) | %{ $_.FullName } | Remove-Item;
+    $dotnetTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
+    $dotnetInstall = Join-Path $dotnetTemp "dotnet-install.ps1"
+
+    try {
+        New-Item $dotnetTemp -ItemType Directory > $null
+        Get-File -url $dotnetUrl -Path $dotnetInstall
+        Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
+    }
+    finally {
+        Remove-Item -Recurse -Force $dotnetTemp
+    }
+
+    if (!($env:Path.Split(';') -icontains $DotNetPath)) {
+        $env:PATH = "$DotNetPath;$env:PATH"
+    }
+
+    Write-Success "dotnet-cli was installed..."
 }
 
-function Install-MSBuild() {
-    if (Test-Path $MSBuildPath) {
+function Install-Condo() {
+    if (Test-Path $CondoPublish) {
         Write-Info "condo was already built: use -Reset to get the latest version."
         return
     }
 
-    try {
-        mkdir $MSBuildPublish -ErrorAction SilentlyContinue | Out-Null
-        mkdir $CondoPublish -ErrorAction SilentlyContinue | Out-Null
+    # create the condo publish path
+    New-Item $CondoPublish -ItemType Directory -ErrorAction SilentlyContinue > $null
 
-        $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches.Groups[1].Value
+    # get the runtime
+    $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches.Groups[1].Value
 
-        $contents = [System.IO.File]::ReadAllText((Convert-Path "$ScriptsPath\msbuild.json"))
-        [System.IO.File]::WriteAllText($MSBuildProj, $contents.Replace("RUNTIME", $runtime))
+    # restore msbuild
+    Write-Info "condo: restoring condo packages..."
+    Invoke-Cmd dotnet restore $SrcRoot --runtime $runtime --verbosity minimal
+    Write-Success "condo: restore complete"
 
-        # restore msbuild
-        Write-Info "condo: restoring condo packages..."
-        Invoke-Cmd dotnet restore $BuildRoot --verbosity minimal
-        Write-Success "condo: restore complete"
-
-        # publish condo
-        Write-Info "condo: publishing condo tasks..."
-        Invoke-Cmd dotnet publish $CondoPath --output $CondoPublish --runtime $runtime
-        Write-Success "condo: publish complete"
-
-        # publish msbuild
-        Write-Info "msbuild: publishing msbuild system..."
-        Invoke-Cmd dotnet publish $MSBuildPath --output $MSBuildPublish --runtime $runtime
-        Write-Success "msbuild: publish complete"
-    }
-    catch {
-        $ex = $error[0]
-
-        if(Test-Path $MSBuildPath) {
-            del -rec -for $MSBuildPath
-        }
-
-        throw $ex
-    }
+    # publish condo
+    Write-Info "condo: publishing condo tasks..."
+    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal
+    Write-Success "condo: publish complete"
 }
 
 try
 {
     Install-DotNet
-    Install-MSBuild
-
-    $CondoTargets = Join-Path $CondoPath "Targets"
-    $CondoProj = Join-Path $WorkingPath "condo.build"
-
-    if (!(Test-Path $CondoProj)) {
-        $CondoProj = Join-Path $CondoTargets "condo.build"
-    }
+    Install-Condo
 
     $MSBuildRspData = @"
 /nologo
 "$CondoProj"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"
+/p:PackageFeedUsername="$Username"
+/p:PackageFeedPassword="$Password"
 /fl
 /flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
 /clp:$MSBuildDisableColor;Verbosity=$Verbosity
@@ -234,8 +221,8 @@ try
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj' $MSBuildArgs"
 
-    & "$MSBuildPublish\corerun.exe" "$MSBuildPublish\MSBuild.dll" `@"$MSBuildRsp"
+    & "dotnet" "msbuild" `@"$MSBuildRsp"
 }
 finally {
-    cp -ErrorAction SilentlyContinue $MSBuildRsp,$CondoLog,$MSBuildLog $ArtifactsRoot
+    Copy-Item $MSBuildRsp, $CondoLog, $MSBuildLog -Destination $ArtifactsRoot -ErrorAction SilentlyContinue
 }

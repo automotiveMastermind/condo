@@ -27,8 +27,6 @@
 .PARAMETER NoColor
     Indicates that any messaging to the standard output should not be emitted using colors. This is useful for parsing
     output by third party tools.
-.PARAMETER Bootstrap
-	Indicates that condo should bootstrap a developer environment to configure access to secured package feeds.
 .PARAMETER Username
 	The username used to bootstrap access to secured package feeds.
 .PARAMETER Password
@@ -69,54 +67,49 @@
 	http://open.automotivemastermind.com/condo
 #>
 
-
 [CmdletBinding(DefaultParameterSetName='ByBranch', PositionalBinding=$false)]
 Param (
-    [Parameter(Mandatory=$false)]
-    [Alias("r")]
+    [Parameter()]
+    [Alias('r')]
     [switch]
     $Reset,
 
-    [Parameter(Mandatory=$false)]
-    [Alias("l")]
+    [Parameter()]
+    [Alias('l')]
     [switch]
     $Local,
 
-    [Parameter(Mandatory=$false)]
-    [Alias("nc")]
+    [Parameter()]
+    [Alias('nc')]
     [switch]
     $NoColor,
 
-    [Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
-    [switch]
-    $Bootstrap,
-
-    [Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
+    [Parameter()]
     [string]
     $Username,
 
-	[Parameter(Mandatory=$true, ParameterSetName="Bootstrap")]
-    [string]
+    [Parameter()]
+    [SecureString]
     $Password,
 
-    [Parameter(Mandatory=$false)]
-    [Alias("v")]
-    [ValidateSet("Quiet", "Minimal", "Normal", "Detailed", "Diagnostic")]
+    [Parameter()]
+    [Alias('v')]
+    [ValidateSet('Quiet', 'Minimal', 'Normal', 'Detailed', 'Diagnostic')]
     [string]
-    $Verbosity = "Normal",
+    $Verbosity = 'Normal',
 
-    [Parameter(Mandatory=$true, ParameterSetName="ByUri")]
-    [Alias("u")]
+    [Parameter(Mandatory=$true, ParameterSetName='ByUri')]
+    [Alias('u')]
     [string]
     $Uri,
 
-    [Parameter(Mandatory=$false, ParameterSetName="ByBranch")]
-    [Alias("b")]
+    [Parameter(Mandatory=$false, ParameterSetName='ByBranch')]
+    [Alias('b')]
     [string]
-    $Branch = "develop",
+    $Branch = 'develop',
 
-    [Parameter(Mandatory=$true, ParameterSetName="BySource")]
-    [Alias("s")]
+    [Parameter(Mandatory=$true, ParameterSetName='BySource')]
+    [Alias('s')]
     [string]
     $Source,
 
@@ -147,7 +140,7 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
         Invoke-WebRequest $url -OutFile $path | Out-Null
     }
     catch [System.Exception] {
-        Write-Failure "Unable to retrieve file: '$url'"
+        Write-Failure "Unable to retrieve file: $url"
 
         if ($retries -eq 0) {
             $exception = $_.Exception
@@ -163,72 +156,73 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
 # find the script path
 $RootPath = $PSScriptRoot
 
-$BuildRoot = Join-Path $RootPath ".build"
-$CondoRoot = Join-Path $BuildRoot "condo"
-$CondoScript = Join-Path $CondoRoot "AM.Condo\Scripts\condo.ps1"
+$CondoRoot = "$HOME\.am\condo"
+$SrcRoot = "$CondoRoot\.src"
+$CondoScript = "$SrcRoot\src\AM.Condo\Scripts\condo.ps1"
 
-if ($PSCmdlet.ParameterSetName -eq "ByBranch") {
+if ($PSCmdlet.ParameterSetName -eq 'ByBranch') {
     $Uri = "https://github.com/automotivemastermind/condo/archive/$Branch.zip"
 }
 
-if ($Reset -and (Test-Path $BuildRoot)) {
-    Write-Info "Resetting condo build system..."
-    del -Recurse -Force $BuildRoot | Out-Null
+if ($Reset -and (Test-Path $CondoRoot)) {
+    Write-Info 'Resetting condo build system...'
+    Remove-Item -Recurse -Force $CondoRoot -ErrorAction SilentlyContinue | Out-Null
 }
 
 if ($Local) {
-    $Source = Join-Path $RootPath "src"
+    $CondoSource = $RootPath
 }
 
-if (!(Test-Path $CondoRoot)) {
-    Write-Info "Creating path for condo at $CondoRoot"
-    mkdir $CondoRoot | Out-Null
+if (!(Test-Path $SrcRoot)) {
+    Write-Info "Creating path for condo at $SrcRoot..."
+    New-Item $SrcRoot -ItemType Directory | Out-Null
 
-    if ($Source) {
-        Write-Info "Using condo build system from $Source"
-        cp -Recurse "$Source\*" $CondoRoot
-    } else {
-        Write-Info "Using condo build system from $Uri"
+    if ($CondoSource) {
+        Write-Info "Using condo build system from $CondoSource..."
+        cp -Recurse "$CondoSource\*" $SrcRoot
+    }
+    else {
+        Write-Info "Using condo build system from $Uri..."
 
         $CondoTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
-    $CondoZip = Join-Path $CondoTemp "condo.zip"
+        $CondoZip = Join-Path $CondoTemp 'condo.zip'
 
-    mkdir $CondoTemp | Out-Null
+        New-Item $CondoTemp -ItemType Directory | Out-Null
 
-    Get-File -url $Uri -Path $CondoZip
+        Get-File -url $Uri -Path $CondoZip
 
-    $CondoExtract = Join-Path $CondoTemp "extract"
+        $CondoExtract = Join-Path $CondoTemp 'extract'
 
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        [System.IO.Compression.ZipFile]::ExtractToDirectory($CondoZip, $CondoExtract)
 
-    pushd "$CondoExtract\*\src"
-    cp -Recurse * $CondoRoot
-    popd
+        Push-Location "$CondoExtract\*\src"
+        Copy-Item -Recurse * $CondoRoot
+        Pop-Location
 
-    if (Test-Path $CondoTemp) {
-        del -Recurse -Force $CondoTemp
+        if (Test-Path $CondoTemp) {
+            Remove-Item -Recurse -Force $CondoTemp -ErrorAction SilentlyContinue
+        }
     }
-}
 }
 
 try {
     # change to the root path
-    pushd $RootPath
+    Push-Location $RootPath
 
-    # add the bootstrap arguments
-    if ($Bootstrap) {
-        $MSBuildArgs = @(
-            $MSBuildArgs,
-            "/t:Bootstrap",
-            "/p:PackageFeedUsername=$Username",
-            "/p:PackageFeedPassword=$Password"
-        )
+    $MSBuildArgs = @()
+
+    if ($Username -ne '') {
+        $MSBuildArgs += "/p:PackageFeedUsername=$Username"
+    }
+
+    if ($Password -ne '') {
+        $MSBuildArgs += "/p:PackageFeedPassword=$Password"
     }
 
     # execute the underlying script
     & "$CondoScript" -Verbosity $Verbosity -NoColor:$NoColor @MSBuildArgs
 }
 finally {
-    popd
+    Pop-Location
 }
