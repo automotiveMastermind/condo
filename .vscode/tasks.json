@@ -1,16 +1,31 @@
 {
-    "version": "0.1.0",
-    "command": "dotnet",
-    "isShellCommand": true,
-    "args": [],
-    "tasks": [
-        {
-            "taskName": "build",
-            "args": [
-                "${workspaceRoot}/src/AM.Condo/AM.Condo.csproj"
-            ],
-            "isBuildCommand": true,
-            "problemMatcher": "$msCompile"
-        }
-    ]
+  "version": "0.1.0",
+  "linux": {
+    "command": "condo.sh"
+  },
+  "osx": {
+    "command": "condo.sh"
+  },
+  "windows": {
+    "command": "condo.cmd"
+  },
+  "isShellCommand": true,
+  "args": [],
+  "taskSelector": "/t:",
+  "tasks": [
+    {
+      "taskName": "build",
+      "isBuildCommand": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "taskName": "test",
+      "isTestCommand": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "taskName": "publish",
+      "problemMatcher": "$msCompile"
+    }
+  ]
 }
