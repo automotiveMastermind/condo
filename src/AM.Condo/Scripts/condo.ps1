@@ -85,14 +85,14 @@ $CondoTargets = "$CondoPath\Targets"
 $CondoProj = "$WorkingPath\condo.build"
 
 if (!(Test-Path $ArtifactsRoot)) {
-    New-Item $ArtifactsRoot -ItemType Directory
+    New-Item $ArtifactsRoot -ItemType Directory > $null
 }
 
 if (Test-Path $BuildRoot) {
     Remove-Item $BuildRoot -Recurse -Force > $null
 }
 
-New-Item $BuildRoot -ItemType Directory
+New-Item $BuildRoot -ItemType Directory -> $null
 
 if (Test-Path $CondoLog) {
     Remove-Item $CondoLog -Force > $null
@@ -165,7 +165,7 @@ function Install-DotNet() {
         Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
     }
     finally {
-        Remove-Item -Recurse -Force $dotnetTemp
+        Remove-Item -Recurse -Force $dotnetTemp > $null
     }
 
     if (!($env:Path.Split(';') -icontains $DotNetPath)) {
@@ -224,5 +224,5 @@ try
     & "dotnet" "msbuild" `@"$MSBuildRsp"
 }
 finally {
-    Copy-Item $MSBuildRsp, $CondoLog, $MSBuildLog -Destination $ArtifactsRoot -ErrorAction SilentlyContinue
+    Copy-Item $MSBuildRsp, $CondoLog, $MSBuildLog -Destination $ArtifactsRoot -ErrorAction SilentlyContinue > $null
 }
