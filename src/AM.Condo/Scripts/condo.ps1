@@ -1,6 +1,6 @@
 #requires -version 4
 
-[CmdletBinding(PositionalBinding=$false, HelpUri = 'http://open.automotivemastermind.com/condo')]
+[CmdletBinding(HelpUri = 'http://open.automotivemastermind.com/condo')]
 
 Param (
     [Parameter()]
@@ -15,12 +15,8 @@ Param (
     $Verbosity = 'Normal',
 
     [Parameter()]
-    [string]
-    $Username,
-
-    [Parameter()]
-    [SecureString]
-    $Password,
+    [pscredential]
+    $Credential,
 
     [Parameter(ValueFromRemainingArguments)]
     [string[]]
@@ -92,7 +88,7 @@ if (Test-Path $BuildRoot) {
     Remove-Item $BuildRoot -Recurse -Force > $null
 }
 
-New-Item $BuildRoot -ItemType Directory -> $null
+New-Item $BuildRoot -ItemType Directory > $null
 
 if (Test-Path $CondoLog) {
     Remove-Item $CondoLog -Force > $null
@@ -194,7 +190,7 @@ function Install-Condo() {
 
     # publish condo
     Write-Info "condo: publishing condo tasks..."
-    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal
+    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false
     Write-Success "condo: publish complete"
 }
 
@@ -203,20 +199,29 @@ try
     Install-DotNet
     Install-Condo
 
+    if ($Credential) {
+        $username = $Credential.UserName
+        $password = $Credential.Password | From-SecureString
+
+        $MSBuildArgs = @(
+            $MSBuildArgs,
+            "/p:PackageFeedUsername=$username",
+            "/p:PackageFeedPassword=$password"
+        )
+    }
+
     $MSBuildRspData = @"
 /nologo
 "$CondoProj"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"
-/p:PackageFeedUsername="$Username"
-/p:PackageFeedPassword="$Password"
 /fl
 /flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
 /clp:$MSBuildDisableColor;Verbosity=$Verbosity
 "@
 
     $MSBuildRspData | Out-File -Encoding ASCII -FilePath $MSBuildRsp
-    $MSBuildArgs | foreach { $_ | Out-File -Append -Encoding ASCII -FilePath $MSBuildRsp }
+    $MSBuildArgs | ForEach-Object { $_ | Out-File -Append -Encoding ASCII -FilePath $MSBuildRsp }
 
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj' $MSBuildArgs"
