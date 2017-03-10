@@ -89,7 +89,7 @@ if (!(Test-Path $ArtifactsRoot)) {
 }
 
 if (Test-Path $BuildRoot) {
-    Remove-Item $BuildRoot -Recursive -Force > $null
+    Remove-Item $BuildRoot -Recurse -Force > $null
 }
 
 New-Item $BuildRoot -ItemType Directory
