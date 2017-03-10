@@ -62,7 +62,7 @@ namespace AM.Condo.Diagnostics
         }
 
         /// <inheritdoc />
-        public void LogMessage(string message)
+        public void LogMessage(string message, LogLevel level)
         {
             if (message == null)
             {
@@ -74,7 +74,7 @@ namespace AM.Condo.Diagnostics
                 throw new ArgumentException($"The {nameof(message)} argument must not be empty.", nameof(message));
             }
 
-            this.log.LogMessage(MessageImportance.High, message);
+            this.log.LogMessage((MessageImportance)level, message);
         }
 
         /// <inheritdoc />

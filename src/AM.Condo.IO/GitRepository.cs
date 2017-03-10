@@ -230,7 +230,7 @@ namespace AM.Condo.IO
 
             if (tags)
             {
-                cmd += " --tags";
+                cmd += " --follow-tags";
             }
 
             if (!string.IsNullOrEmpty(remote))
@@ -245,7 +245,7 @@ namespace AM.Condo.IO
                 this.logger.LogWarning(output.Error);
             }
 
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
 
             return this;
         }
@@ -267,7 +267,7 @@ namespace AM.Condo.IO
                 this.logger.LogWarning(output.Error);
             }
 
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
 
             return this;
         }
@@ -284,7 +284,7 @@ namespace AM.Condo.IO
                 this.logger.LogWarning(output.Error);
             }
 
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
 
             return this;
         }
@@ -374,7 +374,7 @@ namespace AM.Condo.IO
             }
 
             // write the message and warning
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
             this.logger.LogWarning(output.Error);
 
             return this;
@@ -557,7 +557,7 @@ namespace AM.Condo.IO
             var exec = this.Execute(cmd);
 
             // log the output
-            this.logger.LogMessage(exec.Output);
+            this.logger.LogMessage(exec.Output, LogLevel.Low);
 
             // determine if we were successful
             if (!exec.Success)
@@ -609,7 +609,7 @@ namespace AM.Condo.IO
             }
 
             // log the output
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
 
             // return self
             return this;
@@ -635,7 +635,7 @@ namespace AM.Condo.IO
             }
 
             // log the output
-            this.logger.LogMessage(output.Output);
+            this.logger.LogMessage(output.Output, LogLevel.Low);
 
             // return self
             return this;

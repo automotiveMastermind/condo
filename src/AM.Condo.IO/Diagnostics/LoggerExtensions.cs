@@ -67,10 +67,13 @@ namespace AM.Condo.Diagnostics
         /// <param name="message">
         /// The warning to log.
         /// </param>
+        /// <param name="level">
+        /// The level of the log message.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when the specified <paramref name="message"/> is <see langword="null"/>.
         /// </exception>
-        public static void LogMessage(this ILogger logger, IEnumerable<string> message)
+        public static void LogMessage(this ILogger logger, IEnumerable<string> message, LogLevel level)
         {
             if (message == null || !message.Any())
             {
@@ -79,7 +82,7 @@ namespace AM.Condo.Diagnostics
 
             var content = string.Join(Environment.NewLine, message);
 
-            logger.LogMessage(content);
+            logger.LogMessage(content, level);
         }
         #endregion
     }

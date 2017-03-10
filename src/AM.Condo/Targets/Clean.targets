@@ -17,7 +17,7 @@
     <Delete Files="@(IntermediateFiles)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
   </Target>
 
-  <Target Name="CleanRepository" Condition="$(HasGit)">
+  <Target Name="CleanRepository" Condition="$(HasGit) AND $(CI)">
     <CleanRepository RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 

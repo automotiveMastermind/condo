@@ -14,13 +14,16 @@ namespace AM.Condo.Diagnostics
         /// <param name="message">
         /// The message to log.
         /// </param>
+        /// <param name="level">
+        /// The level of the log entry.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when the specified <paramref name="message"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when the specified <paramref name="message"/> is empty.
         /// </exception>
-        void LogMessage(string message);
+        void LogMessage(string message, LogLevel level);
 
         /// <summary>
         /// Logs the specified <paramref name="warning"/>.

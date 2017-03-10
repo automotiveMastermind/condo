@@ -19,7 +19,7 @@ namespace AM.Condo.Diagnostics
         }
 
         /// <inheritdoc />
-        public void LogMessage(string message)
+        public void LogMessage(string message, LogLevel level)
         {
         }
 
