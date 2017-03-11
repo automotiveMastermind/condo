@@ -125,7 +125,7 @@ namespace AM.Condo.ChangeLog
             this.ApplyVersion(current.Key, null, current.Value);
 
             // iterate over each version
-            for (var i = 0; i < versions.Count; i++)
+            for (var i = 1; i < versions.Count; i++)
             {
                 // capture the previous
                 var previous = current;
