@@ -103,4 +103,4 @@ For more information, please refer to the [official documentation][docs-url].
 [gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg
 
 [issues-url]: //waffle.io/automotivemastermind/condo
-[issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?label=up-for-grabs&title=Backlog
+[issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?label=backlog&title=Backlog
