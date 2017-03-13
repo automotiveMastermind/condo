@@ -10,7 +10,7 @@ Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nug
 License       | [![License][license-image]][license]
 Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
-Issues        | [[![Issues][issues-image]][issues-url]
+Issues        | [![Issues][issues-image]][issues-url]
 
 ## Getting Started
 
