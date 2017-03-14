@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PurposeAttribute.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo
 {
     using System;
@@ -9,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     [TraitDiscoverer("AM.Condo.PurposeDiscoverer", "AM.Condo.Xunit")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class PurposeAttribute: Attribute, ITraitAttribute
+    public class PurposeAttribute : Attribute, ITraitAttribute
     {
         #region Constructors and Finalizers
         /// <summary>

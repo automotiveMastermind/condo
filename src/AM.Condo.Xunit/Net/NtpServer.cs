@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NtpServer.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Net
 {
     using System;
@@ -175,7 +181,7 @@ namespace AM.Condo.Net
             };
 
             // iterate over each connection
-            for(int i = 0; i < this.pool.Connections; i++)
+            for (int i = 0; i < this.pool.Connections; i++)
             {
                 // create socket event args
                 var args = new SocketAsyncEventArgs

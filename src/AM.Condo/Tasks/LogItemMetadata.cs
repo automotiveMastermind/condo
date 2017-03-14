@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="LogItemMetadata.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System.Linq;
@@ -35,7 +41,7 @@ namespace AM.Condo.Tasks
             foreach (var item in this.Items)
             {
                 // log the item specification
-                Log.LogMessage(MessageImportance.High, "{0,-19}: {1}", this.Name, item.ItemSpec);
+                this.Log.LogMessage(MessageImportance.High, "{0,-19}: {1}", this.Name, item.ItemSpec);
 
                 // iterate over each metdata name
                 foreach (var name in item.MetadataNames.Cast<string>())
@@ -44,7 +50,7 @@ namespace AM.Condo.Tasks
                     var value = item.GetMetadata(name);
 
                     // log the name of the metdata and its associated value
-                    Log.LogMessage(MessageImportance.Low, "  {0,-17}: {1}", name, value);
+                    this.Log.LogMessage(MessageImportance.Low, "  {0,-17}: {1}", name, value);
                 }
             }
 

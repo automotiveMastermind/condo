@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RecommendVersion.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -43,12 +49,12 @@ namespace AM.Condo.Tasks
         public string NextRelease { get; set; }
 
         /// <summary>
-        /// Gets the header correspondence field used to detect a feature (minor) bump.
+        /// Gets or sets the header correspondence field used to detect a feature (minor) bump.
         /// </summary>
         public string MinorCorrespondence { get; set; }
 
         /// <summary>
-        /// Gets the header correspondence value used to detect a feature (minor) bump.
+        /// Gets or sets the header correspondence value used to detect a feature (minor) bump.
         /// </summary>
         public string MinorValue { get; set; }
         #endregion
@@ -66,7 +72,7 @@ namespace AM.Condo.Tasks
 
             if (!SemanticVersion.TryParse(this.LatestVersion, out version))
             {
-                Log.LogError($"The version ({LatestVersion}) is invalid.");
+                this.Log.LogError($"The version ({this.LatestVersion}) is invalid.");
 
                 return false;
             }
@@ -80,7 +86,7 @@ namespace AM.Condo.Tasks
 
             if (log == null)
             {
-                Log.LogError($"You must call the {nameof(GetCommitInfo)} task before calling this task.");
+                this.Log.LogError($"You must call the {nameof(GetCommitInfo)} task before calling this task.");
 
                 return false;
             }

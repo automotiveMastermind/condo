@@ -50,7 +50,7 @@
 
     <Exec
         Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_MSBuildTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_MSBuildTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
-        WorkingDirectory="%(_MSBuildTestProjects.ProjectDir)" Condition=" '@(_MSBuildTestProjects->Count())' != '0' " />
+        WorkingDirectory="%(_MSBuildTestProjects.ProjectDir)" />
   </Target>
 
   <PropertyGroup>

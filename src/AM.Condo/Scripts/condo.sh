@@ -149,11 +149,11 @@ while [[ $# > 0 ]]; do
             MSBUILD_DISABLE_COLOR="DisableConsoleColor"
             ;;
         --username)
-            FEED_USERNAME=$2
+            PACKAGE_FEED_USERNAME=$2
             shift
             ;;
         --password)
-            FEED_PASSWORD=$2
+            PACKAGE_FEED_PASSWORD=$2
             shift
             ;;
         *)
@@ -206,8 +206,8 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 "$CONDO_PROJ"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
--p:PackageFeedUsername="$FEED_USERNAME"
--p:PackageFeedPassword="$FEED_PASSWORD"
+-p:PackageFeedUsername="$PACKAGE_FEED_USERNAME"
+-p:PackageFeedPassword="$PACKAGE_FEED_PASSWORD"
 -fl
 -flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
 -clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY

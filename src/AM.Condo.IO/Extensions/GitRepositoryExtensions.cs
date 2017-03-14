@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitRepositoryExtensions.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System.Text;
@@ -18,7 +24,7 @@ namespace AM.Condo.IO
         /// Tracks changes of all modifications made to all files within the repository.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which all changes should be tracked.
         /// </param>
         /// <returns>
         /// The current repository instance.
@@ -32,7 +38,7 @@ namespace AM.Condo.IO
         /// Creates a default README file with no content at the root of the repository.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to save a readme file.
         /// </param>
         /// <returns>
         /// The current repository instance.
@@ -46,7 +52,7 @@ namespace AM.Condo.IO
         /// Creates a file with the specified <paramref name="relativePath"/> with no content.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to save an empty file at the specified <paramref name="relativePath"/>.
         /// </param>
         /// <param name="relativePath">
         /// The path of the file relative to the root of the repository that should be created with no content.
@@ -63,7 +69,7 @@ namespace AM.Condo.IO
         /// Creates a new commit with the specified <paramref name="subject"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to commit.
         /// </param>
         /// <param name="subject">
         /// The subject, or first line of the commit message.
@@ -80,7 +86,7 @@ namespace AM.Condo.IO
         /// Creates a new commit with the specified <paramref name="type"/> and <paramref name="subject"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to commit.
         /// </param>
         /// <param name="type">
         /// The type of the commit.
@@ -102,7 +108,7 @@ namespace AM.Condo.IO
         /// <paramref name="subject"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to commit.
         /// </param>
         /// <param name="type">
         /// The type of the commit.
@@ -127,7 +133,7 @@ namespace AM.Condo.IO
         /// <paramref name="subject"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to commit.
         /// </param>
         /// <param name="type">
         /// The type of the commit.
@@ -155,7 +161,7 @@ namespace AM.Condo.IO
         /// <paramref name="subject"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to commit.
         /// </param>
         /// <param name="type">
         /// The type of the commit.
@@ -237,6 +243,9 @@ namespace AM.Condo.IO
         /// <summary>
         /// Restores all available submodules within the current repository.
         /// </summary>
+        /// <param name="repository">
+        /// The repository instance in which to restore submodules.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
@@ -249,7 +258,7 @@ namespace AM.Condo.IO
         /// Creates a new branch with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which to create a new branch.
         /// </param>
         /// <param name="name">
         /// The name of the branch to create.
@@ -266,7 +275,7 @@ namespace AM.Condo.IO
         /// Gets a log of commits using the specified <paramref name="options"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance from which to retrieve a log of commits.
         /// </param>
         /// <param name="options">
         /// The options used to retrieve and parse the log of commits.
@@ -283,7 +292,7 @@ namespace AM.Condo.IO
         /// Gets a log of commits using the specified <paramref name="options"/>.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance from which to retrieve a log of commits.
         /// </param>
         /// <param name="from">
         /// The git item specification from which to start the log.
@@ -300,10 +309,26 @@ namespace AM.Condo.IO
         }
 
         /// <summary>
+        /// Gets the log of commmits from a repository using the default log options, which are based on the AngularJS
+        /// conventional changelog presets.
+        /// </summary>
+        /// <param name="repository">
+        /// The repository instance from which to retrieve a log of commits.
+        /// </param>
+        /// <returns>
+        /// The log of commits from the repository using the default log options, which are based on the AngularJS
+        /// conventional changelog presets.
+        /// </returns>
+        public static GitLog Log(this IGitRepositoryInitialized repository)
+        {
+            return repository.Log(from: null, to: null, options: Options, parser: Parser);
+        }
+
+        /// <summary>
         /// Pushes any staged changes to the "origin" remote and includes tags.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance from which commits should be pushed.
         /// </param>
         /// <returns>
         /// The current repository instance.
@@ -314,24 +339,10 @@ namespace AM.Condo.IO
         }
 
         /// <summary>
-        /// Pulls the changes for the current branch.
-        /// </summary>
-        /// <param name="repository">
-        /// The current repository instance.
-        /// </param>
-        /// <returns>
-        /// The current repository instance.
-        /// </returns>
-        public static IGitRepositoryInitialized Pull(this IGitRepositoryInitialized repository)
-        {
-            return repository.Pull(all: false);
-        }
-
-        /// <summary>
         /// Pushes any staged changes to the "origin" remote and optionally includes tags.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance from which commits should be pushed.
         /// </param>
         /// <param name="tags">
         /// A value indicating whether or not to include tags.
@@ -345,19 +356,17 @@ namespace AM.Condo.IO
         }
 
         /// <summary>
-        /// Gets the log of commmits from a repository using the default log options, which are based on the AngularJS
-        /// conventional changelog presets.
+        /// Pulls the changes for the current branch.
         /// </summary>
         /// <param name="repository">
-        /// The current repository instance.
+        /// The repository instance in which commits should be pulled.
         /// </param>
         /// <returns>
-        /// The log of commits from the repository using the default log options, which are based on the AngularJS
-        /// conventional changelog presets.
+        /// The current repository instance.
         /// </returns>
-        public static GitLog Log(this IGitRepositoryInitialized repository)
+        public static IGitRepositoryInitialized Pull(this IGitRepositoryInitialized repository)
         {
-            return repository.Log(from: null, to: null, options: Options, parser: Parser);
+            return repository.Pull(all: false);
         }
         #endregion
     }

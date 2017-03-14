@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CheckoutBranch.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -70,12 +76,12 @@ namespace AM.Condo.Tasks
                 }
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Checked out the branch: {this.Branch}...");
+                this.Log.LogMessage(MessageImportance.High, $"Checked out the branch: {this.Branch}...");
             }
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarningFromException(netEx);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

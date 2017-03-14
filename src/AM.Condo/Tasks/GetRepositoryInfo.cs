@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetRepositoryInfo.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -23,19 +29,19 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets the URI of the repository that is identified by the source control server.
+        /// Gets or sets the URI of the repository that is identified by the source control server.
         /// </summary>
         [Output]
         public string RepositoryUri { get; set; }
 
         /// <summary>
-        /// Gets the name of the branch used to build the repository.
+        /// Gets or sets the name of the branch used to build the repository.
         /// </summary>
         [Output]
         public string Branch { get; set; }
 
         /// <summary>
-        /// Gets the commit hash or checkin number used to build the repository.
+        /// Gets or sets the commit hash or checkin number used to build the repository.
         /// </summary>
         [Output]
         public string CommitId { get; set; }
@@ -70,7 +76,7 @@ namespace AM.Condo.Tasks
         public string LatestVersion { get; set; }
 
         /// <summary>
-        /// Gets the SHA1 of the commit message associated with the latest version and latest version tag.
+        /// Gets or sets the SHA1 of the commit message associated with the latest version and latest version tag.
         /// </summary>
         [Output]
         public string LatestVersionCommit { get; set; }
@@ -127,6 +133,9 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Attempt to use the `git` command line tool to retrieve repository information.
         /// </summary>
+        /// <param name="root">
+        /// The path to the root of the repository.
+        /// </param>
         /// <returns>
         /// A value indicating whether or not the repository information could be retrieved using the git command line
         /// tool.
@@ -218,7 +227,7 @@ namespace AM.Condo.Tasks
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarningFromException(netEx);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitRepository.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -6,9 +12,9 @@ namespace AM.Condo.IO
     using System.IO;
     using System.Linq;
 
-    using static System.FormattableString;
-
     using AM.Condo.Diagnostics;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a reference to a git repository that can be manipulated programmatically.
@@ -469,7 +475,9 @@ namespace AM.Condo.IO
                 process.WaitForExit();
 
                 // wait for the process to truly end
-                while (!process.HasExited) { }
+                while (!process.HasExited)
+                {
+                }
 
                 // capture the exit code
                 exitCode = process.ExitCode;

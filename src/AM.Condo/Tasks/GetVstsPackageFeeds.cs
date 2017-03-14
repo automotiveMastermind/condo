@@ -1,4 +1,10 @@
-﻿namespace AM.Condo.Tasks
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetVstsPackageFeeds.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace AM.Condo.Tasks
 {
     using System.Linq;
 
@@ -39,7 +45,9 @@
         /// Initializes a new instance of the <see cref="GetVstsPackageFeeds"/> class.
         /// </summary>
         public GetVstsPackageFeeds()
-            : this(null, null) { }
+            : this(settings: null, provider: null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetVstsPackageFeeds"/> class.
@@ -60,6 +68,9 @@
         /// <summary>
         /// Execute the set credentials task.
         /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the task executed successfully.
+        /// </returns>
         public override bool Execute()
         {
             // determine if the settings are not specified
@@ -78,7 +89,7 @@
             if (this.provider == null)
             {
                 // create a new package source provider
-                this.provider = new PackageSourceProvider(settings);
+                this.provider = new PackageSourceProvider(this.settings);
             }
 
             // get the package sources that contains the expected feed uri

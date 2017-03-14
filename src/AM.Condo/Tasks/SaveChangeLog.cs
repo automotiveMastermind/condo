@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SaveChangeLog.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -116,7 +122,7 @@ namespace AM.Condo.Tasks
 
             if (log == null)
             {
-                Log.LogError($"You must call the {nameof(GetCommitInfo)} task before calling this task.");
+                this.Log.LogError($"You must call the {nameof(GetCommitInfo)} task before calling this task.");
 
                 return false;
             }
@@ -128,7 +134,7 @@ namespace AM.Condo.Tasks
 
             if (types.Length != names.Length)
             {
-                Log.LogError($"The number of change log types {types.Length} must match the number of change log names {names.Length}.");
+                this.Log.LogError($"The number of change log types {types.Length} must match the number of change log names {names.Length}.");
 
                 return false;
             }
@@ -183,7 +189,7 @@ namespace AM.Condo.Tasks
             catch (Exception netEx)
             {
                 // log an exception
-                Log.LogErrorFromException(netEx);
+                this.Log.LogErrorFromException(netEx);
 
                 // move on immediately
                 return false;

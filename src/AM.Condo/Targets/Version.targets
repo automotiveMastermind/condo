@@ -80,13 +80,13 @@
   </Target>
 
   <!-- save assembly info files -->
-  <Target Name="SaveAssemblyInfo" Condition=" '@(Projects->Count())' != '0' ">
+  <Target Name="SaveAssemblyInfo">
     <SaveAssemblyInfo
-        AssemblyInfoPath="%(Projects.CondoAssemblyInfo)"
+        AssemblyInfoPath="%(SourceProjects.CondoAssemblyInfo)"
         CurrentRelease="$(CurrentRelease)"
         Company="$(Company)"
         Product="$(Product)"
-        ProjectName="%(Projects.ProjectName)"
+        ProjectName="%(SourceProjects.ProjectName)"
         Copyright="$(Copyright)"
         AssemblyVersion="$(AssemblyVersion)"
         FileVersion="$(FileVersion)"

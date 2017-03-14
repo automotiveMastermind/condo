@@ -1,12 +1,18 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetAssemblyInfo.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
     using System.Globalization;
 
-    using static System.FormattableString;
-
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a Microsoft Build task that accumulates assembly information.
@@ -43,19 +49,19 @@ namespace AM.Condo.Tasks
         public string PreReleaseTag { get; private set; }
 
         /// <summary>
-        /// Gets or sets the assembly version.
+        /// Gets the assembly version.
         /// </summary>
         [Output]
         public string AssemblyVersion { get; private set; }
 
         /// <summary>
-        /// Gets or sets the file version.
+        /// Gets the file version.
         /// </summary>
         [Output]
         public string FileVersion { get; private set; }
 
         /// <summary>
-        /// Gets or sets the informational version.
+        /// Gets the informational version.
         /// </summary>
         [Output]
         public string InformationalVersion { get; private set; }
@@ -73,7 +79,7 @@ namespace AM.Condo.Tasks
         public string CommitId { get; set; }
 
         /// <summary>
-        /// Sets the date and time used to determine the version.
+        /// Gets or sets the date and time used to determine the version.
         /// </summary>
         [Output]
         public string BuildDateUtc { get; set; }
@@ -98,7 +104,8 @@ namespace AM.Condo.Tasks
             if (string.IsNullOrEmpty(this.StartDateUtc))
             {
                 // log an error
-                Log.LogError(Invariant($"{nameof(StartDateUtc)} property must be set."));
+                this.Log.LogError(Invariant
+                    ($"{nameof(this.StartDateUtc)} property must be set."));
 
                 // move on immediately
                 return false;
@@ -111,7 +118,8 @@ namespace AM.Condo.Tasks
             if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out now))
             {
                 // log an error
-                Log.LogError(Invariant($"{nameof(BuildDateUtc)} property could not be parsed. Please verify that the date is valid."));
+                this.Log.LogError
+                    (Invariant($"{nameof(this.BuildDateUtc)} property could not be parsed. Please verify that the date is valid."));
 
                 // could not parse; move on immediately
                 return false;
@@ -127,7 +135,8 @@ namespace AM.Condo.Tasks
             if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out start))
             {
                 // log an error
-                Log.LogError(Invariant($"{nameof(StartDateUtc)} property could not be parsed. Please verify that the date is valid."));
+                this.Log.LogError
+                    (Invariant($"{nameof(this.StartDateUtc)} property could not be parsed. Please verify that the date is valid."));
 
                 // could not parse; move on immediately
                 return false;
@@ -140,7 +149,8 @@ namespace AM.Condo.Tasks
             if (start > now)
             {
                 // log an error
-                Log.LogError(Invariant($"The {nameof(StartDateUtc)} cannot be after the {nameof(BuildDateUtc)}."));
+                this.Log.LogError
+                    (Invariant($"The {nameof(this.StartDateUtc)} cannot be after the {nameof(this.BuildDateUtc)}."));
 
                 // start date is after now; move on immediately
                 return false;

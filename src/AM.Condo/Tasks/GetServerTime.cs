@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetServerTime.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -89,7 +95,7 @@ namespace AM.Condo.Tasks
                 var ms = (seconds * 1000) + ((fraction * 1000) / 0x100000000L);
 
                 // generate the utc time stamp from the response received via NTP
-                var date = (new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc)).AddMilliseconds(ms);
+                var date = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(ms);
 
                 // set the date and time as received from the server
                 this.DateTimeUtc = date.ToString("o", CultureInfo.InvariantCulture);

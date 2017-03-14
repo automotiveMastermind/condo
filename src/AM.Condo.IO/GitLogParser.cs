@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitLogParser.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -6,9 +12,9 @@ namespace AM.Condo.IO
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using static System.FormattableString;
-
     using NuGet.Versioning;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a parser for git logs.
@@ -44,10 +50,6 @@ namespace AM.Condo.IO
             var mergeRegex = string.IsNullOrEmpty(options.MergePattern)
                 ? NoMatchRegex
                 : new Regex(options.MergePattern, RegexOptions.IgnoreCase);
-
-            var FieldRegex = string.IsNullOrEmpty(options.FieldPattern)
-                ? NoMatchRegex
-                : new Regex(options.FieldPattern, RegexOptions.IgnoreCase);
 
             // var mentionRegex = GetMentionRegex(options.MentionPrefixes);
             var noteRegex = GetNotesRegex(options.NoteKeywords);

@@ -1,18 +1,31 @@
 {
   "version": "0.1.0",
+  "windows": {
+    "command": "condo.cmd",
+    "args": [
+      "-NoColor"
+    ]
+  },
   "linux": {
-    "command": "condo.sh"
+    "command": "./condo.sh",
+    "args": [
+      "--no-color"
+    ]
   },
   "osx": {
-    "command": "condo.sh"
-  },
-  "windows": {
-    "command": "condo.cmd"
+    "command": "./condo.sh",
+    "args": [
+      "--no-color"
+    ]
   },
   "isShellCommand": true,
   "args": [],
   "taskSelector": "/t:",
   "tasks": [
+    {
+      "taskName": "compile",
+      "problemMatcher": "$msCompile"
+    },
     {
       "taskName": "build",
       "isBuildCommand": true,
@@ -25,6 +38,13 @@
     },
     {
       "taskName": "publish",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "taskName": "debug",
+      "args": [
+        "/p:CONDO_DEBUG=true"
+      ],
       "problemMatcher": "$msCompile"
     }
   ]

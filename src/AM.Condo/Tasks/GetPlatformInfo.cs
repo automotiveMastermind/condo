@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetPlatformInfo.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System.Runtime.InteropServices;
@@ -55,19 +61,19 @@ namespace AM.Condo.Tasks
             // detect the macos platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Platform = "macOS";
+                this.Platform = "macOS";
                 return this.IsMacOS = true;
             }
 
             // detect the linux platform
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Platform = "Linux";
+                this.Platform = "Linux";
                 return this.IsLinux = true;
             }
 
             // write an error message to the log
-            Log.LogError("Could not retrieve platform information for the build.");
+            this.Log.LogError("Could not retrieve platform information for the build.");
 
             // the build has failed
             return false;

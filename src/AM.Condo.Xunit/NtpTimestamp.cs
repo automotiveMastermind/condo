@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NtpTimestamp.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo
 {
     using System;
@@ -15,7 +21,7 @@ namespace AM.Condo
     ///
     /// TODO: make convertible
     /// </remarks>
-    public struct NtpTimestamp: IComparable, IComparable<NtpTimestamp>, IEquatable<NtpTimestamp>
+    public struct NtpTimestamp : IComparable, IComparable<NtpTimestamp>, IEquatable<NtpTimestamp>
     {
         #region Constants
         /// <summary>
@@ -224,21 +230,21 @@ namespace AM.Condo
         public long Seconds => this.seconds;
 
         /// <summary>
-        /// The time that has elapsed represented as a fraction of a second since the last second included by
+        /// Gets the time that has elapsed represented as a fraction of a second since the last second included by
         /// <see cref="NtpTimestamp.Seconds"/>.
         /// </summary>
         public long Fraction => this.fraction;
 
         /// <summary>
-        /// The 64-bit (8 byte) NTP timestamp organized in big-endian fashion as specified in IETF RFC 5905 section 6
-        /// (https://tools.ietf.org/html/rfc5905#section-6). The first two words represents an unsigned 32-bit seconds
+        /// Gets the 64-bit (8 byte) NTP timestamp organized in big-endian fashion as specified in IETF RFC 5905 section
+        /// 6 (https://tools.ietf.org/html/rfc5905#section-6). The first two words represents an unsigned 32-bit seconds
         /// field. The second two words represents a 32-bit fraction field resolving 232 picoseconds. The prime epoch
         /// is January 1, 1900 at 00:00:00.000 UTC.
         /// </summary>
         public byte[] Timestamp => this.timestamp;
 
         /// <summary>
-        /// The date and time in UTC represented by this instance of the <see cref="NtpTimestamp"/> structure.
+        /// Gets the date and time in UTC represented by this instance of the <see cref="NtpTimestamp"/> structure.
         /// </summary>
         public DateTime Date => this.date;
         #endregion

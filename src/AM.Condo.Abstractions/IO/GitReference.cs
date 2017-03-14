@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitReference.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     /// <summary>
@@ -5,7 +11,7 @@ namespace AM.Condo.IO
     /// </summary>
     public class GitReference
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the ID of the reference.
         /// </summary>

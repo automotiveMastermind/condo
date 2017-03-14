@@ -1,7 +1,13 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NoOpLogger.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Diagnostics
 {
+    using System;
+
     /// <summary>
     /// Represents a logger that does nothing.
     /// </summary>

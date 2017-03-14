@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PushNuGetPackageTest.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System.IO;
@@ -88,7 +94,7 @@ namespace AM.Condo.Tasks
                 var package = NuGetMocks.CreatePackage(id, version, temp.FullPath);
 
                 var item = new TaskItem(package);
-                var items = new [] { item };
+                var items = new[] { item };
 
                 var actual = new PushNuGetPackage(settings, provider)
                 {

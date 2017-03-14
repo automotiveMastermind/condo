@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitCommit.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -11,7 +17,7 @@ namespace AM.Condo.IO
     /// </summary>
     public class GitCommit
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the hash of the git commit.
         /// </summary>

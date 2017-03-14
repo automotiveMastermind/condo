@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ChangeLogWriter.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.ChangeLog
 {
     using System;
@@ -154,16 +160,16 @@ namespace AM.Condo.ChangeLog
 
             // setup the root dictionary
             var root = new Dictionary<string, object>();
-            root.Add("commit", options.CommitName);
-            root.Add("issue", options.IssueName);
-            root.Add("linkReferences", options.LinkReferences);
-            root.Add("repository", options.Repository);
-            root.Add("repoUrl", options.RepositoryUri);
+            root.Add("commit", this.options.CommitName);
+            root.Add("issue", this.options.IssueName);
+            root.Add("linkReferences", this.options.LinkReferences);
+            root.Add("repository", this.options.Repository);
+            root.Add("repoUrl", this.options.RepositoryUri);
             root.Add("previousTag", previous);
             root.Add("currentTag", version.ToFullString());
             root.Add("version", version.ToNormalizedString());
             root.Add("isPatch", version.Patch > 0 || version.IsPrerelease || version.HasMetadata);
-            root.Add("linkCompare", options.LinkReferences && !string.IsNullOrEmpty(previous));
+            root.Add("linkCompare", this.options.LinkReferences && !string.IsNullOrEmpty(previous));
             root.Add("date", first.Date.ToString("yyyy-MM-dd"));
 
             var commitGroups = new List<IDictionary<string, object>>();

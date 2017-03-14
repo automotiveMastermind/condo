@@ -1,4 +1,10 @@
-﻿namespace AM.Condo.Tasks
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="InstallNuGetPackage.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace AM.Condo.Tasks
 {
     using System.IO;
     using System.Threading;
@@ -21,7 +27,7 @@
         public ITaskItem[] Packages { get; set; }
 
         /// <summary>
-        /// Gets the path to which the packages should be installed.
+        /// Gets or sets the path to which the packages should be installed.
         /// </summary>
         [Required]
         public string Path { get; set; }

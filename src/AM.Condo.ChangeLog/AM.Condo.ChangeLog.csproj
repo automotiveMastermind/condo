@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <DebugType>portable</DebugType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>AM.Condo.ChangeLog</AssemblyName>
-    <PackageId>AM.Condo.ChangeLog</PackageId>
+    <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="../../stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../AM.Condo.Abstractions/AM.Condo.Abstractions.csproj" />
@@ -17,5 +19,15 @@
     <PackageReference Include="Handlebars.NetStandard" Version="[1.0.1, 2.0.0)" />
     <PackageReference Include="Newtonsoft.Json" Version="[9.0.1, 10.0.0)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
 </Project>
