@@ -2,12 +2,13 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-alpha-02434"></a>
-## 2.0.0-alpha-02434 (2017-03-14)
+<a name="2.0.0-alpha-02440"></a>
+## 2.0.0-alpha-02440 (2017-03-15)
 
 
 ### Features
 
+* **template:** add support for templating 59ce847
 * **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
 * **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
 * **project-json:** update semver in project.json (#35) d874638, closes #35
