@@ -16,7 +16,7 @@ SRC_ROOT="$CONDO_ROOT/.src"
 CONDO_SHELL="$SRC_ROOT/src/AM.Condo/Scripts/condo.sh"
 
 # change to the root path
-cd $ROOT_PATH
+pushd $ROOT_PATH
 
 # write a newline for separation
 echo
@@ -114,32 +114,47 @@ if [ ! -d "$SRC_ROOT" ]; then
         info "Using condo build system from $CONDO_SOURCE..."
         cp -r $CONDO_SOURCE/* $SRC_ROOT/
     else
-        info "Using condo build system from $CONDO_URI..."
+        local CURL_OPT='-s'
+        if [ ! -z "${GH_TOKEN:-}" ]; then
+            CURL_OPT='$CURL_OPT -H "Authorization: token $GH_TOKEN"'
+        fi
 
-        CONDO_TEMP=$(mktemp -d)
-        CONDO_TAR="$CONDO_TEMP/condo.tar.gz"
+        local CONDO_PATH="$HOME/.am/condo"
+        local SHA_URI="https://api.github.com/repos/automotivemastermind/condo/commits/$CONDO_BRANCH"
+        local CONDO_SHA=$(curl $CURL_OPT $SHA_URI | grep sha | head -n 1 | sed 's#.*\:.*"\(.*\).*",#\1#')
+        local SHA_PATH="$CONDO_PATH/$CONDO_SHA"
 
-        retries=5
+        if [ -f $SHA_PATH ]; then
+            echo "condo: latest version already installed: $CONDO_SHA"
+        else
+            info "Using condo build system from $CONDO_URI..."
 
-        until (wget -O $CONDO_TAR $CONDO_URI 2>/dev/null || curl -o $CONDO_TAR --location $CONDO_URI 2>/dev/null); do
-            failure "Unable to retrieve condo: '$CONDO_URI'"
+            CONDO_TEMP=$(mktemp -d)
+            CONDO_TAR="$CONDO_TEMP/condo.tar.gz"
 
-            if [ "$retries" -le 0 ]; then
-                exit 1
-            fi
+            retries=5
 
-            retries=$((retries - 1))
-            failure "Retrying in 10 seconds... attempts left: $retries"
-            sleep 10s
-        done
+            until (wget -O $CONDO_TAR $CONDO_URI 2>/dev/null || curl -o $CONDO_TAR --location $CONDO_URI 2>/dev/null); do
+                failure "Unable to retrieve condo: '$CONDO_URI'"
 
-        CONDO_EXTRACT="$CONDO_TEMP/extract"
-        CONDO_SOURCE="$CONDO_EXTRACT"
+                if [ "$retries" -le 0 ]; then
+                    exit 1
+                fi
 
-        mkdir -p $CONDO_EXTRACT
-        tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
-        cp -r $CONDO_SOURCE/* $SRC_ROOT/
-        rm -Rf $CONDO_TEMP
+                retries=$((retries - 1))
+                failure "Retrying in 10 seconds... attempts left: $retries"
+                sleep 10s
+            done
+
+            CONDO_EXTRACT="$CONDO_TEMP/extract"
+            CONDO_SOURCE="$CONDO_EXTRACT"
+
+            mkdir -p $CONDO_EXTRACT
+            tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
+            cp -r $CONDO_SOURCE/* $SRC_ROOT/
+            cp -r $CONDO_SOURCE/template $CONDO_ROOT
+            rm -Rf $CONDO_TEMP
+        fi
     fi
 fi
 
@@ -156,7 +171,7 @@ EXIT_CODE=$?
 echo
 
 # change to the original path
-cd $CURRENT_PATH
+popd
 
 # exit
 exit $EXIT_CODE

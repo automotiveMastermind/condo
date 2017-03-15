@@ -12,6 +12,7 @@ ARTIFACTS_ROOT="$WORKING_PATH/artifacts"
 CONDO_ROOT="$HOME/.am/condo"
 SRC_ROOT="$CONDO_ROOT/.src"
 BUILD_ROOT="$CONDO_ROOT/.build"
+TEMPLATE_ROOT="$SRC_ROOT/template"
 
 MSBUILD_LOG="$BUILD_ROOT/condo.msbuild.log"
 MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
@@ -128,6 +129,7 @@ install_condo() {
         # publish condo
         info "condo: publishing condo tasks..."
         safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+        cp -R $TEMPLATE_ROOT $CONDO_ROOT
         success "condo: publish complete"
     else
         info "condo was already built: use --reset to get the latest version."
@@ -149,11 +151,11 @@ while [[ $# > 0 ]]; do
             MSBUILD_DISABLE_COLOR="DisableConsoleColor"
             ;;
         --username)
-            PACKAGE_FEED_USERNAME=$2
+            export PACKAGE_FEED_USERNAME=$2
             shift
             ;;
         --password)
-            PACKAGE_FEED_PASSWORD=$2
+            export PACKAGE_FEED_PASSWORD=$2
             shift
             ;;
         *)
@@ -206,8 +208,6 @@ cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 "$CONDO_PROJ"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
--p:PackageFeedUsername="$PACKAGE_FEED_USERNAME"
--p:PackageFeedPassword="$PACKAGE_FEED_PASSWORD"
 -fl
 -flp:LogFile="$MSBUILD_LOG";Encoding=UTF-8;Verbosity=$CONDO_VERBOSITY
 -clp:$MSBUILD_DISABLE_COLOR;Verbosity=$CONDO_VERBOSITY
