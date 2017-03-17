@@ -193,13 +193,12 @@ namespace AM.Condo.ChangeLog
                 // add the header
                 commit.Add("header", currentCommit.Header);
 
+                // do not include the commit by default
                 var include = false;
 
                 // iterate over all notes on the current commit
                 foreach (var currentNote in currentCommit.Notes)
                 {
-                    include = true;
-
                     // create the note
                     var note = new Dictionary<string, object>();
 
@@ -213,15 +212,28 @@ namespace AM.Condo.ChangeLog
                     // get the header value
                     var value = currentNote.Header;
 
+                    // define a variable to retain the display value
+                    var display = default(string);
+
+                    // determine if we should include the note type
+                    if (!this.options.ChangeLogTypes.TryGetValue(value, out display))
+                    {
+                        // move on immediately
+                        continue;
+                    }
+
+                    // force include the commit
+                    include = true;
+
                     // attempt to get the group
-                    if (!tempNotes.TryGetValue(value, out group))
+                    if (!tempNotes.TryGetValue(display, out group))
                     {
                         // create the group
                         group = new Dictionary<string, object>();
-                        tempNotes.Add(value, group);
+                        tempNotes.Add(display, group);
 
                         // add the title
-                        group.Add("title", value);
+                        group.Add("title", display);
 
                         // add the notes
                         group.Add("notes", new List<IDictionary<string, object>>());
@@ -247,8 +259,8 @@ namespace AM.Condo.ChangeLog
                     // determine if this is the group by key
                     if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
                     {
-                        // capture the display name
-                        string display = value;
+                        // create a variable to retain the display name
+                        var display = default(string);
 
                         // attempt to get the display name mapping
                         if (!this.options.ChangeLogTypes.TryGetValue(value, out display) && !include)
@@ -261,11 +273,11 @@ namespace AM.Condo.ChangeLog
                         IDictionary<string, object> group;
 
                         // attempt to get the group
-                        if (!tempCommits.TryGetValue(value, out group))
+                        if (!tempCommits.TryGetValue(display, out group))
                         {
                             // create the group
                             group = new Dictionary<string, object>();
-                            tempCommits.Add(value, group);
+                            tempCommits.Add(display, group);
 
                             // add the title
                             group.Add("title", display);
