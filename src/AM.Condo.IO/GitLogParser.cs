@@ -262,9 +262,6 @@ namespace AM.Condo.IO
                     // capture the line
                     var line = lines.Current;
 
-                    // capture the content
-                    section.AppendLine(line);
-
                     // append the footer line
                     footer.AppendLine(line);
 
@@ -295,7 +292,13 @@ namespace AM.Condo.IO
 
                         // add the current note to the commit
                         commit.Notes.Add(note);
+
+                        // continue
+                        continue;
                     }
+
+                    // capture the content
+                    section.AppendLine(line);
                 }
 
                 // determine if additional body info was acquired
