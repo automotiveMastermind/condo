@@ -2,26 +2,14 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-alpha-02440"></a>
-## 2.0.0-alpha-02440 (2017-03-15)
-
-
-### Features
-
-* **template:** add support for templating 59ce847
-* **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
-* **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
-* **project-json:** update semver in project.json (#35) d874638, closes #35
-* **log:** add support for conventional changelog (#31) 8f27d5a, closes #31
-* **dotnet:** add support for dotnet core 1.1 (#30) b74275c, closes #30
-* **git-tag:** add support for version tagging in git repo (#26) 2c0abce, closes #26
-* **nuget:** add support for nuget push of vsts protected feeds (#18) 75a7d41, closes #18
-* **windows:** add support for building on windows (#17) 961090d, closes #17
-* **dotnet-cli:** replace dnx support with dotnet-cli using msbuild (#16) c97c190, closes #16 #12 #13
+<a name="2.0.0-alpha-02456"></a>
+## 2.0.0-alpha-02456 (2017-03-17)
 
 
 ### Bug Fixes
 
+* **log:** use display name for note tags 11a47f4
+* **changelog:** resolve extra note header 5eeb6bd
 * **changelog:** fix repeated initial version f6ec61f
 * **install:** do not emit new-item output 8a3042d
 * **install:** recursive fix 64cf2e0
@@ -40,12 +28,24 @@
 * bug in expand when downloading condo from src (#22) 0a59505, closes #22
 
 
-### BREAKING CHANGE
+### Features
+
+* **template:** add support for templating 59ce847
+* **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
+* **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
+* **project-json:** update semver in project.json (#35) d874638, closes #35
+* **log:** add support for conventional changelog (#31) 8f27d5a, closes #31
+* **dotnet:** add support for dotnet core 1.1 (#30) b74275c, closes #30
+* **git-tag:** add support for version tagging in git repo (#26) 2c0abce, closes #26
+* **nuget:** add support for nuget push of vsts protected feeds (#18) 75a7d41, closes #18
+* **windows:** add support for building on windows (#17) 961090d, closes #17
+* **dotnet-cli:** replace dnx support with dotnet-cli using msbuild (#16) c97c190, closes #16 #12 #13
+
+
+### BREAKING CHANGES
 
 * **log:** 
 Any existing bootstrap scripts *MUST* be updated due to some changes in how condo itself is retrieved and built. Replace the bootstrap scripts you rely on (`condo.ps1`, `condo.cmd`, and `condo.ps1`) from [here](https://github.com/pulsebridge/condo/tree/develop/template).
-
-BREAKING CHANGE:
 * **log:** 
 Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The version is now based on git tags.
 
