@@ -2,8 +2,8 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-alpha-02456"></a>
-## 2.0.0-alpha-02456 (2017-03-17)
+<a name="2.0.0-alpha-02468"></a>
+## 2.0.0-alpha-02468 (2017-03-18)
 
 
 ### Bug Fixes
