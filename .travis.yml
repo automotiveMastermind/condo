@@ -2,5 +2,11 @@ dist: trusty
 os:
 - linux
 - osx
+branches:
+    except:
+    - feature/*
+    - bugfix/*
+    - hotfix/*
+    - support/*
 script:
 - "./condo.sh /t:ci"

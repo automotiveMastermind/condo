@@ -205,11 +205,27 @@ namespace AM.Condo.IO
         {
             get
             {
+                // pull all tags
+                this.Pull(all: true);
+
+                // determine what command to run
                 var cmd = this.version?.Major > 1 ? "tag --sort version:refname" : "tag";
 
+                // execute the command
                 var result = this.Execute(cmd);
 
-                return result.Success ? result.Output : new List<string>();
+                // determine if we were successful
+                if (!result.Success)
+                {
+                    // log the error as a warning
+                    this.logger.LogWarning(result.Error);
+
+                    // return an empty list
+                    return new List<string>();
+                }
+
+                // return the output
+                return result.Output;
             }
         }
         #endregion
@@ -263,7 +279,7 @@ namespace AM.Condo.IO
 
             if (all)
             {
-                cmd += " --all";
+                cmd += " --all --tags";
             }
 
             var output = this.Execute(cmd);

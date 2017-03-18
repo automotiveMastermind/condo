@@ -171,7 +171,7 @@
         CommitId="$(CommitId)">
       <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot" />
       <Output TaskParameter="RepositoryUri" PropertyName="RepositoryUri" />
-      <Output TaskParameter="ClientVersion" PropertyName="ClientVersion" />
+      <Output TaskParameter="ClientVersion" PropertyName="GitClientVersion" />
       <Output TaskParameter="LatestVersionTag" PropertyName="LatestVersionTag" />
       <Output TaskParameter="LatestVersion" PropertyName="LatestVersion" />
       <Output TaskParameter="LatestVersionCommit" PropertyName="LatestVersionCommit" />
@@ -236,6 +236,7 @@
     <Message Importance="High" Text="Pull Request ID    : $(PullRequestId)" Condition=" '$(PullRequestId)' != '' " />
     <Message Importance="High" Text="Provider           : $(RepositoryProvider)" Condition=" '$(RepositoryProvider)' != '' " />
     <Message Importance="High" Text="Git Support        : $(HasGit)" />
+    <Message Importance="High" Text="Git Client Version : $(GitClientVersion)" Condition=" '$(GitClientVersion)' != '' " />
     <Message Importance="High" Text="Latest Version     : $(LatestVersion)" />
     <Message Importance="High" Text="Latest Version Tag : $(LatestVersionTag)" />
     <Message Importance="High" Text="Latest Vesion Hash : $(LatestVersionCommit)" />
