@@ -446,6 +446,8 @@ namespace AM.Condo.IO
         /// <inheritdoc/>
         public IProcessOutput Execute(string command)
         {
+            this.logger.LogMessage($"git: executing: {command}", LogLevel.Low);
+
             var start = this.CreateProcessInfo(command);
             var process = new Process
             {

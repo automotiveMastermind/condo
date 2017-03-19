@@ -9,4 +9,4 @@ branches:
     - hotfix/*
     - support/*
 script:
-- "./condo.sh /t:ci"
+- "./condo.sh --verbosity diagnostic /t:ci"
