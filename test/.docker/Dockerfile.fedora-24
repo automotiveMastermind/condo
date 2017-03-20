@@ -10,9 +10,6 @@ WORKDIR $destination
 RUN dnf -y update && dnf clean all
 RUN dnf install -y \
         ca-certificates \
-        libicu52 \
-        libcurl3 \
-        libunwind8 \
         curl \
         tar \
         git \

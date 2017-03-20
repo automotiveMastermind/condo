@@ -13,3 +13,5 @@ cache:
 - '%USERPROFILE%\.nuget'
 - '%USERPROFILE%\.am'
 - '%LOCALAPPDATA%\Microsoft\dotnet'
+build_script:
+  - condo.cmd /t:ci
