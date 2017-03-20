@@ -103,14 +103,17 @@ namespace AM.Condo.IO
                 };
 
                 // get the tags
-                var tags = lines.Current.Trim().TrimStart('(').TrimEnd(')').Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var tags = lines.Current.Trim().TrimStart('(').TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 lines.MoveNext();
 
                 // iterate over each tag
                 foreach (var tag in tags)
                 {
+                    // trim the tag
+                    var trimmed = tag.Trim();
+
                     // test for a tag
-                    match = TagRegex.Match(tag);
+                    match = TagRegex.Match(trimmed);
 
                     // determine if tag was found
                     if (match.Success)
@@ -140,7 +143,7 @@ namespace AM.Condo.IO
                     }
 
                     // add the tag as a branch reference
-                    commit.Branches.Add(tag);
+                    commit.Branches.Add(trimmed);
                 }
 
                 // get the header

@@ -58,18 +58,8 @@ namespace AM.Condo.IO
         /// </param>
         public GitRepository(IPathManager path, ILogger log)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
-            if (log == null)
-            {
-                throw new ArgumentNullException(nameof(log));
-            }
-
-            this.path = path;
-            this.logger = log;
+            this.path = path ?? throw new ArgumentNullException(nameof(path));
+            this.logger = log ?? throw new ArgumentNullException(nameof(log));
 
             try
             {
@@ -77,18 +67,24 @@ namespace AM.Condo.IO
                 var output = this.Execute("--version");
 
                 // capture the version string
-                var values = output.Output.FirstOrDefault()?.Split(' ');
+                var values = output.Output.FirstOrDefault()?.Split(new[] { '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // define a temporary value to retain the version
+                var version = string.Empty;
 
                 // iterate over each value
                 foreach (var value in values)
                 {
-                    // attempt to parse the version
-                    if (Version.TryParse(value, out this.version))
+                    // determine if the segment is an int
+                    if (int.TryParse(value, out int segment))
                     {
-                        // break from the iteration
-                        break;
+                        // add the segment to the version
+                        version = $"{version}.{segment}";
                     }
                 }
+
+                // create the version
+                this.version = new Version(version.Trim('.'));
             }
             catch (Exception netEx)
             {
