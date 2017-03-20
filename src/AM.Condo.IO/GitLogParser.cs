@@ -103,7 +103,7 @@ namespace AM.Condo.IO
                 };
 
                 // get the tags
-                var tags = lines.Current.Split(',');
+                var tags = lines.Current.Trim().TrimStart('(').TrimEnd(')').Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 lines.MoveNext();
 
                 // iterate over each tag

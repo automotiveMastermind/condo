@@ -16,9 +16,9 @@ services:
     image: condo-fedora-24:latest
     build:
       context: .
-      dockerfile: test/.docker/Dockerfile-fedora-24
+      dockerfile: test/.docker/Dockerfile.fedora-24
   condo-fedora-23:
     image: condo-fedora-23:latest
     build:
       context: .
-      dockerfile: test/.docker/Dockerfile-fedora-23
+      dockerfile: test/.docker/Dockerfile.fedora-23

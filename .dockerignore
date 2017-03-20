@@ -2,9 +2,6 @@
 *.user
 *.suo
 
-# hidden folders
-.*/
-
 # build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -55,3 +52,13 @@ appveyor.yml
 # docker files
 [Dd]ockerfile*
 [Dd]ocker-[Cc]ompose*
+
+# vs files
+.vs/
+.vscode/
+
+# docker files
+.docker/
+[Dd]ocker-[Cc]ompose.*
+[Dd]ockerfile.*
+[Dd]ockerfile

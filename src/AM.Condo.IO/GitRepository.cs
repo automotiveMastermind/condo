@@ -24,7 +24,7 @@ namespace AM.Condo.IO
         #region Private Fields
         private const string Split = "------------------------ >8< ------------------------";
 
-        private const string Format = "%H%n%h%n%cI%n%D%n%B%n" + Split;
+        private const string Format = "%H%n%h%n%ci%n%d%n%B%n" + Split;
 
         private readonly IPathManager path;
 
