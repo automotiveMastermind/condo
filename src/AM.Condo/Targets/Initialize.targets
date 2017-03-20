@@ -106,7 +106,7 @@
     <RepositoryProvider>Git</RepositoryProvider>
     <TeamProject>$(TRAVIS_REPO_SLUG)</TeamProject>
     <BuildUri>https://travis-ci.org/$(TeamProject)/jobs/$(JobId)</BuildUri>
-    <BuildName>$(TeamProject) - $(Branch) - $(JobId)</BuildName>
+    <BuildName>$(TeamProject) - $(Branch) - $(TRAVIS_JOB_NUMBER)</BuildName>
   </PropertyGroup>
 
   <!-- determine if the repository is managed by git -->

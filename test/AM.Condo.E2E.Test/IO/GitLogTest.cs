@@ -11,7 +11,9 @@ namespace AM.Condo.IO
     using System.Linq;
     using System.Text;
 
+    using AM.Condo.Diagnostics;
     using Xunit;
+    using Xunit.Abstractions;
 
     [Purpose(PurposeType.Integration)]
     [Agent(AgentType.CI)]
@@ -19,13 +21,21 @@ namespace AM.Condo.IO
     {
         private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();
 
+        private readonly ILogger logger;
+
         private static readonly Random Random = new Random();
+
+        public GitLogTest(ITestOutputHelper output)
+        {
+            // create a logger from the output
+            this.logger = new TestLogger(output);
+        }
 
         [MemberData(nameof(CommitMessages))]
         [Theory]
         public void GitLog_WhenSimple_Succeeds(CommitMessage expected)
         {
-            using (var repo = this.repository.Initialize())
+            using (var repo = this.repository.Initialize(this.logger))
             {
                 // set the username and email
                 repo.Username = "condo";

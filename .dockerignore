@@ -1,0 +1,57 @@
+# user files
+*.user
+*.suo
+
+# hidden folders
+.*/
+
+# build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Tt]arget/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Tt]est[Rr]esults/
+
+# condo files
+[Cc]ondo.[Aa]ssembly[Ii]nfo.cs
+condo-local.sh
+condo-local.ps1
+.ready
+
+# jetbrains
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+_TeamCity*
+*.dotCover
+
+# nuget packages
+*.nupkg
+*.nuget.props
+
+# git files
+.gitignore
+.gitattributes
+
+# mac files
+.DS_Store
+
+# win files
+[Tt]humbs.db
+
+# log files
+*.log
+
+# build files
+appveyor.yml
+.travis.yml
+
+# docker files
+[Dd]ockerfile*
+[Dd]ocker-[Cc]ompose*
