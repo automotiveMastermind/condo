@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ISocketPool.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Net
 {
     using System;
@@ -29,12 +35,18 @@ namespace AM.Condo.Net
         /// <summary>
         /// Pops an instance of a <see cref="SocketAsyncEventArgs"/> from the pool with a pre-allocated buffer.
         /// </summary>
+        /// <returns>
+        /// The <see cref="SocketAsyncEventArgs"/> to use for the next operation.
+        /// </returns>
         SocketAsyncEventArgs Pop();
 
         /// <summary>
         /// Pushes an instance of a <see cref="SocketAsyncEventArgs"/> back into the pool and clears the pre-allocated
         /// buffer.
         /// </summary>
+        /// <param name="args">
+        /// The <see cref="SocketAsyncEventArgs"/> to return to the socket pool.
+        /// </param>
         void Push(SocketAsyncEventArgs args);
         #endregion
     }

@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitLog.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System.Collections.Generic;
@@ -38,11 +44,12 @@ namespace AM.Condo.IO
             = new SortedDictionary<SemanticVersion, IList<GitCommit>>(new VersionComparer());
 
         /// <summary>
-        /// Gets or sets the tag contained within the log.
+        /// Gets the tag contained within the log.
         /// </summary>
         public ICollection<GitTag> Tags { get; } = new SortedSet<GitTag>();
         #endregion
 
+        #region Methods
         /// <inheritdoc />
         public override string ToString()
         {
@@ -54,5 +61,6 @@ namespace AM.Condo.IO
 
             return builder.ToString();
         }
+        #endregion
     }
 }

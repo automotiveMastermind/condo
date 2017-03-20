@@ -1,0 +1,24 @@
+
+version: '2'
+
+services:
+  condo-ubuntu-xenial:
+    image: condo-ubuntu-xenial:latest
+    build:
+      context: .
+      dockerfile: test/.docker/Dockerfile.ubuntu-xenial
+  condo-ubuntu-trusty:
+    image: condo-ubuntu-trusty:latest
+    build:
+      context: .
+      dockerfile: test/.docker/Dockerfile.ubuntu-trusty
+  condo-fedora-24:
+    image: condo-fedora-24:latest
+    build:
+      context: .
+      dockerfile: test/.docker/Dockerfile.fedora-24
+  condo-fedora-23:
+    image: condo-fedora-23:latest
+    build:
+      context: .
+      dockerfile: test/.docker/Dockerfile.fedora-23

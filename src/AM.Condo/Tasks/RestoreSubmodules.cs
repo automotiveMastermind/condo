@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RestoreSubmodules.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -57,6 +63,9 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Attempt to use the `git` command line tool to retrieve repository information.
         /// </summary>
+        /// <param name="root">
+        /// The root of the repository in which to restore submodules.
+        /// </param>
         /// <returns>
         /// A value indicating whether or not the repository information could be retrieved using the git command line
         /// tool.
@@ -82,12 +91,11 @@ namespace AM.Condo.Tasks
 
                 // restore submodules
                 repository.RestoreSubmodules();
-
             }
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarningFromException(netEx);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

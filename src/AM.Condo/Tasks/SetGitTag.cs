@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SetGitTag.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -31,7 +37,6 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the remote that should be used to push the tag.
         /// </summary>
-        /// <returns></returns>
         [Output]
         public string Remote { get; set; } = "origin";
 
@@ -104,12 +109,12 @@ namespace AM.Condo.Tasks
                 repository.Tag(this.Tag);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Created tag {this.Tag}");
+                this.Log.LogMessage(MessageImportance.High, $"Created tag {this.Tag}");
             }
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarningFromException(netEx);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

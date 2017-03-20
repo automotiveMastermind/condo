@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PushNuGetPackage.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -9,8 +15,9 @@ namespace AM.Condo.Tasks
     using NuGet.Commands;
     using NuGet.Configuration;
 
-    using MSBuildTask = Microsoft.Build.Utilities.Task;
     using System.Linq;
+
+    using MSBuildTask = Microsoft.Build.Utilities.Task;
 
     /// <summary>
     /// Represents a Microsoft Build task used to publish a package to a NuGet feed.
@@ -33,7 +40,7 @@ namespace AM.Condo.Tasks
         public ITaskItem[] Packages { get; set; }
 
         /// <summary>
-        /// Gets the root path of the repository used to locate NuGet configuration settings.
+        /// Gets or sets the root path of the repository used to locate NuGet configuration settings.
         /// </summary>
         [Required]
         public string RepositoryRoot { get; set; }
@@ -78,7 +85,6 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the available number of tasks (processes) used to publish packages to the feed.
         /// </summary>
-        /// <returns></returns>
         public int Parallelism { get; set; } = Environment.ProcessorCount * 2;
 
         /// <summary>
@@ -97,7 +103,9 @@ namespace AM.Condo.Tasks
         /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.
         /// </summary>
         public PushNuGetPackage()
-            : this(null, null) { }
+            : this(settings: null, provider: null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.

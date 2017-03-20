@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetCommitInfo.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -28,7 +34,7 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets the commit from which to retrieve commit history.
+        /// Gets or sets the commit from which to retrieve commit history.
         /// </summary>
         /// <remarks>
         /// The default value is <see langword="null"/>, which will cause all commits in the entire repository to be
@@ -38,7 +44,7 @@ namespace AM.Condo.Tasks
         public string From { get; set; }
 
         /// <summary>
-        /// Gets the commit to which to retrieve commit history.
+        /// Gets or sets the commit to which to retrieve commit history.
         /// </summary>
         /// <remarks>
         /// The default value is HEAD, which is the most recent commit.
@@ -138,7 +144,7 @@ namespace AM.Condo.Tasks
         public string VersionTag { get; set; }
 
         /// <summary>
-        /// Gets the commits that belong to the current release.
+        /// Gets or sets the commits that belong to the current release.
         /// </summary>
         /// <remarks>
         /// Will contain a list of all commits that comply with the indicated format.

@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="WaitForFile.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -32,14 +38,14 @@ namespace AM.Condo.Tasks
             if (this.FilePath == null)
             {
                 // throw an argument null exception
-                throw new ArgumentNullException(nameof(FilePath));
+                throw new ArgumentNullException(nameof(this.FilePath));
             }
 
             // determine if the file length is zero
             if (this.FilePath.Length == 0)
             {
                 // throw a new argument exception
-                throw new ArgumentException($"The {nameof(FilePath)} cannot be empty.", nameof(FilePath));
+                throw new ArgumentException($"The {nameof(this.FilePath)} cannot be empty.", nameof(this.FilePath));
             }
 
             // wait for the file to be written

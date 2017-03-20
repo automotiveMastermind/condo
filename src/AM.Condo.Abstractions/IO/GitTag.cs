@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitTag.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -35,6 +41,9 @@ namespace AM.Condo.IO
         /// <param name="versionTag">
         /// The version tag prefix used for version tags.
         /// </param>
+        /// <returns>
+        /// The semantic version represented by the specified <paramref name="versionTag"/>.
+        /// </returns>
         public SemanticVersion Version(string versionTag)
         {
             // capture the tag name
@@ -48,7 +57,7 @@ namespace AM.Condo.IO
             }
 
             // attempt to parse the tags
-            SemanticVersion.TryParse(tag, out version);
+            SemanticVersion.TryParse(tag, out this.version);
 
             // return the version
             return this.version;

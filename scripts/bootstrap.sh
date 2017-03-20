@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+function condo-init()
+{
+    local CONDO_PATH="$HOME/.am/condo"
+}
+
 function condo-bootstrap()
 {
     # condo branch
@@ -51,17 +56,23 @@ function condo-bootstrap()
     fi
 
     local INSTALL_URI="https://github.com/automotivemastermind/condo/archive/$CONDO_BRANCH.tar.gz"
-    local INTALL_TEMP=$(mktemp -d -t am_condo)
-    local EXTRACT_TEMP="$INTALL_TEMP/extract"
+    local INSTALL_TEMP=$(mktemp -d -t am_condo)
+    local CONDO_EXTRACT="$CONDO_TEMP/extract"
+    local CONDO_SOURCE="$CONDO_EXTRACT"
 
-    pushd $INTALL_TEMP 1>/dev/null
+    mkdir -p $CONDO_EXTRACT
+    tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
+    cp -r $CONDO_SOURCE/* $SRC_ROOT/
+    rm -Rf $CONDO_TEMP
+
+    pushd $INSTALL_TEMP 1>/dev/null
     curl -skL $INSTALL_URI | tar zx
-    pushd "condo-$CONDO_BRANCH/scripts" 1>/dev/null
-    ./install.sh
+    pushd $CONDO_SCRIPTS 1>/dev/null
+    ./install.sh --source $CONDO_SOURCE
     popd 1>/dev/null
     popd 1>/dev/null
 
-    rm -rf $INTALL_TEMP 1>/dev/null
+    rm -rf $INSTALL_TEMP 1>/dev/null
 }
 
 condo-bootstrap $@

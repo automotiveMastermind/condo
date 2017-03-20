@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IPathManager.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -7,7 +13,7 @@ namespace AM.Condo.IO
     /// </summary>
     public interface IPathManager : IDisposable
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the full path of the temporary path.
         /// </summary>

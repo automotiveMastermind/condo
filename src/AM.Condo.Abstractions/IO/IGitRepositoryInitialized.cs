@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IGitRepositoryInitialized.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System.Collections.Generic;
@@ -100,6 +106,9 @@ namespace AM.Condo.IO
         /// <summary>
         /// Checks out the branch or tag with the specified <paramref name="name"/>.
         /// </summary>
+        /// <param name="name">
+        /// The name of the branch or tag to checkout.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>

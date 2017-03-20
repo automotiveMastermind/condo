@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitLogParser.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -6,9 +12,9 @@ namespace AM.Condo.IO
     using System.Text;
     using System.Text.RegularExpressions;
 
-    using static System.FormattableString;
-
     using NuGet.Versioning;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a parser for git logs.
@@ -44,10 +50,6 @@ namespace AM.Condo.IO
             var mergeRegex = string.IsNullOrEmpty(options.MergePattern)
                 ? NoMatchRegex
                 : new Regex(options.MergePattern, RegexOptions.IgnoreCase);
-
-            var FieldRegex = string.IsNullOrEmpty(options.FieldPattern)
-                ? NoMatchRegex
-                : new Regex(options.FieldPattern, RegexOptions.IgnoreCase);
 
             // var mentionRegex = GetMentionRegex(options.MentionPrefixes);
             var noteRegex = GetNotesRegex(options.NoteKeywords);
@@ -101,14 +103,17 @@ namespace AM.Condo.IO
                 };
 
                 // get the tags
-                var tags = lines.Current.Split(',');
+                var tags = lines.Current.Trim().TrimStart('(').TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 lines.MoveNext();
 
                 // iterate over each tag
                 foreach (var tag in tags)
                 {
+                    // trim the tag
+                    var trimmed = tag.Trim();
+
                     // test for a tag
-                    match = TagRegex.Match(tag);
+                    match = TagRegex.Match(trimmed);
 
                     // determine if tag was found
                     if (match.Success)
@@ -138,7 +143,7 @@ namespace AM.Condo.IO
                     }
 
                     // add the tag as a branch reference
-                    commit.Branches.Add(tag);
+                    commit.Branches.Add(trimmed);
                 }
 
                 // get the header
@@ -260,9 +265,6 @@ namespace AM.Condo.IO
                     // capture the line
                     var line = lines.Current;
 
-                    // capture the content
-                    section.AppendLine(line);
-
                     // append the footer line
                     footer.AppendLine(line);
 
@@ -293,7 +295,13 @@ namespace AM.Condo.IO
 
                         // add the current note to the commit
                         commit.Notes.Add(note);
+
+                        // continue
+                        continue;
                     }
+
+                    // capture the content
+                    section.AppendLine(line);
                 }
 
                 // determine if additional body info was acquired

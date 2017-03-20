@@ -3,11 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <DebugType>portable</DebugType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>AM.Condo</AssemblyName>
-    <PackageId>AM.Condo</PackageId>
     <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
+    <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="../../stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="AM.Condo.tasks">
@@ -32,5 +35,13 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.1.548, 16.0.0)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.1.548, 16.0.0)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
 </Project>

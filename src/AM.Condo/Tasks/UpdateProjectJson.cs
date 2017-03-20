@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UpdateProjectJson.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -88,7 +94,7 @@ namespace AM.Condo.Tasks
             catch (Exception netEx)
             {
                 // log an error
-                Log.LogErrorFromException(netEx);
+                this.Log.LogErrorFromException(netEx);
 
                 // move on immediately
                 return false;

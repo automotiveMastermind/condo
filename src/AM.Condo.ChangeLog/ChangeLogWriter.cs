@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ChangeLogWriter.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.ChangeLog
 {
     using System;
@@ -125,7 +131,7 @@ namespace AM.Condo.ChangeLog
             this.ApplyVersion(current.Key, null, current.Value);
 
             // iterate over each version
-            for (var i = 0; i < versions.Count; i++)
+            for (var i = 1; i < versions.Count; i++)
             {
                 // capture the previous
                 var previous = current;
@@ -154,16 +160,16 @@ namespace AM.Condo.ChangeLog
 
             // setup the root dictionary
             var root = new Dictionary<string, object>();
-            root.Add("commit", options.CommitName);
-            root.Add("issue", options.IssueName);
-            root.Add("linkReferences", options.LinkReferences);
-            root.Add("repository", options.Repository);
-            root.Add("repoUrl", options.RepositoryUri);
+            root.Add("commit", this.options.CommitName);
+            root.Add("issue", this.options.IssueName);
+            root.Add("linkReferences", this.options.LinkReferences);
+            root.Add("repository", this.options.Repository);
+            root.Add("repoUrl", this.options.RepositoryUri);
             root.Add("previousTag", previous);
             root.Add("currentTag", version.ToFullString());
             root.Add("version", version.ToNormalizedString());
             root.Add("isPatch", version.Patch > 0 || version.IsPrerelease || version.HasMetadata);
-            root.Add("linkCompare", options.LinkReferences && !string.IsNullOrEmpty(previous));
+            root.Add("linkCompare", this.options.LinkReferences && !string.IsNullOrEmpty(previous));
             root.Add("date", first.Date.ToString("yyyy-MM-dd"));
 
             var commitGroups = new List<IDictionary<string, object>>();
@@ -187,13 +193,12 @@ namespace AM.Condo.ChangeLog
                 // add the header
                 commit.Add("header", currentCommit.Header);
 
+                // do not include the commit by default
                 var include = false;
 
                 // iterate over all notes on the current commit
                 foreach (var currentNote in currentCommit.Notes)
                 {
-                    include = true;
-
                     // create the note
                     var note = new Dictionary<string, object>();
 
@@ -207,15 +212,28 @@ namespace AM.Condo.ChangeLog
                     // get the header value
                     var value = currentNote.Header;
 
+                    // define a variable to retain the display value
+                    var display = default(string);
+
+                    // determine if we should include the note type
+                    if (!this.options.ChangeLogTypes.TryGetValue(value, out display))
+                    {
+                        // move on immediately
+                        continue;
+                    }
+
+                    // force include the commit
+                    include = true;
+
                     // attempt to get the group
-                    if (!tempNotes.TryGetValue(value, out group))
+                    if (!tempNotes.TryGetValue(display, out group))
                     {
                         // create the group
                         group = new Dictionary<string, object>();
-                        tempNotes.Add(value, group);
+                        tempNotes.Add(display, group);
 
                         // add the title
-                        group.Add("title", value);
+                        group.Add("title", display);
 
                         // add the notes
                         group.Add("notes", new List<IDictionary<string, object>>());
@@ -241,8 +259,8 @@ namespace AM.Condo.ChangeLog
                     // determine if this is the group by key
                     if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
                     {
-                        // capture the display name
-                        string display = value;
+                        // create a variable to retain the display name
+                        var display = default(string);
 
                         // attempt to get the display name mapping
                         if (!this.options.ChangeLogTypes.TryGetValue(value, out display) && !include)
@@ -255,11 +273,11 @@ namespace AM.Condo.ChangeLog
                         IDictionary<string, object> group;
 
                         // attempt to get the group
-                        if (!tempCommits.TryGetValue(value, out group))
+                        if (!tempCommits.TryGetValue(display, out group))
                         {
                             // create the group
                             group = new Dictionary<string, object>();
-                            tempCommits.Add(value, group);
+                            tempCommits.Add(display, group);
 
                             // add the title
                             group.Add("title", display);

@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CreateRelease.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -86,7 +92,7 @@ namespace AM.Condo.Tasks
                 repository.Add().Commit(message).Tag(this.Version);
 
                 // log a message
-                Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
+                this.Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
 
                 // determine if we should push
                 if (this.Push)
@@ -95,13 +101,13 @@ namespace AM.Condo.Tasks
                     repository.Push(tags: true);
 
                     // log a message
-                    Log.LogMessage(MessageImportance.High, $"Pushed the release for version: {this.Version}...");
+                    this.Log.LogMessage(MessageImportance.High, $"Pushed the release for version: {this.Version}...");
                 }
             }
             catch (Exception netEx)
             {
                 // log a warning
-                Log.LogWarningFromException(netEx);
+                this.Log.LogWarningFromException(netEx);
 
                 // move on immediately
                 return false;

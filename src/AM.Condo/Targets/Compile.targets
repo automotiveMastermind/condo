@@ -3,21 +3,28 @@
   <PropertyGroup>
     <DotNetBuildOptions Condition=" '$(PreReleaseTag)' != '' ">$(DotNetBuildOptions) --version-suffix &quot;$(PreReleaseTag)&quot;</DotNetBuildOptions>
     <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
-    <DotNetBuildOptions Condition=" '$(DOTNET_BUILD_OPTIONS)' != '' ">$(DotNetBuildOptions) $(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
 
-    <DotNetBuildProperties>/p:GenerateAssemblyInfo=false</DotNetBuildProperties>
+    <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
+
+    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
+    <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
+    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
   </PropertyGroup>
 
-  <Target Name="DotNetBuild" Condition=" '@(DotNetProjects->)' != '0' ">
+  <Target Name="DotNetBuild">
     <Exec
-        Command="dotnet build @(DotNetProjects->'&quot;%(FullPath)&quot;', ' ') $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
+        Command="dotnet build &quot;%(SourceProjects.FullPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
+        WorkingDirectory="$(RepositoryRoot)" />
+
+    <Exec
+        Command="dotnet build &quot;%(TestProjects.FullPath)&quot; $(DotNetTestBuildOptions.Trim()) $(DotNetTestBuildProperties.Trim())"
         WorkingDirectory="$(RepositoryRoot)" />
   </Target>
 
-  <Target Name="CopyDotNetBuild" Condition=" '@(DotNetProjects->Count())' != '0' ">
+  <Target Name="CopyDotNetBuild">
     <ItemGroup>
-      <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(Slash)**">
-        <ProjectName>%(DotNetProjects.ProjectName)</ProjectName>
+      <_CopyDotNetBuild Include="%(Projects.ProjectDir)bin$(Slash)**">
+        <ProjectName>%(Projects.ProjectName)</ProjectName>
       </_CopyDotNetBuild>
     </ItemGroup>
 

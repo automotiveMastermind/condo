@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GitRepository.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System;
@@ -6,9 +12,9 @@ namespace AM.Condo.IO
     using System.IO;
     using System.Linq;
 
-    using static System.FormattableString;
-
     using AM.Condo.Diagnostics;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a reference to a git repository that can be manipulated programmatically.
@@ -18,7 +24,7 @@ namespace AM.Condo.IO
         #region Private Fields
         private const string Split = "------------------------ >8< ------------------------";
 
-        private const string Format = "%H%n%h%n%cI%n%D%n%B%n" + Split;
+        private const string Format = "%H%n%h%n%ci%n%d%n%B%n" + Split;
 
         private readonly IPathManager path;
 
@@ -52,18 +58,8 @@ namespace AM.Condo.IO
         /// </param>
         public GitRepository(IPathManager path, ILogger log)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
-            if (log == null)
-            {
-                throw new ArgumentNullException(nameof(log));
-            }
-
-            this.path = path;
-            this.logger = log;
+            this.path = path ?? throw new ArgumentNullException(nameof(path));
+            this.logger = log ?? throw new ArgumentNullException(nameof(log));
 
             try
             {
@@ -71,18 +67,24 @@ namespace AM.Condo.IO
                 var output = this.Execute("--version");
 
                 // capture the version string
-                var values = output.Output.FirstOrDefault()?.Split(' ');
+                var values = output.Output.FirstOrDefault()?.Split(new[] { '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // define a temporary value to retain the version
+                var version = string.Empty;
 
                 // iterate over each value
                 foreach (var value in values)
                 {
-                    // attempt to parse the version
-                    if (Version.TryParse(value, out this.version))
+                    // determine if the segment is an int
+                    if (int.TryParse(value, out int segment))
                     {
-                        // break from the iteration
-                        break;
+                        // add the segment to the version
+                        version = $"{version}.{segment}";
                     }
                 }
+
+                // create the version
+                this.version = new Version(version.Trim('.'));
             }
             catch (Exception netEx)
             {
@@ -199,11 +201,27 @@ namespace AM.Condo.IO
         {
             get
             {
+                // pull all tags
+                this.Pull(all: true);
+
+                // determine what command to run
                 var cmd = this.version?.Major > 1 ? "tag --sort version:refname" : "tag";
 
+                // execute the command
                 var result = this.Execute(cmd);
 
-                return result.Success ? result.Output : new List<string>();
+                // determine if we were successful
+                if (!result.Success)
+                {
+                    // log the error as a warning
+                    this.logger.LogWarning(result.Error);
+
+                    // return an empty list
+                    return new List<string>();
+                }
+
+                // return the output
+                return result.Output;
             }
         }
         #endregion
@@ -257,7 +275,7 @@ namespace AM.Condo.IO
 
             if (all)
             {
-                cmd += " --all";
+                cmd += " --all --tags";
             }
 
             var output = this.Execute(cmd);
@@ -424,6 +442,8 @@ namespace AM.Condo.IO
         /// <inheritdoc/>
         public IProcessOutput Execute(string command)
         {
+            this.logger.LogMessage($"git: executing: {command}", LogLevel.Low);
+
             var start = this.CreateProcessInfo(command);
             var process = new Process
             {
@@ -469,7 +489,9 @@ namespace AM.Condo.IO
                 process.WaitForExit();
 
                 // wait for the process to truly end
-                while (!process.HasExited) { }
+                while (!process.HasExited)
+                {
+                }
 
                 // capture the exit code
                 exitCode = process.ExitCode;

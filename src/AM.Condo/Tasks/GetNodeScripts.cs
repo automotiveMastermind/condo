@@ -1,13 +1,19 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="GetNodeScripts.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
     using System.IO;
 
-    using static System.FormattableString;
-
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using Microsoft.Build.Tasks;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets a list of available node scripts.
@@ -95,7 +101,7 @@ namespace AM.Condo.Tasks
             if (!exec.Execute())
             {
                 // log a warning
-                Log.LogWarning("The npm command line tool is not available on the current path.");
+                this.Log.LogWarning("The npm command line tool is not available on the current path.");
 
                 // move on immediately
                 return true;
@@ -105,7 +111,7 @@ namespace AM.Condo.Tasks
             if (exec.ConsoleOutput.Length == 0)
             {
                 // log a warning
-                Log.LogWarning("The version of the npm command line tool is unavailable.");
+                this.Log.LogWarning("The version of the npm command line tool is unavailable.");
 
                 // move on immediately
                 return true;
@@ -121,7 +127,7 @@ namespace AM.Condo.Tasks
             if (!exec.Execute())
             {
                 // log an npm warning
-                Log.LogWarning("Could not retrieve a list of available npm scripts.");
+                this.Log.LogWarning("Could not retrieve a list of available npm scripts.");
 
                 // move on immediately
                 return true;

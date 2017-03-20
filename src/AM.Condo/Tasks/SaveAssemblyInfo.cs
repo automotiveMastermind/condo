@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SaveAssemblyInfo.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.Tasks
 {
     using System;
@@ -57,17 +63,17 @@ namespace AM.Condo.Tasks
         public string Branch { get; set; }
 
         /// <summary>
-        /// Gets or sets the assembly version.
+        /// Gets the assembly version.
         /// </summary>
         public string AssemblyVersion { get; private set; }
 
         /// <summary>
-        /// Gets or sets the file version.
+        /// Gets the file version.
         /// </summary>
         public string FileVersion { get; private set; }
 
         /// <summary>
-        /// Gets or sets the informational version of the build.
+        /// Gets the informational version of the build.
         /// </summary>
         public string InformationalVersion { get; private set; }
 
@@ -92,12 +98,12 @@ namespace AM.Condo.Tasks
         public string PullRequestId { get; set; }
 
         /// <summary>
-        /// Sets the date and time of the build.
+        /// Gets or sets the date and time of the build.
         /// </summary>
         public string BuildDateUtc { get; set; }
 
         /// <summary>
-        /// Gets the URI of the repository that is identified by the source control server.
+        /// Gets or sets the URI of the repository that is identified by the source control server.
         /// </summary>
         public string RepositoryUri { get; set; }
 

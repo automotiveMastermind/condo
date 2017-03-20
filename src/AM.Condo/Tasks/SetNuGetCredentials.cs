@@ -1,4 +1,10 @@
-﻿namespace AM.Condo.Tasks
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SetNuGetCredentials.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace AM.Condo.Tasks
 {
     using System.Linq;
     using System.IO;
@@ -56,7 +62,9 @@
         /// Initializes a new instance of the <see cref="SetNuGetCredentials"/> class.
         /// </summary>
         public SetNuGetCredentials()
-            : this(null, null) { }
+            : this(settings: null, provider: null)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetNuGetCredentials"/> class.
@@ -77,6 +85,9 @@
         /// <summary>
         /// Execute the set credentials task.
         /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the task executed successfully.
+        /// </returns>
         public override bool Execute()
         {
             // determine if the settings are not specified
@@ -90,7 +101,7 @@
             if (this.provider == null)
             {
                 // create a new package source provider
-                this.provider = new PackageSourceProvider(settings);
+                this.provider = new PackageSourceProvider(this.settings);
             }
 
             // capture the priority config file

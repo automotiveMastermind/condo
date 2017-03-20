@@ -1,8 +1,41 @@
 {
-    "editor.tabSize": 4,
-    "editor.detectIndentation": true,
-    "editor.insertSpaces": true,
-
-    "files.encoding": "utf8",
-    "files.trimTrailingWhitespace": true
+  "editor.fontFamily": "'Fira Code Retina', 'Fira Code', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 12,
+  "editor.fontLigatures": true,
+  "editor.trimAutoWhitespace": true,
+  "editor.detectIndentation": false,
+  "editor.rulers": [
+    120
+  ],
+  "html.format.indentInnerHtml": false,
+  "html.format.endWithNewline": true,
+  "html.format.wrapLineLength": 120,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/.DS_Store": true,
+    "**/artifacts": true,
+    "**/node_modules": true,
+    "**/bower_components": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/node_modules/**": true,
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/condo.sh": true,
+    "**/condo.ps1": true,
+    "**/condo.cmd": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/condo.sh": true,
+    "**/condo.ps1": true,
+    "**/condo.cmd": true
+  }
 }

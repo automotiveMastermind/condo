@@ -1,11 +1,17 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NuGetMSBuildLogger.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo
 {
     using System;
 
-    using static System.FormattableString;
-
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+
+    using static System.FormattableString;
 
     using ILogger = NuGet.Common.ILogger;
 

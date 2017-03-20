@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IGitLogOptions.cs" company="automotiveMastermind and contributors">
+//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace AM.Condo.IO
 {
     using System.Collections.Generic;
@@ -7,7 +13,7 @@ namespace AM.Condo.IO
     /// </summary>
     public interface IGitLogOptions
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the regular expression pattern used to parse the subject line of a git commit.
         /// </summary>
@@ -76,7 +82,7 @@ namespace AM.Condo.IO
         List<string> NoteKeywords { get; }
 
         /// <summary>
-        /// Gets a value indicating whether or not to include invalid commits.
+        /// Gets or sets a value indicating whether or not to include invalid commits.
         /// </summary>
         bool IncludeInvalidCommits { get; set; }
 
