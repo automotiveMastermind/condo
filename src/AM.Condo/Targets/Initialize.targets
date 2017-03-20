@@ -75,7 +75,6 @@
     <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
     <BuildOn>$(AGENT_NAME)</BuildOn>
     <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
-    <RepositoryProvider Condition=" '$(RepositoryProvider)' == 'TfsGit' ">git</RepositoryProvider>
     <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
     <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
     <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
@@ -107,6 +106,22 @@
     <TeamProject>$(TRAVIS_REPO_SLUG)</TeamProject>
     <BuildUri>https://travis-ci.org/$(TeamProject)/jobs/$(JobId)</BuildUri>
     <BuildName>$(TeamProject) - $(Branch) - $(TRAVIS_JOB_NUMBER)</BuildName>
+  </PropertyGroup>
+
+  <!-- capture details from a continuous integration build hosted by AppVeyor -->
+  <PropertyGroup Condition = " '$(APPVEYOR)' != '' ">
+    <BuildHost>appveyor</BuildHost>
+    <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
+    <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
+    <BuildId>$(APPVEYOR_BUILD_ID)</BuildId>
+    <JobId>$(APPVEYOR_JOB_ID)</JobId>
+    <PullRequestId>$(APPVEYOR_PULL_REQUEST_NUMBER)</PullRequestId>
+    <BuildOn>AppVeyor: $(PLATFORM)</BuildOn>
+    <RepositoryProvider>$(APPVEYOR_REPO_PROVIDER)</RepositoryProvider>
+    <TeamProject>$(APPVEYOR_PROJECT_SLUG)</TeamProject>
+    <BuildUri>https://ci.appveyor.com/project/$(TeamProject)/build/$(APPVEYOR_BUILD_NUMBER)</BuildUri>
+    <BuildName>$(TeamProject) - $(Branch) - $(APPVEYOR_JOB_NAME)</BuildName>
+    <CI>True</CI>
   </PropertyGroup>
 
   <!-- determine if the repository is managed by git -->
