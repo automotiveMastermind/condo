@@ -2,18 +2,13 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-alpha-02472"></a>
-## 2.0.0-alpha-02472 (2017-03-20)
+<a name="2.0.0-beta-02488"></a>
+## 2.0.0-beta-02488 (2017-03-20)
 
 
 ### Bug Fixes
 
-* **log:** use display name for note tags 11a47f4
-* **changelog:** resolve extra note header 5eeb6bd
-* **changelog:** fix repeated initial version f6ec61f
-* **install:** do not emit new-item output 8a3042d
-* **install:** recursive fix 64cf2e0
-* **install:** update posh scripts 1d9e2d8
+* **install:** fix install on windows (#46) 98993f1, closes #46
 * **git:** checkout branch task was missing (#45) 57462c7, closes #45
 * **release:** checkout branch due to detached head (#41) 05b4c26, closes #41
 * **release:** set author name/email (#40) df032a0, closes #40
@@ -30,7 +25,6 @@
 
 ### Features
 
-* **template:** add support for templating 59ce847
 * **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
 * **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
 * **project-json:** update semver in project.json (#35) d874638, closes #35
