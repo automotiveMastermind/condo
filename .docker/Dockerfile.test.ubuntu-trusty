@@ -1,11 +1,7 @@
 FROM ubuntu:trusty
 LABEL vendor=automotiveMastermind\ and\ Contributors
 
-ENV destination /condo
-ENV LANG C.UTF-8
-
-ARG source=.
-WORKDIR $destination
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -13,13 +9,21 @@ RUN apt-get update \
         libicu52 \
         libcurl3 \
         libunwind8 \
+        locales \
         curl \
         tar \
         git \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
-COPY $source/test/.docker/docker-task.sh /
+ENV LANG en_US.UTF-8
+
+ARG source=.
+ARG destination=/condo
+WORKDIR $destination
+
 COPY $source .
+COPY $source/.docker/docker-task.sh /
 
 ENTRYPOINT ["/docker-task.sh"]
-CMD [ "condo", "/t:ci" ]
+CMD [ "condo", "/t:test" ]
