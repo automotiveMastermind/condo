@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <DotNetBuildOptions Condition=" '$(PreReleaseTag)' != '' ">$(DotNetBuildOptions) --version-suffix &quot;$(PreReleaseTag)&quot;</DotNetBuildOptions>
-    <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
-
-    <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
-
-    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
-    <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
-    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
-  </PropertyGroup>
 
   <Target Name="DotNetBuild">
+    <PropertyGroup>
+      <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
+      <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
+
+      <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
+      <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
+    </PropertyGroup>
+
     <Exec
         Command="dotnet build &quot;%(SourceProjects.FullPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
         WorkingDirectory="$(RepositoryRoot)" />

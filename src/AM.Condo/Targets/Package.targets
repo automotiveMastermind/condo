@@ -6,7 +6,7 @@
 
   <Target Name="DotNetPack" Condition=" '@(Projects->Count())' != '0' ">
     <Exec
-        Command="dotnet pack --version-suffix &quot;$(PreReleaseTag)&quot; -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(Projects.FullPath)&quot;"
+        Command="dotnet pack -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(Projects.FullPath)&quot; /p:Version=$(InformationalVersion)"
         Condition="'%(Projects.ProjectGroup)' == 'src'"
         WorkingDirectory="$(RepositoryRoot)" />
 
