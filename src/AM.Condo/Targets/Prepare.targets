@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' AND '@(DotNetRestorePaths->Count())' != '0' ">
+    <PropertyGroup>
+      <DotNetRestoreOptions Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreOptions) --configfile &quot;$(NuGetConfigPath)&quot;</DotNetRestoreOptions>
+    </PropertyGroup>
+
     <ItemGroup>
       <_DotNetToRestore Include="%(DotNetRestorePaths.RootDir)%(DotNetRestorePaths.Directory)" />
     </ItemGroup>

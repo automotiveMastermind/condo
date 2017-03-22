@@ -7,11 +7,11 @@
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetBuildQuality" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetCommitInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNodeScripts" />
+  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetRepositoryInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetServerTime" />
-  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetVstsPackageFeeds" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.InstallNuGetPackage" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.LogItemMetadata" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.PushNuGetPackage" />
@@ -20,8 +20,7 @@
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.SaveAssemblyInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.SaveChangeLog" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.SetGitTag" />
-  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.SetNuGetCredentials" />
-  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.UpdateProjectJson" />
+  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.SetNuGetPackageSources" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.WaitForDebugger" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.WaitForFile" />
 </Project>

@@ -28,7 +28,7 @@
   <Target Name="Initialize" />
 
   <!-- developer bootstrapping -->
-  <Target Name="Bootstrap" DependsOnTargets="Initialize" />
+  <Target Name="Bootstrap" />
 
   <!-- semantic versioning -->
   <Target Name="Version" DependsOnTargets="Initialize" />

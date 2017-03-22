@@ -1,11 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GetVstsPackageFeeds.cs" company="automotiveMastermind and contributors">
+// <copyright file="GetNuGetPackageSources.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Microsoft.Build.Framework;
@@ -13,14 +14,11 @@ namespace AM.Condo.Tasks
     using NuGet.Configuration;
 
     /// <summary>
-    /// Represents a NuGet task that gets NuGet package sources that are Visual Studio Team Services (VSTS) secured
-    /// feeds.
+    /// Represents a NuGet task that gets NuGet package sources from the current configuration.
     /// </summary>
-    public class GetVstsPackageFeeds : Task
+    public class GetNuGetPackageSources : Task
     {
         #region Fields
-        private const string VstsPackageFeed = "pkgs.visualstudio.com/";
-
         private ISettings settings;
 
         private IPackageSourceProvider provider;
@@ -42,15 +40,15 @@ namespace AM.Condo.Tasks
 
         #region Constructors and Finalizers
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetVstsPackageFeeds"/> class.
+        /// Initializes a new instance of the <see cref="GetNuGetPackageSources"/> class.
         /// </summary>
-        public GetVstsPackageFeeds()
+        public GetNuGetPackageSources()
             : this(settings: null, provider: null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetVstsPackageFeeds"/> class.
+        /// Initializes a new instance of the <see cref="GetNuGetPackageSources"/> class.
         /// </summary>
         /// <param name="settings">
         /// The settings used to push or restore packages.
@@ -58,7 +56,7 @@ namespace AM.Condo.Tasks
         /// <param name="provider">
         /// The package source provider used to push or restore packages.
         /// </param>
-        public GetVstsPackageFeeds(ISettings settings, IPackageSourceProvider provider)
+        public GetNuGetPackageSources(ISettings settings, IPackageSourceProvider provider)
         {
             // set the settings and package source provider
             this.settings = settings;
@@ -92,13 +90,26 @@ namespace AM.Condo.Tasks
                 this.provider = new PackageSourceProvider(this.settings);
             }
 
-            // get the package sources that contains the expected feed uri
-            this.Sources = this.provider.LoadPackageSources()
-                .Where(source => source.Source.ToLowerInvariant().Contains(VstsPackageFeed))
-                .Select(source => new TaskItem(source.Source))
-                .ToArray();
+            // collect the sources as a list
+            var sources = new HashSet<ITaskItem>();
 
-            // return
+            // iterate over each package source
+            foreach (var source in this.provider.LoadPackageSources())
+            {
+                // create a new task item
+                var item = new TaskItem(source.Name);
+                item.SetMetadata(nameof(source.Source), source.Source);
+                item.SetMetadata(nameof(source.ProtocolVersion), source.ProtocolVersion.ToString());
+                item.SetMetadata(nameof(source.IsEnabled), source.IsEnabled.ToString());
+
+                // add the item to the source collection
+                sources.Add(item);
+            }
+
+            // set the sources array
+            this.Sources = sources.ToArray();
+
+            // return true
             return true;
         }
         #endregion

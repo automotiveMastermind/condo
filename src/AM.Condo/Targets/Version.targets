@@ -68,17 +68,6 @@
     </GetAssemblyInfo>
   </Target>
 
-  <Target Name="UpdateProjectJson" Condition="$(CI)">
-    <ItemGroup>
-      <ProjectJsonProjects Include="@(Projects)" Condition=" '%(Projects.DotNetType)' == 'ProjectJson' " />
-    </ItemGroup>
-
-    <UpdateProjectJson
-      Projects="@(ProjectJsonProjects)"
-      Version="$(CurrentRelease)"
-      BuildQuality="$(BuildQuality)" />
-  </Target>
-
   <!-- save assembly info files -->
   <Target Name="SaveAssemblyInfo">
     <SaveAssemblyInfo
@@ -135,7 +124,6 @@
       GetAssemblyInfo;
       PrintVersionInfo;
       SaveAssemblyInfo;
-      UpdateProjectJson;
       $(VersionDependsOn);
       $(AfterVersion);
     </VersionDependsOn>
