@@ -47,7 +47,7 @@ namespace AM.Condo.IO
                 // arrange
                 foreach (var tag in expected.Tags)
                 {
-                    repo.Tag(tag);
+                    repo.Tag(tag, message: null);
                 }
 
                 // act

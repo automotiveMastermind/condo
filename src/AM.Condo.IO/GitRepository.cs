@@ -412,9 +412,13 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepositoryInitialized Tag(string name)
+        public IGitRepositoryInitialized Tag(string name, string message)
         {
-            var exec = this.Execute($"tag {name}");
+            var cmd = string.IsNullOrEmpty(message)
+                ? $"tag {name}"
+                : $@"tag -a {name} -m ""${message}""";
+
+            var exec = this.Execute(cmd);
 
             if (!exec.Success)
             {

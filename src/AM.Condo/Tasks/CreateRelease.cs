@@ -89,7 +89,7 @@ namespace AM.Condo.Tasks
                 var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
 
                 // create the commit and tag the release
-                repository.Add().Commit(message).Tag(this.Version);
+                repository.Add().Commit(message).Tag(this.Version, this.Version);
 
                 // log a message
                 this.Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");

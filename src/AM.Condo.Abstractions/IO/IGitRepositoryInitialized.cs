@@ -120,10 +120,13 @@ namespace AM.Condo.IO
         /// <param name="name">
         /// The name of the tag to create.
         /// </param>
+        /// <param name="message">
+        /// The message used to annotate the tag.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
-        IGitRepositoryInitialized Tag(string name);
+        IGitRepositoryInitialized Tag(string name, string message);
 
         /// <summary>
         /// Restores all available submodules within the current repository.

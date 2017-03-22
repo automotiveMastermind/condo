@@ -147,7 +147,7 @@ namespace AM.Condo.Tasks
                         .Commit(commit.Raw);
                 }
 
-                repo.Tag(expected.LatestVersion);
+                repo.Tag(expected.LatestVersion, message: null);
 
                 var engine = MSBuildMocks.CreateEngine();
 
