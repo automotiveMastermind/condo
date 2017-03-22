@@ -3,10 +3,8 @@ os:
 - linux
 - osx
 branches:
-    except:
-    - feature/*
-    - bugfix/*
-    - hotfix/*
-    - support/*
+    only:
+    - develop
+    - master
 script:
 - "./condo.sh --verbosity diagnostic /t:ci"
