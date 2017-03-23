@@ -68,7 +68,7 @@
     <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
 
     <!-- add prefixes to well-known authenticated feeds -->
-    <NuGetProtectedFeedPrefixes Include="https://api.nuget.org" />
+    <NuGetProtectedFeedPrefixes Include="pkgs.visualstudio.com" />
   </ItemGroup>
 
   <!-- get server time from NIST -->
