@@ -28,6 +28,7 @@
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
     </CleanDependsOn>
+
     <BeforeInitialize>
       CleanRepository;
     </BeforeInitialize>

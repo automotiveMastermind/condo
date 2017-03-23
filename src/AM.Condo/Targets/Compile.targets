@@ -7,7 +7,9 @@
       <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
       <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
 
+      <DotNetBuildProperties Condition=" '$(DotNetBuildProperties)' == '' ">$(DOTNET_BUILD_PROPS)</DotNetBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
+      <DotNetBuildProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetBuildProperties) /p:Version=$(InformationalVersion)</DotNetBuildProperties>
       <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
     </PropertyGroup>
@@ -36,17 +38,17 @@
   </Target>
 
   <PropertyGroup>
+    <AfterCompile>
+      CopyDotNetBuild;
+      $(AfterCompile);
+    </AfterCompile>
+
     <CompileDependsOn>
       $(BeforeCompile);
       DotNetBuild;
       $(CompileDependsOn);
       $(AfterCompile);
     </CompileDependsOn>
-
-    <AfterCompile>
-      CopyDotNetBuild;
-      $(AfterCompile);
-    </AfterCompile>
   </PropertyGroup>
 
   <Target Name="Compilation" DependsOnTargets="$(CompileDependsOn)" BeforeTargets="Compile" />

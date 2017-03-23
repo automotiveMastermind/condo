@@ -5,13 +5,15 @@
       <DotNetPublishOptions Condition=" '$(DotNetPublishOptions)' == '' ">$(DOTNET_PUBLISH_OPTIONS)</DotNetPublishOptions>
       <DotNetPublishOptions Condition=" '$(Configuration)' != '' ">$(DotNetPublishOptions) --configuration &quot;$(Configuration)&quot;</DotNetPublishOptions>
 
+      <DotNetPublishProperties Condition=" '$(DotNetPublishProperties)' == '' ">$(DOTNET_PUBLISH_PROPS)</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:Version=$(InformationalVersion)</DotNetPublishProperties>
       <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateAssemblyInfo=false</DotNetPublishProperties>
       <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateDocumentationFile=true</DotNetPublishProperties>
     </PropertyGroup>
 
     <ItemGroup>
       <_ExecutableProjects Include="@(ExecutableProjects)">
-        <OutputPath>$(PublishArtifactsRoot)$(slash)$(Configuration)$(slash)%(ProjectName)</OutputPath>
+        <OutputPath>$(PublishArtifactsRoot)$(Slash)$(Configuration)$(Slash)%(ProjectName)</OutputPath>
       </_ExecutableProjects>
     </ItemGroup>
 
