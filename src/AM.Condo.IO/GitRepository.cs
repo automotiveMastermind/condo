@@ -347,9 +347,13 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc/>
-        public IGitRepositoryInitialized Add(string spec)
+        public IGitRepositoryInitialized Add(string spec, bool force)
         {
-            var output = this.Execute($@"add ""{spec}""");
+            // create the command
+            var cmd = force ? $@"add ""{spec}"" --force" : $@"add ""{spec}""";
+
+            // execute the command
+            var output = this.Execute(cmd);
 
             if (!output.Success)
             {

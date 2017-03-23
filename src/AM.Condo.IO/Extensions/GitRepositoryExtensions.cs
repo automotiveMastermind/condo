@@ -31,7 +31,7 @@ namespace AM.Condo.IO
         /// </returns>
         public static IGitRepositoryInitialized Add(this IGitRepositoryInitialized repository)
         {
-            return repository.Add(".");
+            return repository.Add(".", force: false);
         }
 
         /// <summary>
