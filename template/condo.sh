@@ -36,6 +36,8 @@ condo_help() {
     echo -e "condo-help"
 }
 
+CONDO_OPTS=()
+
 # continue testing for arguments
 while [[ $# > 0 ]]; do
     case $1 in
@@ -63,27 +65,34 @@ while [[ $# > 0 ]]; do
             ;;
         -v|--verbosity)
             CONDO_VERBOSITY=$2
-            break
+            CONDO_OPTS+=("$1" "$2")
+            shift
             ;;
         -nc|--no-color)
             CLR_INFO=
             CLR_FAILURE=
             CLR_CLEAR=
-            break
+            CONDO_OPTS+=("$1")
             ;;
         --username|--password)
+            CONDO_OPTS+=("$1" "$2")
             shift
             ;;
         --)
+            CONDO_OPTS+=("$1")
             shift
             break
             ;;
         *)
-            break
+            echo "Unknown option: $1"
+            condo_help
+            exit 1
             ;;
     esac
     shift
 done
+
+CONDO_OPTS+=("$@")
 
 if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
@@ -147,7 +156,7 @@ fi
 chmod a+x $CONDO_SHELL
 
 # execute condo shell with the arguments
-$CONDO_SHELL $@
+$CONDO_SHELL "${CONDO_OPTS[@]}"
 
 # capture the current exit code
 EXIT_CODE=$?

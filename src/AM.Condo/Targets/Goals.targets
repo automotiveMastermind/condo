@@ -5,8 +5,8 @@
 
   <!-- import the task targets -->
   <Import Project="$(CondoTargetsPath)Clean.targets" />
-  <Import Project="$(CondoTargetsPath)Bootstrap.targets" />
   <Import Project="$(CondoTargetsPath)Initialize.targets" />
+  <Import Project="$(CondoTargetsPath)Bootstrap.targets" />
   <Import Project="$(CondoTargetsPath)Version.targets" />
   <Import Project="$(CondoTargetsPath)Prepare.targets" />
   <Import Project="$(CondoTargetsPath)Compile.targets" />
