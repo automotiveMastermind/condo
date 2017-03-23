@@ -127,6 +127,8 @@
   <Target Name="SetNuGetCredentials" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
     <SetNuGetPackageSources RepositoryRoot="$(RepositoryRoot)"
                          ArtifactsRoot="$(ArtifactsRoot)"
+                         Uri="$(PackageFeedUri)"
+                         SymbolUri="$(PackageSymbolUri)"
                          Prefixes="@(NuGetProtectedFeedPrefixes)"
                          Username="$(PackageFeedUsername)"
                          Password="$(PackageFeedPassword)"

@@ -65,6 +65,16 @@ namespace AM.Condo.Tasks
         public string FileName { get; set; } = "nuget.config";
 
         /// <summary>
+        /// Gets or sets the package feed URI.
+        /// </summary>
+        public string Uri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the symbol feed URI.
+        /// </summary>
+        public string SymbolUri { get; set; }
+
+        /// <summary>
         /// Gets the final configuration path of the nuget file.
         /// </summary>
         [Output]
@@ -141,7 +151,23 @@ namespace AM.Condo.Tasks
             var prefixes = this.Prefixes.Select(prefix => prefix.ItemSpec);
 
             // create a hash set to retain the sources
-            var sources = currentProvider.LoadPackageSources();
+            var sources = currentProvider.LoadPackageSources().ToList();
+
+            // determine if the uri is specified and not already in the nuget.config
+            if (!string.IsNullOrEmpty(this.Uri)
+                && !sources.Any(source => source.Source.Equals(this.Uri, StringComparison.OrdinalIgnoreCase)))
+            {
+                // add the push source
+                sources.Add(new PackageSource(this.Uri, "condo-push-source"));
+            }
+
+            // determine if the symbol uri is specified and not already in the nuget.config
+            if (!string.IsNullOrEmpty(this.SymbolUri)
+                && !sources.Any(source => source.Source.Equals(this.SymbolUri, StringComparison.OrdinalIgnoreCase)))
+            {
+                // add the symbol source
+                sources.Add(new PackageSource(this.SymbolUri, "condo-symbol-source"));
+            }
 
             // iterate over each source
             foreach (var source in sources)
