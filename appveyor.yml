@@ -3,15 +3,15 @@ pull_requests:
   do_not_increment_build_number: true
 branches:
   only:
-  - develop
-  - master
+    - develop
+    - master
 skip_tags: true
 skip_branch_with_pr: true
 image: Visual Studio 2017
 cache:
-- '%USERPROFILE%\.nuget'
-- '%USERPROFILE%\.am'
-- '%LOCALAPPDATA%\Microsoft\dotnet'
+  - '%USERPROFILE%\.nuget'
+  - '%USERPROFILE%\.am'
+  - '%LOCALAPPDATA%\Microsoft\dotnet'
 build_script:
-- cmd: condo.cmd /t:ci
+  - cmd: condo.cmd /t:ci
 test: off
