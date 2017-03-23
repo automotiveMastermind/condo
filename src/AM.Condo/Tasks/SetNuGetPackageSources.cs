@@ -57,7 +57,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the prefixes used to isolate nuget feeds to configure.
         /// </summary>
-        public ITaskItem[] Prefixes { get; set; } = new[] { new TaskItem("https://pkgs.visualstudio.com") };
+        public ITaskItem[] Prefixes { get; set; } = new[] { new TaskItem("pkgs.visualstudio.com/") };
 
         /// <summary>
         /// Gets or sets the file name of the resulting NuGet configuration file.
@@ -147,7 +147,7 @@ namespace AM.Condo.Tasks
             foreach (var source in sources)
             {
                 // determine if this is a secure feed
-                if (prefixes.Any(prefix => source.Source.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+                if (prefixes.Any(prefix => source.Source.Contains(prefix)))
                 {
                     // set the credentials on the source
                     source.Credentials = new PackageSourceCredential
