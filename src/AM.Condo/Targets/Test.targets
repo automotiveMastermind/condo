@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <Exec
-        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
+        Command="dotnet test --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
         WorkingDirectory="%(_DotNetTestProjects.ProjectDir)" />
   </Target>
 

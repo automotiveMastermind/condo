@@ -120,6 +120,7 @@
       <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
       <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>
       <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
+      <ExecutableProjects Include="@(SourceProjects)" Condition=" '%(SourceProjects.OutputType)' == 'exe' " />
     </ItemGroup>
   </Target>
 

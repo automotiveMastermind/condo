@@ -2,12 +2,14 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
+    <DotNetPackOptions>$(DotNetPackOptions) --output &quot;$(PackageArtifactsRoot)&quot;</DotNetPackOptions>
+    <DotNetPackOptions>$(DotNetPackOptions) --no-build</DotNetPackOptions>
+    <DotNetPackOptions Condition=" '$(Configuration)' != '' ">$(DotNetPackOptions) --configuration &quot;$(Configuration)&quot;</DotNetPackOptions>
   </PropertyGroup>
 
-  <Target Name="DotNetPack" Condition=" '@(Projects->Count())' != '0' ">
+  <Target Name="DotNetPack" Condition=" '@(SourceProjects->Count())' != '0' ">
     <Exec
-        Command="dotnet pack -o &quot;$(PackageArtifactsRoot)&quot; --no-build --configuration &quot;$(Configuration)&quot; $(DotNetPackOptions) &quot;%(Projects.FullPath)&quot; /p:Version=$(InformationalVersion)"
-        Condition="'%(Projects.ProjectGroup)' == 'src'"
+        Command="dotnet pack &quot;%(SourceProjects.FullPath)&quot; $(DotNetPackOptions) /p:Version=$(InformationalVersion)"
         WorkingDirectory="$(RepositoryRoot)" />
 
     <ItemGroup>

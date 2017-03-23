@@ -3,6 +3,7 @@
 
   <Target Name="DotNetBuild">
     <PropertyGroup>
+      <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
       <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
       <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
 
@@ -13,11 +14,13 @@
 
     <Exec
         Command="dotnet build &quot;%(SourceProjects.FullPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)" />
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(SourceProjects.FullPath)') " />
 
     <Exec
         Command="dotnet build &quot;%(TestProjects.FullPath)&quot; $(DotNetTestBuildOptions.Trim()) $(DotNetTestBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)" />
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(TestProjects.FullPath)') " />
   </Target>
 
   <Target Name="CopyDotNetBuild">

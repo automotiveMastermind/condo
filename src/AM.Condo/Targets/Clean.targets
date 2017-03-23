@@ -24,6 +24,7 @@
   <PropertyGroup>
     <CleanDependsOn>
       CleanArtifacts;
+      GetProjectMetadata;
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
     </CleanDependsOn>

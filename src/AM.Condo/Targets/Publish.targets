@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="PublishSourceExecutables">
+    <PropertyGroup>
+      <DotNetPublishOptions Condition=" '$(DotNetPublishOptions)' == '' ">$(DOTNET_PUBLISH_OPTIONS)</DotNetPublishOptions>
+      <DotNetPublishOptions Condition=" '$(Configuration)' != '' ">$(DotNetPublishOptions) --configuration &quot;$(Configuration)&quot;</DotNetPublishOptions>
+
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateAssemblyInfo=false</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateDocumentationFile=true</DotNetPublishProperties>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ExecutableProjects Include="@(ExecutableProjects)">
+        <OutputPath>$(PublishArtifactsRoot)$(slash)$(Configuration)$(slash)%(ProjectName)</OutputPath>
+      </_ExecutableProjects>
+    </ItemGroup>
+
+    <Exec
+        Command="dotnet publish &quot;%(_ExecutableProjects.FullPath)&quot; --output &quot;%(_ExecutableProjects.OutputPath)&quot; $(DotNetPublishOptions.Trim()) $(DotNetPublishProperties.Trim())"
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(_ExecutableProjects.FullPath)') " />
+  </Target>
+
   <Target Name="InstallPackages">
     <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; --source &quot;$(FeedArtifactsRoot)&quot;" />
   </Target>
@@ -30,6 +51,7 @@
   <PropertyGroup>
     <PublishDependsOn>
       $(BeforePublish);
+      PublishSourceExecutables;
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);

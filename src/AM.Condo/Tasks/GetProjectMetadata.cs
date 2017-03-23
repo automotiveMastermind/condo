@@ -111,6 +111,16 @@ namespace AM.Condo.Tasks
             // parse the file
             var xml = XDocument.Load(path);
 
+            // get the output type (default to library)
+            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value ?? "library";
+
+            // determine if the output type is available
+            if (!string.IsNullOrEmpty(output))
+            {
+                // set the output type
+                project.SetMetadata("OutputType", output.ToLower());
+            }
+
             // get the target framework node
             var frameworks = xml.Descendants("TargetFramework");
 
