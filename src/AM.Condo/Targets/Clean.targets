@@ -23,11 +23,13 @@
 
   <PropertyGroup>
     <CleanDependsOn>
-      CleanRepository;
       CleanArtifacts;
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
     </CleanDependsOn>
+    <BeforeInitialize>
+      CleanRepository;
+    </BeforeInitialize>
   </PropertyGroup>
 
   <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" />
