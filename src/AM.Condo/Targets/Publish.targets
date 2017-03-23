@@ -7,15 +7,24 @@
   <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' ">
     <PropertyGroup>
       <NuGetPushOptions Condition=" '$(NuGetPushOptions)' == '' ">$(NUGET_PUSH_OPTIONS)</NuGetPushOptions>
-      <NuGetPushOptions Condition=" '$(NuGetConfigPath)' != '' ">$(NuGetPushOptions) --config-file $(NuGetConfigPath)</NuGetPushOptions>
       <NuGetPushOptions Condition=" '$(PackageFeedUri)' != '' ">$(NuGetPushOptions) --source $(PackageFeedUri)</NuGetPushOptions>
       <NuGetPushOptions Condition=" '$(PackageFeedApiKey)' != '' ">$(NuGetPushOptions) --api-key $(PackageFeedApiKey)</NuGetPushOptions>
       <NuGetPushOptions Condition=" '$(PackageSymbolUri)' != '' ">$(NuGetPushOptions) --symbol-source $(PackageSymbolUri)</NuGetPushOptions>
       <NuGetPushOptions Condition=" '$(PackageSymbolApiKey)' != '' ">$(NuGetPushOptions) --symbol-api-key $(PackageSymbolApiKey)</NuGetPushOptions>
       <NuGetPushOptions Condition="$(PackageNoSymbols)">$(NuGetPushOptions) --no-symbols</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(NuGetConfigPath)' != '' ">$(NuGetPushOptions) --config-file $(NuGetConfigPath)</NuGetPushOptions>
     </PropertyGroup>
 
-    <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; $(NuGetPushOptions)" />
+    <PushNuGetPackage
+      NuGetConfigPath="$(NuGetConfigPath)"
+      Packages="@(Packages)"
+      Uri="$(PackageFeedUri)"
+      ApiKey="$(PackageFeedApiKey)"
+      SymbolUri="$(PackageSymbolUri)"
+      SymbolApiKey="$(PackageSymbolApiKey)"
+      NoSymbols="$(PackageNoSymbols)" />
+
+    <!--<Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; $(NuGetPushOptions)" />-->
   </Target>
 
   <PropertyGroup>

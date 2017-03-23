@@ -8,6 +8,7 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Concurrent;
+    using System.IO;
     using System.Threading.Tasks;
 
     using Microsoft.Build.Framework;
@@ -41,7 +42,7 @@ namespace AM.Condo.Tasks
         /// Gets or sets the path to the nuget configuration file.
         /// </summary>
         [Required]
-        public string NuGetConfigFilePath { get; set; }
+        public string NuGetConfigPath { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the feed.
@@ -110,8 +111,8 @@ namespace AM.Condo.Tasks
             this.success = false;
 
             // set the settings and package source provider
-            this.settings = settings ?? new Settings(this.NuGetConfigFilePath);
-            this.provider = provider ?? new PackageSourceProvider(this.settings);
+            this.settings = settings;
+            this.provider = provider;
         }
         #endregion
 
@@ -123,6 +124,24 @@ namespace AM.Condo.Tasks
         /// </returns>
         public override bool Execute()
         {
+            // determine if the settings are null
+            if (this.settings == null)
+            {
+                // get the directory and filename
+                var root = Path.GetDirectoryName(this.NuGetConfigPath);
+                var filename = Path.GetFileName(this.NuGetConfigPath);
+
+                // initialize the settings
+                this.settings = new Settings(root, filename, isMachineWideSettings: false);
+            }
+
+            // determine if the provider is null
+            if (this.provider == null)
+            {
+                // initialize the package source provider
+                this.provider = new PackageSourceProvider(this.settings);
+            }
+
             // ensure that packages are specified
             if (this.Packages == null)
             {
