@@ -2,11 +2,14 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- clear the artifacts root so that condo applies credentials to user-level nuget configuration -->
-    <ArtifactsRoot></ArtifactsRoot>
+    <Target Name="ClearArtifactsRoot">
+      <ArtifactsRoot></ArtifactsRoot>
+    </Target>
 
     <BootstrapDependsOn>
       $(BeforeBootstrap);
       GetPlatformInfo;
+      ClearArtifactsRoot;
       SetNuGetCredentials;
       $(BootstrapDependsOn);
       $(AfterBootstrap);
