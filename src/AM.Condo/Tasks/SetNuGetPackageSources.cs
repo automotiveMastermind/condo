@@ -153,6 +153,9 @@ namespace AM.Condo.Tasks
                     source.Credentials = new PackageSourceCredential
                         (source.Name, this.Username, this.Password, this.IsPasswordClearText);
                 }
+
+                // log a verbose message
+                this.Log.LogMessage(MessageImportance.Low, $"Saved source {source.Name} - {source.Source}");
             }
 
             // save the modified sources (to the new config file)
