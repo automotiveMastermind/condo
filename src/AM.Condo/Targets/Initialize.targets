@@ -206,6 +206,7 @@
       GetServerTime;
       GetPlatformInfo;
       SetNuGetCredentials;
+      Waiting;
       GetRepositoryInfo;
       GetProjectMetadata;
       PrintProperties;
