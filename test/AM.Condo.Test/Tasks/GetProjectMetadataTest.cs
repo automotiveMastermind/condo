@@ -26,7 +26,7 @@ namespace AM.Condo.Tasks
             this.output = output;
         }
 
-        [Fact]
+        [Fact(Skip = "Project JSON is no longer supported.")]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
         public void Execute_WithValidProjectJson_Succeeds()

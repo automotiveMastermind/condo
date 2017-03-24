@@ -1,25 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="PublishSourceExecutables">
+    <PropertyGroup>
+      <DotNetPublishOptions Condition=" '$(DotNetPublishOptions)' == '' ">$(DOTNET_PUBLISH_OPTIONS)</DotNetPublishOptions>
+      <DotNetPublishOptions Condition=" '$(Configuration)' != '' ">$(DotNetPublishOptions) --configuration &quot;$(Configuration)&quot;</DotNetPublishOptions>
+
+      <DotNetPublishProperties Condition=" '$(DotNetPublishProperties)' == '' ">$(DOTNET_PUBLISH_PROPS)</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:Version=$(InformationalVersion)</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateAssemblyInfo=false</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateDocumentationFile=true</DotNetPublishProperties>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_ExecutableProjects Include="@(ExecutableProjects)">
+        <OutputPath>$(PublishArtifactsRoot)$(Slash)$(Configuration)$(Slash)%(ProjectName)</OutputPath>
+      </_ExecutableProjects>
+    </ItemGroup>
+
+    <Exec
+        Command="dotnet publish &quot;%(_ExecutableProjects.FullPath)&quot; --output &quot;%(_ExecutableProjects.OutputPath)&quot; $(DotNetPublishOptions.Trim()) $(DotNetPublishProperties.Trim())"
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(_ExecutableProjects.FullPath)') " />
+  </Target>
+
   <Target Name="InstallPackages">
-    <InstallNuGetPackage Packages="@(Packages)" Path="$(FeedArtifactsRoot)" />
+    <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; --source &quot;$(FeedArtifactsRoot)&quot;" />
   </Target>
 
   <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' ">
+    <PropertyGroup>
+      <NuGetPushOptions Condition=" '$(NuGetPushOptions)' == '' ">$(NUGET_PUSH_OPTIONS)</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(PackageFeedUri)' != '' ">$(NuGetPushOptions) --source $(PackageFeedUri)</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(PackageFeedApiKey)' != '' ">$(NuGetPushOptions) --api-key $(PackageFeedApiKey)</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(PackageSymbolUri)' != '' ">$(NuGetPushOptions) --symbol-source $(PackageSymbolUri)</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(PackageSymbolApiKey)' != '' ">$(NuGetPushOptions) --symbol-api-key $(PackageSymbolApiKey)</NuGetPushOptions>
+      <NuGetPushOptions Condition="$(PackageNoSymbols)">$(NuGetPushOptions) --no-symbols</NuGetPushOptions>
+      <NuGetPushOptions Condition=" '$(NuGetConfigPath)' != '' ">$(NuGetPushOptions) --config-file $(NuGetConfigPath)</NuGetPushOptions>
+    </PropertyGroup>
+
     <PushNuGetPackage
-      RepositoryRoot="$(RepositoryRoot)"
+      NuGetConfigPath="$(NuGetConfigPath)"
       Packages="@(Packages)"
       Uri="$(PackageFeedUri)"
       ApiKey="$(PackageFeedApiKey)"
-      Username="$(PackageFeedUsername)"
-      Password="$(PackageFeedPassword)"
       SymbolUri="$(PackageSymbolUri)"
       SymbolApiKey="$(PackageSymbolApiKey)"
       NoSymbols="$(PackageNoSymbols)" />
+
+    <!--<Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; $(NuGetPushOptions)" />-->
   </Target>
 
   <PropertyGroup>
     <PublishDependsOn>
       $(BeforePublish);
+      PublishSourceExecutables;
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);

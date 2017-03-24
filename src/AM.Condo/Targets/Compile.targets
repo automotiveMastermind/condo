@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <DotNetBuildOptions Condition=" '$(PreReleaseTag)' != '' ">$(DotNetBuildOptions) --version-suffix &quot;$(PreReleaseTag)&quot;</DotNetBuildOptions>
-    <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
-
-    <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
-
-    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
-    <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
-    <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
-  </PropertyGroup>
 
   <Target Name="DotNetBuild">
+    <PropertyGroup>
+      <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
+      <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
+      <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
+
+      <DotNetBuildProperties Condition=" '$(DotNetBuildProperties)' == '' ">$(DOTNET_BUILD_PROPS)</DotNetBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
+      <DotNetBuildProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetBuildProperties) /p:Version=$(InformationalVersion)</DotNetBuildProperties>
+      <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
+    </PropertyGroup>
+
     <Exec
         Command="dotnet build &quot;%(SourceProjects.FullPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)" />
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(SourceProjects.FullPath)') " />
 
     <Exec
         Command="dotnet build &quot;%(TestProjects.FullPath)&quot; $(DotNetTestBuildOptions.Trim()) $(DotNetTestBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)" />
+        WorkingDirectory="$(RepositoryRoot)"
+        Condition=" Exists('%(TestProjects.FullPath)') " />
   </Target>
 
   <Target Name="CopyDotNetBuild">
@@ -34,17 +38,17 @@
   </Target>
 
   <PropertyGroup>
+    <AfterCompile>
+      CopyDotNetBuild;
+      $(AfterCompile);
+    </AfterCompile>
+
     <CompileDependsOn>
       $(BeforeCompile);
       DotNetBuild;
       $(CompileDependsOn);
       $(AfterCompile);
     </CompileDependsOn>
-
-    <AfterCompile>
-      CopyDotNetBuild;
-      $(AfterCompile);
-    </AfterCompile>
   </PropertyGroup>
 
   <Target Name="Compilation" DependsOnTargets="$(CompileDependsOn)" BeforeTargets="Compile" />

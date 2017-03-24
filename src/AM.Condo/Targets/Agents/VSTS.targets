@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- capture details from a continuous integration build hosted by TFS -->
+  <PropertyGroup>
+    <BuildHost>tfs</BuildHost>
+    <CI>True</CI>
+    <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
+    <Branch>$(BUILD_SOURCEBRANCH)</Branch>
+    <CommitId>$(BUILD_SOURCEVERSION)</CommitId>
+    <BuildId>$(BUILD_BUILDID)</BuildId>
+    <PullRequestId Condition=" $(Branch.StartsWith('refs/pull/')) ">$(Branch.Split("/")[2])</PullRequestId>
+    <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
+    <BuildOn>$(AGENT_NAME)</BuildOn>
+    <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
+    <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
+    <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
+    <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
+    <TeamUri Condition=" '$(TeamUri)' == '' ">$(TF_BUILD_COLLECTIONURI)</TeamUri>
+    <RepositoryUri>$(BUILD_REPOSITORY_URI)</RepositoryUri>
+    <BuildUri>$(BUILD_BUILDURI)</BuildUri>
+    <BuildUri Condition=" '$(BuildUri)' == '' ">$(TF_BUILD_BUILDURI)</BuildUri>
+    <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
+    <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
+    <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
+
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">VSTS</PackageFeedApiKey>
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">VssSessionToken</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(AccessToken)</PackageFeedPassword>
+  </PropertyGroup>
+</Project>

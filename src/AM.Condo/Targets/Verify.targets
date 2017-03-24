@@ -3,7 +3,6 @@
   <PropertyGroup>
     <VerifyDependsOn>
       $(BeforeVerify);
-      CleanIntermediateArtifacts;
       $(VerifyDependsOn);
       $(AfterVerify);
     </VerifyDependsOn>

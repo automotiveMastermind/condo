@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- capture details from a continuous integration build hosted by AppVeyor -->
+  <PropertyGroup Condition = " '$(APPVEYOR)' != '' ">
+    <BuildHost>AppVeyor</BuildHost>
+    <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
+    <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
+    <BuildId>$(APPVEYOR_BUILD_ID)</BuildId>
+    <JobId>$(APPVEYOR_JOB_ID)</JobId>
+    <PullRequestId>$(APPVEYOR_PULL_REQUEST_NUMBER)</PullRequestId>
+    <BuildOn>$(BuildHost): $(APPVEYOR_BUILD_WORKER_IMAGE)</BuildOn>
+    <RepositoryProvider>$(APPVEYOR_REPO_PROVIDER)</RepositoryProvider>
+    <TeamProject>$(APPVEYOR_PROJECT_SLUG)</TeamProject>
+    <BuildUri>https://ci.appveyor.com/project/$(TeamProject)/build/$(APPVEYOR_BUILD_NUMBER)</BuildUri>
+    <BuildName>$(TeamProject) - $(Branch) - #$(PullRequestId):$(JobId)</BuildName>
+    <CI>True</CI>
+  </PropertyGroup>
+</Project>

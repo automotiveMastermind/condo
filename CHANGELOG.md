@@ -2,12 +2,14 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-beta-02488"></a>
-## 2.0.0-beta-02488 (2017-03-20)
+<a name="2.0.0-alpha-02081"></a>
+## 2.0.0-alpha-02081 (2017-03-22)
 
 
 ### Bug Fixes
 
+* **tags:** annotate tags so they are followed 7d2101e
+* **versioning:** set the version the msbuild way e2e62d5
 * **install:** fix install on windows (#46) 98993f1, closes #46
 * **git:** checkout branch task was missing (#45) 57462c7, closes #45
 * **release:** checkout branch due to detached head (#41) 05b4c26, closes #41

@@ -72,10 +72,13 @@ namespace AM.Condo.IO
         /// <param name="spec">
         /// The file specification used to track changes to one or more files.
         /// </param>
+        /// <param name="force">
+        /// A value indicating whether or not to force the add operation.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
-        IGitRepositoryInitialized Add(string spec);
+        IGitRepositoryInitialized Add(string spec, bool force);
 
         /// <summary>
         /// Creates a new commit with the specified <paramref name="message"/>.
@@ -120,10 +123,13 @@ namespace AM.Condo.IO
         /// <param name="name">
         /// The name of the tag to create.
         /// </param>
+        /// <param name="message">
+        /// The message used to annotate the tag.
+        /// </param>
         /// <returns>
         /// The current repository instance.
         /// </returns>
-        IGitRepositoryInitialized Tag(string name);
+        IGitRepositoryInitialized Tag(string name, string message);
 
         /// <summary>
         /// Restores all available submodules within the current repository.

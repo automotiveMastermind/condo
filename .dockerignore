@@ -56,9 +56,3 @@ appveyor.yml
 # vs files
 .vs/
 .vscode/
-
-# docker files
-.docker/
-[Dd]ocker-[Cc]ompose.*
-[Dd]ockerfile.*
-[Dd]ockerfile

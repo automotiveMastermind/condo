@@ -27,8 +27,11 @@
   <!-- initialize dynamic properties -->
   <Target Name="Initialize" />
 
+  <!-- the default target for clean -->
+  <Target Name="Clean" />
+
   <!-- developer bootstrapping -->
-  <Target Name="Bootstrap" DependsOnTargets="Initialize" />
+  <Target Name="Bootstrap" />
 
   <!-- semantic versioning -->
   <Target Name="Version" DependsOnTargets="Initialize" />
@@ -56,9 +59,6 @@
 
   <!-- the default target for build -->
   <Target Name="Build" DependsOnTargets="Package" />
-
-  <!-- the default target for clean -->
-  <Target Name="Clean" DependsOnTargets="Initialize" />
 
   <!-- the default target for continuous integration -->
   <Target Name="CI" DependsOnTargets="Clean;Verify" />

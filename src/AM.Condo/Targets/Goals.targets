@@ -4,14 +4,15 @@
   <Import Project="$(CondoTasksPath)AM.Condo.tasks" />
 
   <!-- import the task targets -->
-  <Import Project="$(MSBuildThisFileDirectory)Clean.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Initialize.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Version.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Prepare.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Compile.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Test.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Package.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Verify.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Document.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)Publish.targets" />
+  <Import Project="$(CondoTargetsPath)Clean.targets" />
+  <Import Project="$(CondoTargetsPath)Initialize.targets" />
+  <Import Project="$(CondoTargetsPath)Bootstrap.targets" />
+  <Import Project="$(CondoTargetsPath)Version.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare.targets" />
+  <Import Project="$(CondoTargetsPath)Compile.targets" />
+  <Import Project="$(CondoTargetsPath)Test.targets" />
+  <Import Project="$(CondoTargetsPath)Package.targets" />
+  <Import Project="$(CondoTargetsPath)Verify.targets" />
+  <Import Project="$(CondoTargetsPath)Document.targets" />
+  <Import Project="$(CondoTargetsPath)Publish.targets" />
 </Project>

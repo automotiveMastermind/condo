@@ -181,7 +181,7 @@ namespace AM.Condo.Tasks
                 writer.Load(this.Template).Apply(log).Save();
 
                 // track changes for the changelog path
-                repository.Add(this.Name);
+                repository.Add(this.Name, force: true);
 
                 // write a message
                 this.Log.LogMessage(MessageImportance.High, $"Saved the conventional changelog: {this.Name}...");

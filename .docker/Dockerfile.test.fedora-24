@@ -1,0 +1,22 @@
+FROM fedora:24
+LABEL vendor=automotiveMastermind\ and\ Contributors
+
+RUN dnf -y update --setopt=deltarpm=false && dnf clean all
+RUN dnf install -y \
+        libunwind \
+        libicu \
+        which \
+        findutils \
+        tar \
+        git \
+    && dnf clean all
+
+ARG source=.
+ARG destination=/condo
+WORKDIR $destination
+
+COPY $source .
+COPY $source/.docker/docker-task.sh /
+
+ENTRYPOINT ["/docker-task.sh"]
+CMD [ "condo", "/t:test" ]

@@ -14,8 +14,6 @@ namespace AM.Condo.Tasks
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
-    using Newtonsoft.Json.Linq;
-
     /// <summary>
     /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the
     /// project.json format.
@@ -98,53 +96,11 @@ namespace AM.Condo.Tasks
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
 
-            if (extension.EndsWith("json", StringComparison.OrdinalIgnoreCase))
-            {
-                // set project json metadata
-                this.SetProjectJsonMetadata(project, path);
-
-                // move on immediately
-                return;
-            }
-
             if (extension.EndsWith("proj", StringComparison.OrdinalIgnoreCase))
             {
                 // set msbuild metadata
                 this.SetMSBuildMetadata(project, path);
             }
-        }
-
-        private void SetProjectJsonMetadata(ITaskItem project, string path)
-        {
-            // set the dotnet build type
-            project.SetMetadata("DotNetType", "ProjectJson");
-
-            // parse the file
-            var json = JObject.Parse(File.ReadAllText(path));
-
-            // get the frameworks node
-            var frameworks = json["frameworks"] as JObject;
-
-            // determine if the frameworks node did not exist
-            if (frameworks == null)
-            {
-                // log a warning
-                this.Log.LogWarning("No frameworks were specified.");
-
-                // move on immediately
-                return;
-            }
-
-            // get the name properties ordered by name
-            var names = frameworks.Properties().Select(p => p.Name)
-                .OrderByDescending(name => name);
-
-            // get the highest netcore tfm
-            var tfm = names.FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
-
-            // set the target frameworks property
-            project.SetMetadata("TargetFrameworks", string.Join(";", names));
-            project.SetMetadata("NetCoreFramework", tfm);
         }
 
         private void SetMSBuildMetadata(ITaskItem project, string path)
@@ -154,6 +110,16 @@ namespace AM.Condo.Tasks
 
             // parse the file
             var xml = XDocument.Load(path);
+
+            // get the output type (default to library)
+            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value ?? "library";
+
+            // determine if the output type is available
+            if (!string.IsNullOrEmpty(output))
+            {
+                // set the output type
+                project.SetMetadata("OutputType", output.ToLower());
+            }
 
             // get the target framework node
             var frameworks = xml.Descendants("TargetFramework");

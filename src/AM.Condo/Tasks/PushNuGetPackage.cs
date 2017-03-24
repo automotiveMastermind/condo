@@ -8,14 +8,13 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Concurrent;
+    using System.IO;
     using System.Threading.Tasks;
 
     using Microsoft.Build.Framework;
 
     using NuGet.Commands;
     using NuGet.Configuration;
-
-    using System.Linq;
 
     using MSBuildTask = Microsoft.Build.Utilities.Task;
 
@@ -40,10 +39,10 @@ namespace AM.Condo.Tasks
         public ITaskItem[] Packages { get; set; }
 
         /// <summary>
-        /// Gets or sets the root path of the repository used to locate NuGet configuration settings.
+        /// Gets or sets the path to the nuget configuration file.
         /// </summary>
         [Required]
-        public string RepositoryRoot { get; set; }
+        public string NuGetConfigPath { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the feed.
@@ -56,16 +55,6 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string ApiKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the username used to push the package.
-        /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        /// Gets or sets the password used to push the package.
-        /// </summary>
-        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the URI of the symbol feed.
@@ -135,22 +124,21 @@ namespace AM.Condo.Tasks
         /// </returns>
         public override bool Execute()
         {
-            // determine if the settings are not specified
+            // determine if the settings are null
             if (this.settings == null)
             {
-                // load the settings
-                this.settings = Settings.LoadDefaultSettings
-                    (
-                        this.RepositoryRoot,
-                        configFileName: null,
-                        machineWideSettings: new NuGetMachineSettings()
-                    );
+                // get the directory and filename
+                var root = Path.GetDirectoryName(this.NuGetConfigPath);
+                var filename = Path.GetFileName(this.NuGetConfigPath);
+
+                // initialize the settings
+                this.settings = new Settings(root, filename, isMachineWideSettings: false);
             }
 
-            // determine if the provider is not specified
+            // determine if the provider is null
             if (this.provider == null)
             {
-                // create a new package source provider
+                // initialize the package source provider
                 this.provider = new PackageSourceProvider(this.settings);
             }
 
@@ -172,36 +160,6 @@ namespace AM.Condo.Tasks
 
                 // move on immediately
                 return true;
-            }
-
-            // determine if a password is set
-            if (!string.IsNullOrEmpty(this.Password))
-            {
-                // get the source
-                var sources = this.provider.LoadPackageSources().ToList();
-
-                // get the source
-                var source = sources
-                    .FirstOrDefault(s => s.Source.ToLower().Equals(this.Uri, StringComparison.OrdinalIgnoreCase));
-
-                // determine if the source is null
-                if (source == null)
-                {
-                    // create a log entry
-                    this.Log.LogWarning($"Creating a source for {this.Uri}...");
-
-                    // create a new source
-                    source = new PackageSource(this.Uri, "condo");
-
-                    // add the source to the collection
-                    sources.Add(source);
-                }
-
-                // update the credentials
-                source.Credentials = new PackageSourceCredential(source.Name, this.Username, this.Password, true);
-
-                // save the sources
-                this.provider.SavePackageSources(sources);
             }
 
             // set success to true

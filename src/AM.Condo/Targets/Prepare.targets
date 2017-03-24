@@ -4,9 +4,16 @@
     <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
     <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
     <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
+
+    <DotNetRestoreProperties Condition=" '$(DotNetRestoreProperties)' == '' ">$(DOTNET_RESTORE_PROPS)</DotNetRestoreProperties>
   </PropertyGroup>
 
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' AND '@(DotNetRestorePaths->Count())' != '0' ">
+    <PropertyGroup>
+      <DotNetRestoreOptions Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreOptions) --configfile &quot;$(NuGetConfigPath)&quot;</DotNetRestoreOptions>
+      <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties) /p:Version=$(InformationalVersion)</DotNetRestoreProperties>
+    </PropertyGroup>
+
     <ItemGroup>
       <_DotNetToRestore Include="%(DotNetRestorePaths.RootDir)%(DotNetRestorePaths.Directory)" />
     </ItemGroup>
@@ -15,17 +22,17 @@
       <Output TaskParameter="Filtered" ItemName="_DotNetToRestore" />
     </RemoveDuplicates>
 
-    <Exec Command="dotnet restore $(DotNetRestoreOptions)"
+    <Exec Command="dotnet restore $(DotNetRestoreOptions.Trim()) $(DotNetRestoreProperties.Trim())"
           WorkingDirectory="%(_DotNetToRestore.RootDir)%(_DotNetToRestore.Directory)" />
   </Target>
 
   <Target Name="NpmInstall" Condition=" '$(NpmInstall)' != 'skip' AND '@(NpmInstallPaths->Count())' != '0' ">
-    <Exec Command="npm install $(NpmInstallOptions)"
+    <Exec Command="npm install $(NpmInstallOptions.Trim())"
           WorkingDirectory="%(NpmInstallPaths.RootDir)%(NpmInstallPaths.Directory)" />
   </Target>
 
   <Target Name="BowerInstall" Condition=" '$(BowerInstall)' != 'skip' AND '@(BowerInstallPaths->Count())' != '0' ">
-    <Exec Command="bower install $(BowerInstallOptions)"
+    <Exec Command="bower install $(BowerInstallOptions.Trim())"
           WorkingDirectory="%(BowerInstallPaths.RootDir)%(BowerInstallPaths.Directory)" />
   </Target>
 

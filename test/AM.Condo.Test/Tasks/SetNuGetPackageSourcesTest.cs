@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SetNuGetCredentialsTest.cs" company="automotiveMastermind and contributors">
+// <copyright file="SetNuGetPackageSourcesTest.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -12,9 +12,9 @@ namespace AM.Condo.Tasks
 
     using AM.Condo.IO;
 
-    [Class(nameof(SetNuGetCredentials))]
+    [Class(nameof(SetNuGetPackageSources))]
     [Purpose(PurposeType.Unit)]
-    public class SetNuGetCredentialsTest
+    public class SetNuGetPackageSourcesTest
     {
         [Fact]
         [Priority(1)]
@@ -24,7 +24,8 @@ namespace AM.Condo.Tasks
             {
                 // arrange
                 var root = temp.FullPath;
-                var source = "http://nuget.localtest.me";
+                var source = "https://nuget.localtest.me/blah/blah/mah/mah";
+                var prefix = source.Substring(20);
                 var name = "test";
                 var username = "vsts";
                 var password = "example";
@@ -33,13 +34,14 @@ namespace AM.Condo.Tasks
                 var settings = NuGetMocks.CreateSettings(root, source, name);
                 var provider = new PackageSourceProvider(settings);
 
-                var actual = new SetNuGetCredentials(settings, provider)
+                var actual = new SetNuGetPackageSources(settings, provider)
                 {
                     RepositoryRoot = root,
+                    ArtifactsRoot = root,
                     BuildEngine = engine,
                     Username = username,
                     Password = password,
-                    Sources = new[] { new TaskItem(name) }
+                    Prefixes = new[] { new TaskItem(prefix) }
                 };
 
                 // act

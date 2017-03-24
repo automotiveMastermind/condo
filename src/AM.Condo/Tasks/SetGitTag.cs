@@ -106,7 +106,7 @@ namespace AM.Condo.Tasks
                 var repository = factory.Load(root, new CondoMSBuildLogger(this.Log));
 
                 // set the repository tag
-                repository.Tag(this.Tag);
+                repository.Tag(this.Tag, this.Annotation);
 
                 // log a message
                 this.Log.LogMessage(MessageImportance.High, $"Created tag {this.Tag}");

@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DotNetTestProjectJson">
-    <PropertyGroup>
-      <ProjectJsonTestOptions Condition=" '$(ProjectJsonTestOptions)' == '' ">$(DOTNET_PROJECTJSON_TEST_OPTIONS)</ProjectJsonTestOptions>
-
-      <ProjectJsonTestFilterOptions Condition=" $(IsWIndows) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-windows</ProjectJsonTestFilterOptions>
-      <ProjectJsonTestFilterOptions Condition=" $(IsMacOS) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-macos</ProjectJsonTestFilterOptions>
-      <ProjectJsonTestFilterOptions Condition=" $(IsLinux) ">$(ProjectJsonTestFilterOptions) -notrait platform=not-linux</ProjectJsonTestFilterOptions>
-
-      <ProjectJsonTestFilterOptions Condition=" $(CI) ">$(ProjectJsonTestFilterOptions) -notrait agent=not-ci</ProjectJsonTestFilterOptions>
-      <ProjectJsonTestFilterOptions Condition=" !$(CI) ">$(ProjectJsonTestFilterOptions) -notrait agent=not-local</ProjectJsonTestFilterOptions>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <_ProjectJsonTestProjects Include="@(TestProjects)" Condition=" '%(TestProjects.DotNetType)' == 'ProjectJson' AND ($(IsWindows) OR '%(NetCoreFramework)' != '') ">
-        <DotNetTestOptions Condition="  $(IsWindows) ">$(ProjectJsonTestOptions) $(ProjectJsonTestFilterOptions.Trim())</DotNetTestOptions>
-        <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(ProjectJsonTestOptions) $(ProjectJsonTestFilterOptions.Trim())</DotNetTestOptions>
-        <TestResultsPath>$(TestArtifactsRoot)$(slash)%(TestProjects.ProjectName).dotnet.xml</TestResultsPath>
-      </_ProjectJsonTestProjects>
-    </ItemGroup>
-
-    <Exec
-        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_ProjectJsonTestProjects.DotNetTestOptions) -xml &quot;%(_ProjectJsonTestProjects.TestResultsPath)&quot;"
-        WorkingDirectory="%(_ProjectJsonTestProjects.ProjectDir)" Condition=" '@(_ProjectJsonTestProjects->Count())' != '0' " />
-  </Target>
-
-  <Target Name="DotNetTestMSBuild">
+  <Target Name="DotNetTest">
     <PropertyGroup>
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
 
@@ -39,25 +14,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_MSBuildTestProjects Include="@(TestProjects)" Condition=" '%(TestProjects.DotNetType)' == 'MSBuild' AND ($(IsWindows) OR '%(NetCoreFramework)' != '') ">
+      <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) OR '%(NetCoreFramework)' != '' ">
         <DotNetTestOptions Condition="  $(IsWindows) ">$(DotNetTestOptions)</DotNetTestOptions>
         <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(DotNetTestOptions.Trim())</DotNetTestOptions>
         <!-- removing traits for now as it causes issues with the current implementation of dotnet test -->
         <!--<DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>-->
         <TestResultsFileName>%(TestProjects.ProjectName).dotnet.xml</TestResultsFileName>
-      </_MSBuildTestProjects>
+      </_DotNetTestProjects>
     </ItemGroup>
 
     <Exec
-        Command="dotnet test --configuration &quot;$(Configuration)&quot; --no-build %(_MSBuildTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_MSBuildTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
-        WorkingDirectory="%(_MSBuildTestProjects.ProjectDir)" />
+        Command="dotnet test --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
+        WorkingDirectory="%(_DotNetTestProjects.ProjectDir)" />
   </Target>
 
   <PropertyGroup>
     <TestDependsOn>
       $(BeforeTest);
-      DotNetTestProjectJson;
-      DotNetTestMSBuild;
+      DotNetTest;
       $(TestDependsOn);
       $(AfterTest);
     </TestDependsOn>

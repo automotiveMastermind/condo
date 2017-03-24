@@ -22,6 +22,13 @@
     <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
     <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'feed'))</FeedArtifactsRoot>
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
+
+    <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)\Agents\</AgentTargetsRoot>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
+
+    <AgentTargetsPath Condition=" '$(AgentTargetsPath)' == '' ">$(AgentTargetsRoot)$(BuildHost).targets</AgentTargetsPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,96 +40,11 @@
     <ArtifactPaths Include="$(DocsArtifactsRoot)" />
   </ItemGroup>
 
-  <!-- provide reasonable defaults for required attributes -->
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">$(DOTNET_BUILD_VERSION)</CurrentRelease>
-    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">0.0.0</CurrentRelease>
-    <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
-    <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
-    <CI Condition=" '$(CI)' != '' ">True</CI>
-    <CI Condition=" '$(CI)' == '' ">False</CI>
-    <HasGit Condition=" '$(HasGit)' == '' ">False</HasGit>
-    <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">False</IsPullRequest>
+  <!-- import default agent configuration -->
+  <Import Project="$(AgentTargetsRoot)Defaults.targets" />
 
-    <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
-    <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
-    <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
-
-    <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
-    <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
-
-    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
-    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
-    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(PACKAGE_FEED_USERNAME)</PackageFeedUsername>
-    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
-
-    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
-    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
-
-    <UseServerTime Condition=" '$(UseServerTime)' == '' ">False</UseServerTime>
-  </PropertyGroup>
-
-  <!-- capture details from a continuous integration build hosted by TFS -->
-  <PropertyGroup Condition=" '$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '' ">
-    <BuildHost>tfs</BuildHost>
-    <CI>True</CI>
-    <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
-    <Branch>$(BUILD_SOURCEBRANCH)</Branch>
-    <CommitId>$(BUILD_SOURCEVERSION)</CommitId>
-    <BuildId>$(BUILD_BUILDID)</BuildId>
-    <PullRequestId Condition=" $(Branch.StartsWith('refs/pull/')) ">$(Branch.Split("/")[2])</PullRequestId>
-    <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
-    <BuildOn>$(AGENT_NAME)</BuildOn>
-    <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>
-    <TeamProject>$(SYSTEM_TEAMPROJECT)</TeamProject>
-    <TeamProject Condition=" '$(TeamProject)' == '' ">$(TF_BUILD_TEAMPROJECT)</TeamProject>
-    <TeamUri>$(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)</TeamUri>
-    <TeamUri Condition=" '$(TeamUri)' == '' ">$(TF_BUILD_COLLECTIONURI)</TeamUri>
-    <RepositoryUri>$(BUILD_REPOSITORY_URI)</RepositoryUri>
-    <BuildUri>$(BUILD_BUILDURI)</BuildUri>
-    <BuildUri Condition=" '$(BuildUri)' == '' ">$(TF_BUILD_BUILDURI)</BuildUri>
-    <BuildName>$(BUILD_BUILDNUMBER)</BuildName>
-    <BuildName Condition=" '$(BuildName)' == '' ">$(TF_BUILD_BUILDNUMBER)</BuildName>
-    <AccessToken Condition=" '$(AccessToken)' == '' ">$(SYSTEM_ACCESSTOKEN)</AccessToken>
-
-    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">VSTS</PackageFeedApiKey>
-    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(BuildHost)</PackageFeedUsername>
-    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(AccessToken)</PackageFeedPassword>
-  </PropertyGroup>
-
-  <!-- capture details from a continuous integration build hosted by Travis-CI -->
-  <PropertyGroup Condition = " '$(TRAVIS)' != '' ">
-    <BuildHost>travis</BuildHost>
-    <CI>True</CI>
-    <Branch>$(TRAVIS_PULL_REQUEST_BRANCH)</Branch>
-    <Branch Condition=" '$(Branch)' == '' ">$(TRAVIS_BRANCH)</Branch>
-    <CommitId>$(TRAVIS_COMMIT)</CommitId>
-    <BuildId>$(TRAVIS_BUILD_NUMBER)</BuildId>
-    <JobId>$(TRAVIS_JOB_ID)</JobId>
-    <PullRequestId Condition=" '$(TRAVIS_PULL_REQUEST)' != 'false' ">$(TRAVIS_PULL_REQUEST)</PullRequestId>
-    <BuildOn>Travis-CI: $(TRAVIS_OS_NAME)</BuildOn>
-    <RepositoryProvider>Git</RepositoryProvider>
-    <TeamProject>$(TRAVIS_REPO_SLUG)</TeamProject>
-    <BuildUri>https://travis-ci.org/$(TeamProject)/jobs/$(JobId)</BuildUri>
-    <BuildName>$(TeamProject) - $(Branch) - $(TRAVIS_JOB_NUMBER)</BuildName>
-  </PropertyGroup>
-
-  <!-- capture details from a continuous integration build hosted by AppVeyor -->
-  <PropertyGroup Condition = " '$(APPVEYOR)' != '' ">
-    <BuildHost>appveyor</BuildHost>
-    <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
-    <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
-    <BuildId>$(APPVEYOR_BUILD_ID)</BuildId>
-    <JobId>$(APPVEYOR_JOB_ID)</JobId>
-    <PullRequestId>$(APPVEYOR_PULL_REQUEST_NUMBER)</PullRequestId>
-    <BuildOn>AppVeyor: $(PLATFORM)</BuildOn>
-    <RepositoryProvider>$(APPVEYOR_REPO_PROVIDER)</RepositoryProvider>
-    <TeamProject>$(APPVEYOR_PROJECT_SLUG)</TeamProject>
-    <BuildUri>https://ci.appveyor.com/project/$(TeamProject)/build/$(APPVEYOR_BUILD_NUMBER)</BuildUri>
-    <BuildName>$(TeamProject) - $(Branch) - $(APPVEYOR_JOB_NAME)</BuildName>
-    <CI>True</CI>
-  </PropertyGroup>
+  <!-- import agent configuration -->
+  <Import Project="$(AgentTargetsPath)" Condition=" Exists('$(AgentTargetsPath)') " />
 
   <!-- determine if the repository is managed by git -->
   <PropertyGroup>
@@ -131,11 +53,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- locate all dotnet project paths -->
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)project.json" />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)project.json" />
-    <DotNetRestorePaths Include="$(SrcRoot)$(slash)**$(slash)*.xproj" />
-    <DotNetRestorePaths Include="$(TestRoot)$(slash)**$(slash)*.xproj" />
+    <!-- locate all dotnet solution paths -->
     <DotNetRestorePaths Include="$(RepositoryRoot)$(slash)*.sln" />
 
     <!-- locate all npm, bower, gulp, and grunt projects -->
@@ -145,17 +63,12 @@
     <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
     <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
 
-    <!-- locate all dotnet project.json projects -->
-    <ProjectJsonPaths Include="$(SrcRoot)$(Slash)**$(Slash)project.json" />
-    <ProjectJsonPaths Include="$(TestRoot)$(Slash)**$(Slash)project.json" />
-
     <!-- locate all dotnet msbuild projects -->
-    <MSBuildPaths Include="$(SrcRoot)$(Slash)**$(Slash)*.*proj" />
-    <MSBuildPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
+    <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)*.*proj" />
+    <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
 
-    <!-- group all dotnet paths -->
-    <DotNetPaths Include="@(ProjectJsonPaths)" />
-    <DotNetPaths Include="@(MSBuildPaths)" />
+    <!-- add prefixes to well-known authenticated feeds -->
+    <NuGetProtectedFeedPrefixes Include="pkgs.visualstudio.com" />
   </ItemGroup>
 
   <!-- get server time from NIST -->
@@ -207,21 +120,22 @@
       <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
       <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>
       <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
+      <ExecutableProjects Include="@(SourceProjects)" Condition=" '%(SourceProjects.OutputType)' == 'exe' " />
     </ItemGroup>
   </Target>
 
-  <!-- get vsts package feeds -->
-  <Target Name="BootstrapVstsFeeds" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
-    <GetVstsPackageFeeds RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Sources" ItemName="VstsSources" />
-    </GetVstsPackageFeeds>
-
-    <SetNuGetCredentials RepositoryRoot="$(RepositoryRoot)"
-                         Sources="@(VstsSources)"
+  <!-- set nuget credentials -->
+  <Target Name="SetNuGetCredentials" Condition=" '$(PackageFeedUsername)' != '' AND '$(PackageFeedPassword)' != '' ">
+    <SetNuGetPackageSources RepositoryRoot="$(RepositoryRoot)"
+                         ArtifactsRoot="$(ArtifactsRoot)"
+                         Uri="$(PackageFeedUri)"
+                         SymbolUri="$(PackageSymbolUri)"
+                         Prefixes="@(NuGetProtectedFeedPrefixes)"
                          Username="$(PackageFeedUsername)"
-                         Password="$(PackageFeedPassword)">
+                         Password="$(PackageFeedPassword)"
+                         IsPasswordClearText="!$(IsWindows)">
       <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
-    </SetNuGetCredentials>
+    </SetNuGetPackageSources>
   </Target>
 
   <!-- print all of the properties that were used to perform the build -->
@@ -272,6 +186,7 @@
     <Message Importance="High" Text="Package Symbol Key : $(PackageSymbolApiKey)" Condition=" '$(PackageSymbolApiKey)' != '' " />
     <Message Importance="High" Text="Package Username   : $(PackageFeedUsername)" Condition=" '$(PackageFeedUsername)' != '' " />
     <Message Importance="High" Text="Package Password   : $(PackageFeedPassword)" Condition=" '$(PackageFeedPassword)' != '' " />
+    <Message Importance="High" Text="NuGet Config Path  : $(NuGetConfigPath)" Condition=" '$(NuGetConfigPath)' != '' " />
   </Target>
 
   <!-- print all of the paths used to create the build -->
@@ -293,9 +208,9 @@
       $(BeforeInitialize);
       GetServerTime;
       GetPlatformInfo;
+      SetNuGetCredentials;
       GetRepositoryInfo;
       GetProjectMetadata;
-      BootstrapVstsFeeds;
       PrintProperties;
       PrintRepositoryInfo;
       PrintProjects;

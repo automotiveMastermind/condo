@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- provide reasonable defaults for required attributes -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">$(DOTNET_BUILD_VERSION)</CurrentRelease>
+    <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">0.0.0</CurrentRelease>
+    <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
+    <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
+    <CI Condition=" '$(CI)' != '' ">True</CI>
+    <CI Condition=" '$(CI)' == '' ">False</CI>
+    <HasGit Condition=" '$(HasGit)' == '' ">False</HasGit>
+    <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">False</IsPullRequest>
+
+    <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
+    <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
+    <Copyright Condition=" '$(Copyright)' == '' And '$(Company)' != '' ">©. $(Company.Trim('.')). All Rights Reserved.</Copyright>
+
+    <PackageFeedUri Condition=" '$(PackageFeedUri)' == '' ">$(PACKAGE_FEED_URI)</PackageFeedUri>
+    <PackageSymbolUri Condition=" '$(PackageSymbolUri)' == '' ">$(PACKAGE_SYMBOL_URI)</PackageSymbolUri>
+
+    <PackageFeedApiKey Condition=" '$(PackageFeedApiKey)' == '' ">$(PACKAGE_FEED_APIKEY)</PackageFeedApiKey>
+    <PackageSymbolApiKey Condition=" '$(PackageSymbolApiKey)' == '' ">$(PACKAGE_SYMBOL_APIKEY)</PackageSymbolApiKey>
+
+    <PackageFeedUsername Condition=" '$(PackageFeedUsername)' == '' ">$(PACKAGE_FEED_USERNAME)</PackageFeedUsername>
+    <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
+
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
+
+    <UseServerTime Condition=" '$(UseServerTime)' == '' ">False</UseServerTime>
+  </PropertyGroup>
+
+</Project>

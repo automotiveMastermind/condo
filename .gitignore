@@ -52,8 +52,8 @@ _TeamCity*
 # log files
 *.log
 
+# docker
+!.docker/*
+
 #vscode
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/extensions.json
-!.vscode/launch.json
+!.vscode/*
