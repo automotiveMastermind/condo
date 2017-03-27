@@ -6,6 +6,7 @@
     <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,10 +35,10 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="[15.1.548, 16.0.0)" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.1.548, 16.0.0)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.1.548, 16.0.0)" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)">
+        <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

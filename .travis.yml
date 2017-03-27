@@ -1,15 +1,10 @@
-language: csharp
-os:
-  - linux
-  - osx
+language: generic
+os: linux
 dist: trusty
-osx_image: xcode7.3
 branches:
     only:
       - develop
       - master
-mono:
-  - none
 addons:
   apt:
     packages:
@@ -20,13 +15,4 @@ addons:
       - libunwind8
       - zlib1g
       - curl
-before-install:
-  - |
-    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      brew update
-      brew install jq
-      brew install openssl
-      ln -s /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib /usr/local/lib/
-      ln -s /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/lib/
-    fi
 script: ./condo.sh -- /t:ci

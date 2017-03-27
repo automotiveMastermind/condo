@@ -1,6 +1,8 @@
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GitFlowOptions.cs" company="automotiveMastermind and contributors">
 // © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.IO
 {
