@@ -50,7 +50,7 @@ namespace AM.Condo.IO
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public string FullPath => this.path;
         #endregion

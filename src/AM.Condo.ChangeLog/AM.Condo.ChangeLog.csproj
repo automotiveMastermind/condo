@@ -5,6 +5,7 @@
     <DebugType>portable</DebugType>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,10 +20,10 @@
     <PackageReference Include="System.Diagnostics.Process" Version="[4.3.0, 5.0.0)" />
     <PackageReference Include="Handlebars.NetStandard" Version="[1.0.1, 2.0.0)" />
     <PackageReference Include="Newtonsoft.Json" Version="[9.0.1, 10.0.0)" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)">
+        <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

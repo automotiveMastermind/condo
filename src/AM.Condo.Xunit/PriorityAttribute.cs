@@ -31,7 +31,7 @@ namespace AM.Condo
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the priority associated with the priority attribute.
         /// </summary>

@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetCommitInfo.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,17 +10,17 @@ namespace AM.Condo.Tasks
     using System.Collections.Generic;
     using System.Linq;
 
+    using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about the commits within a repository.
     /// </summary>
     public class GetCommitInfo : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the git log if previously retrieved.
         /// </summary>
@@ -141,7 +141,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the tag used to indicate a version.
         /// </summary>
-        public string VersionTag { get; set; }
+        public string VersionTagPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets the commits that belong to the current release.
@@ -265,7 +265,7 @@ namespace AM.Condo.Tasks
             var repository = factory.Load(this.RepositoryRoot);
 
             // set the client version
-            this.ClientVersion = repository.ClientVersion;
+            this.ClientVersion = repository.ClientVersion?.ToString();
 
             var headers = this.HeaderCorrespondence.PropertySplit().ToList();
             var merges = this.MergeCorrespondence.PropertySplit().ToList();
@@ -281,26 +281,22 @@ namespace AM.Condo.Tasks
             var options = new GitLogOptions
             {
                 HeaderPattern = this.HeaderPattern,
-                HeaderCorrespondence = headers,
-
                 MergePattern = this.MergePattern,
-                MergeCorrespondence = merges,
-
                 RevertPattern = this.RevertPattern,
-                RevertCorrespondence = reversions,
-
                 FieldPattern = this.FieldPattern,
-
-                ActionKeywords = actionKeywords,
-                NoteKeywords = noteKeywords,
-
-                MentionPrefixes = mentions,
-                ReferencePrefixes = references,
 
                 IncludeInvalidCommits = this.IncludeInvalidCommits,
 
-                VersionTag = this.VersionTag
+                VersionTagPrefix = this.VersionTagPrefix
             };
+
+            options.HeaderCorrespondence.AddRange(headers);
+            options.MergeCorrespondence.AddRange(merges);
+            options.RevertCorrespondence.AddRange(reversions);
+            options.ActionKeywords.AddRange(actionKeywords);
+            options.NoteKeywords.AddRange(noteKeywords);
+            options.MentionPrefixes.AddRange(mentions);
+            options.ReferencePrefixes.AddRange(references);
 
             var parser = new GitLogParser();
 

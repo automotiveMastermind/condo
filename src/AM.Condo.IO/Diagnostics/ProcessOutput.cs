@@ -36,7 +36,7 @@ namespace AM.Condo.Diagnostics
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc />
         public IList<string> Error { get; private set; }
 

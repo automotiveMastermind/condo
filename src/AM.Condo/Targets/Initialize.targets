@@ -53,19 +53,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- locate all dotnet solution paths -->
-    <DotNetRestorePaths Include="$(RepositoryRoot)$(slash)*.sln" />
-
     <!-- locate all npm, bower, gulp, and grunt projects -->
     <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
     <BowerInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)bower.json" />
     <GulpPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gulpfile.*" />
     <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
     <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
-
-    <!-- locate all dotnet msbuild projects -->
-    <DotNetPaths Include="$(SrcRoot)$(Slash)**$(Slash)*.*proj" />
-    <DotNetPaths Include="$(TestRoot)$(Slash)**$(Slash)*.*proj" />
 
     <!-- add prefixes to well-known authenticated feeds -->
     <NuGetProtectedFeedPrefixes Include="pkgs.visualstudio.com" />
@@ -95,7 +88,7 @@
         RepositoryRoot="$(RepositoryRoot)"
         RepositoryUri="$(RepositoryUri)"
         Branch="$(Branch)"
-        VersionTag="$(VersionTag)"
+        VersionTagPrefix="$(VersionTagPrefix)"
         CommitId="$(CommitId)">
       <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot" />
       <Output TaskParameter="RepositoryUri" PropertyName="RepositoryUri" />
@@ -111,11 +104,21 @@
 
   <!-- get project metadata based on its location -->
   <Target Name="GetProjectMetadata">
-    <GetProjectMetadata Projects="@(DotNetPaths)">
+    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
+      <DotNetSolutions Include="$(RepositoryRoot)$(slash)*.sln" />
+    </ItemGroup>
+
+    <GetProjectsForSolution Solutions="@(DotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
+      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
+    </GetProjectsForSolution>
+
+    <GetProjectMetadata Projects="@(DotNetProjects)">
       <Output TaskParameter="Projects" ItemName="Projects" />
     </GetProjectMetadata>
 
     <ItemGroup>
+      <DotNetRestorePaths Include="@(DotNetSolutions)" />
+
       <SourceProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'src' "/>
       <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
       <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>

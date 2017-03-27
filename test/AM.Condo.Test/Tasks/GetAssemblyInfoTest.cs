@@ -361,7 +361,7 @@ namespace AM.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenMasterBranch_Succeeds()
+        public void Execute_WhenProductionReleaseBranch_Succeeds()
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);

@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RestoreSubmodules.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -9,17 +9,17 @@ namespace AM.Condo.Tasks
     using System;
     using System.IO;
 
+    using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about a repository.
     /// </summary>
     public class RestoreSubmodules : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
@@ -35,76 +35,6 @@ namespace AM.Condo.Tasks
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Executes the <see cref="GetRepositoryInfo"/> task.
-        /// </summary>
-        /// <returns>
-        /// A value indicating whether or not the task executed successfully.
-        /// </returns>
-        public override bool Execute()
-        {
-            // attempt to get the repository root (walking the parent until we find it)
-            var root = GetRepositoryInfo.GetRoot(this.RepositoryRoot);
-
-            // determine if the root could be found
-            if (string.IsNullOrEmpty(root))
-            {
-                // move on immediately
-                return true;
-            }
-
-            // update the repository root
-            this.RepositoryRoot = root;
-
-            // attempt to use the command line first
-            return this.TryCommandLine(root);
-        }
-
-        /// <summary>
-        /// Attempt to use the `git` command line tool to retrieve repository information.
-        /// </summary>
-        /// <param name="root">
-        /// The root of the repository in which to restore submodules.
-        /// </param>
-        /// <returns>
-        /// A value indicating whether or not the repository information could be retrieved using the git command line
-        /// tool.
-        /// </returns>
-        public bool TryCommandLine(string root)
-        {
-            // determine if the root is specified
-            if (root == null)
-            {
-                // set the root
-                root = this.RepositoryRoot;
-            }
-
-            var factory = new GitRepositoryFactory();
-
-            try
-            {
-                // load the repository
-                var repository = factory.Load(root);
-
-                // set the client version
-                this.ClientVersion = repository.ClientVersion;
-
-                // restore submodules
-                repository.RestoreSubmodules();
-            }
-            catch (Exception netEx)
-            {
-                // log a warning
-                this.Log.LogWarningFromException(netEx);
-
-                // move on immediately
-                return false;
-            }
-
-            // we were successful
-            return true;
-        }
-
         /// <summary>
         /// Attempt to find the git repository root by scanning the specified
         /// <paramref name="root"/> path and walking upward.
@@ -161,6 +91,76 @@ namespace AM.Condo.Tasks
 
             // walk the tree to the parent
             return GetRepositoryInfo.GetRoot(root.Parent);
+        }
+
+        /// <summary>
+        /// Executes the <see cref="GetRepositoryInfo"/> task.
+        /// </summary>
+        /// <returns>
+        /// A value indicating whether or not the task executed successfully.
+        /// </returns>
+        public override bool Execute()
+        {
+            // attempt to get the repository root (walking the parent until we find it)
+            var root = GetRepositoryInfo.GetRoot(this.RepositoryRoot);
+
+            // determine if the root could be found
+            if (string.IsNullOrEmpty(root))
+            {
+                // move on immediately
+                return true;
+            }
+
+            // update the repository root
+            this.RepositoryRoot = root;
+
+            // attempt to use the command line first
+            return this.TryCommandLine(root);
+        }
+
+        /// <summary>
+        /// Attempt to use the `git` command line tool to retrieve repository information.
+        /// </summary>
+        /// <param name="root">
+        /// The root of the repository in which to restore submodules.
+        /// </param>
+        /// <returns>
+        /// A value indicating whether or not the repository information could be retrieved using the git command line
+        /// tool.
+        /// </returns>
+        public bool TryCommandLine(string root)
+        {
+            // determine if the root is specified
+            if (root == null)
+            {
+                // set the root
+                root = this.RepositoryRoot;
+            }
+
+            var factory = new GitRepositoryFactory();
+
+            try
+            {
+                // load the repository
+                var repository = factory.Load(root);
+
+                // set the client version
+                this.ClientVersion = repository.ClientVersion?.ToString();
+
+                // restore submodules
+                repository.RestoreSubmodules();
+            }
+            catch (Exception netEx)
+            {
+                // log a warning
+                this.Log.LogWarningFromException(netEx);
+
+                // move on immediately
+                return false;
+            }
+
+            // we were successful
+            return true;
         }
         #endregion
     }

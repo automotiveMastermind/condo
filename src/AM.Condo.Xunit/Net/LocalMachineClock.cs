@@ -13,7 +13,7 @@ namespace AM.Condo.Net
     /// </summary>
     public class LocalMachineClock : IClockProvider
     {
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public DateTime UtcNow => DateTime.UtcNow;
 

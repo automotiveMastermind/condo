@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SaveChangeLog.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -9,12 +9,12 @@ namespace AM.Condo.Tasks
     using System;
     using System.IO;
 
+    using AM.Condo.ChangeLog;
+    using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using NuGet.Versioning;
-
-    using AM.Condo.ChangeLog;
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task used to save an automatically generated changelog to the repository root.

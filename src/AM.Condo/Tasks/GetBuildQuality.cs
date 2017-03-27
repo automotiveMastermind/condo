@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetBuildQuality.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ namespace AM.Condo.Tasks
     /// </summary>
     public class GetBuildQuality : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the branch used to determine the pre-release tag.
         /// </summary>
@@ -55,12 +55,12 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the name used to identify the integration branch for development.
         /// </summary>
-        public string DevelopBranch { get; set; } = "develop";
+        public string NextReleaseBranch { get; set; } = "develop";
 
         /// <summary>
         /// Gets or sets the name used to identify the integration branch for production.
         /// </summary>
-        public string MasterBranch { get; set; } = "master";
+        public string ProductionReleaseBranch { get; set; } = "master";
 
         /// <summary>
         /// Gets or sets the default build quality, which is used whenever a branch specific build quality is not set
@@ -71,12 +71,12 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the build quality to use for the develop branch.
         /// </summary>
-        public string DevelopBranchBuildQuality { get; set; } = "beta";
+        public string NextReleaseBranchBuildQuality { get; set; } = "beta";
 
         /// <summary>
         /// Gets or sets the build quality to use for the master branch.
         /// </summary>
-        public string MasterBranchBuildQuality { get; set; }
+        public string ProductionReleaseBranchBuildQuality { get; set; }
 
         /// <summary>
         /// Gets or sets the build quality to use for feature branches.
@@ -129,21 +129,21 @@ namespace AM.Condo.Tasks
             }
 
             // determine if the branch is the master branch
-            if (this.Branch.Equals(this.MasterBranch, StringComparison.OrdinalIgnoreCase))
+            if (this.Branch.Equals(this.ProductionReleaseBranch, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the master branch build quality
-                this.BuildQuality = this.MasterBranchBuildQuality;
+                this.BuildQuality = this.ProductionReleaseBranchBuildQuality;
 
                 // move on immediately
                 return true;
             }
 
             // determine if the branch is a develop branch
-            if (!string.IsNullOrEmpty(this.DevelopBranchBuildQuality)
-                && this.Branch.Equals(this.DevelopBranch, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(this.NextReleaseBranchBuildQuality)
+                && this.Branch.Equals(this.NextReleaseBranch, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the develop branch build quality
-                this.BuildQuality = this.DevelopBranchBuildQuality;
+                this.BuildQuality = this.NextReleaseBranchBuildQuality;
 
                 // move on immediately
                 return true;

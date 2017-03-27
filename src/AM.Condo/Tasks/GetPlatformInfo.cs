@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetPlatformInfo.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ namespace AM.Condo.Tasks
     /// </summary>
     public class GetPlatformInfo : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets a value indicating whether or not the platform is a distribution of Linux.
         /// </summary>

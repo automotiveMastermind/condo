@@ -11,9 +11,9 @@ namespace AM.Condo.ChangeLog
     using System.IO;
     using System.Linq;
 
+    using AM.Condo.IO;
     using HandlebarsDotNet;
     using NuGet.Versioning;
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents a change log writer used to generate a changelog from a git commit history.
@@ -21,13 +21,13 @@ namespace AM.Condo.ChangeLog
     public class ChangeLogWriter : IChangeLogWriter
     {
         #region Private Fields
+        private readonly ChangeLogOptions options;
+
         private string changelog;
 
         private string path;
 
         private Func<object, string> apply;
-
-        private readonly ChangeLogOptions options;
         #endregion
 
         #region Constructors and Finalizers
@@ -147,189 +147,6 @@ namespace AM.Condo.ChangeLog
             return this;
         }
 
-        private void ApplyVersion(SemanticVersion version, string previous, IList<GitCommit> log)
-        {
-            // determine if the log does not contain any commits
-            if (log.Count == 0)
-            {
-                // move on immediately
-                return;
-            }
-
-            var first = log[0];
-
-            // setup the root dictionary
-            var root = new Dictionary<string, object>();
-            root.Add("commit", this.options.CommitName);
-            root.Add("issue", this.options.IssueName);
-            root.Add("linkReferences", this.options.LinkReferences);
-            root.Add("repository", this.options.Repository);
-            root.Add("repoUrl", this.options.RepositoryUri);
-            root.Add("previousTag", previous);
-            root.Add("currentTag", version.ToFullString());
-            root.Add("version", version.ToNormalizedString());
-            root.Add("isPatch", version.Patch > 0 || version.IsPrerelease || version.HasMetadata);
-            root.Add("linkCompare", this.options.LinkReferences && !string.IsNullOrEmpty(previous));
-            root.Add("date", first.Date.ToString("yyyy-MM-dd"));
-
-            var commitGroups = new List<IDictionary<string, object>>();
-            root.Add("commitGroups", commitGroups);
-
-            var noteGroups = new List<IDictionary<string, object>>();
-            root.Add("noteGroups", noteGroups);
-
-            var tempCommits = new SortedDictionary<string, IDictionary<string, object>>();
-            var tempNotes = new SortedDictionary<string, IDictionary<string, object>>();
-
-            // iterate over each commit
-            foreach (var currentCommit in log)
-            {
-                // create the commit
-                var commit = new Dictionary<string, object>();
-
-                // add the hash
-                commit.Add("hash", currentCommit.ShortHash);
-
-                // add the header
-                commit.Add("header", currentCommit.Header);
-
-                // do not include the commit by default
-                var include = false;
-
-                // iterate over all notes on the current commit
-                foreach (var currentNote in currentCommit.Notes)
-                {
-                    // create the note
-                    var note = new Dictionary<string, object>();
-
-                    // add the text and associated commit
-                    note.Add("text", currentNote.Body);
-                    note.Add("commit", commit);
-
-                    // define a variable to retain the group
-                    IDictionary<string, object> group;
-
-                    // get the header value
-                    var value = currentNote.Header;
-
-                    // define a variable to retain the display value
-                    var display = default(string);
-
-                    // determine if we should include the note type
-                    if (!this.options.ChangeLogTypes.TryGetValue(value, out display))
-                    {
-                        // move on immediately
-                        continue;
-                    }
-
-                    // force include the commit
-                    include = true;
-
-                    // attempt to get the group
-                    if (!tempNotes.TryGetValue(display, out group))
-                    {
-                        // create the group
-                        group = new Dictionary<string, object>();
-                        tempNotes.Add(display, group);
-
-                        // add the title
-                        group.Add("title", display);
-
-                        // add the notes
-                        group.Add("notes", new List<IDictionary<string, object>>());
-                    }
-
-                    // get the notes
-                    var notes = group["notes"] as List<IDictionary<string, object>>;
-
-                    // add the note
-                    notes.Add(note);
-                }
-
-                // iterate over header correspondence
-                foreach (var correspondence in currentCommit.HeaderCorrespondence)
-                {
-                    // capture the key
-                    var key = correspondence.Key;
-                    var value = correspondence.Value;
-
-                    // add the key
-                    commit.Add(key.ToLowerInvariant(), correspondence.Value);
-
-                    // determine if this is the group by key
-                    if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // create a variable to retain the display name
-                        var display = default(string);
-
-                        // attempt to get the display name mapping
-                        if (!this.options.ChangeLogTypes.TryGetValue(value, out display) && !include)
-                        {
-                            // discard the commit
-                            continue;
-                        }
-
-                        // define a variable to retain the group
-                        IDictionary<string, object> group;
-
-                        // attempt to get the group
-                        if (!tempCommits.TryGetValue(display, out group))
-                        {
-                            // create the group
-                            group = new Dictionary<string, object>();
-                            tempCommits.Add(display, group);
-
-                            // add the title
-                            group.Add("title", display);
-
-                            // add the commits
-                            group.Add("commits", new List<IDictionary<string, object>>());
-                        }
-
-                        // get the commits
-                        var commits = group["commits"] as List<IDictionary<string, object>>;
-
-                        // add the commit
-                        commits.Add(commit);
-                    }
-                }
-
-                // create the references
-                var references = new HashSet<IDictionary<string, object>>();
-                commit.Add("references", references);
-
-                // iterate over each reference
-                foreach (var currentReference in currentCommit.References)
-                {
-                    // create the reference
-                    var reference = new Dictionary<string, object>();
-                    references.Add(reference);
-
-                    // add the owner, issue id, and repository
-                    reference.Add("owner", currentReference.Owner);
-                    reference.Add("issue", currentReference.Id);
-                    reference.Add("repository", currentReference.Repository);
-                }
-            }
-
-            // iterate over the sorted groups
-            foreach (var item in tempCommits)
-            {
-                // add the groups
-                commitGroups.Add(item.Value);
-            }
-
-            // iterate over sorted notes
-            foreach (var item in tempNotes)
-            {
-                // add the notes
-                noteGroups.Add(item.Value);
-            }
-
-            // apply the log
-            this.changelog = this.apply(root) + Environment.NewLine + this.changelog;
-        }
-
         /// <inheritdoc />
         void IChangeLogWriterApplied.Save()
         {
@@ -409,6 +226,181 @@ namespace AM.Condo.ChangeLog
 
             // return self
             return this;
+        }
+
+        private void ApplyVersion(SemanticVersion version, string previous, IList<GitCommit> log)
+        {
+            // determine if the log does not contain any commits
+            if (log.Count == 0)
+            {
+                // move on immediately
+                return;
+            }
+
+            var first = log[0];
+
+            // setup the root dictionary
+            var root = new Dictionary<string, object>
+            {
+                { "commit", this.options.CommitName },
+                { "issue", this.options.IssueName },
+                { "linkReferences", this.options.LinkReferences },
+                { "repository", this.options.Repository },
+                { "repoUrl", this.options.RepositoryUri },
+                { "previousTag", previous },
+                { "currentTag", version.ToFullString() },
+                { "version", version.ToNormalizedString() },
+                { "isPatch", version.Patch > 0 || version.IsPrerelease || version.HasMetadata },
+                { "linkCompare", this.options.LinkReferences && !string.IsNullOrEmpty(previous) },
+                { "date", first.Date.ToString("yyyy-MM-dd") }
+            };
+
+            var commitGroups = new List<IDictionary<string, object>>();
+            root.Add("commitGroups", commitGroups);
+
+            var noteGroups = new List<IDictionary<string, object>>();
+            root.Add("noteGroups", noteGroups);
+
+            var tempCommits = new SortedDictionary<string, IDictionary<string, object>>();
+            var tempNotes = new SortedDictionary<string, IDictionary<string, object>>();
+
+            // iterate over each commit
+            foreach (var currentCommit in log)
+            {
+                // create the commit
+                var commit = new Dictionary<string, object>
+                {
+                    // add the hash
+                    { "hash", currentCommit.ShortHash },
+
+                    // add the header
+                    { "header", currentCommit.Header }
+                };
+
+                // do not include the commit by default
+                var include = false;
+
+                // iterate over all notes on the current commit
+                foreach (var currentNote in currentCommit.Notes)
+                {
+                    // create the note
+                    var note = new Dictionary<string, object>
+                    {
+                        // add the text and associated commit
+                        { "text", currentNote.Body },
+                        { "commit", commit }
+                    };
+
+                    // get the header value
+                    var value = currentNote.Header;
+
+                    // determine if we should include the note type
+                    if (!this.options.ChangeLogTypes.TryGetValue(value, out string display))
+                    {
+                        // move on immediately
+                        continue;
+                    }
+
+                    // force include the commit
+                    include = true;
+
+                    // attempt to get the group
+                    if (!tempNotes.TryGetValue(display, out IDictionary<string, object> group))
+                    {
+                        // create the group
+                        group = new Dictionary<string, object>();
+                        tempNotes.Add(display, group);
+
+                        // add the title
+                        group.Add("title", display);
+
+                        // add the notes
+                        group.Add("notes", new List<IDictionary<string, object>>());
+                    }
+
+                    // get the notes
+                    var notes = group["notes"] as List<IDictionary<string, object>>;
+
+                    // add the note
+                    notes.Add(note);
+                }
+
+                // iterate over header correspondence
+                foreach (var correspondence in currentCommit.HeaderCorrespondence)
+                {
+                    // capture the key
+                    var key = correspondence.Key;
+                    var value = correspondence.Value;
+
+                    // add the key
+                    commit.Add(key.ToLowerInvariant(), correspondence.Value);
+
+                    // determine if this is the group by key
+                    if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // attempt to get the display name mapping
+                        if (!this.options.ChangeLogTypes.TryGetValue(value, out string display) && !include)
+                        {
+                            // discard the commit
+                            continue;
+                        }
+
+                        // attempt to get the group
+                        if (!tempCommits.TryGetValue(display, out IDictionary<string, object> group))
+                        {
+                            // create the group
+                            group = new Dictionary<string, object>();
+                            tempCommits.Add(display, group);
+
+                            // add the title
+                            group.Add("title", display);
+
+                            // add the commits
+                            group.Add("commits", new List<IDictionary<string, object>>());
+                        }
+
+                        // get the commits
+                        var commits = group["commits"] as List<IDictionary<string, object>>;
+
+                        // add the commit
+                        commits.Add(commit);
+                    }
+                }
+
+                // create the references
+                var references = new HashSet<IDictionary<string, object>>();
+                commit.Add("references", references);
+
+                // iterate over each reference
+                foreach (var currentReference in currentCommit.References)
+                {
+                    // create the reference
+                    var reference = new Dictionary<string, object>();
+                    references.Add(reference);
+
+                    // add the owner, issue id, and repository
+                    reference.Add("owner", currentReference.Owner);
+                    reference.Add("issue", currentReference.Id);
+                    reference.Add("repository", currentReference.Repository);
+                }
+            }
+
+            // iterate over the sorted groups
+            foreach (var item in tempCommits)
+            {
+                // add the groups
+                commitGroups.Add(item.Value);
+            }
+
+            // iterate over sorted notes
+            foreach (var item in tempNotes)
+            {
+                // add the notes
+                noteGroups.Add(item.Value);
+            }
+
+            // apply the log
+            this.changelog = this.apply(root) + Environment.NewLine + this.changelog;
         }
         #endregion
     }

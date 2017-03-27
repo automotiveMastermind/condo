@@ -7,9 +7,6 @@
 
   <Target Name="CleanIntermediateArtifacts">
     <ItemGroup>
-      <IntermediateArtifacts Include="%(Projects.ProjectDir)bin" Condition=" Exists('%(Projects.ProjectDir)bin') " />
-      <IntermediateArtifacts Include="%(Projects.ProjectDir)obj" Condition=" Exists('%(Projects.ProjectDir)obj') " />
-
       <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" Condition=" Exists('%(Projects.CondoAssemblyInfo)') " />
     </ItemGroup>
 
@@ -31,6 +28,7 @@
 
     <BeforeInitialize>
       CleanRepository;
+      $(BeforeInitialize);
     </BeforeInitialize>
   </PropertyGroup>
 

@@ -31,7 +31,7 @@ namespace AM.Condo
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the agent type associated with the type attribute.
         /// </summary>

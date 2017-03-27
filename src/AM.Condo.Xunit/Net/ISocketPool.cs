@@ -14,7 +14,7 @@ namespace AM.Condo.Net
     /// </summary>
     public interface ISocketPool : IDisposable
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the number of connections supported by the pool.
         /// </summary>

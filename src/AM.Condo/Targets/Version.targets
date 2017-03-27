@@ -31,8 +31,8 @@
         SupportBranchPrefix="$(SupportBranchPrefix)"
         HotfixBranchPrefix="$(HotfixBranchPrefix)"
 
-        DevelopBranch="$(DevelopBranch)"
-        MasterBranch="$(MasterBranch)"
+        NextReleaseBranch="$(NextReleaseBranch)"
+        ProductionReleaseBranch="$(ProductionReleaseBranch)"
 
         DefaultBuildQuality="$(DefaultBuildQuality)"
 
@@ -41,8 +41,8 @@
         ReleaseBranchBuildQuality="$(ReleaseBranchBuildQuality)"
         SupportBranchBuildQuality="$(SupportBranchBuildQuality)"
         HotfixBranchBuildQuality="$(HotfixBranchBuildQuality)"
-        DevelopBranchBuildQuality="$(DevelopBranchBuildQuality)"
-        MasterBranchBuildQuality="$(MasterBranchBuildQuality)">
+        NextReleaseBranchBuildQuality="$(NextReleaseBranchBuildQuality)"
+        ProductionReleaseBranchBuildQuality="$(ProductionReleaseBranchBuildQuality)">
       <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
     </GetBuildQuality>
   </Target>
@@ -51,7 +51,7 @@
   <Target Name="GetAssemblyInfo">
     <GetAssemblyInfo
         CI="$(CI)"
-        CurrentRelease="$(CurrentRelease)"
+        CurrentRelease="$(RecommendedRelease)"
         AssemblyVersion="$(AssemblyVersion)"
         BuildId="$(BuildId)"
         CommitId="$(CommitId)"
@@ -69,10 +69,10 @@
   </Target>
 
   <!-- save assembly info files -->
-  <Target Name="SaveAssemblyInfo">
+  <Target Name="SaveAssemblyInfo" Condition=" '@(SourceProjects->Count())' != '0' ">
     <SaveAssemblyInfo
         AssemblyInfoPath="%(SourceProjects.CondoAssemblyInfo)"
-        CurrentRelease="$(CurrentRelease)"
+        CurrentRelease="$(RecommendedRelease)"
         Company="$(Company)"
         Product="$(Product)"
         ProjectName="%(SourceProjects.ProjectName)"
@@ -103,6 +103,7 @@
     <Message Importance="High" Text="Build Version      : $(InformationalVersion)" />
     <Message Importance="High" Text="Current Version    : $(LatestVersion)" Condition=" '$(LatestVersion)' != '' " />
     <Message Importance="High" Text="Current Release    : $(CurrentRelease)" />
+    <Message Importance="High" Text="Recommended Release: $(RecommendedRelease)" Condition=" '$(RecommendedRelease)' != '' "/>
     <Message Importance="High" Text="Next Release       : $(NextRelease)" Condition=" '$(NextRelease)' != '' " />
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
@@ -119,11 +120,13 @@
       $(BeforeVersion);
     </BeforeVersion>
 
+    <AfterVersion>
+      $(AfterVersion);
+      PrintVersionInfo;
+    </AfterVersion>
+
     <VersionDependsOn>
       $(BeforeVersion);
-      GetAssemblyInfo;
-      PrintVersionInfo;
-      SaveAssemblyInfo;
       $(VersionDependsOn);
       $(AfterVersion);
     </VersionDependsOn>

@@ -14,7 +14,7 @@ namespace AM.Condo.Net
     /// </summary>
     public interface IBufferManager : IDisposable
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the maximum number of connections to pre-allocate.
         /// </summary>

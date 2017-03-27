@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetNuGetPackageSources.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -22,20 +22,6 @@ namespace AM.Condo.Tasks
         private ISettings settings;
 
         private IPackageSourceProvider provider;
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Gets or sets the root of the repository.
-        /// </summary>
-        [Required]
-        public string RepositoryRoot { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sources
-        /// </summary>
-        [Output]
-        public ITaskItem[] Sources { get; set; }
         #endregion
 
         #region Constructors and Finalizers
@@ -62,7 +48,23 @@ namespace AM.Condo.Tasks
             this.settings = settings;
             this.provider = provider;
         }
+        #endregion
 
+        #region Properties and Indexers
+        /// <summary>
+        /// Gets or sets the root of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sources
+        /// </summary>
+        [Output]
+        public ITaskItem[] Sources { get; set; }
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Execute the set credentials task.
         /// </summary>

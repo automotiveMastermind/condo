@@ -14,7 +14,21 @@ namespace AM.Condo.IO
     public static class GitRepositoryExtensions
     {
         #region Private Fields
-        private static readonly IGitLogOptions Options = new GitLogOptions();
+        private static readonly GitLogOptions Options = new GitLogOptions
+        {
+            HeaderPattern = @"^(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$",
+            RevertPattern = @"^Revert\s""([\s\S]*)""\s*This reverts commit (\w*)\.",
+            FieldPattern = @"^-(.*?)-$",
+            IncludeInvalidCommits = false,
+            GroupBy = "Type",
+            SortBy = "Scope",
+            HeaderCorrespondence = { "Type", "Scope", "Subject" },
+            RevertCorrespondence = { "Header", "Hash" },
+            ReferencePrefixes = { "#" },
+            MentionPrefixes = { "@" },
+            ActionKeywords = { "Close", "Closes", "Closed", "Fix", "Fixes", "Fixed", "Resolve", "Resolves", "Resolved" },
+            NoteKeywords = { "BREAKING CHANGE", "BREAKING CHANGES" }
+        };
 
         private static readonly IGitLogParser Parser = new GitLogParser();
         #endregion
@@ -283,7 +297,7 @@ namespace AM.Condo.IO
         /// <returns>
         /// The log of commits using the specified <paramref name="options"/>.
         /// </returns>
-        public static GitLog Log(this IGitRepositoryInitialized repository, IGitLogOptions options)
+        public static GitLog Log(this IGitRepositoryInitialized repository, GitLogOptions options)
         {
             return repository.Log(from: null, to: "HEAD", options: options, parser: null);
         }
@@ -303,7 +317,7 @@ namespace AM.Condo.IO
         /// <returns>
         /// The log of commits using the specified <paramref name="options"/>.
         /// </returns>
-        public static GitLog Log(this IGitRepositoryInitialized repository, string from, IGitLogOptions options)
+        public static GitLog Log(this IGitRepositoryInitialized repository, string from, GitLogOptions options)
         {
             return repository.Log(from, to: "HEAD", options: options, parser: null);
         }

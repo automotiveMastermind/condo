@@ -203,7 +203,7 @@ namespace AM.Condo
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the current date and time represented as an NTP timestamp.
         /// </summary>

@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetProjectMetadata.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ namespace AM.Condo.Tasks
     /// </summary>
     public class GetProjectMetadata : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the list of projects for which to set additional metadata.
         /// </summary>
@@ -56,54 +56,7 @@ namespace AM.Condo.Tasks
             return true;
         }
 
-        /// <summary>
-        /// Sets additional project metadata on the specified <paramref name="project"/>.
-        /// </summary>
-        /// <param name="project">
-        /// The project item on which to set additional project metadata.
-        /// </param>
-        private void SetMetadata(ITaskItem project)
-        {
-            // get the extension
-            var extension = project.GetMetadata("Extension");
-
-            // determine if the extension is null
-            if (string.IsNullOrEmpty(extension))
-            {
-                // move on immediately
-                return;
-            }
-
-            // get the full path of the project file
-            var path = project.GetMetadata("FullPath");
-
-            // get the directory name from the path
-            var directory = Path.GetDirectoryName(path);
-            var group = Path.GetFileName(Path.GetDirectoryName(directory));
-
-            // set the project directory path
-            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
-
-            // set the project group
-            project.SetMetadata("ProjectGroup", group);
-
-            // set the name of the project (using the directory name by convention)
-            project.SetMetadata("ProjectName", Path.GetFileName(directory));
-
-            // set the shared sources directory
-            project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
-
-            // set the condo assembly info path
-            project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
-
-            if (extension.EndsWith("proj", StringComparison.OrdinalIgnoreCase))
-            {
-                // set msbuild metadata
-                this.SetMSBuildMetadata(project, path);
-            }
-        }
-
-        private void SetMSBuildMetadata(ITaskItem project, string path)
+        private static void SetMSBuildMetadata(ITaskItem project, string path)
         {
             // set the dotnet build type
             project.SetMetadata("DotNetType", "MSBuild");
@@ -141,6 +94,34 @@ namespace AM.Condo.Tasks
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", names));
             project.SetMetadata("NetCoreFramework", tfm);
+        }
+
+        private void SetMetadata(ITaskItem project)
+        {
+            // get the full path of the project file
+            var path = project.GetMetadata("FullPath");
+
+            // get the directory name from the path
+            var directory = Path.GetDirectoryName(path);
+            var group = Path.GetFileName(Path.GetDirectoryName(directory));
+
+            // set the project directory path
+            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+
+            // set the project group
+            project.SetMetadata("ProjectGroup", group);
+
+            // set the name of the project (using the directory name by convention)
+            project.SetMetadata("ProjectName", Path.GetFileName(directory));
+
+            // set the shared sources directory
+            project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
+
+            // set the condo assembly info path
+            project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
+
+            // set msbuild metadata
+            SetMSBuildMetadata(project, path);
         }
         #endregion
     }

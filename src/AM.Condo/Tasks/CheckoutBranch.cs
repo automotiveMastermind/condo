@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CheckoutBranch.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -8,18 +8,18 @@ namespace AM.Condo.Tasks
 {
     using System;
 
+    using AM.Condo.Diagnostics;
+    using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-
-    using AM.Condo.IO;
-    using AM.Condo.Diagnostics;
 
     /// <summary>
     /// Represents a Microsoft Build task that is used to checkout a branch.
     /// </summary>
     public class CheckoutBranch : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="InstallNuGetPackage.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,15 +11,15 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-    using NuGet.Packaging.Core;
     using NuGet.Packaging;
+    using NuGet.Packaging.Core;
 
     /// <summary>
     /// Represents a Microsoft Build (MSBuild) task that installs a NuGet package to the specified path.
     /// </summary>
     public class InstallNuGetPackage : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the packages that should be installed.
         /// </summary>

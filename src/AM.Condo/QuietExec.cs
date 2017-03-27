@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="QuietExec.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ namespace AM.Condo
     /// </summary>
     public sealed class QuietExec : Exec
     {
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         protected override MessageImportance StandardOutputLoggingImportance { get; } = MessageImportance.Low;
 

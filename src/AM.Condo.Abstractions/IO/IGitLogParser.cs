@@ -26,7 +26,7 @@ namespace AM.Condo.IO
         /// <returns>
         /// The parsed git log.
         /// </returns>
-        GitLog Parse(IEnumerable<IList<string>> commits, IGitLogOptions options);
+        GitLog Parse(IEnumerable<IList<string>> commits, GitLogOptions options);
         #endregion
     }
 }

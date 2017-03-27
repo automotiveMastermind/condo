@@ -13,5 +13,5 @@ cache:
   - '%USERPROFILE%\.am'
   - '%LOCALAPPDATA%\Microsoft\dotnet'
 build_script:
-  - cmd: condo.cmd /t:ci
+  - cmd: condo.cmd -- /t:ci
 test: off

@@ -11,9 +11,9 @@ namespace AM.Condo.IO
     /// <summary>
     /// Defines the properties and methods required to implement a git repository that has already been initialized.
     /// </summary>
-    public interface IGitRepositoryInitialized : IGitRepositoryBare
+    public interface IGitRepositoryInitialized : IGitRepositoryBare, IGitFlow
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the current username associated with the repository configuration.
         /// </summary>
@@ -234,7 +234,7 @@ namespace AM.Condo.IO
         /// <returns>
         /// The git log for the specified <paramref name="parser"/>.
         /// </returns>
-        GitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser);
+        GitLog Log(string from, string to, GitLogOptions options, IGitLogParser parser);
         #endregion
     }
 }

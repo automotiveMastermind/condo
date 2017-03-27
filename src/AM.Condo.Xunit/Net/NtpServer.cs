@@ -25,6 +25,11 @@ namespace AM.Condo.Net
         private readonly int port;
 
         /// <summary>
+        /// The semaphore used to track accepted clients.
+        /// </summary>
+        private readonly Semaphore accepted;
+
+        /// <summary>
         /// A value indicating whether or not the server has been disposed.
         /// </summary>
         private bool disposed;
@@ -48,11 +53,6 @@ namespace AM.Condo.Net
         /// A value used to track active connections.
         /// </summary>
         private int connected;
-
-        /// <summary>
-        /// The semaphore used to track accepted clients.
-        /// </summary>
-        private readonly Semaphore accepted;
         #endregion
 
         #region Constructors and Finalizers
@@ -204,7 +204,7 @@ namespace AM.Condo.Net
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the port used for the server.
         /// </summary>

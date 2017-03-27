@@ -121,7 +121,7 @@ namespace AM.Condo.Net
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public int Connections => this.connections;
 

@@ -3,7 +3,8 @@
   "settings": {
     "documentationRules": {
       "companyName": "automotiveMastermind and contributors",
-      "copyrightText": "© automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details."
+      "copyrightText": "© automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.",
+      "headerDecoration": "---------------------------------------------------------------------------------------------------------------------"
     }
   }
 }

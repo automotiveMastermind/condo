@@ -23,10 +23,10 @@ namespace AM.Condo.IO
     {
         private static readonly Regex NoMatchRegex = new Regex("(?!.*)");
 
-        private static readonly Regex TagRegex = new Regex("(?:tag:\\s*)(.+)");
+        private static readonly Regex TagRegex = new Regex("tag:\\s*(.+)");
 
         /// <inheritdoc />
-        public GitLog Parse(IEnumerable<IList<string>> commits, IGitLogOptions options)
+        public GitLog Parse(IEnumerable<IList<string>> commits, GitLogOptions options)
         {
             // create the git log
             var log = new GitLog();
@@ -103,7 +103,12 @@ namespace AM.Condo.IO
                 };
 
                 // get the tags
-                var tags = lines.Current.Trim().TrimStart('(').TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var tags = lines.Current.Trim()
+                    .TrimStart('(')
+                    .TrimEnd(')')
+                    .Replace("->", ",")
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
                 lines.MoveNext();
 
                 // iterate over each tag
@@ -125,7 +130,7 @@ namespace AM.Condo.IO
                         var current = new GitTag { Name = label, Hash = hash, ShortHash = shortHash };
 
                         // get the version sample
-                        var sample = current.Version(options.VersionTag);
+                        var sample = current.Version(options.VersionTagPrefix);
 
                         // determine if the version is not null
                         if (sample != null)

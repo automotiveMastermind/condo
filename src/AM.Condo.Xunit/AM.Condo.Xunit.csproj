@@ -6,6 +6,7 @@
     <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +17,10 @@
     <PackageReference Include="System.Diagnostics.Process" Version="[4.3.0, 5.0.0)" />
     <PackageReference Include="System.Net.NameResolution" Version="[4.3.0, 5.0.0)" />
     <PackageReference Include="xunit" Version="[2.2.0, 3.0.0)" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)">
+        <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
