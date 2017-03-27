@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IGitLogParser.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.IO
 {
@@ -26,7 +24,7 @@ namespace AM.Condo.IO
         /// <returns>
         /// The parsed git log.
         /// </returns>
-        GitLog Parse(IEnumerable<IList<string>> commits, IGitLogOptions options);
+        GitLog Parse(IEnumerable<IList<string>> commits, GitLogOptions options);
         #endregion
     }
 }

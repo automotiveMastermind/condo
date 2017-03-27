@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PushNuGetPackage.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
@@ -31,7 +29,36 @@ namespace AM.Condo.Tasks
         private IPackageSourceProvider provider;
         #endregion
 
-        #region Properties
+        #region Constructors and Finalizers
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.
+        /// </summary>
+        public PushNuGetPackage()
+            : this(settings: null, provider: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.
+        /// </summary>
+        /// <param name="settings">
+        /// The settings used to push packages.
+        /// </param>
+        /// <param name="provider">
+        /// The package source provider used to push packages.
+        /// </param>
+        public PushNuGetPackage(ISettings settings, IPackageSourceProvider provider)
+        {
+            // set success to false
+            this.success = false;
+
+            // set the settings and package source provider
+            this.settings = settings;
+            this.provider = provider;
+        }
+        #endregion
+
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the packages that should be published to the feed.
         /// </summary>
@@ -85,35 +112,6 @@ namespace AM.Condo.Tasks
         /// Gets or sets a value indicating whether or not to allow symbol packages to be pushed.
         /// </summary>
         public bool NoSymbols { get; set; }
-        #endregion
-
-        #region Constructors and Finalizers
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.
-        /// </summary>
-        public PushNuGetPackage()
-            : this(settings: null, provider: null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PushNuGetPackage"/> class.
-        /// </summary>
-        /// <param name="settings">
-        /// The settings used to push packages.
-        /// </param>
-        /// <param name="provider">
-        /// The package source provider used to push packages.
-        /// </param>
-        public PushNuGetPackage(ISettings settings, IPackageSourceProvider provider)
-        {
-            // set success to false
-            this.success = false;
-
-            // set the settings and package source provider
-            this.settings = settings;
-            this.provider = provider;
-        }
         #endregion
 
         /// <summary>

@@ -1,38 +1,25 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GitRepository.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.IO
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
     using AM.Condo.Diagnostics;
 
-    using static System.FormattableString;
-
     /// <summary>
     /// Represents a reference to a git repository that can be manipulated programmatically.
     /// </summary>
-    public class GitRepository : IGitRepository
+    public class GitRepository : GitRepositoryBare, IGitRepository
     {
         #region Private Fields
         private const string Split = "------------------------ >8< ------------------------";
 
         private const string Format = "%H%n%h%n%ci%n%d%n%B%n" + Split;
-
-        private readonly IPathManager path;
-
-        private readonly ILogger logger;
-
-        private readonly Version version;
-
-        private bool disposed;
         #endregion
 
         #region Constructors and Finalizers
@@ -53,81 +40,16 @@ namespace AM.Condo.IO
         /// <param name="path">
         /// The path manager that is responsible for managing the path.
         /// </param>
-        /// <param name="log">
+        /// <param name="logger">
         /// The logger that is responsible for logging.
         /// </param>
-        public GitRepository(IPathManager path, ILogger log)
+        public GitRepository(IPathManager path, ILogger logger)
+            : base(path, logger)
         {
-            this.path = path ?? throw new ArgumentNullException(nameof(path));
-            this.logger = log ?? throw new ArgumentNullException(nameof(log));
-
-            try
-            {
-                // get the version outut
-                var output = this.Execute("--version");
-
-                // capture the version string
-                var values = output.Output.FirstOrDefault()?.Split(new[] { '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                // define a temporary value to retain the version
-                var version = string.Empty;
-
-                // iterate over each value
-                foreach (var value in values)
-                {
-                    // determine if the segment is an int
-                    if (int.TryParse(value, out int segment))
-                    {
-                        // add the segment to the version
-                        version = $"{version}.{segment}";
-                    }
-                }
-
-                // create the version
-                this.version = new Version(version.Trim('.'));
-            }
-            catch (Exception netEx)
-            {
-                throw new InvalidOperationException
-                    (Invariant($"A git client was not found on the current path ({path.FullPath})."), netEx);
-            }
         }
         #endregion
 
-        #region Properties
-        /// <inheritdoc/>
-        public string CurrentBranch
-        {
-            get
-            {
-                // get the output for the current branch
-                var result = this.Execute("symbolic-ref HEAD");
-
-                // determine if we were not successful
-                if (!result.Success)
-                {
-                    // log the output as a warning
-                    this.logger.LogWarning(result.Error);
-
-                    // return null
-                    return null;
-                }
-
-                var branch = result.Output.FirstOrDefault();
-
-                // return the current branch
-                return branch.StartsWith("refs/heads/")
-                    ? branch.Substring(11)
-                    : branch;
-            }
-        }
-
-        /// <inheritdoc/>
-        public string ClientVersion => this.version?.ToString();
-
-        /// <inheritdoc/>
-        public string RepositoryPath => this.path?.FullPath;
-
+        #region Properties and Indexers
         /// <inheritdoc/>
         public string Username
         {
@@ -141,12 +63,7 @@ namespace AM.Condo.IO
 
             set
             {
-                var output = this.Execute($@"config user.name ""{value}""");
-
-                if (!output.Success)
-                {
-                    throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-                }
+                this.Execute($@"config user.name ""{value}""", throwOnError: true);
             }
         }
 
@@ -163,12 +80,7 @@ namespace AM.Condo.IO
 
             set
             {
-                var output = this.Execute($@"config user.email ""{value}""");
-
-                if (!output.Success)
-                {
-                    throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-                }
+                this.Execute($@"config user.email ""{value}""", throwOnError: true);
             }
         }
 
@@ -186,17 +98,6 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc/>
-        public string LatestCommit
-        {
-            get
-            {
-                var result = this.Execute("rev-parse HEAD");
-
-                return result.Success ? result.Output.FirstOrDefault() : null;
-            }
-        }
-
-        /// <inheritdoc/>
         public IEnumerable<string> Tags
         {
             get
@@ -205,23 +106,13 @@ namespace AM.Condo.IO
                 this.Pull(all: true);
 
                 // determine what command to run
-                var cmd = this.version?.Major > 1 ? "tag --sort version:refname" : "tag";
+                var cmd = this.ClientVersion?.Major > 1 ? "tag --sort version:refname" : "tag";
 
                 // execute the command
                 var result = this.Execute(cmd);
 
-                // determine if we were successful
-                if (!result.Success)
-                {
-                    // log the error as a warning
-                    this.logger.LogWarning(result.Error);
-
-                    // return an empty list
-                    return new List<string>();
-                }
-
-                // return the output
-                return result.Output;
+                // return the result
+                return result.Success ? result.Output : new List<string>();
             }
         }
         #endregion
@@ -231,12 +122,7 @@ namespace AM.Condo.IO
         public IGitRepositoryInitialized Initialize()
         {
             // execute the init command
-            var output = this.Execute("init");
-
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
+            this.Execute("init", throwOnError: true);
 
             return this;
         }
@@ -256,14 +142,7 @@ namespace AM.Condo.IO
                 cmd += $" --set-upstream {remote}";
             }
 
-            var output = this.Execute(cmd);
-
-            if (!output.Success)
-            {
-                this.logger.LogWarning(output.Error);
-            }
-
-            this.logger.LogMessage(output.Output, LogLevel.Low);
+            this.Execute(cmd);
 
             return this;
         }
@@ -278,14 +157,7 @@ namespace AM.Condo.IO
                 cmd += " --all --tags";
             }
 
-            var output = this.Execute(cmd);
-
-            if (!output.Success)
-            {
-                this.logger.LogWarning(output.Error);
-            }
-
-            this.logger.LogMessage(output.Output, LogLevel.Low);
+            this.Execute(cmd);
 
             return this;
         }
@@ -295,14 +167,7 @@ namespace AM.Condo.IO
         {
             var cmd = "clean -xdf";
 
-            var output = this.Execute(cmd);
-
-            if (!output.Success)
-            {
-                this.logger.LogWarning(output.Error);
-            }
-
-            this.logger.LogMessage(output.Output, LogLevel.Low);
+            this.Execute(cmd);
 
             return this;
         }
@@ -310,12 +175,7 @@ namespace AM.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryBare Bare()
         {
-            var output = this.Execute("init --bare");
-
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
+            var output = this.Execute("init --bare", throwOnError: true);
 
             return this;
         }
@@ -323,16 +183,8 @@ namespace AM.Condo.IO
         /// <inheritdoc/>
         public IGitRepositoryInitialized Clone(string uri)
         {
-            // create the cmd to clone the repository
-            var cmd = $"clone {uri} .";
-
             // execute the cmd
-            var output = this.Execute(cmd);
-
-            if (!output.Success)
-            {
-                this.logger.LogWarning(output.Error);
-            }
+            this.Execute($"clone {uri} .", throwOnError: true);
 
             return this;
         }
@@ -341,7 +193,7 @@ namespace AM.Condo.IO
         public IGitRepositoryInitialized Save(string relativePath, string contents)
         {
             // save the contents using the path manager
-            this.path.Save(relativePath, contents);
+            this.PathManager.Save(relativePath, contents);
 
             return this;
         }
@@ -353,13 +205,9 @@ namespace AM.Condo.IO
             var cmd = force ? $@"add ""{spec}"" --force" : $@"add ""{spec}""";
 
             // execute the command
-            var output = this.Execute(cmd);
+            this.Execute(cmd, throwOnError: true);
 
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
-
+            // return self
             return this;
         }
 
@@ -373,13 +221,10 @@ namespace AM.Condo.IO
                 cmd += $" {source}";
             }
 
-            var output = this.Execute(cmd);
+            // execute the checkout command
+            this.Execute(cmd, throwOnError: true);
 
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
-
+            // return self
             return this;
         }
 
@@ -387,30 +232,16 @@ namespace AM.Condo.IO
         public IGitRepositoryInitialized Checkout(string name)
         {
             // checkout the branch
-            var output = this.Execute($"checkout {name}");
+            this.Execute($"checkout {name}", throwOnError: true);
 
-            // determine if the operation was successful
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
-
-            // write the message and warning
-            this.logger.LogMessage(output.Output, LogLevel.Low);
-            this.logger.LogWarning(output.Error);
-
+            // return self
             return this;
         }
 
         /// <inheritdoc/>
         public IGitRepositoryInitialized Commit(string message)
         {
-            var output = this.Execute($@"commit --allow-empty -m ""{message}""");
-
-            if (!output.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
-            }
+            this.Execute($@"commit --allow-empty -m ""{message}""", throwOnError: true);
 
             return this;
         }
@@ -422,12 +253,7 @@ namespace AM.Condo.IO
                 ? $"tag {name}"
                 : $@"tag -a {name} -m ""${message}""";
 
-            var exec = this.Execute(cmd);
-
-            if (!exec.Success)
-            {
-                throw new InvalidOperationException(string.Join(Environment.NewLine, exec.Error));
-            }
+            this.Execute(cmd, throwOnError: true);
 
             return this;
         }
@@ -445,85 +271,6 @@ namespace AM.Condo.IO
             this.Execute(cmd);
 
             return this;
-        }
-
-        /// <inheritdoc/>
-        public IProcessOutput Execute(string command)
-        {
-            this.logger.LogMessage($"git: executing: {command}", LogLevel.Low);
-
-            var start = this.CreateProcessInfo(command);
-            var process = new Process
-            {
-                StartInfo = start,
-                EnableRaisingEvents = true
-            };
-
-            // create queues for data
-            var errorQueue = new Queue<string>();
-            var outputQueue = new Queue<string>();
-            var exitCode = -1;
-
-            // setup event handlers to handle queue processing
-            process.ErrorDataReceived += (sender, args) =>
-            {
-                if (args.Data != null)
-                {
-                    errorQueue.Enqueue(args.Data);
-                }
-            };
-
-            process.OutputDataReceived += (sender, args) =>
-            {
-                if (args.Data != null)
-                {
-                    outputQueue.Enqueue(args.Data);
-                }
-            };
-
-            try
-            {
-                // start the process
-                process.Start();
-
-                // start listening for events
-                process.BeginErrorReadLine();
-                process.BeginOutputReadLine();
-
-                // do not write to standard input
-                process.StandardInput.Dispose();
-
-                // wait for exit
-                process.WaitForExit();
-
-                // wait for the process to truly end
-                while (!process.HasExited)
-                {
-                }
-
-                // capture the exit code
-                exitCode = process.ExitCode;
-
-                // determine if the process did not exit successfully
-                if (exitCode != 0)
-                {
-                    // enqueue the error
-                    errorQueue.Enqueue
-                        (Invariant($"Execution of {command} failed in path {this.RepositoryPath}. Exit Code: {process.ExitCode}"));
-                }
-            }
-            catch (Exception netEx)
-            {
-                errorQueue.Enqueue
-                    (Invariant($"Execution of {command} failed in path {this.RepositoryPath}. Error: {netEx.Message}"));
-            }
-            finally
-            {
-                process.Dispose();
-            }
-
-            // return process output
-            return new ProcessOutput(outputQueue, errorQueue, exitCode);
         }
 
         /// <inheritdoc/>
@@ -565,7 +312,7 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc />
-        public GitLog Log(string from, string to, IGitLogOptions options, IGitLogParser parser)
+        public GitLog Log(string from, string to, GitLogOptions options, IGitLogParser parser)
         {
             // create the range
             var range = from ?? (from = string.Empty);
@@ -587,7 +334,7 @@ namespace AM.Condo.IO
             var exec = this.Execute(cmd);
 
             // log the output
-            this.logger.LogMessage(exec.Output, LogLevel.Low);
+            this.Logger.LogMessage(exec.Output, LogLevel.Low);
 
             // determine if we were successful
             if (!exec.Success)
@@ -611,12 +358,7 @@ namespace AM.Condo.IO
         {
             var output = this.Execute($"rev-parse {reference}");
 
-            if (output.Success)
-            {
-                return output.Output.FirstOrDefault();
-            }
-
-            return string.Empty;
+            return output.Success ? output.Output.FirstOrDefault() : string.Empty;
         }
 
         /// <inheritdoc />
@@ -626,20 +368,7 @@ namespace AM.Condo.IO
             var cmd = $"remote add {name} {uri}";
 
             // execute the cmd
-            var output = this.Execute(cmd);
-
-            // determine if we were not successful
-            if (!output.Success)
-            {
-                // log the output
-                this.logger.LogWarning(output.Error);
-
-                // return self
-                return this;
-            }
-
-            // log the output
-            this.logger.LogMessage(output.Output, LogLevel.Low);
+            this.Execute(cmd);
 
             // return self
             return this;
@@ -652,52 +381,80 @@ namespace AM.Condo.IO
             var cmd = $"remote set-url {name} {uri}";
 
             // execute the cmd
-            var output = this.Execute(cmd);
-
-            // determine if we were not successful
-            if (!output.Success)
-            {
-                // log the output
-                this.logger.LogWarning(output.Error);
-
-                // move on immediately
-                return this;
-            }
-
-            // log the output
-            this.logger.LogMessage(output.Output, LogLevel.Low);
+            this.Execute(cmd);
 
             // return self
             return this;
         }
 
-        /// <inheritdoc/>
-        public void Dispose()
+        /// <inheritdoc />
+        public IGitRepositoryInitialized GitFlow(GitFlowOptions options)
         {
-            this.Dispose(true);
+            // initialize git flow
+            var output = this.Execute("flow init -d");
+
+            // determine if we were not successful
+            if (!output.Success)
+            {
+                // return self
+                return this;
+            }
+
+            // set the gitflow options
+            this.Execute($"config --local gitflow.branch.master ${options.ProductionReleaseBranch}");
+            this.Execute($"config --local gitflow.branch.develop ${options.NextReleaseBranch}");
+            this.Execute($"config --local gitflow.prefix.feature ${options.FeatureBranchPrefix}/");
+            this.Execute($"config --local gitflow.branch.bugfix ${options.BugfixBranchPrefix}/");
+            this.Execute($"config --local gitflow.branch.release ${options.ReleaseBranchPrefix}/");
+            this.Execute($"config --local gitflow.branch.hotfix ${options.HotfixBranchPrefix}/");
+            this.Execute($"config --local gitflow.branch.support ${options.SupportBranchPrefix}/");
+            this.Execute($"config --local gitflow.branch.versiontag ${options.VersionTagPrefix}");
+
+            // return self
+            return this;
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <param name="disposing">
-        /// A value indicating whether or not dispose was called manually.
-        /// </param>
-        protected void Dispose(bool disposing)
+        /// <inheritdoc />
+        public IGitRepositoryInitialized StartFlow(string type, string name, string source)
         {
-            if (this.disposed)
+            if (type == null)
             {
-                throw new ObjectDisposedException(nameof(GitRepository));
+                throw new ArgumentNullException(nameof(type));
             }
 
-            this.disposed = true;
-
-            if (!disposing)
+            if (name == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(name));
             }
 
-            // this.path.Dispose();
+            if (type.Equals(string.Empty))
+            {
+                throw new ArgumentException($"The {nameof(type)} cannot be empty.");
+            }
+
+            if (name.Equals(string.Empty))
+            {
+                throw new ArgumentException($"The {nameof(name)} cannot be empty.");
+            }
+
+            var cmd = $"flow {type} start {name}";
+
+            if (!string.IsNullOrEmpty(source))
+            {
+                cmd += $" {source}";
+            }
+
+            // execute the cmd
+            this.Execute(cmd);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc />
+        public IGitRepositoryInitialized FinishFlow()
+        {
+            throw new NotImplementedException();
         }
 
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
@@ -717,19 +474,6 @@ namespace AM.Condo.IO
 
                 set.Add(line);
             }
-        }
-
-        private ProcessStartInfo CreateProcessInfo(string command)
-        {
-            return new ProcessStartInfo("git", command)
-            {
-                WorkingDirectory = this.path.FullPath,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                RedirectStandardInput = true
-            };
         }
         #endregion
     }

@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="NtpServer.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Net
 {
@@ -23,6 +21,11 @@ namespace AM.Condo.Net
         /// The port used to to listen for connections.
         /// </summary>
         private readonly int port;
+
+        /// <summary>
+        /// The semaphore used to track accepted clients.
+        /// </summary>
+        private readonly Semaphore accepted;
 
         /// <summary>
         /// A value indicating whether or not the server has been disposed.
@@ -48,11 +51,6 @@ namespace AM.Condo.Net
         /// A value used to track active connections.
         /// </summary>
         private int connected;
-
-        /// <summary>
-        /// The semaphore used to track accepted clients.
-        /// </summary>
-        private readonly Semaphore accepted;
         #endregion
 
         #region Constructors and Finalizers
@@ -204,7 +202,7 @@ namespace AM.Condo.Net
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the port used for the server.
         /// </summary>

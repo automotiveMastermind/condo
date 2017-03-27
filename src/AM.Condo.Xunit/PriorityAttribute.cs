@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PriorityAttribute.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo
 {
@@ -31,7 +29,7 @@ namespace AM.Condo
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the priority associated with the priority attribute.
         /// </summary>

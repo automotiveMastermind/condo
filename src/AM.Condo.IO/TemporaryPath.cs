@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TemporaryPath.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.IO
 {
@@ -57,7 +55,7 @@ namespace AM.Condo.IO
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public string FullPath => this.path.FullPath;
         #endregion

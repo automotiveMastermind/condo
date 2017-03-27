@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IGitRepositoryBare.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.IO
 {
@@ -29,7 +27,7 @@ namespace AM.Condo.IO
         /// <summary>
         /// Gets the version of the git client in use on the system.
         /// </summary>
-        string ClientVersion { get; }
+        Version ClientVersion { get; }
 
         /// <summary>
         /// Gets the current fully-qualified path to the repository.
@@ -44,10 +42,13 @@ namespace AM.Condo.IO
         /// <param name="command">
         /// The command to execute.
         /// </param>
+        /// <param name="throwOnError">
+        /// A value indicating whether or not to throw an exception in the event that the command does not succeed.
+        /// </param>
         /// <returns>
         /// The output from the process.
         /// </returns>
-        IProcessOutput Execute(string command);
+        IProcessOutput Execute(string command, bool throwOnError = false);
         #endregion
     }
 }

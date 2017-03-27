@@ -1,25 +1,23 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SetGitTag.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
     using System;
 
-    using Microsoft.Build.Framework;
-    using Microsoft.Build.Utilities;
-
     using AM.Condo.Diagnostics;
     using AM.Condo.IO;
+
+    using Microsoft.Build.Framework;
+    using Microsoft.Build.Utilities;
 
     /// <summary>
     /// Represents a Microsoft Build task that sets a tag for the current commit with git.
     /// </summary>
     public class SetGitTag : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>

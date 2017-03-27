@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IProcessOutput.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Diagnostics
 {
@@ -13,7 +11,7 @@ namespace AM.Condo.Diagnostics
     /// </summary>
     public interface IProcessOutput
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the standard output.
         /// </summary>

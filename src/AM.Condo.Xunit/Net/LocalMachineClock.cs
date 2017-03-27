@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="LocalMachineClock.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Net
 {
@@ -13,7 +11,7 @@ namespace AM.Condo.Net
     /// </summary>
     public class LocalMachineClock : IClockProvider
     {
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public DateTime UtcNow => DateTime.UtcNow;
 

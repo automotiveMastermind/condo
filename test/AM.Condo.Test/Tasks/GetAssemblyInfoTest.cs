@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetAssemblyInfoTest.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
@@ -361,7 +359,7 @@ namespace AM.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenMasterBranch_Succeeds()
+        public void Execute_WhenProductionReleaseBranch_Succeeds()
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);

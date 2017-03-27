@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetServerTime.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
@@ -24,7 +22,7 @@ namespace AM.Condo.Tasks
     /// </remarks>
     public class GetServerTime : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets an accurate server time from NIST represented in UTC.
         /// </summary>

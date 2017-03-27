@@ -9,6 +9,7 @@
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNodeScripts" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />
+  <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetProjectsForSolution" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetRepositoryInfo" />
   <UsingTask AssemblyFile="$(CondoTasksPath)AM.Condo.dll" TaskName="AM.Condo.Tasks.GetServerTime" />

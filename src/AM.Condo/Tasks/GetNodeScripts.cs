@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetNodeScripts.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
@@ -10,8 +8,8 @@ namespace AM.Condo.Tasks
     using System.IO;
 
     using Microsoft.Build.Framework;
-    using Microsoft.Build.Utilities;
     using Microsoft.Build.Tasks;
+    using Microsoft.Build.Utilities;
 
     using static System.FormattableString;
 
@@ -20,7 +18,7 @@ namespace AM.Condo.Tasks
     /// </summary>
     public class GetNodeScripts : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the project for which to retrieve the available node scripts.
         /// </summary>

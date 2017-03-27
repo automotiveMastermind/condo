@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BufferManager.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Net
 {
@@ -121,7 +119,7 @@ namespace AM.Condo.Net
         }
         #endregion
 
-        #region Properties
+        #region Properties and Indexers
         /// <inheritdoc/>
         public int Connections => this.connections;
 

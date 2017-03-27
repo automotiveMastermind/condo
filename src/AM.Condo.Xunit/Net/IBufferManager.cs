@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IBufferManager.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Net
 {
@@ -14,7 +12,7 @@ namespace AM.Condo.Net
     /// </summary>
     public interface IBufferManager : IDisposable
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the maximum number of connections to pre-allocate.
         /// </summary>

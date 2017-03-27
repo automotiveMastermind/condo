@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="NuGetMachineSettings.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo
 {
@@ -17,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     public class NuGetMachineSettings : IMachineWideSettings
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// The lazy initialization field containing the machine wide settings.
         /// </summary>

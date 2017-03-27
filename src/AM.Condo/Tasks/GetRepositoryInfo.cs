@@ -1,26 +1,24 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GetRepositoryInfo.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
     using System;
     using System.IO;
 
+    using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using NuGet.Versioning;
-
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about a repository.
     /// </summary>
     public class GetRepositoryInfo : Task
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
@@ -61,7 +59,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the version tag used to identify a version string.
         /// </summary>
-        public string VersionTag { get; set; }
+        public string VersionTagPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets the latest version tag found within the repository.
@@ -83,6 +81,64 @@ namespace AM.Condo.Tasks
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Attempt to find the git repository root by scanning the specified
+        /// <paramref name="root"/> path and walking upward.
+        /// </summary>
+        /// <param name="root">
+        /// The starting path that is believed to be the root path.
+        /// </param>
+        /// <returns>
+        /// The path that is the repository root path, or <see langword="null"/> if no root
+        /// path could be found.
+        /// </returns>
+        public static string GetRoot(string root)
+        {
+            // determine if the directory exists
+            if (string.IsNullOrEmpty(root) || !Directory.Exists(root))
+            {
+                // move on immediately
+                return null;
+            }
+
+            // use the overload using a directory info
+            return GetRepositoryInfo.GetRoot(new DirectoryInfo(root));
+        }
+
+        /// <summary>
+        /// Attempt to find the git repository root by scanning the specified
+        /// <paramref name="root"/> path and walking upward.
+        /// </summary>
+        /// <param name="root">
+        /// The starting path that is believed to be the root path.
+        /// </param>
+        /// <returns>
+        /// The path that is the repository root path, or <see langword="null"/> if no root
+        /// path could be found.
+        /// </returns>
+        public static string GetRoot(DirectoryInfo root)
+        {
+            // determine if the starting directory exists
+            if (root == null)
+            {
+                // move on immediately
+                return null;
+            }
+
+            // create the path for the .git folder
+            var path = Path.Combine(root.FullName, ".git");
+
+            // determine if the directory exists
+            if (Directory.Exists(path))
+            {
+                // move on immediately
+                return root.FullName;
+            }
+
+            // walk the tree to the parent
+            return GetRepositoryInfo.GetRoot(root.Parent);
+        }
+
         /// <summary>
         /// Executes the <see cref="GetRepositoryInfo"/> task.
         /// </summary>
@@ -150,7 +206,7 @@ namespace AM.Condo.Tasks
                 var repository = factory.Load(root);
 
                 // set the client version
-                this.ClientVersion = repository.ClientVersion;
+                this.ClientVersion = repository.ClientVersion?.ToString();
 
                 // determine if the repository uri is not already set
                 if (string.IsNullOrEmpty(this.RepositoryUri))
@@ -183,7 +239,7 @@ namespace AM.Condo.Tasks
                 var current = default(SemanticVersion);
 
                 // determine whether or not to trim tags
-                var trim = !string.IsNullOrEmpty(this.VersionTag);
+                var trim = !string.IsNullOrEmpty(this.VersionTagPrefix);
 
                 // iterate over each tag
                 foreach (var value in repository.Tags)
@@ -192,10 +248,10 @@ namespace AM.Condo.Tasks
                     var tag = value;
 
                     // determine if we need to trim the version
-                    if (trim && tag.StartsWith(this.VersionTag))
+                    if (trim && tag.StartsWith(this.VersionTagPrefix))
                     {
                         // trim the version
-                        tag = tag.Substring(this.VersionTag.Length);
+                        tag = tag.Substring(this.VersionTagPrefix.Length);
                     }
 
                     // attempt to parse the tags
@@ -235,64 +291,6 @@ namespace AM.Condo.Tasks
 
             // we were successful
             return true;
-        }
-
-        /// <summary>
-        /// Attempt to find the git repository root by scanning the specified
-        /// <paramref name="root"/> path and walking upward.
-        /// </summary>
-        /// <param name="root">
-        /// The starting path that is believed to be the root path.
-        /// </param>
-        /// <returns>
-        /// The path that is the repository root path, or <see langword="null"/> if no root
-        /// path could be found.
-        /// </returns>
-        public static string GetRoot(string root)
-        {
-            // determine if the directory exists
-            if (string.IsNullOrEmpty(root) || !Directory.Exists(root))
-            {
-                // move on immediately
-                return null;
-            }
-
-            // use the overload using a directory info
-            return GetRepositoryInfo.GetRoot(new DirectoryInfo(root));
-        }
-
-        /// <summary>
-        /// Attempt to find the git repository root by scanning the specified
-        /// <paramref name="root"/> path and walking upward.
-        /// </summary>
-        /// <param name="root">
-        /// The starting path that is believed to be the root path.
-        /// </param>
-        /// <returns>
-        /// The path that is the repository root path, or <see langword="null"/> if no root
-        /// path could be found.
-        /// </returns>
-        public static string GetRoot(DirectoryInfo root)
-        {
-            // determine if the starting directory exists
-            if (root == null)
-            {
-                // move on immediately
-                return null;
-            }
-
-            // create the path for the .git folder
-            var path = Path.Combine(root.FullName, ".git");
-
-            // determine if the directory exists
-            if (Directory.Exists(path))
-            {
-                // move on immediately
-                return root.FullName;
-            }
-
-            // walk the tree to the parent
-            return GetRepositoryInfo.GetRoot(root.Parent);
         }
         #endregion
     }

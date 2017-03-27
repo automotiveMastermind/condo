@@ -1,14 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SetNuGetPackageSources.cs" company="automotiveMastermind and contributors">
-//   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE for details.
+﻿// <copyright file="SetNuGetPackageSources.cs" company="automotiveMastermind and contributors">
+// © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Tasks
 {
     using System;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -25,7 +23,33 @@ namespace AM.Condo.Tasks
         private IPackageSourceProvider provider;
         #endregion
 
-        #region Properties
+        #region Constructors and Finalizers
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetNuGetPackageSources"/> class.
+        /// </summary>
+        public SetNuGetPackageSources()
+            : this(settings: null, provider: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetNuGetPackageSources"/> class.
+        /// </summary>
+        /// <param name="settings">
+        /// The settings used to push or restore packages.
+        /// </param>
+        /// <param name="provider">
+        /// The package source provider used to push or restore packages.
+        /// </param>
+        public SetNuGetPackageSources(ISettings settings, IPackageSourceProvider provider)
+        {
+            // set the settings and package source provider
+            this.settings = settings;
+            this.provider = provider;
+        }
+        #endregion
+
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the root of the repository.
         /// </summary>
@@ -81,31 +105,7 @@ namespace AM.Condo.Tasks
         public string NuGetConfigPath { get; private set; }
         #endregion
 
-        #region Constructors and Finalizers
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetNuGetPackageSources"/> class.
-        /// </summary>
-        public SetNuGetPackageSources()
-            : this(settings: null, provider: null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetNuGetPackageSources"/> class.
-        /// </summary>
-        /// <param name="settings">
-        /// The settings used to push or restore packages.
-        /// </param>
-        /// <param name="provider">
-        /// The package source provider used to push or restore packages.
-        /// </param>
-        public SetNuGetPackageSources(ISettings settings, IPackageSourceProvider provider)
-        {
-            // set the settings and package source provider
-            this.settings = settings;
-            this.provider = provider;
-        }
-
+        #region Methods
         /// <summary>
         /// Execute the set credentials task.
         /// </summary>

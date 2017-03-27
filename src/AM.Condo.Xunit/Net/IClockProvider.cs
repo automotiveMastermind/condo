@@ -1,8 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="IClockProvider.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace AM.Condo.Net
 {
@@ -14,7 +12,7 @@ namespace AM.Condo.Net
     /// </summary>
     public interface IClockProvider
     {
-        #region Properties
+        #region Properties and Indexers
         /// <summary>
         /// Gets the current date and time (in UTC) from a trusted authority.
         /// </summary>
