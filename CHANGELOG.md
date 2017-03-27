@@ -2,14 +2,12 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.0-alpha-02081"></a>
-## 2.0.0-alpha-02081 (2017-03-22)
+<a name="2.0.0-beta-02596"></a>
+## 2.0.0-beta-02596 (2017-03-27)
 
 
 ### Bug Fixes
 
-* **tags:** annotate tags so they are followed 7d2101e
-* **versioning:** set the version the msbuild way e2e62d5
 * **install:** fix install on windows (#46) 98993f1, closes #46
 * **git:** checkout branch task was missing (#45) 57462c7, closes #45
 * **release:** checkout branch due to detached head (#41) 05b4c26, closes #41
@@ -27,6 +25,7 @@
 
 ### Features
 
+* **package:** use dotnet nuget in place of custom task (#48) 0e46525, closes #48 #50 dotnet/cli/#6123
 * **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
 * **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
 * **project-json:** update semver in project.json (#35) d874638, closes #35
