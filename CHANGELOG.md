@@ -2,6 +2,10 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.0-beta-02611"></a>
+## 2.0.0-beta-02611 (2017-03-28)
+
+
 <a name="2.0.0-beta-02596"></a>
 ## 2.0.0-beta-02596 (2017-03-27)
 
