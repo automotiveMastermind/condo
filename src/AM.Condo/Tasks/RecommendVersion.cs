@@ -158,6 +158,10 @@ namespace AM.Condo.Tasks
                 return true;
             }
 
+            // determine if the version is a release branch build
+            var isReleaseBuildQuality = version.IsPrerelease
+                && version.Release.StartsWith(this.ReleaseBranchBuildQuality, StringComparison.OrdinalIgnoreCase);
+
             // normalize the version
             version = new SemanticVersion(version.Major, version.Minor, version.Patch);
 
@@ -179,6 +183,14 @@ namespace AM.Condo.Tasks
 
                 // normalize the version
                 version = new SemanticVersion(version.Major, version.Minor, version.Patch);
+            }
+            else if (isReleaseBuildQuality)
+            {
+                // reduce the major version by one
+                version = new SemanticVersion(version.Major - 1, version.Minor, version.Minor);
+
+                // log a message
+                this.Log.LogMessage($"The current release {version} is a release candidate, which does not yet exist on the current branch. The version will not be incremented.");
             }
             else
             {
