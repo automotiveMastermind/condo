@@ -74,6 +74,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -129,6 +130,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -184,6 +186,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -238,6 +241,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -312,6 +316,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -385,6 +390,7 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
@@ -458,12 +464,78 @@ namespace AM.Condo.Tasks
 
             var actual = new RecommendVersion(gitlog)
             {
+                BuildEngine = engine,
                 BuildQuality = buildQuality,
                 ReleaseBranchBuildQuality = releaseBranchBuildQuality,
                 MinorCorrespondence = nameof(type),
                 MinorValue = "feat",
                 LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
+                LatestVersionCommit = latestVersionHash,
+            };
+
+            // act
+            var result = actual.Execute();
+
+            // assert
+            Assert.True(result);
+            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
+            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
+            Assert.Equal(expected.NextRelease, actual.NextRelease);
+        }
+
+        [Fact]
+        [Priority(1)]
+        [Purpose(PurposeType.Unit)]
+        public void Execute_WhenReleaseAfterReleaseBranchReleaseWithBreakingChangeInPreviousCommit_DoesNotIncrement()
+        {
+            // arrange
+            var buildQuality = "alpha";
+            var releaseBranchBuildQuality = "rc";
+            var releaseVersion = new SemanticVersion(1, 0, 0, releaseBranchBuildQuality);
+            var releaseVersionHash = "1";
+
+            var type = "feat";
+
+            var releaseCommit = new GitCommit
+            {
+                Hash = releaseVersionHash,
+                HeaderCorrespondence = { { nameof(type), "chore" } }
+            };
+
+            var currentCommit = new GitCommit
+            {
+                Hash = "3",
+                HeaderCorrespondence = { { nameof(type), type } },
+                Notes = { new GitNote { Header = "BREAKING CHANGE" } }
+            };
+
+            var gitlog = new GitLog
+            {
+                Versions =
+                {
+                     { releaseVersion, new List<GitCommit> { releaseCommit } }
+                },
+                Commits = { releaseCommit, currentCommit }
+            };
+
+            var engine = MSBuildMocks.CreateEngine();
+
+            var expected = new
+            {
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0"
+            };
+
+            var actual = new RecommendVersion(gitlog)
+            {
+                BuildEngine = engine,
+                BuildQuality = buildQuality,
+                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
+                MinorCorrespondence = nameof(type),
+                MinorValue = "feat",
+                LatestVersion = releaseVersion.ToString(),
+                LatestVersionCommit = releaseVersionHash
             };
 
             // act
