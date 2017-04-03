@@ -20,12 +20,15 @@
         <!-- removing traits for now as it causes issues with the current implementation of dotnet test -->
         <!--<DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>-->
         <TestResultsFileName>%(TestProjects.ProjectName).dotnet.xml</TestResultsFileName>
+        <OutputPath>$(BuildArtifactsRoot)$(Slash)%(ProjectName)</OutputPath>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+        <ProjectName>%(Filename)%(Extension)</ProjectName>
       </_DotNetTestProjects>
     </ItemGroup>
 
     <Exec
-        Command="dotnet test %(_DotNetTestProjects.FullPath) --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
-        WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
+        Command="dotnet test &quot;%(_DotNetTestProjects.ProjectName)&quot; --output &quot;%(_DotNetTestProjects.OutputPath)&quot; --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
+        WorkingDirectory="%(_DotNetTestProjects.WorkingDirectory)"
         Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
   </Target>
 

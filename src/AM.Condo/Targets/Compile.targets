@@ -5,45 +5,28 @@
     <PropertyGroup>
       <DotNetBuildOptions Condition=" '$(DotNetBuildOptions)' == '' ">$(DOTNET_BUILD_OPTIONS)</DotNetBuildOptions>
       <DotNetBuildOptions Condition=" '$(Configuration)' != '' ">$(DotNetBuildOptions) --configuration &quot;$(Configuration)&quot;</DotNetBuildOptions>
-      <DotNetTestBuildOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DotNetBuildOptions)</DotNetTestBuildOptions>
 
       <DotNetBuildProperties Condition=" '$(DotNetBuildProperties)' == '' ">$(DOTNET_BUILD_PROPS)</DotNetBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateAssemblyInfo=false</DotNetBuildProperties>
       <DotNetBuildProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetBuildProperties) /p:Version=$(InformationalVersion)</DotNetBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties) /clp:NoSummary</DotNetBuildProperties>
-      <DotNetTestBuildProperties Condition=" '$(DotNetTestBuildProperties)' == '' ">$(DotNetBuildProperties)</DotNetTestBuildProperties>
-      <DotNetBuildProperties>$(DotNetBuildProperties) /p:GenerateDocumentationFile=true</DotNetBuildProperties>
     </PropertyGroup>
 
-    <Exec
-        Command="dotnet build &quot;%(SourceProjects.FullPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)"
-        Condition=" Exists('%(SourceProjects.FullPath)') " />
-
-    <Exec
-        Command="dotnet build &quot;%(TestProjects.FullPath)&quot; $(DotNetTestBuildOptions.Trim()) $(DotNetTestBuildProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)"
-        Condition=" Exists('%(TestProjects.FullPath)') " />
-  </Target>
-
-  <Target Name="CopyDotNetBuild">
     <ItemGroup>
-      <_CopyDotNetBuild Include="%(Projects.ProjectDir)bin$(Slash)**">
-        <ProjectName>%(Projects.ProjectName)</ProjectName>
-      </_CopyDotNetBuild>
+      <_DotNetBuildProjects Include="@(Projects)">
+        <OutputPath>$(BuildArtifactsRoot)$(Slash)%(ProjectName)</OutputPath>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+        <BuildName>%(Filename)%(Extension)</BuildName>
+      </_DotNetBuildProjects>
     </ItemGroup>
 
-    <Copy
-        SourceFiles="@(_CopyDotNetBuild)"
-        DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(Slash)%(ProjectName)$(Slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Exec
+        Command="dotnet build &quot;%(_DotNetBuildProjects.BuildName)&quot; --output &quot;%(_DotNetBuildProjects.OutputPath)&quot; $(DotNetBuildOptions.Trim()) $(DotNetBuildProperties.Trim())"
+        WorkingDirectory="%(_DotNetBuildProjects.WorkingDirectory)"
+        Condition=" Exists('%(_DotNetBuildProjects.FullPath)') " />
   </Target>
 
   <PropertyGroup>
-    <AfterCompile>
-      CopyDotNetBuild;
-      $(AfterCompile);
-    </AfterCompile>
-
     <CompileDependsOn>
       $(BeforeCompile);
       DotNetBuild;

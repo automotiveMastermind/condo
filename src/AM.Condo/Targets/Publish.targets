@@ -12,15 +12,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_ExecutableProjects Include="@(ExecutableProjects)">
-        <OutputPath>$(PublishArtifactsRoot)$(Slash)$(Configuration)$(Slash)%(ProjectName)</OutputPath>
-      </_ExecutableProjects>
+      <_DotNetPublishProjects Include="@(ExecutableProjects)">
+        <OutputPath>$(PublishArtifactsRoot)$(Slash)%(ProjectName)</OutputPath>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+        <PublishName>%(Filename)%(Extension)</PublishName>
+      </_DotNetPublishProjects>
     </ItemGroup>
 
     <Exec
-        Command="dotnet publish &quot;%(_ExecutableProjects.FullPath)&quot; --output &quot;%(_ExecutableProjects.OutputPath)&quot; $(DotNetPublishOptions.Trim()) $(DotNetPublishProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)"
-        Condition=" Exists('%(_ExecutableProjects.FullPath)') " />
+        Command="dotnet publish &quot;%(_DotNetPublishProjects.PublishName)&quot; --output &quot;%(_DotNetPublishProjects.OutputPath)&quot; $(DotNetPublishOptions.Trim()) $(DotNetPublishProperties.Trim())"
+        WorkingDirectory="%(_DotNetPublishProjects.WorkingDirectory)"
+        Condition=" Exists('%(_DotNetPublishProjects.FullPath)') " />
   </Target>
 
   <Target Name="InstallPackages">

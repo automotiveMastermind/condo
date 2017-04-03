@@ -44,8 +44,7 @@
     <RecommendVersion
       MinorCorrespondence="$(MinorCorrespondence)"
       MinorValue="$(MinorValue)"
-      BuildQuality="$(BuildQuality)"
-      ReleaseBranchBuildQuality="$(ReleaseBranchBuildQuality)">
+      BuildQuality="$(BuildQuality)">
       <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
       <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
       <Output TaskParameter="RecommendedRelease" PropertyName="RecommendedRelease" />
