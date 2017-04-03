@@ -101,7 +101,7 @@
 
   <Target Name="PrintVersionInfo">
     <Message Importance="High" Text="Build Version      : $(InformationalVersion)" />
-    <Message Importance="High" Text="Current Version    : $(LatestVersion)" Condition=" '$(LatestVersion)' != '' " />
+    <Message Importance="High" Text="Current Version    : $(CurrentVersion)" Condition=" '$(CurrentVersion)' != '' " />
     <Message Importance="High" Text="Current Release    : $(CurrentRelease)" />
     <Message Importance="High" Text="Recommended Release: $(RecommendedRelease)" Condition=" '$(RecommendedRelease)' != '' "/>
     <Message Importance="High" Text="Next Release       : $(NextRelease)" Condition=" '$(NextRelease)' != '' " />

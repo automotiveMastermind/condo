@@ -129,19 +129,16 @@ namespace AM.Condo.IO
                         // get the current tag
                         var current = new GitTag { Name = label, Hash = hash, ShortHash = shortHash };
 
-                        // get the version sample
-                        var sample = current.Version(options.VersionTagPrefix);
-
-                        // determine if the version is not null
-                        if (sample != null)
-                        {
-                            // set the version
-                            version = sample;
-                        }
-
                         // add the tag
                         commit.Tags.Add(current);
                         log.Tags.Add(current);
+
+                        // get the version sample
+                        if (current.TryParseVersion(options.VersionTagPrefix))
+                        {
+                            // capture the version
+                            version = current.Version;
+                        }
 
                         // move on immediately
                         continue;
@@ -149,6 +146,28 @@ namespace AM.Condo.IO
 
                     // add the tag as a branch reference
                     commit.Branches.Add(trimmed);
+                }
+
+                // determine if the version exists
+                if (version != null)
+                {
+                    // set the commit version
+                    commit.Version = version;
+
+                    // get or add the commit to the log versions
+                    IList<GitCommit> versioned;
+
+                    if (!log.Versions.TryGetValue(version, out versioned))
+                    {
+                        // create a new versioned list
+                        versioned = new List<GitCommit>();
+
+                        // add the list to the versions dictionary
+                        log.Versions.Add(version, versioned);
+                    }
+
+                    // add the commit to the versioned collection
+                    versioned.Add(commit);
                 }
 
                 // get the header
@@ -186,28 +205,8 @@ namespace AM.Condo.IO
                 // add the commit to the log
                 log.Commits.Add(commit);
 
-                // determine if the version exists
-                if (version != null)
-                {
-                    // set the commit version
-                    commit.Version = version;
-
-                    // get or add the commit to the log versions
-                    IList<GitCommit> versioned;
-
-                    if (!log.Versions.TryGetValue(version, out versioned))
-                    {
-                        // create a new versioned list
-                        versioned = new List<GitCommit>();
-
-                        // add the list to the versions dictionary
-                        log.Versions.Add(version, versioned);
-                    }
-
-                    // add the commit to the versioned collection
-                    versioned.Add(commit);
-                }
-                else
+                // determine if this is unversioned
+                if (version == null)
                 {
                     // add the commit to the unversioned commits
                     log.Unversioned.Add(commit);

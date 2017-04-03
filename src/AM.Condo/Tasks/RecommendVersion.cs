@@ -52,24 +52,23 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the build quality of the release.
         /// </summary>
-        [Required]
         public string BuildQuality { get; set; }
 
         /// <summary>
-        /// Gets or sets the build quality for the release branch.
+        /// Gets or sets the header correspondence field used to detect a feature (minor) bump.
         /// </summary>
-        [Required]
-        public string ReleaseBranchBuildQuality { get; set; }
+        public string MinorCorrespondence { get; set; }
+
+        /// <summary>
+        /// Gets or sets the header correspondence value used to detect a feature (minor) bump.
+        /// </summary>
+        public string MinorValue { get; set; }
 
         /// <summary>
         /// Gets or sets the current (latest) version.
         /// </summary>
-        public string LatestVersion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latest commit included in the current (latest) version.
-        /// </summary>
-        public string LatestVersionCommit { get; set; }
+        [Output]
+        public string CurrentVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the current semantic version.
@@ -88,119 +87,68 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Output]
         public string RecommendedRelease { get; set; }
-
-        /// <summary>
-        /// Gets or sets the header correspondence field used to detect a feature (minor) bump.
-        /// </summary>
-        public string MinorCorrespondence { get; set; }
-
-        /// <summary>
-        /// Gets or sets the header correspondence value used to detect a feature (minor) bump.
-        /// </summary>
-        public string MinorValue { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether or not to force the initial release.
-        /// </summary>
-        public bool ShouldForceRelease => string.IsNullOrEmpty(this.BuildQuality)
-            || this.BuildQuality.Equals(this.ReleaseBranchBuildQuality, StringComparison.OrdinalIgnoreCase);
         #endregion
 
         #region Methods
         /// <inheritdoc />
         public override bool Execute()
         {
-            // determine if the latest version is specified
-            if (string.IsNullOrEmpty(this.LatestVersion))
+            // determine if no version tags exist
+            if (!this.gitlog.Versions.Any())
             {
                 // assume this is the very first release and set to all zeros
-                this.LatestVersion = "0.0.0";
-            }
+                this.CurrentVersion = this.CurrentRelease = "0.0.0";
 
-            // define a variable to retain the version
-            if (!SemanticVersion.TryParse(this.LatestVersion, out SemanticVersion version))
-            {
-                // log the error
-                this.Log.LogError($"The version ({this.LatestVersion}) is invalid.");
+                // set the recommended release to the first patch
+                this.RecommendedRelease = "0.0.1";
 
-                // move on immediately
-                return false;
-            }
-
-            // determine if this is the first release
-            if (version.Major == 0)
-            {
-                // set the current release
-                this.CurrentRelease = new SemanticVersion(version.Major, version.Minor, version.Patch).ToString();
-
-                // bump to the next minor bit for current and recommended release
-                this.RecommendedRelease
-                    = GetNextVersion(version, level: this.ShouldForceRelease ? 0 : 1);
-
-                // set the next relese to the first major version
+                // set the next release to the current major release
                 this.NextRelease = "1.0.0";
 
                 // move on immediately
                 return true;
             }
 
-            // determine if this is another build of the first release on the release or production branch
-            if (version.Major == 1
-                && version.Minor == 0
-                && version.Patch == 0
-                && version.IsPrerelease
-                && this.ShouldForceRelease)
+            // get the current version
+            var current = this.gitlog.Versions.Last();
+            var currentVersion = current.Key;
+            var currentCommit = this.gitlog.Tags.First(tag => currentVersion.Equals(tag.Version)).Hash;
+
+            // set the current version and current release properties
+            this.CurrentVersion = currentVersion.ToNormalizedString();
+            this.CurrentRelease = currentVersion.ToString("V", VersionFormatter.Instance);
+
+            // get the level for the next version
+            var level = this.RecommendLevel(currentVersion, currentCommit);
+
+            // set the next release version
+            this.NextRelease = RecommendRelease(currentVersion, currentVersion.Major == 0 ? 0 : level);
+
+            // parse the prerelease build quality
+            var currentBuildQuality = currentVersion.Release.Split('-').FirstOrDefault();
+
+            // get the comparison
+            var comparison = string.Compare(this.BuildQuality, currentBuildQuality);
+
+            // determine if the current build quality is greater than the new build quality
+            if (string.IsNullOrEmpty(currentBuildQuality) || string.Compare(this.BuildQuality, currentBuildQuality) < 0)
             {
-                // set the current release
-                this.CurrentRelease = this.RecommendedRelease = this.NextRelease = "1.0.0";
+                // set the recommended release to the next release
+                this.RecommendedRelease = RecommendRelease(currentVersion, string.IsNullOrEmpty(this.BuildQuality) ? level : 2);
 
                 // move on immediately
                 return true;
             }
 
-            // determine if the version is a release branch build
-            var isReleaseBuildQuality = version.IsPrerelease
-                && version.Release.StartsWith(this.ReleaseBranchBuildQuality, StringComparison.OrdinalIgnoreCase);
+            // we should not increment
+            this.RecommendedRelease = this.CurrentRelease;
 
-            // normalize the version
-            version = new SemanticVersion(version.Major, version.Minor, version.Patch);
+            // move on immediately
+            return true;
+        }
 
-            // set the current release to the normalized version
-            this.CurrentRelease = version.ToString();
-
-            // get the last release version
-            var last = this.gitlog.Versions.LastOrDefault(release => !release.Key.IsPrerelease);
-
-            // determine if the last is not null
-            if (last.Key != null)
-            {
-                // get the version from the key
-                version = last.Key;
-
-                // set the latest version and commit
-                this.LatestVersion = version.ToFullString();
-                this.LatestVersionCommit = last.Value.LastOrDefault().Hash;
-
-                // normalize the version
-                version = new SemanticVersion(version.Major, version.Minor, version.Patch);
-            }
-            else if (isReleaseBuildQuality)
-            {
-                // reduce the major version by one
-                version = new SemanticVersion(version.Major - 1, version.Minor, version.Minor);
-
-                // log a message
-                this.Log.LogMessage($"The current release {version} is a release candidate, which does not yet exist on the current branch. The version will not be incremented.");
-            }
-            else
-            {
-                // create a normalized version that is the previous major version
-                version = new SemanticVersion(version.Major > 1 ? version.Major - 1 : 1, 0, 0);
-
-                // write a warning
-                this.Log.LogWarning($"The current release is {version}, which is >= 1.0.0 but all previous releases have a prerelease tag. Falling back to previous major release version.");
-            }
-
+        private int RecommendLevel(SemanticVersion version, string hash)
+        {
             // set the default bump level to patch
             var level = 2;
 
@@ -214,7 +162,7 @@ namespace AM.Condo.Tasks
             for (index = commits.Count - 1; index > 0; index--)
             {
                 // determine if we have found the current version commit
-                if (commits[index].Hash.Equals(this.LatestVersionCommit))
+                if (commits[index].Hash.Equals(hash))
                 {
                     // break from the loop
                     break;
@@ -247,14 +195,11 @@ namespace AM.Condo.Tasks
                 }
             }
 
-            // set the next release version
-            this.RecommendedRelease = this.NextRelease = GetNextVersion(version, level);
-
-            // move on immediately
-            return true;
+            // return the level
+            return level;
         }
 
-        private static string GetNextVersion(SemanticVersion version, int level)
+        private static string RecommendRelease(SemanticVersion version, int level)
         {
             switch (level)
             {
@@ -264,8 +209,11 @@ namespace AM.Condo.Tasks
                 case 1:
                     version = new SemanticVersion(version.Major, version.Minor + 1, 0);
                     break;
-                default:
+                case 2:
                     version = new SemanticVersion(version.Major, version.Minor, version.Patch + 1);
+                    break;
+                default:
+                    version = new SemanticVersion(version.Major, version.Minor, version.Patch);
                     break;
             }
 

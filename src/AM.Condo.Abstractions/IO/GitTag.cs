@@ -15,7 +15,9 @@ namespace AM.Condo.IO
     /// </summary>
     public class GitTag : IComparable<GitTag>
     {
+        #region Fields
         private SemanticVersion version;
+        #endregion
 
         #region Properties and Indexers
         /// <summary>
@@ -32,35 +34,37 @@ namespace AM.Condo.IO
         /// Gets or sets the short hash of the tag.
         /// </summary>
         public string ShortHash { get; set; }
+
+        /// <summary>
+        /// Gets the version associated with the tag.
+        /// </summary>
+        public SemanticVersion Version => this.version;
         #endregion
 
         #region Methods
         /// <summary>
-        /// Gets the version of the tag based on the specified <paramref name="versionTag"/>.
+        /// Gets the version of the tag based on the specified <paramref name="versionTagPrefix"/>.
         /// </summary>
-        /// <param name="versionTag">
+        /// <param name="versionTagPrefix">
         /// The version tag prefix used for version tags.
         /// </param>
         /// <returns>
-        /// The semantic version represented by the specified <paramref name="versionTag"/>.
+        /// The semantic version represented by the current tag.
         /// </returns>
-        public SemanticVersion Version(string versionTag)
+        public bool TryParseVersion(string versionTagPrefix)
         {
             // capture the tag name
             var tag = this.Name;
 
             // determine if we need to trim the version
-            if (!string.IsNullOrEmpty(versionTag) && tag.StartsWith(versionTag))
+            if (!string.IsNullOrEmpty(versionTagPrefix) && tag.StartsWith(versionTagPrefix))
             {
                 // trim the version
-                tag = tag.Substring(versionTag.Length);
+                tag = tag.Substring(versionTagPrefix.Length);
             }
 
             // attempt to parse the tags
-            SemanticVersion.TryParse(tag, out this.version);
-
-            // return the version
-            return this.version;
+            return SemanticVersion.TryParse(tag, out this.version);
         }
 
         /// <summary>
