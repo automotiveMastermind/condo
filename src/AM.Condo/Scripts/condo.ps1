@@ -201,7 +201,7 @@ try
 
     if ($Credential) {
         $username = $Credential.UserName
-        $password = $Credential.Password | ConvertFrom-SecureString
+        $password = $Credential.GetNetworkCredential().Password
 
         $MSBuildArgs = @(
             $MSBuildArgs,
@@ -225,7 +225,7 @@ try
     $MSBuildArgs | ForEach-Object { $_ | Out-File -Append -Encoding ASCII -FilePath $MSBuildRsp }
 
     Write-Info "Starting build..."
-    Write-Info "msbuild '$CondoProj' $MSBuildArgs"
+    Write-Info "msbuild '$CondoProj'"
 
     & "dotnet" "msbuild" `@"$MSBuildRsp"
 }
