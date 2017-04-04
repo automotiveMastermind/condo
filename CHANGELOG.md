@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.0-beta-02656"></a>
+## 2.0.0-beta-02656 (2017-04-04)
+
+
+### Bug Fixes
+
+* **windows:** fix bootstrapping on windows (#60) b3ce495, closes #60 #59
+
+
 <a name="2.0.0-beta-02611"></a>
 ## 2.0.0-beta-02611 (2017-03-28)
 
