@@ -48,8 +48,7 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
         Invoke-WebRequest $url -OutFile $path > $null
     }
-    catch [System.Exception]
-    {
+    catch [System.Exception] {
         Write-Failure "Unable to retrieve file: '$url'"
 
         if ($retries -eq 0) {
@@ -120,7 +119,7 @@ function Invoke-Cmd([string] $cmd) {
     $exitCode = $LASTEXITCODE
 
     # determine if the command was successful
-    if($exitCode -ne 0) {
+    if ($exitCode -ne 0) {
         # throw an exception message
         $message = "'$cmdName $args' failed with exit code: $exitCode. Check '$CondoLog' for additional information..."
         $exception = New-Object System.FormatException $message
@@ -194,8 +193,7 @@ function Install-Condo() {
     Write-Success "condo: publish complete"
 }
 
-try
-{
+try {
     Install-DotNet
     Install-Condo
 
