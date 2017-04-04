@@ -201,10 +201,11 @@ try
 
     if ($Credential) {
         $username = $Credential.UserName
-        $password = $Credential.Password | From-SecureString
+        $password = $Credential.Password | ConvertFrom-SecureString
 
         $MSBuildArgs = @(
             $MSBuildArgs,
+            "/t:Bootstrap",
             "/p:PackageFeedUsername=$username",
             "/p:PackageFeedPassword=$password"
         )
