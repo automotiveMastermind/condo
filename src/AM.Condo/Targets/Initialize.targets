@@ -135,8 +135,7 @@
                          SymbolUri="$(PackageSymbolUri)"
                          Prefixes="@(NuGetProtectedFeedPrefixes)"
                          Username="$(PackageFeedUsername)"
-                         Password="$(PackageFeedPassword)"
-                         IsPasswordClearText="!$(IsWindows)">
+                         Password="$(PackageFeedPassword)">
       <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
     </SetNuGetPackageSources>
   </Target>
