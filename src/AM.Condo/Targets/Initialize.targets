@@ -12,18 +12,38 @@
 
     <!-- get the solution and package root paths -->
     <RepositoryRoot     Condition=" '$(RepositoryRoot)'     == '' ">$(MSBuildStartupDirectory)</RepositoryRoot>
-    <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'src'))</SrcRoot>
-    <TestRoot           Condition=" '$(TestRoot)'           == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'test'))</TestRoot>
-    <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(RepositoryRoot)', 'artifacts'))</ArtifactsRoot>
+    <RepositoryRoot     Condition=" !HasTrailingSlash('$(RepositoryRoot)') ">$(RepositoryRoot)$(slash)</RepositoryRoot>
 
-    <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)'     == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'build'))</BuildArtifactsRoot>
-    <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'test'))</TestArtifactsRoot>
-    <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'publish'))</PublishArtifactsRoot>
-    <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'packages'))</PackageArtifactsRoot>
-    <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'feed'))</FeedArtifactsRoot>
-    <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$([System.IO.Path]::Combine('$(ArtifactsRoot)', 'docs'))</DocsArtifactsRoot>
+    <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$(RepositoryRoot)source$(slash)</SrcRoot>
+    <SrcRoot            Condition=" !HasTrailingSlash('$(SrcRoot)')">$(SrcRoot)$(slash)</SrcRoot>
 
-    <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)\Agents\</AgentTargetsRoot>
+    <TestRoot           Condition=" '$(TestRoot)'           == '' ">$(RepositoryRoot)test$(slash)</TestRoot>
+    <TestRoot           Condition=" !HasTrailingSlash('$(TestRoot)') ">$(TestRoot)$(slash)</TestRoot>
+
+    <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$(RepositoryRoot)artifacts$(slash)</ArtifactsRoot>
+    <ArtifactsRoot      Condition=" !HasTrailingSlash('$(ArtifactsRoot)') ">$(ArtifactsRoot)$(slash)</ArtifactsRoot>
+
+    <BuildArtifactsRoot     Condition=" '$(BuildArtifactsRoot)'     == '' ">$(ArtifactsRoot)build$(slash)</BuildArtifactsRoot>
+    <BuildArtifactsRoot     Condition=" !HasTrailingSlash('$(BuildArtifactsRoot)') ">$(BuildArtifactsRoot)$(slash)</BuildArtifactsRoot>
+
+    <TestArtifactsRoot      Condition=" '$(TestArtifactsRoot)'      == '' ">$(ArtifactsRoot)test$(slash)</TestArtifactsRoot>
+    <TestArtifactsRoot      Condition=" !HasTrailingSlash('$(TestArtifactsRoot)') ">$(TestArtifactsRoot)$(slash)</TestArtifactsRoot>
+
+    <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$(ArtifactsRoot)publish$(slash)</PublishArtifactsRoot>
+    <PublishArtifactsRoot   Condition=" !HasTrailingSlash('$(PublishArtifactsRoot)') ">$(PublishArtifactsRoot)$(slash)</PublishArtifactsRoot>
+
+    <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$(ArtifactsRoot)packages$(slash)</PackageArtifactsRoot>
+    <PackageArtifactsRoot   Condition=" !HasTrailingSlash('$(PackageArtifactsRoot)') ">$(PackageArtifactsRoot)$(slash)</PackageArtifactsRoot>
+
+    <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$(ArtifactsRoot)feed$(slash)</FeedArtifactsRoot>
+    <FeedArtifactsRoot      Condition=" !HasTrailingSlash('$(FeedArtifactsRoot)') ">$(FeedArtifactsRoot)feed$(slash)</FeedArtifactsRoot>
+
+    <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$(ArtifactsRoot)docs$(slash)</DocsArtifactsRoot>
+    <DocsArtifactsRoot      Condition=" !HasTrailingSlash('$(DocsArtifactsRoot)') ">$(DocsArtifactsRoot)$(slash)</DocsArtifactsRoot>
+
+    <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)$(slash)Agents$(slash)</AgentTargetsRoot>
+    <AgentTargetsRoot Condition=" !HasTrailingSlash('$(AgentTargetsRoot)') ">$(AgentTargetsRoot)$(slash)</AgentTargetsRoot>
+
     <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
@@ -104,22 +124,27 @@
       <DotNetSolutions Include="$(RepositoryRoot)$(slash)*.sln" />
     </ItemGroup>
 
-    <GetProjectsForSolution Solutions="@(DotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
+    <RemoveDuplicates Inputs="@(DotNetSolutions)">
+      <Output TaskParameter="Filtered" ItemName="FilteredDotNetSolutions" />
+    </RemoveDuplicates>
+
+    <GetProjectsForSolution Solutions="@(FilteredDotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
       <Output TaskParameter="Projects" ItemName="DotNetProjects" />
     </GetProjectsForSolution>
 
     <GetProjectMetadata Projects="@(DotNetProjects)">
-      <Output TaskParameter="Projects" ItemName="Projects" />
+      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
     </GetProjectMetadata>
 
     <ItemGroup>
-      <DotNetRestorePaths Include="@(DotNetSolutions)" />
+      <DotNetRestorePaths Include="@(FilteredDotNetSolutions)" />
+      <DotNetBuildPaths   Include="@(FilteredDotNetSolutions)" />
 
-      <SourceProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'src' "/>
-      <TestProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'test' "/>
-      <DocProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'docs' "/>
-      <SampleProjects Include="@(Projects)" Condition=" '%(Projects.ProjectGroup)' == 'samples' "/>
-      <ExecutableProjects Include="@(SourceProjects)" Condition=" '%(SourceProjects.OutputType)' == 'exe' " />
+      <SourceProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'src' "/>
+      <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' "/>
+      <DocProjects        Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'docs' "/>
+      <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
+      <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.Publish) "/>
     </ItemGroup>
   </Target>
 
