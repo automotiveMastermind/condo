@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.0-beta-02709"></a>
+## 2.0.0-beta-02709 (2017-04-07)
+
+
+### Performance Improvements
+
+* **build:** improve build performance (#61) 693dbb4, closes #61
+
+
 <a name="2.0.0-beta-02656"></a>
 ## 2.0.0-beta-02656 (2017-04-04)
 
