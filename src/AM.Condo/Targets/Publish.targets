@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="PublishSourceExecutables">
+  <Target Name="DotNetPublish" Condition=" '$(DotNetPublish)' != 'skip' ">
     <PropertyGroup>
       <DotNetPublishOptions Condition=" '$(DotNetPublishOptions)' == '' ">$(DOTNET_PUBLISH_OPTIONS)</DotNetPublishOptions>
       <DotNetPublishOptions Condition=" '$(Configuration)' != '' ">$(DotNetPublishOptions) --configuration &quot;$(Configuration)&quot;</DotNetPublishOptions>
+      <DotNetPublishOptions>$(DotNetPublishOptions.Trim())</DotNetPublishOptions>
 
       <DotNetPublishProperties Condition=" '$(DotNetPublishProperties)' == '' ">$(DOTNET_PUBLISH_PROPS)</DotNetPublishProperties>
       <DotNetPublishProperties>$(DotNetPublishProperties) /p:Version=$(InformationalVersion)</DotNetPublishProperties>
       <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateAssemblyInfo=false</DotNetPublishProperties>
-      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateDocumentationFile=true</DotNetPublishProperties>
+      <DotNetPublishProperties>$(DotNetPublishProperties.Trim())</DotNetPublishProperties>
     </PropertyGroup>
 
     <ItemGroup>
-      <_ExecutableProjects Include="@(ExecutableProjects)">
-        <OutputPath>$(PublishArtifactsRoot)$(Slash)$(Configuration)$(Slash)%(ProjectName)</OutputPath>
-      </_ExecutableProjects>
+      <DotNetPublishProjects Include="@(PublishProjects)" Condition=" '@(DotNetPublishProjects->Count())' == '0' " />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DotNetPublish Include="@(DotNetPublishProjects)">
+        <OutputPath>&quot;$(PublishArtifactsRoot)$(Slash)%(ProjectName)&quot;</OutputPath>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+        <PublishName>&quot;%(Filename)%(Extension)&quot;</PublishName>
+      </_DotNetPublish>
     </ItemGroup>
 
     <Exec
-        Command="dotnet publish &quot;%(_ExecutableProjects.FullPath)&quot; --output &quot;%(_ExecutableProjects.OutputPath)&quot; $(DotNetPublishOptions.Trim()) $(DotNetPublishProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)"
-        Condition=" Exists('%(_ExecutableProjects.FullPath)') " />
+        Command="dotnet publish %(_DotNetPublish.PublishName) --output %(_DotNetPublish.OutputPath) $(DotNetPublishOptions) $(DotNetPublishProperties)"
+        WorkingDirectory="%(_DotNetPublish.WorkingDirectory)"
+        Condition=" Exists('%(_DotNetPublish.FullPath)') " />
   </Target>
 
-  <Target Name="InstallPackages">
+  <Target Name="InstallPackages" Condition=" '@(Packages->Count())' != '0' ">
     <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; --source &quot;$(FeedArtifactsRoot)&quot;" />
   </Target>
 
-  <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' ">
+  <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' AND '@(Packages->Count())' != '0' ">
     <PropertyGroup>
       <NuGetPushOptions Condition=" '$(NuGetPushOptions)' == '' ">$(NUGET_PUSH_OPTIONS)</NuGetPushOptions>
       <NuGetPushOptions Condition=" '$(PackageFeedUri)' != '' ">$(NuGetPushOptions) --source $(PackageFeedUri)</NuGetPushOptions>
@@ -53,7 +60,7 @@
   <PropertyGroup>
     <PublishDependsOn>
       $(BeforePublish);
-      PublishSourceExecutables;
+      DotNetPublish;
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);

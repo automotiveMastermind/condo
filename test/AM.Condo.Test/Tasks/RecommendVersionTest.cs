@@ -14,11 +14,17 @@ namespace AM.Condo.Tasks
     using NuGet.Versioning;
 
     using Xunit;
+    using Xunit.Abstractions;
 
     [Class(nameof(RecommendVersion))]
     public class RecommendVersionTest
     {
-        private readonly IGitRepositoryFactory repository = new GitRepositoryFactory();
+        private readonly ITestOutputHelper output;
+
+        public RecommendVersionTest(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
 
         [Fact]
         [Priority(1)]
@@ -37,50 +43,52 @@ namespace AM.Condo.Tasks
             Assert.Throws<ArgumentNullException>(nameof(gitlog), act);
         }
 
-        [Fact]
+        [MemberData(nameof(Releases))]
+        [Theory]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenInitialRelease_IncrementsMinorSegment()
+        public void Execute_WhenRelease_RecommendsValidRelease(ReleaseData release)
         {
             // arrange
-            var buildQuality = "alpha";
-            var releaseBranchBuildQuality = "rc";
-
-            var latestVersion = new SemanticVersion(0, 2, 0, buildQuality);
-            var latestVersionHash = "2";
-
-            var type = "feat";
-
-            var commit = new GitCommit
+            var previous = new GitCommit
             {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } }
+                Hash = "0"
             };
 
-            var gitlog = new GitLog
+            var current = new GitCommit
             {
-                Versions = { { latestVersion, new List<GitCommit> { commit } } },
-                Commits = { commit }
+                Hash = "1",
+                HeaderCorrespondence = { { nameof(release.Type), release.Type } },
             };
 
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
+            if (release.BreakingChange)
             {
-                CurrentRelease = "0.2.0",
-                RecommendedRelease = "0.3.0",
-                NextRelease = "1.0.0"
+                current.Notes.Add(new GitNote());
+            }
+
+            var log = new GitLog
+            {
+                Commits = { previous, current }
             };
 
-            var actual = new RecommendVersion(gitlog)
+            if (!string.IsNullOrEmpty(release.CurrentVersion))
+            {
+                var version = SemanticVersion.Parse(release.CurrentVersion);
+                var tag = new GitTag { Hash = previous.Hash, Name = release.CurrentVersion };
+                tag.TryParseVersion(versionTagPrefix: null);
+
+                log.Tags.Add(tag);
+                log.Versions.Add(version, new List<GitCommit> { previous });
+            }
+
+            var engine = MSBuildMocks.CreateEngine(this.output);
+
+            var actual = new RecommendVersion(log)
             {
                 BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
+                BuildQuality = release.BuildQuality,
+                MinorCorrespondence = nameof(release.Type),
                 MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
             };
 
             // act
@@ -88,464 +96,619 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
+            Assert.Equal(release.CurrentVersion ?? "0.0.0", actual.CurrentVersion);
+            Assert.Equal(release.CurrentRelease, actual.CurrentRelease);
+            Assert.Equal(release.RecommendedRelease, actual.RecommendedRelease);
+            Assert.Equal(release.NextRelease, actual.NextRelease);
         }
 
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenInitialReleaseOnReleaseBranch_IncrementsMajorSegment()
+        public static TheoryData<ReleaseData> Releases => new TheoryData<ReleaseData>
         {
-            // arrange
-            var buildQuality = "rc";
-            var releaseBranchBuildQuality = "rc";
-            var latestVersion = new SemanticVersion(0, 2, 0, buildQuality);
-            var latestVersionHash = "2";
-
-            var type = "bugfix";
-
-            var commit = new GitCommit
+            // BUGFIX: NULL -> ALPHA (DEFAULT)
+            new ReleaseData
             {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } },
-                Notes = { new GitNote { Header = "BREAKING CHANGE" } }
-            };
-
-            var gitlog = new GitLog
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
             {
-                Versions = { { latestVersion, new List<GitCommit> { commit } } },
-                Commits = { commit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: ALPHA -> ALPHA (NO INCREMENT)
+            new ReleaseData
             {
-                CurrentRelease = "0.2.0",
-                RecommendedRelease = "1.0.0",
-                NextRelease = "1.0.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
             {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenAdditionalReleaseOnReleaseBranch_DoesNotIncrementAndEmitsNoWarnings()
-        {
-            // arrange
-            var buildQuality = "rc";
-            var releaseBranchBuildQuality = "rc";
-            var latestVersion = new SemanticVersion(1, 0, 0, buildQuality);
-            var latestVersionHash = "2";
-
-            var type = "bugfix";
-
-            var commit = new GitCommit
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-alpha-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: BETA -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
             {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } },
-                Notes = { new GitNote { Header = "BREAKING CHANGE" } }
-            };
-
-            var gitlog = new GitLog
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
             {
-                Versions = { { latestVersion, new List<GitCommit> { commit } } },
-                Commits = { commit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-beta-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: HOTFIX -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
             {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-hotfix-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: SERVICING -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-servicing-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: RC -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-rc-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: FINAL -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.0",
-                NextRelease = "1.0.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
-            {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenInitialReleaseOnProductionBranch_IncrementsMajorSegment()
-        {
-            // arrange
-            var buildQuality = string.Empty;
-            var releaseBranchBuildQuality = "rc";
-            var latestVersion = new SemanticVersion(0, 2, 0, buildQuality);
-            var latestVersionHash = "2";
-
-            var type = "bugfix";
-
-            var commit = new GitCommit
-            {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var gitlog = new GitLog
-            {
-                Versions = { { latestVersion, new List<GitCommit> { commit } } },
-                Commits = { commit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
-            {
-                CurrentRelease = "0.2.0",
-                RecommendedRelease = "1.0.0",
-                NextRelease = "1.0.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
-            {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenReleaseAfterFirstReleaseWithBreakingChangeInPreviousCommit_IncrementsMajorSegment()
-        {
-            // arrange
-            var buildQuality = "alpha";
-            var releaseBranchBuildQuality = "rc";
-            var releaseVersion = new SemanticVersion(1, 0, 0);
-            var releaseVersionHash = "1";
-
-            var latestVersion = new SemanticVersion(1, 0, 1, "beta");
-            var latestVersionHash = "2";
-
-            var type = "bugfix";
-
-            var releaseCommit = new GitCommit
-            {
-                Hash = releaseVersionHash,
-                HeaderCorrespondence = { { nameof(type), "chore" } }
-            };
-
-            var previousCommit = new GitCommit
-            {
-                Hash = "2",
-                HeaderCorrespondence = { { nameof(type), type } },
-                Notes = { new GitNote { Header = "BREAKING CHANGE" } }
-            };
-
-            var currentCommit = new GitCommit
-            {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var gitlog = new GitLog
-            {
-                Versions =
-                {
-                     { releaseVersion, new List<GitCommit> { releaseCommit } },
-                     { latestVersion, new List<GitCommit> { currentCommit } }
-                },
-                Commits = { releaseCommit, previousCommit, currentCommit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
-            {
-                CurrentRelease = "1.0.1",
-                RecommendedRelease = "2.0.0",
-                NextRelease = "2.0.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
-            {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenReleaseAfterFirstReleaseWithBugfixInPreviousCommit_IncrementsPatchSegment()
-        {
-            // arrange
-            var buildQuality = "alpha";
-            var releaseBranchBuildQuality = "rc";
-            var releaseVersion = new SemanticVersion(1, 0, 0);
-            var releaseVersionHash = "1";
-
-            var latestVersion = new SemanticVersion(1, 0, 1, "beta");
-            var latestVersionHash = "2";
-
-            var type = "bugfix";
-
-            var releaseCommit = new GitCommit
-            {
-                Hash = releaseVersionHash,
-                HeaderCorrespondence = { { nameof(type), "chore" } }
-            };
-
-            var previousCommit = new GitCommit
-            {
-                Hash = "2",
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var currentCommit = new GitCommit
-            {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var gitlog = new GitLog
-            {
-                Versions =
-                {
-                     { releaseVersion, new List<GitCommit> { releaseCommit } },
-                     { latestVersion, new List<GitCommit> { currentCommit } }
-                },
-                Commits = { releaseCommit, previousCommit, currentCommit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
-            {
-                CurrentRelease = "1.0.1",
                 RecommendedRelease = "1.0.1",
-                NextRelease = "1.0.1"
-            };
-
-            var actual = new RecommendVersion(gitlog)
+                NextRelease = "1.0.1",
+                BreakingChange = false
+            },
+            new ReleaseData
             {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenReleaseAfterFirstReleaseWithFeatureInPreviousCommit_IncrementsMinorSegment()
-        {
-            // arrange
-            var buildQuality = "alpha";
-            var releaseBranchBuildQuality = "rc";
-            var releaseVersion = new SemanticVersion(1, 0, 0);
-            var releaseVersionHash = "1";
-
-            var latestVersion = new SemanticVersion(1, 0, 1, "beta");
-            var latestVersionHash = "2";
-
-            var type = "feat";
-
-            var releaseCommit = new GitCommit
-            {
-                Hash = releaseVersionHash,
-                HeaderCorrespondence = { { nameof(type), "chore" } }
-            };
-
-            var previousCommit = new GitCommit
-            {
-                Hash = "2",
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var currentCommit = new GitCommit
-            {
-                Hash = latestVersionHash,
-                HeaderCorrespondence = { { nameof(type), type } }
-            };
-
-            var gitlog = new GitLog
-            {
-                Versions =
-                {
-                     { releaseVersion, new List<GitCommit> { releaseCommit } },
-                     { latestVersion, new List<GitCommit> { currentCommit } }
-                },
-                Commits = { releaseCommit, previousCommit, currentCommit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
-            {
-                CurrentRelease = "1.0.1",
-                RecommendedRelease = "1.1.0",
-                NextRelease = "1.1.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
-            {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = latestVersion.ToFullString(),
-                LatestVersionCommit = latestVersionHash,
-            };
-
-            // act
-            var result = actual.Execute();
-
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
-        }
-
-        [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
-        public void Execute_WhenReleaseAfterReleaseBranchReleaseWithBreakingChangeInPreviousCommit_DoesNotIncrement()
-        {
-            // arrange
-            var buildQuality = "alpha";
-            var releaseBranchBuildQuality = "rc";
-            var releaseVersion = new SemanticVersion(1, 0, 0, releaseBranchBuildQuality);
-            var releaseVersionHash = "1";
-
-            var type = "feat";
-
-            var releaseCommit = new GitCommit
-            {
-                Hash = releaseVersionHash,
-                HeaderCorrespondence = { { nameof(type), "chore" } }
-            };
-
-            var currentCommit = new GitCommit
-            {
-                Hash = "3",
-                HeaderCorrespondence = { { nameof(type), type } },
-                Notes = { new GitNote { Header = "BREAKING CHANGE" } }
-            };
-
-            var gitlog = new GitLog
-            {
-                Versions =
-                {
-                     { releaseVersion, new List<GitCommit> { releaseCommit } }
-                },
-                Commits = { releaseCommit, currentCommit }
-            };
-
-            var engine = MSBuildMocks.CreateEngine();
-
-            var expected = new
-            {
+                Type = "bugfix",
+                BuildQuality = "alpha",
+                CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.0",
-                NextRelease = "1.0.0"
-            };
-
-            var actual = new RecommendVersion(gitlog)
+                RecommendedRelease = "1.0.1",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: NULL -> ALPHA (DEFAULT)
+            new ReleaseData
             {
-                BuildEngine = engine,
-                BuildQuality = buildQuality,
-                ReleaseBranchBuildQuality = releaseBranchBuildQuality,
-                MinorCorrespondence = nameof(type),
-                MinorValue = "feat",
-                LatestVersion = releaseVersion.ToString(),
-                LatestVersionCommit = releaseVersionHash
-            };
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: ALPHA -> ALPHA (NO INCREMENT)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-alpha-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: BETA -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-beta-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: HOTFIX -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-hotfix-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: SERVICING -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-servicing-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: RC -> ALPHA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "0.0.1-rc-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: FINAL -> ALPHA (INCREMENT MINOR)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "1.1.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "alpha",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: NULL -> BETA (DEFAULT)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: ALPHA -> BETA (NO INCREMENT)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-alpha-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: BETA -> BETA (NO INCREMENT)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-beta-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: HOTFIX -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-hotfix-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: SERVICING -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-servicing-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: RC -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-rc-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: FINAL -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "1.0.1",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "beta",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: NULL -> BETA (DEFAULT)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: ALPHA -> BETA (NO INCREMENT)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-alpha-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: BETA -> BETA (NO INCREMENT)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-beta-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.1",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: HOTFIX -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-hotfix-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: SERVICING -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-servicing-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: RC -> BETA (INCREMENT PATCH)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "0.0.1-rc-2",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "0.0.2",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: FINAL -> BETA (INCREMENT MINOR)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "1.1.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "beta",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            }
+        };
 
-            // act
-            var result = actual.Execute();
+        public class ReleaseData
+        {
+            public string Type { get; set; }
 
-            // assert
-            Assert.True(result);
-            Assert.Equal(expected.CurrentRelease, actual.CurrentRelease);
-            Assert.Equal(expected.RecommendedRelease, actual.RecommendedRelease);
-            Assert.Equal(expected.NextRelease, actual.NextRelease);
+            public string BuildQuality { get; set; }
+
+            public string CurrentVersion { get; set; }
+
+            public string CurrentRelease { get; set; }
+
+            public string RecommendedRelease { get; set; }
+
+            public string NextRelease { get; set; }
+
+            public bool BreakingChange { get; set; }
         }
     }
 }

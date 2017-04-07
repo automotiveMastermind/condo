@@ -42,15 +42,13 @@
   <!-- update semantic version -->
   <Target Name="RecommendVersion">
     <RecommendVersion
-      LatestVersion="$(LatestVersion)"
-      LatestVersionCommit="$(LatestVersionCommit)"
       MinorCorrespondence="$(MinorCorrespondence)"
       MinorValue="$(MinorValue)"
-      BuildQuality="$(BuildQuality)"
-      ReleaseBranchBuildQuality="$(ReleaseBranchBuildQuality)">
+      BuildQuality="$(BuildQuality)">
       <Output TaskParameter="CurrentRelease" PropertyName="CurrentRelease" />
       <Output TaskParameter="NextRelease" PropertyName="NextRelease" />
       <Output TaskParameter="RecommendedRelease" PropertyName="RecommendedRelease" />
+      <Output TaskParameter="CurrentVersion" PropertyName="CurrentVersion" />
     </RecommendVersion>
   </Target>
 

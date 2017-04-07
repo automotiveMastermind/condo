@@ -5,7 +5,7 @@
     <BuildHost>AppVeyor</BuildHost>
     <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
     <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
-    <BuildId>$(APPVEYOR_BUILD_ID)</BuildId>
+    <BuildId>$(APPVEYOR_BUILD_NUMBER)</BuildId>
     <JobId>$(APPVEYOR_JOB_ID)</JobId>
     <PullRequestId>$(APPVEYOR_PULL_REQUEST_NUMBER)</PullRequestId>
     <BuildOn>$(BuildHost): $(APPVEYOR_BUILD_WORKER_IMAGE)</BuildOn>

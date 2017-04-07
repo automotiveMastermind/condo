@@ -96,7 +96,7 @@ namespace AM.Condo.Diagnostics
         {
             var start = this.CreateProcessInfo(command);
 
-            this.logger.LogMessage($"executing: {start.FileName} {start.Arguments}", LogLevel.High);
+            this.logger.LogMessage($"executing: {start.FileName} {start.Arguments}", LogLevel.Low);
 
             var process = new Process
             {

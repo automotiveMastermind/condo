@@ -72,6 +72,7 @@ namespace AM.Condo.Tasks
             {
                 // set the output type
                 project.SetMetadata("OutputType", output.ToLower());
+                project.SetMetadata("Publish", "true");
             }
 
             // get the target framework node
@@ -90,6 +91,9 @@ namespace AM.Condo.Tasks
 
             // get the highest netcore tfm
             var tfm = names.FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+
+            // set the publish to true
+            project.SetMetadata("Publish", (tfm != null).ToString());
 
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", names));

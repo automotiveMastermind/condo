@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DotNetTest">
+  <Target Name="DotNetTest" Condition=" '$(DotNetTest)' != 'skip' AND '@(TestProjects->Count())' != '0' ">
     <PropertyGroup>
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
+      <DotNetTestOptions>$(DotNetTestOptions.Trim()) --no-build</DotNetTestOptions>
+      <DotNetTestOptions>$(DotNetTestOptions.Trim())</DotNetTestOptions>
 
       <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Platform!=not-windows</DotNetTestFilterOptions>
       <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Platform!=not-macos</DotNetTestFilterOptions>
@@ -11,22 +13,27 @@
       <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Agent!=not-ci</DotNetTestFilterOptions>
       <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Agent!=not-local</DotNetTestFilterOptions>
       <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quot;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quot;</DotNetTestFilterOptions>
+
+      <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties.Trim()) RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties.Trim())</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties.Trim())</DotNetTestProperties>
     </PropertyGroup>
 
     <ItemGroup>
-      <_DotNetTestProjects Include="@(TestProjects)" Condition=" $(IsWindows) OR '%(NetCoreFramework)' != '' ">
-        <DotNetTestOptions Condition="  $(IsWindows) ">$(DotNetTestOptions)</DotNetTestOptions>
-        <DotNetTestOptions Condition=" !$(IsWindows) "> --framework %(TestProjects.NetCoreFramework) $(DotNetTestOptions.Trim())</DotNetTestOptions>
+      <_DotNetTest Include="@(TestProjects)">
+        <ProjectName>%(Filename)%(Extension)</ProjectName>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+
         <!-- removing traits for now as it causes issues with the current implementation of dotnet test -->
         <!--<DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>-->
-        <TestResultsFileName>%(TestProjects.ProjectName).dotnet.xml</TestResultsFileName>
-      </_DotNetTestProjects>
+        <Args>$(DotNetTestOptions) --logger &quot;trx;LogFileName=%(Filename).dotnet.xml&quot; -- $(DotNetTestProperties)</Args>
+      </_DotNetTest>
     </ItemGroup>
 
     <Exec
-        Command="dotnet test %(_DotNetTestProjects.FullPath) --no-build %(_DotNetTestProjects.DotNetTestOptions) --logger &quot;trx;LogFileName=%(_DotNetTestProjects.TestResultsFileName)&quot; -- RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;"
-        WorkingDirectory="%(_DotNetTestProjects.ProjectDir)"
-        Condition=" Exists('%(_DotNetTestProjects.FullPath)') " />
+        Command="dotnet test &quot;%(_DotNetTest.ProjectName)&quot; %(_DotNetTest.Args)"
+        WorkingDirectory="%(_DotNetTest.WorkingDirectory)" />
   </Target>
 
   <PropertyGroup>

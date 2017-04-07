@@ -13,7 +13,6 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-    using NuGet.Versioning;
 
     /// <summary>
     /// Represents a Microsoft Build task that gets information about a repository.
@@ -57,29 +56,6 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Output]
         public bool HasGit { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the version tag used to identify a version string.
-        /// </summary>
-        public string VersionTagPrefix { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latest version tag found within the repository.
-        /// </summary>
-        [Output]
-        public string LatestVersionTag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latest semantic version indicated by the latest version tag.
-        /// </summary>
-        [Output]
-        public string LatestVersion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the SHA1 of the commit message associated with the latest version and latest version tag.
-        /// </summary>
-        [Output]
-        public string LatestVersionCommit { get; set; }
         #endregion
 
         #region Methods
@@ -229,57 +205,6 @@ namespace AM.Condo.Tasks
                 {
                     // set the current commit id
                     this.CommitId = repository.LatestCommit;
-                }
-
-                // define a variable to retain the latest tag
-                var latestTag = default(string);
-
-                // create the latest version as 0.0.0
-                var latest = new SemanticVersion(0, 0, 0);
-
-                // retain the current version
-                var current = default(SemanticVersion);
-
-                // determine whether or not to trim tags
-                var trim = !string.IsNullOrEmpty(this.VersionTagPrefix);
-
-                // iterate over each tag
-                foreach (var value in repository.Tags)
-                {
-                    // capture the value
-                    var tag = value;
-
-                    // determine if we need to trim the version
-                    if (trim && tag.StartsWith(this.VersionTagPrefix))
-                    {
-                        // trim the version
-                        tag = tag.Substring(this.VersionTagPrefix.Length);
-                    }
-
-                    // attempt to parse the tags
-                    if (SemanticVersion.TryParse(tag, out current))
-                    {
-                        // determine if the current value is greater than the latest
-                        if (current > latest)
-                        {
-                            // set the latest to the current value
-                            latest = current;
-
-                            // capture the latest tag
-                            latestTag = value;
-                        }
-                    }
-                }
-
-                // set the latest version
-                this.LatestVersionTag = latestTag;
-                this.LatestVersion = latest.ToFullString();
-
-                // attempt to capture the latest version tag commit
-                if (!string.IsNullOrEmpty(this.LatestVersionTag))
-                {
-                    // attempt to get the commit message
-                    this.LatestVersionCommit = repository.RevParse(this.LatestVersionTag);
                 }
             }
             catch (Exception netEx)
