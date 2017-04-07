@@ -4,6 +4,7 @@
     <PropertyGroup>
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
       <DotNetTestOptions>$(DotNetTestOptions.Trim()) --no-build</DotNetTestOptions>
+      <DotNetTestOptions Condition=" '$(Configuration)' != '' ">$(DotNetTestOptions.Trim()) --configuration &quot;$(Configuration)&quot;</DotNetTestOptions>
       <DotNetTestOptions>$(DotNetTestOptions.Trim())</DotNetTestOptions>
 
       <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Platform!=not-windows</DotNetTestFilterOptions>
@@ -16,7 +17,6 @@
 
       <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
       <DotNetTestProperties>$(DotNetTestProperties.Trim()) RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;</DotNetTestProperties>
-      <DotNetTestProperties>$(DotNetTestProperties.Trim())</DotNetTestProperties>
       <DotNetTestProperties>$(DotNetTestProperties.Trim())</DotNetTestProperties>
     </PropertyGroup>
 

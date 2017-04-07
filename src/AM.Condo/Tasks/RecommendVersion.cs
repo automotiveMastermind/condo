@@ -127,9 +127,6 @@ namespace AM.Condo.Tasks
             // parse the prerelease build quality
             var currentBuildQuality = currentVersion.Release.Split('-').FirstOrDefault();
 
-            // get the comparison
-            var comparison = string.Compare(this.BuildQuality, currentBuildQuality);
-
             // determine if the current build quality is greater than the new build quality
             if (string.IsNullOrEmpty(currentBuildQuality) || string.Compare(this.BuildQuality, currentBuildQuality) < 0)
             {
