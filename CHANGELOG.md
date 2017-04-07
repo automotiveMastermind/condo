@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.0-beta-02716"></a>
+## 2.0.0-beta-02716 (2017-04-07)
+
+
+### Bug Fixes
+
+* **test:** add configuration to dotnet-test (#62) 9c46c5f, closes #62
+
+
 <a name="2.0.0-beta-02709"></a>
 ## 2.0.0-beta-02709 (2017-04-07)
 
