@@ -95,7 +95,7 @@ namespace AM.Condo.Tasks
             var result = actual.Execute();
 
             // assert
-            Assert.True(result, "result");
+            Assert.True(result);
             Assert.Equal(release.CurrentVersion ?? "0.0.0", actual.CurrentVersion);
             Assert.Equal(release.CurrentRelease, actual.CurrentRelease);
             Assert.Equal(release.RecommendedRelease, actual.RecommendedRelease);
