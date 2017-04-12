@@ -8,7 +8,8 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Diagnostics;
+    using System.Threading;
     using Condo.IO;
 
     using NuGet.Versioning;
@@ -95,7 +96,7 @@ namespace AM.Condo.Tasks
             var result = actual.Execute();
 
             // assert
-            Assert.True(result);
+            Assert.True(result, "result");
             Assert.Equal(release.CurrentVersion ?? "0.0.0", actual.CurrentVersion);
             Assert.Equal(release.CurrentRelease, actual.CurrentRelease);
             Assert.Equal(release.RecommendedRelease, actual.RecommendedRelease);
@@ -689,6 +690,594 @@ namespace AM.Condo.Tasks
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
                 RecommendedRelease = "1.0.1",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: NULL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: ALPHA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-alpha-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: BETA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-beta-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: HOTFIX -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-hotfix-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: SERVICING -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-servicing-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: RC -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-rc-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: FINAL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "1.0.1",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: NULL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: ALPHA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-alpha-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: BETA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-beta-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: HOTFIX -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-hotfix-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: SERVICING -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-servicing-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: RC -> FINAL (SET NEXT VERSION
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-rc-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: FINAL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.1.0",
+                NextRelease = "1.1.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: NULL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: ALPHA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-alpha-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: BETA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-beta-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: HOTFIX -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-hotfix-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: SERVICING -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-servicing-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: RC -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-rc-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // BUGFIX: FINAL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.1",
+                NextRelease = "1.0.1",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "bugfix",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: NULL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = null,
+                CurrentRelease = "0.0.0",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = true
+            },
+            // FEAT: ALPHA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-alpha-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-alpha-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: BETA -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-beta-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-beta-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: HOTFIX -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-hotfix-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-hotfix-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: SERVICING -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-servicing-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-servicing-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: RC -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "0.0.1-rc-1",
+                CurrentRelease = "0.0.1",
+                RecommendedRelease = "1.0.0",
+                NextRelease = "1.0.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.1-rc-2",
+                CurrentRelease = "1.0.1",
+                RecommendedRelease = "2.0.0",
+                NextRelease = "2.0.0",
+                BreakingChange = true
+            },
+            // FEAT: FINAL -> FINAL (SET NEXT VERSION)
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.1.0",
+                NextRelease = "1.1.0",
+                BreakingChange = false
+            },
+            new ReleaseData
+            {
+                Type = "feat",
+                BuildQuality = "",
+                CurrentVersion = "1.0.0",
+                CurrentRelease = "1.0.0",
+                RecommendedRelease = "2.0.0",
                 NextRelease = "2.0.0",
                 BreakingChange = true
             }

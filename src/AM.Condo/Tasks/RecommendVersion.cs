@@ -99,11 +99,11 @@ namespace AM.Condo.Tasks
                 // assume this is the very first release and set to all zeros
                 this.CurrentVersion = this.CurrentRelease = "0.0.0";
 
-                // set the recommended release to the first patch
-                this.RecommendedRelease = "0.0.1";
-
                 // set the next release to the current major release
                 this.NextRelease = "1.0.0";
+
+                // set the recommended release to the first patch
+                this.RecommendedRelease = string.IsNullOrEmpty(this.BuildQuality) ? this.NextRelease : "0.0.1";
 
                 // move on immediately
                 return true;
@@ -122,16 +122,26 @@ namespace AM.Condo.Tasks
             var level = this.RecommendLevel(currentVersion, currentCommit);
 
             // set the next release version
-            this.NextRelease = RecommendRelease(currentVersion, currentVersion.Major == 0 ? 0 : level);
+            this.NextRelease = RecommendRelease(currentVersion, level);
 
             // parse the prerelease build quality
             var currentBuildQuality = currentVersion.Release.Split('-').FirstOrDefault();
 
+            // determine if this is a release
+            if (string.IsNullOrEmpty(this.BuildQuality))
+            {
+                // set the recommended release to the next reelease
+                this.RecommendedRelease = this.NextRelease;
+
+                // move on immediately
+                return true;
+            }
+
             // determine if the current build quality is greater than the new build quality
             if (string.IsNullOrEmpty(currentBuildQuality) || string.Compare(this.BuildQuality, currentBuildQuality) < 0)
             {
-                // set the recommended release to the next release
-                this.RecommendedRelease = RecommendRelease(currentVersion, string.IsNullOrEmpty(this.BuildQuality) ? level : 2);
+                // set the recommended release to the next patch for pre-release
+                this.RecommendedRelease = RecommendRelease(currentVersion, level: 2);
 
                 // move on immediately
                 return true;
@@ -146,6 +156,13 @@ namespace AM.Condo.Tasks
 
         private int RecommendLevel(SemanticVersion version, string hash)
         {
+            // determine if the major version is 0
+            if (version.Major == 0)
+            {
+                // return 0 (next version is always 1.0.0)
+                return 0;
+            }
+
             // set the default bump level to patch
             var level = 2;
 

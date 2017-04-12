@@ -148,7 +148,7 @@
       <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' "/>
       <DocProjects        Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'docs' "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
-      <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.Publish) "/>
+      <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.Publish) "/>
     </ItemGroup>
   </Target>
 
