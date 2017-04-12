@@ -33,7 +33,9 @@
 
     <Exec
         Command="dotnet test &quot;%(_DotNetTest.ProjectName)&quot; %(_DotNetTest.Args)"
-        WorkingDirectory="%(_DotNetTest.WorkingDirectory)" />
+        WorkingDirectory="%(_DotNetTest.WorkingDirectory)"
+        IgnoreStandardErrorWarningFormat="true"
+        CustomErrorRegularExpression="\[FAIL\]$" />
   </Target>
 
   <PropertyGroup>

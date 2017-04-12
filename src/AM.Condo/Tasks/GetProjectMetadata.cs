@@ -21,6 +21,8 @@ namespace AM.Condo.Tasks
     public class GetProjectMetadata : Task
     {
         #region Properties and Indexers
+        private static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
+
         /// <summary>
         /// Gets or sets the list of projects for which to set additional metadata.
         /// </summary>
@@ -81,6 +83,9 @@ namespace AM.Condo.Tasks
             // determine if the frameworks node did not exist
             if (frameworks == null || !frameworks.Any())
             {
+                // set publish to false
+                project.SetMetadata("Publish", "false");
+
                 // move on immediately
                 return;
             }
@@ -107,7 +112,15 @@ namespace AM.Condo.Tasks
 
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
-            var group = Path.GetFileName(Path.GetDirectoryName(directory));
+            var parent = Path.GetDirectoryName(directory);
+            var group = Path.GetFileName(directory);
+
+            // determine if the group is a well-known folder path
+            if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
+            {
+                // use the parent of the group folder, which means multiple projects are contained within the folder
+                group = Path.GetFileName(parent);
+            }
 
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
@@ -115,11 +128,11 @@ namespace AM.Condo.Tasks
             // set the project group
             project.SetMetadata("ProjectGroup", group);
 
-            // set the name of the project (using the directory name by convention)
-            project.SetMetadata("ProjectName", Path.GetFileName(directory));
+            // set the name of the project based on the name of the csproj
+            project.SetMetadata("ProjectName", Path.GetFileNameWithoutExtension(path));
 
             // set the shared sources directory
-            project.SetMetadata("SharedSourcesDir", Path.Combine(directory, "shared") + Path.DirectorySeparatorChar);
+            project.SetMetadata("SharedSourcesDir", Path.Combine(parent, "shared") + Path.DirectorySeparatorChar);
 
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));

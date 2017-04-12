@@ -2,6 +2,23 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.1-alpha-02797"></a>
+## 2.0.1-alpha-02797 (2017-04-12)
+
+
+<a name="2.0.1-alpha-02796"></a>
+## 2.0.1-alpha-02796 (2017-04-12)
+
+
+<a name="2.0.1-alpha-02794"></a>
+## 2.0.1-alpha-02794 (2017-04-12)
+
+
+### Bug Fixes
+
+* **semver:** ensure master branch always uses next version 14b3d65
+
+
 <a name="2.0.0-beta-02716"></a>
 ## 2.0.0-beta-02716 (2017-04-07)
 
