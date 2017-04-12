@@ -15,3 +15,5 @@ cache:
 build_script:
   - cmd: condo.cmd -- /t:ci
 test: off
+skip_commits:
+  message: "***NO_CI***"
