@@ -8,8 +8,7 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading;
+
     using Condo.IO;
 
     using NuGet.Versioning;
