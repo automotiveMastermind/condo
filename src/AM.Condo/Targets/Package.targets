@@ -21,8 +21,8 @@
         WorkingDirectory="$(RepositoryRoot)" />
 
     <ItemGroup>
-      <AllPackages Include="$(PackageArtifactsRoot)$(slash)*.nupkg" />
-      <Symbols Include="$(PackageArtifactsRoot)$(slash)*.symbols.nupkg" />
+      <AllPackages Include="$(PackageArtifactsRoot)*.nupkg" />
+      <Symbols Include="$(PackageArtifactsRoot)*.symbols.nupkg" />
       <Packages Include="@(AllPackages)" Exclude="@(Symbols)" />
     </ItemGroup>
   </Target>
