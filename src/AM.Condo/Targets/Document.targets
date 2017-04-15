@@ -1,3 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="DotNetDocs" Condition=" '$(DotNetDocs)' != 'skip' AND '$(DocProjects->Count())' != '0' ">
+    <PropertyGroup>
+      <DocFXRoot>$(CondoPath)../docfx/</DocFXRoot>
+      <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
+      <DocFXCommand>$(DocFXPath)</DocFXCommand>
+      <HasMono>false</HasMono>
+      <DocFXEnabled>false</DocFXEnabled>
+    </PropertyGroup>
+
+    <FindCommand Command="mono" Condition=" NOT $(IsWindows) ">
+      <Output TaskParameter="Path" ItemName="MonoPath" />
+      <Output TaskParameter="Exists" ItemName="HasMono" />
+    </FindCommand>
+
+    <PropertyGroup Condition=" $(IsWindows) OR $(HasMono) ">
+      <DocFXEnabled>true</DocFXEnabled>
+      <DocFXCommand Condition=" $(HasMono) ">mono $(DocFXPath)</DocFXCommand>
+    </PropertyGroup>
+
+    <Message Importance="High"
+             Text="Mono must be available on the system to build DocFX projects on non-Windows platforms."
+             Condition=" NOT $(IsWindows) AND NOT $(HasMono) " />
+
+    <GetLatestRelease Organization="dotnet" Repository="docfx" Token="$(GH_TOKEN)"
+                      Destination="$(DocFXPath)" Condition=" $(DocFXEnabled) " />
+
+    <Exec Command="$(DocFXCommand) %(_DotNetDocs.ProjectName) $(DotNetDocsArgs)"
+          WorkingDirectory="%(_DotNetDocs.WorkingDirectory)" />
+  </Target>
 </Project>

@@ -26,7 +26,7 @@
           WorkingDirectory="%(_DotNetBuild.WorkingDirectory)" />
   </Target>
 
-  <Target Name="CopyDotNetBuild">
+  <Target Name="CopyDotNetBuild" Condition=" '$(DotNetBuild)' != 'skip' AND '@(DotNetBuildPaths->Count())' != '0' ">
     <ItemGroup>
       <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(slash)**" Exclude="%(DotNetProjects.ProjectDir)bin$(slash)publish$(slash)**">
         <ProjectName>%(DotNetProjects.ProjectName)</ProjectName>

@@ -211,6 +211,7 @@ fi
 cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 -nologo
 "$CONDO_PROJ"
+-p:CondoPath="$CONDO_ROOT/"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
 -p:PACKAGE_FEED_USERNAME="$PACKAGE_FEED_USERNAME"

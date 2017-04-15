@@ -212,6 +212,7 @@ try {
     $MSBuildRspData = @"
 /nologo
 "$CondoProj"
+/p:CondoPath="$CondoRoot\\"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"
 /fl
