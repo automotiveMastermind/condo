@@ -23,6 +23,7 @@ x86/
 [Cc]ondo.[Aa]ssembly[Ii]nfo.cs
 condo-local.sh
 condo-local.ps1
+CHANGELOG.md
 .ready
 
 # jetbrains
