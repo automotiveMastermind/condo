@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="2.0.1-alpha-02811"></a>
+## 2.0.1-alpha-02811 (2017-04-15)
+
+
+### Bug Fixes
+
+* **slashes:** normalize slashes everywhere b86d317
+
+
 <a name="2.0.1-alpha-02810"></a>
 ## 2.0.1-alpha-02810 (2017-04-15)
 
