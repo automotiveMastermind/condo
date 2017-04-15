@@ -28,13 +28,15 @@
     "**/bower_components": true,
     "**/condo.sh": true,
     "**/condo.ps1": true,
-    "**/condo.cmd": true
+    "**/condo.cmd": true,
+    "artifacts/**": true
   },
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
     "**/condo.sh": true,
     "**/condo.ps1": true,
-    "**/condo.cmd": true
+    "**/condo.cmd": true,
+    "artifacts/**": true
   }
 }
