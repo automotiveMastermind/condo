@@ -32,12 +32,8 @@
     <PublishArtifactsRoot   Condition=" '$(PublishArtifactsRoot)'   == '' ">$(ArtifactsRoot)publish$(slash)</PublishArtifactsRoot>
     <PublishArtifactsRoot   Condition=" !HasTrailingSlash('$(PublishArtifactsRoot)') ">$(PublishArtifactsRoot)$(slash)</PublishArtifactsRoot>
 
-    <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$(ArtifactsRoot)packages</PackageArtifactsRoot>
-
-    <!-- does dotnet pack have issues with trailing slashes on windows?
     <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$(ArtifactsRoot)packages$(slash)</PackageArtifactsRoot>
     <PackageArtifactsRoot   Condition=" !HasTrailingSlash('$(PackageArtifactsRoot)') ">$(PackageArtifactsRoot)$(slash)</PackageArtifactsRoot>
-    -->
 
     <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$(ArtifactsRoot)feed$(slash)</FeedArtifactsRoot>
     <FeedArtifactsRoot      Condition=" !HasTrailingSlash('$(FeedArtifactsRoot)') ">$(FeedArtifactsRoot)feed$(slash)</FeedArtifactsRoot>

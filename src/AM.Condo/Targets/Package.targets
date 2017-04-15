@@ -4,7 +4,7 @@
   <Target Name="DotNetPack" Condition=" '$(DotNetPack)' != 'skip' ">
     <PropertyGroup>
       <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
-      <DotNetPackOptions>$(DotNetPackOptions) --output &quot;$(PackageArtifactsRoot)&quot;</DotNetPackOptions>
+      <DotNetPackOptions>$(DotNetPackOptions) --output &quot;$(PackageArtifactsRoot.TrimEnd('$(slash)'))&quot;</DotNetPackOptions>
       <DotNetPackOptions>$(DotNetPackOptions) --no-build</DotNetPackOptions>
       <DotNetPackOptions Condition=" '$(Configuration)' != '' ">$(DotNetPackOptions) --configuration &quot;$(Configuration)&quot;</DotNetPackOptions>
 
