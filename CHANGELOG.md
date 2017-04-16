@@ -2,21 +2,23 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.1-alpha-02797"></a>
-## 2.0.1-alpha-02797 (2017-04-12)
-
-
-<a name="2.0.1-alpha-02796"></a>
-## 2.0.1-alpha-02796 (2017-04-12)
-
-
-<a name="2.0.1-alpha-02794"></a>
-## 2.0.1-alpha-02794 (2017-04-12)
+<a name="2.0.1-alpha-02811"></a>
+## 2.0.1-alpha-02811 (2017-04-15)
 
 
 ### Bug Fixes
 
-* **semver:** ensure master branch always uses next version 14b3d65
+* **slashes:** normalize slashes everywhere b86d317
+
+
+<a name="2.0.1-alpha-02810"></a>
+## 2.0.1-alpha-02810 (2017-04-15)
+
+
+### Bug Fixes
+
+* **nuget-push:** remove trailing slash on windows 302d5fa
+* ensure master branch always uses next version (#63) 0777c6b, closes #63
 
 
 <a name="2.0.0-beta-02716"></a>

@@ -28,14 +28,14 @@
 
   <Target Name="CopyDotNetBuild">
     <ItemGroup>
-      <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(Slash)**" Exclude="%(DotNetProjects.ProjectDir)bin$(slash)publish$(slash)**">
+      <_CopyDotNetBuild Include="%(DotNetProjects.ProjectDir)bin$(slash)**" Exclude="%(DotNetProjects.ProjectDir)bin$(slash)publish$(slash)**">
         <ProjectName>%(DotNetProjects.ProjectName)</ProjectName>
       </_CopyDotNetBuild>
     </ItemGroup>
 
     <Copy
         SourceFiles="@(_CopyDotNetBuild)"
-        DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(Slash)%(ProjectName)$(Slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+        DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <PropertyGroup>
