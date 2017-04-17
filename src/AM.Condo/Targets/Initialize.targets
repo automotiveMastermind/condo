@@ -15,10 +15,13 @@
     <RepositoryRoot     Condition=" !HasTrailingSlash('$(RepositoryRoot)') ">$(RepositoryRoot)$(slash)</RepositoryRoot>
 
     <SrcRoot            Condition=" '$(SrcRoot)'            == '' ">$(RepositoryRoot)source$(slash)</SrcRoot>
-    <SrcRoot            Condition=" !HasTrailingSlash('$(SrcRoot)')">$(SrcRoot)$(slash)</SrcRoot>
+    <SrcRoot            Condition=" !HasTrailingSlash('$(SrcRoot)') ">$(SrcRoot)$(slash)</SrcRoot>
 
     <TestRoot           Condition=" '$(TestRoot)'           == '' ">$(RepositoryRoot)test$(slash)</TestRoot>
     <TestRoot           Condition=" !HasTrailingSlash('$(TestRoot)') ">$(TestRoot)$(slash)</TestRoot>
+
+    <DocsRoot           Condition=" '$(DocsRoot)'           == '' ">$(RepositoryRoot)docs$(slash)</DocsRoot>
+    <DocsRoot           Condition=" !HasTrailingSlash('$(DocsRoot)') ">$(DocsRoot)$(slash)</DocsRoot>
 
     <ArtifactsRoot      Condition=" '$(ArtifactsRoot)'      == '' ">$(RepositoryRoot)artifacts$(slash)</ArtifactsRoot>
     <ArtifactsRoot      Condition=" !HasTrailingSlash('$(ArtifactsRoot)') ">$(ArtifactsRoot)$(slash)</ArtifactsRoot>
@@ -145,6 +148,8 @@
       <DocProjects        Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'docs' "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
       <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.Publish) "/>
+
+      <DocFxProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
     </ItemGroup>
   </Target>
 

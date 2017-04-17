@@ -7,6 +7,7 @@
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetAssemblyInfo" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetBuildQuality" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetCommitInfo" />
+  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetLatestRelease" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNodeScripts" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />

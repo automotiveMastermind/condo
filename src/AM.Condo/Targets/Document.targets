@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DotNetDocs" Condition=" '$(DotNetDocs)' != 'skip' AND '$(DocProjects->Count())' != '0' ">
+  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)../docfx/</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
@@ -9,24 +9,39 @@
       <DocFXEnabled>false</DocFXEnabled>
     </PropertyGroup>
 
-    <FindCommand Command="mono" Condition=" NOT $(IsWindows) ">
-      <Output TaskParameter="Path" ItemName="MonoPath" />
-      <Output TaskParameter="Exists" ItemName="HasMono" />
+    <FindCommand Command="mono" Condition=" !$(IsWindows) ">
+      <Output TaskParameter="Path" PropertyName="MonoPath" />
+      <Output TaskParameter="Exists" PropertyName="HasMono" />
     </FindCommand>
 
     <PropertyGroup Condition=" $(IsWindows) OR $(HasMono) ">
       <DocFXEnabled>true</DocFXEnabled>
       <DocFXCommand Condition=" $(HasMono) ">mono $(DocFXPath)</DocFXCommand>
+      <DocFXOptions Condition=" '$(DocFXOptions)' == '' ">$(DOCFX_OPTIONS.Trim())</DocFXOptions>
+      <DocFXOptions>$(DocFXOptions.Trim()) build --output &quot;$(DocsArtifactsRoot)&quot;</DocFXOptions>
+      <DocFXOptions>$(DocFXOptions.Trim())</DocFXOptions>
+      <DocFXArgs Condition=" '$(DocFXArgs)' == '' ">$(DOCFX_ARGS.Trim())</DocFXArgs>
     </PropertyGroup>
 
-    <Message Importance="High"
-             Text="Mono must be available on the system to build DocFX projects on non-Windows platforms."
-             Condition=" NOT $(IsWindows) AND NOT $(HasMono) " />
+    <Warning Text="Mono must be available on the system to build DocFX projects on non-Windows platforms."
+             Condition=" !($(IsWindows) OR $(HasMono)) " />
 
     <GetLatestRelease Organization="dotnet" Repository="docfx" Token="$(GH_TOKEN)"
-                      Destination="$(DocFXPath)" Condition=" $(DocFXEnabled) " />
+                      Destination="$(DocFXRoot)" Condition=" $(DocFXEnabled) " />
 
-    <Exec Command="$(DocFXCommand) %(_DotNetDocs.ProjectName) $(DotNetDocsArgs)"
-          WorkingDirectory="%(_DotNetDocs.WorkingDirectory)" />
+    <Exec Command="$(DocFXCommand) $(DocFXOptions) &quot;%(DocFxProjects.FullPath)&quot; $(DocFXArgs)"
+          WorkingDirectory="%(DocFxProjects.WorkingDirectory)"
+          Condition=" $(DocFxEnabled) " />
   </Target>
+
+  <PropertyGroup>
+    <DocumentDependsOn>
+      $(BeforeDocument);
+      DocFxDocs;
+      $(DocumentDependsOn);
+      $(AfterDocument);
+    </DocumentDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Documentation" DependsOnTargets="$(DocumentDependsOn)" BeforeTargets="Document" />
 </Project>
