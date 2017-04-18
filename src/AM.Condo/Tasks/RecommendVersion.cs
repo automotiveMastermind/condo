@@ -191,7 +191,9 @@ namespace AM.Condo.Tasks
             switch (level)
             {
                 case 0:
-                    version = new SemanticVersion(version.Major + 1, 0, 0, releaseLabel);
+                    version = string.IsNullOrEmpty(releaseLabel)
+                        ? new SemanticVersion(version.Major + 1, 0, 0, releaseLabel)
+                        : new SemanticVersion(version.Major, version.Minor + 1, 0, releaseLabel);
                     break;
                 case 1:
                     version = new SemanticVersion(version.Major, version.Minor + 1, 0, releaseLabel);
