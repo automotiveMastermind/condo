@@ -2,15 +2,13 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="0.1.0-alpha-02838"></a>
-## 0.1.0-alpha-02838 (2017-04-18)
+<a name="2.0.1-alpha-02795"></a>
+## 2.0.1-alpha-02795 (2017-04-12)
 
 
 ### Bug Fixes
 
-* **releases:** detect PR after agent is imported 68eee00
-* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
-* ensure master branch always uses next version (#63) 0777c6b, closes #63
+* **semver:** ensure master branch always uses next version 14b3d65
 * **test:** add configuration to dotnet-test (#62) 9c46c5f, closes #62
 * **windows:** fix bootstrapping on windows (#60) b3ce495, closes #60 #59
 * **install:** fix install on windows (#46) 98993f1, closes #46
@@ -30,7 +28,6 @@
 
 ### Features
 
-* **semver:** simplify recommend release logic d885914
 * **package:** use dotnet nuget in place of custom task (#48) 0e46525, closes #48 #50 dotnet/cli/#6123
 * **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
 * **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
@@ -54,5 +51,21 @@
 Any existing bootstrap scripts *MUST* be updated due to some changes in how condo itself is retrieved and built. Replace the bootstrap scripts you rely on (`condo.ps1`, `condo.cmd`, and `condo.ps1`) from [here](https://github.com/pulsebridge/condo/tree/develop/template).
 * **log:** 
 Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The version is now based on git tags.
+
+
+<a name="0.1.0-alpha-02838"></a>
+## 0.1.0-alpha-02838 (2017-04-18)
+
+
+### Bug Fixes
+
+* **releases:** detect PR after agent is imported 68eee00
+* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
+* ensure master branch always uses next version (#63) 0777c6b, closes #63
+
+
+### Features
+
+* **semver:** simplify recommend release logic d885914
 
 
