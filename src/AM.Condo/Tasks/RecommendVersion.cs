@@ -93,87 +93,48 @@ namespace AM.Condo.Tasks
         /// <inheritdoc />
         public override bool Execute()
         {
-            // determine if no version tags exist
-            if (!this.gitlog.Versions.Any())
-            {
-                // assume this is the very first release and set to all zeros
-                this.CurrentVersion = this.CurrentRelease = "0.0.0";
-
-                // set the next release to the current major release
-                this.NextRelease = "1.0.0";
-
-                // set the recommended release to the first patch
-                this.RecommendedRelease = string.IsNullOrEmpty(this.BuildQuality) ? this.NextRelease : "0.0.1";
-
-                // move on immediately
-                return true;
-            }
-
             // get the current version
-            var current = this.gitlog.Versions.Last();
-            var currentVersion = current.Key;
-            var currentCommit = this.gitlog.Tags.First(tag => currentVersion.Equals(tag.Version)).Hash;
+            var current = this.gitlog.Versions.LastOrDefault();
+            var currentVersion = current.Key ?? new SemanticVersion(major: 0, minor: 0, patch: 0);
+
+            // get the last version of the same build quality
+            var last = this.gitlog.Versions.LastOrDefault(v => !v.Key.IsPrerelease);
+            var lastVersion = last.Key;
+            var lastCommit = lastVersion == null ? null : this.gitlog.Tags.First(tag => lastVersion.Equals(tag.Version)).Hash;
+
+            // get the version
+            var version = lastVersion ?? currentVersion;
 
             // set the current version and current release properties
-            this.CurrentVersion = currentVersion.ToNormalizedString();
-            this.CurrentRelease = currentVersion.ToString("V", VersionFormatter.Instance);
+            this.CurrentVersion = version.ToNormalizedString();
+            this.CurrentRelease = version.ToString("V", VersionFormatter.Instance);
 
             // get the level for the next version
-            var level = this.RecommendLevel(currentVersion, currentCommit);
+            var level = this.RecommendLevel(lastCommit);
 
             // set the next release version
-            this.NextRelease = RecommendRelease(currentVersion, level);
+            this.NextRelease = RecommendRelease(version, level, releaseLabel: null);
 
-            // parse the prerelease build quality
-            var currentBuildQuality = currentVersion.Release.Split('-').FirstOrDefault();
-
-            // determine if this is a release
-            if (string.IsNullOrEmpty(this.BuildQuality))
-            {
-                // set the recommended release to the next reelease
-                this.RecommendedRelease = this.NextRelease;
-
-                // move on immediately
-                return true;
-            }
-
-            // determine if the current build quality is greater than the new build quality
-            if (string.IsNullOrEmpty(currentBuildQuality) || string.Compare(this.BuildQuality, currentBuildQuality) < 0)
-            {
-                // set the recommended release to the next patch for pre-release
-                this.RecommendedRelease = RecommendRelease(currentVersion, level: 2);
-
-                // move on immediately
-                return true;
-            }
-
-            // we should not increment
-            this.RecommendedRelease = this.CurrentRelease;
+            // set the recommended version
+            this.RecommendedRelease = RecommendRelease(version, level, this.BuildQuality);
 
             // move on immediately
             return true;
         }
 
-        private int RecommendLevel(SemanticVersion version, string hash)
+        private int RecommendLevel(string hash)
         {
-            // determine if the major version is 0
-            if (version.Major == 0)
-            {
-                // return 0 (next version is always 1.0.0)
-                return 0;
-            }
-
             // set the default bump level to patch
             var level = 2;
 
             // capture the commits
             var commits = this.gitlog.Commits;
 
-            // set an index to start at the beginning of the commits
-            var index = 0;
+            // set an index to start at the beginning of the commits (latest)
+            var index = string.IsNullOrEmpty(hash) ? commits.Count - 1 : -1;
 
             // continue iterating until the last commit
-            for (index = commits.Count - 1; index > 0; index--)
+            while (++index < commits.Count)
             {
                 // determine if we have found the current version commit
                 if (commits[index].Hash.Equals(hash))
@@ -184,7 +145,7 @@ namespace AM.Condo.Tasks
             }
 
             // iterate starting at the latest version commit
-            for (index = index + 1; index < commits.Count; index++)
+            while (index-- > 0)
             {
                 // capture the commit at that index
                 var commit = commits[index];
@@ -213,21 +174,33 @@ namespace AM.Condo.Tasks
             return level;
         }
 
-        private static string RecommendRelease(SemanticVersion version, int level)
+        private static string RecommendRelease(SemanticVersion version, int level, string releaseLabel)
         {
+            if (version.Major == 0)
+            {
+                if (string.IsNullOrEmpty(releaseLabel))
+                {
+                    level = 0;
+                }
+                else if (level == 0)
+                {
+                    level = 1;
+                }
+            }
+
             switch (level)
             {
                 case 0:
-                    version = new SemanticVersion(version.Major + 1, 0, 0);
+                    version = new SemanticVersion(version.Major + 1, 0, 0, releaseLabel);
                     break;
                 case 1:
-                    version = new SemanticVersion(version.Major, version.Minor + 1, 0);
+                    version = new SemanticVersion(version.Major, version.Minor + 1, 0, releaseLabel);
                     break;
                 case 2:
-                    version = new SemanticVersion(version.Major, version.Minor, version.Patch + 1);
+                    version = new SemanticVersion(version.Major, version.Minor, version.Patch + 1, releaseLabel);
                     break;
                 default:
-                    version = new SemanticVersion(version.Major, version.Minor, version.Patch);
+                    version = new SemanticVersion(version.Major, version.Minor, version.Patch, releaseLabel);
                     break;
             }
 

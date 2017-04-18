@@ -11,6 +11,7 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+    using NuGet.Versioning;
 
     using static System.FormattableString;
 
@@ -24,7 +25,7 @@ namespace AM.Condo.Tasks
         /// Gets or sets the semantic version of the product.
         /// </summary>
         [Required]
-        public string CurrentRelease { get; set; }
+        public string RecommendedRelease { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time (UTC) that the project was first started.
@@ -156,21 +157,18 @@ namespace AM.Condo.Tasks
                 return false;
             }
 
-            // define a variable to retain the version
-            Version version;
-
             // attempt to parse the version
-            if (!Version.TryParse(this.CurrentRelease, out version))
+            if (!SemanticVersion.TryParse(this.RecommendedRelease, out SemanticVersion version))
             {
                 // emit an error if the version is not parsable
-                this.Log.LogError(Invariant($"Could not parse {nameof(this.CurrentRelease)} {this.CurrentRelease} -- it is not in the expected format."));
+                this.Log.LogError(Invariant($"Could not parse {nameof(this.RecommendedRelease)} {this.RecommendedRelease} -- it is not in the expected format."));
 
                 // move on immediately
                 return false;
             }
 
             // set the assembly version to the semantic version
-            this.AssemblyVersion = version.ToString();
+            this.InformationalVersion = this.AssemblyVersion = version.ToString("x.y.z", VersionFormatter.Instance);
 
             // create a commit number from the current seconds
             var commit = now.ToString("HHmm", CultureInfo.InvariantCulture);
@@ -194,10 +192,7 @@ namespace AM.Condo.Tasks
             }
 
             // set the file version
-            this.FileVersion = Invariant($"{version.Major}.{version.Minor}.{this.BuildId}.{commit}");
-
-            // get the semantic version
-            this.InformationalVersion = this.CurrentRelease;
+            this.FileVersion = version.ToString($"x.y.{this.BuildId}.{commit}", VersionFormatter.Instance);
 
             // determine if the prerelease tag is now set
             if (!string.IsNullOrEmpty(this.BuildQuality))

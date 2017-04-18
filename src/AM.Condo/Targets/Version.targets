@@ -51,7 +51,7 @@
   <Target Name="GetAssemblyInfo">
     <GetAssemblyInfo
         CI="$(CI)"
-        CurrentRelease="$(RecommendedRelease)"
+        RecommendedRelease="$(RecommendedRelease)"
         AssemblyVersion="$(AssemblyVersion)"
         BuildId="$(BuildId)"
         CommitId="$(CommitId)"
@@ -72,7 +72,7 @@
   <Target Name="SaveAssemblyInfo" Condition=" '@(SourceProjects->Count())' != '0' ">
     <SaveAssemblyInfo
         AssemblyInfoPath="%(SourceProjects.CondoAssemblyInfo)"
-        CurrentRelease="$(RecommendedRelease)"
+        RecommendedRelease="$(RecommendedRelease)"
         Company="$(Company)"
         Product="$(Product)"
         ProjectName="%(SourceProjects.ProjectName)"
