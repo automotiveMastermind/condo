@@ -2,62 +2,17 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.1-alpha-02811"></a>
-## 2.0.1-alpha-02811 (2017-04-15)
+<a name="0.0.1-alpha-02857"></a>
+## 0.0.1-alpha-02857 (2017-04-18)
 
 
 ### Bug Fixes
 
-* **slashes:** normalize slashes everywhere b86d317
-
-
-<a name="2.0.1-alpha-02810"></a>
-## 2.0.1-alpha-02810 (2017-04-15)
-
-
-### Bug Fixes
-
-* **nuget-push:** remove trailing slash on windows 302d5fa
+* **publish:** improve publish target detection aafb52d, closes #66
+* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
 * ensure master branch always uses next version (#63) 0777c6b, closes #63
-
-
-<a name="2.0.0-beta-02716"></a>
-## 2.0.0-beta-02716 (2017-04-07)
-
-
-### Bug Fixes
-
 * **test:** add configuration to dotnet-test (#62) 9c46c5f, closes #62
-
-
-<a name="2.0.0-beta-02709"></a>
-## 2.0.0-beta-02709 (2017-04-07)
-
-
-### Performance Improvements
-
-* **build:** improve build performance (#61) 693dbb4, closes #61
-
-
-<a name="2.0.0-beta-02656"></a>
-## 2.0.0-beta-02656 (2017-04-04)
-
-
-### Bug Fixes
-
 * **windows:** fix bootstrapping on windows (#60) b3ce495, closes #60 #59
-
-
-<a name="2.0.0-beta-02611"></a>
-## 2.0.0-beta-02611 (2017-03-28)
-
-
-<a name="2.0.0-beta-02596"></a>
-## 2.0.0-beta-02596 (2017-03-27)
-
-
-### Bug Fixes
-
 * **install:** fix install on windows (#46) 98993f1, closes #46
 * **git:** checkout branch task was missing (#45) 57462c7, closes #45
 * **release:** checkout branch due to detached head (#41) 05b4c26, closes #41
@@ -85,6 +40,11 @@
 * **nuget:** add support for nuget push of vsts protected feeds (#18) 75a7d41, closes #18
 * **windows:** add support for building on windows (#17) 961090d, closes #17
 * **dotnet-cli:** replace dnx support with dotnet-cli using msbuild (#16) c97c190, closes #16 #12 #13
+
+
+### Performance Improvements
+
+* **build:** improve build performance (#61) 693dbb4, closes #61
 
 
 ### BREAKING CHANGES
