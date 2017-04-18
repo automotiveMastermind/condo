@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <DotNetPackProjects Include="@(SourceProjects)" Condition=" '@(DotNetPackProjects->Count())' == '0' " />
+      <DotNetPackProjects Include="@(SourceProjects)" Condition=" '@(DotNetPackProjects->Count())' == '0' AND %(SourceProjects.Pack) " />
     </ItemGroup>
 
     <Exec
