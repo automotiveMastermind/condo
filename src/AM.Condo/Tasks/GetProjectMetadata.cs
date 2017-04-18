@@ -67,41 +67,63 @@ namespace AM.Condo.Tasks
             var xml = XDocument.Load(path);
 
             // get the output type (default to library)
-            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value ?? "library";
+            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value.ToLower() ?? "library";
 
-            // determine if the output type is available
-            if (!string.IsNullOrEmpty(output))
-            {
-                // set the output type
-                project.SetMetadata("OutputType", output.ToLower());
-                project.SetMetadata("Publish", "true");
-            }
+            // set the output type
+            project.SetMetadata("OutputType", output);
+
+            // determine if the project is a library
+            var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
+
+            // set the default publish and pack
+            project.SetMetadata("Publish", (!library).ToString());
+            project.SetMetadata("Pack", library.ToString());
 
             // get the target framework node
-            var frameworks = xml.Descendants("TargetFramework");
+            var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
+                .SelectMany(node => node.Value.Split(';'))
+                .OrderByDescending(name => name);
 
             // determine if the frameworks node did not exist
             if (frameworks == null || !frameworks.Any())
             {
-                // set publish to false
+                // set publish and pack to false
                 project.SetMetadata("Publish", "false");
+                project.SetMetadata("Pack", "false");
 
                 // move on immediately
                 return;
             }
 
-            // get the name properties ordered by name
-            var names = frameworks.SelectMany(node => node.Value.Split(';'))
-                .OrderByDescending(name => name);
-
             // get the highest netcore tfm
-            var tfm = names.FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+            var tfm = frameworks
+                .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
 
             // set the publish to true
             project.SetMetadata("Publish", (tfm != null).ToString());
 
+            // get the publish property
+            var publish = xml.Descendants("Publish").FirstOrDefault()?.Value;
+
+            // determine if the publish property exists
+            if (!string.IsNullOrEmpty(publish))
+            {
+                // set the publish value
+                project.SetMetadata("Publish", publish);
+            }
+
+            // get the pack property
+            var pack = xml.Descendants("Pack").FirstOrDefault()?.Value;
+
+            // determine if the pack property exists
+            if (!string.IsNullOrEmpty(pack))
+            {
+                // set the pack metadata
+                project.SetMetadata("Pack", pack);
+            }
+
             // set the target frameworks property
-            project.SetMetadata("TargetFrameworks", string.Join(";", names));
+            project.SetMetadata("TargetFrameworks", string.Join(";", frameworks));
             project.SetMetadata("NetCoreFramework", tfm);
         }
 
