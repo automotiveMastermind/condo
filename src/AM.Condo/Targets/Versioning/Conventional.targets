@@ -17,11 +17,6 @@
   <!-- import the convention strategy -->
   <Import Project="$(ConventionStrategyTargets)" />
 
-  <!-- detect a pull request after agent is imported -->
-  <PropertyGroup>
-    <IsPullRequest Condition=" '$(PullRequestId)' != '' ">true</IsPullRequest>
-  </PropertyGroup>
-
   <!-- get information about the commits within the repository -->
   <Target Name="GetCommitInfo" Condition="$(HasGit)">
     <GetCommitInfo
