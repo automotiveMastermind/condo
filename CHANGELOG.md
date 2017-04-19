@@ -2,6 +2,15 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="3.0.0-alpha-02842"></a>
+## 3.0.0-alpha-02842 (2017-04-18)
+
+
+### Bug Fixes
+
+* **git-log:** include annotated tags in git log c5f1d18
+
+
 <a name="2.0.1-alpha-02795"></a>
 ## 2.0.1-alpha-02795 (2017-04-12)
 
@@ -67,5 +76,14 @@ Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The
 ### Features
 
 * **semver:** simplify recommend release logic d885914
+
+
+<a name="0.0.1-alpha-02857"></a>
+## 0.0.1-alpha-02857 (2017-04-18)
+
+
+### Bug Fixes
+
+* **publish:** improve publish target detection aafb52d, closes #66
 
 
