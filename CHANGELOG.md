@@ -2,62 +2,24 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="2.0.1-alpha-02811"></a>
-## 2.0.1-alpha-02811 (2017-04-15)
+<a name="3.0.0-alpha-02842"></a>
+## 3.0.0-alpha-02842 (2017-04-18)
 
 
 ### Bug Fixes
 
-* **slashes:** normalize slashes everywhere b86d317
+* **git-log:** include annotated tags in git log c5f1d18
 
 
-<a name="2.0.1-alpha-02810"></a>
-## 2.0.1-alpha-02810 (2017-04-15)
-
-
-### Bug Fixes
-
-* **nuget-push:** remove trailing slash on windows 302d5fa
-* ensure master branch always uses next version (#63) 0777c6b, closes #63
-
-
-<a name="2.0.0-beta-02716"></a>
-## 2.0.0-beta-02716 (2017-04-07)
+<a name="2.0.1-alpha-02795"></a>
+## 2.0.1-alpha-02795 (2017-04-12)
 
 
 ### Bug Fixes
 
+* **semver:** ensure master branch always uses next version 14b3d65
 * **test:** add configuration to dotnet-test (#62) 9c46c5f, closes #62
-
-
-<a name="2.0.0-beta-02709"></a>
-## 2.0.0-beta-02709 (2017-04-07)
-
-
-### Performance Improvements
-
-* **build:** improve build performance (#61) 693dbb4, closes #61
-
-
-<a name="2.0.0-beta-02656"></a>
-## 2.0.0-beta-02656 (2017-04-04)
-
-
-### Bug Fixes
-
 * **windows:** fix bootstrapping on windows (#60) b3ce495, closes #60 #59
-
-
-<a name="2.0.0-beta-02611"></a>
-## 2.0.0-beta-02611 (2017-03-28)
-
-
-<a name="2.0.0-beta-02596"></a>
-## 2.0.0-beta-02596 (2017-03-27)
-
-
-### Bug Fixes
-
 * **install:** fix install on windows (#46) 98993f1, closes #46
 * **git:** checkout branch task was missing (#45) 57462c7, closes #45
 * **release:** checkout branch due to detached head (#41) 05b4c26, closes #41
@@ -87,11 +49,41 @@
 * **dotnet-cli:** replace dnx support with dotnet-cli using msbuild (#16) c97c190, closes #16 #12 #13
 
 
+### Performance Improvements
+
+* **build:** improve build performance (#61) 693dbb4, closes #61
+
+
 ### BREAKING CHANGES
 
 * **log:** 
 Any existing bootstrap scripts *MUST* be updated due to some changes in how condo itself is retrieved and built. Replace the bootstrap scripts you rely on (`condo.ps1`, `condo.cmd`, and `condo.ps1`) from [here](https://github.com/pulsebridge/condo/tree/develop/template).
 * **log:** 
 Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The version is now based on git tags.
+
+
+<a name="0.1.0-alpha-02838"></a>
+## 0.1.0-alpha-02838 (2017-04-18)
+
+
+### Bug Fixes
+
+* **releases:** detect PR after agent is imported 68eee00
+* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
+* ensure master branch always uses next version (#63) 0777c6b, closes #63
+
+
+### Features
+
+* **semver:** simplify recommend release logic d885914
+
+
+<a name="0.0.1-alpha-02857"></a>
+## 0.0.1-alpha-02857 (2017-04-18)
+
+
+### Bug Fixes
+
+* **publish:** improve publish target detection aafb52d, closes #66
 
 

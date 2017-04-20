@@ -8,7 +8,6 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Generic;
-
     using Condo.IO;
 
     using NuGet.Versioning;
@@ -23,6 +22,8 @@ namespace AM.Condo.Tasks
 
         public RecommendVersionTest(ITestOutputHelper output)
         {
+            // Debug.WaitForDebugger();
+
             this.output = output;
         }
 
@@ -68,7 +69,7 @@ namespace AM.Condo.Tasks
 
             var log = new GitLog
             {
-                Commits = { previous, current }
+                Commits = { current, previous }
             };
 
             if (!string.IsNullOrEmpty(release.CurrentVersion))
@@ -104,14 +105,14 @@ namespace AM.Condo.Tasks
 
         public static TheoryData<ReleaseData> Releases => new TheoryData<ReleaseData>
         {
-            // BUGFIX: NULL -> ALPHA (DEFAULT)
+            // BUGFIX: NULL -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.0.1-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -121,18 +122,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: ALPHA -> ALPHA (NO INCREMENT)
+            // BUGFIX: ALPHA -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-alpha-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.0.2-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -142,18 +143,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-alpha-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: BETA -> ALPHA (INCREMENT PATCH)
+            // BUGFIX: BETA -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-beta-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -163,18 +164,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-beta-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: HOTFIX -> ALPHA (INCREMENT PATCH)
+            // BUGFIX: HOTFIX -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-hotfix-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -184,18 +185,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-hotfix-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: SERVICING -> ALPHA (INCREMENT PATCH)
+            // BUGFIX: SERVICING -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-servicing-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -205,18 +206,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-servicing-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: RC -> ALPHA (INCREMENT PATCH)
+            // BUGFIX: RC -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-rc-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -226,18 +227,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-rc-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: FINAL -> ALPHA (INCREMENT PATCH)
+            // BUGFIX: FINAL -> ALPHA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "alpha",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "1.0.1-alpha",
                 NextRelease = "1.0.1",
                 BreakingChange = false
             },
@@ -247,18 +248,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "2.0.0-alpha",
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: NULL -> ALPHA (DEFAULT)
+            // FEAT: NULL -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -268,18 +269,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: ALPHA -> ALPHA (NO INCREMENT)
+            // FEAT: ALPHA -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-alpha-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -289,18 +290,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-alpha-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: BETA -> ALPHA (INCREMENT PATCH)
+            // FEAT: BETA -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-beta-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -310,18 +311,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-beta-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: HOTFIX -> ALPHA (INCREMENT PATCH)
+            // FEAT: HOTFIX -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-hotfix-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -331,18 +332,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-hotfix-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: SERVICING -> ALPHA (INCREMENT PATCH)
+            // FEAT: SERVICING -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-servicing-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -352,18 +353,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-servicing-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: RC -> ALPHA (INCREMENT PATCH)
+            // FEAT: RC -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-rc-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -373,18 +374,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "0.0.1-rc-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-alpha",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: FINAL -> ALPHA (INCREMENT MINOR)
+            // FEAT: FINAL -> ALPHA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "alpha",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "1.1.0-alpha",
                 NextRelease = "1.1.0",
                 BreakingChange = false
             },
@@ -394,18 +395,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "alpha",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "2.0.0-alpha",
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: NULL -> BETA (DEFAULT)
+            // BUGFIX: NULL -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.0.1-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -415,18 +416,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: ALPHA -> BETA (NO INCREMENT)
+            // BUGFIX: ALPHA -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-alpha-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.0.2-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -436,18 +437,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-alpha-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: BETA -> BETA (NO INCREMENT)
+            // BUGFIX: BETA -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-beta-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.0.2-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -457,18 +458,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-beta-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: HOTFIX -> BETA (INCREMENT PATCH)
+            // BUGFIX: HOTFIX -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-hotfix-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -478,18 +479,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-hotfix-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: SERVICING -> BETA (INCREMENT PATCH)
+            // BUGFIX: SERVICING -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-servicing-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -499,18 +500,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-servicing-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: RC -> BETA (INCREMENT PATCH)
+            // BUGFIX: RC -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-rc-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.0.2-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -520,18 +521,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-rc-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: FINAL -> BETA (INCREMENT PATCH)
+            // BUGFIX: FINAL -> BETA
             new ReleaseData
             {
                 Type = "bugfix",
                 BuildQuality = "beta",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "1.0.1-beta",
                 NextRelease = "1.0.1",
                 BreakingChange = false
             },
@@ -541,18 +542,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "2.0.0-beta",
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: NULL -> BETA (DEFAULT)
+            // FEAT: NULL -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -562,18 +563,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = null,
                 CurrentRelease = "0.0.0",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: ALPHA -> BETA (NO INCREMENT)
+            // FEAT: ALPHA -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-alpha-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -583,18 +584,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-alpha-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: BETA -> BETA (NO INCREMENT)
+            // FEAT: BETA -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-beta-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -604,18 +605,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-beta-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.1",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: HOTFIX -> BETA (INCREMENT PATCH)
+            // FEAT: HOTFIX -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-hotfix-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -625,18 +626,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-hotfix-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: SERVICING -> BETA (INCREMENT PATCH)
+            // FEAT: SERVICING -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-servicing-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -646,18 +647,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-servicing-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: RC -> BETA (INCREMENT PATCH)
+            // FEAT: RC -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-rc-1",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = false
             },
@@ -667,18 +668,18 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "0.0.1-rc-2",
                 CurrentRelease = "0.0.1",
-                RecommendedRelease = "0.0.2",
+                RecommendedRelease = "0.1.0-beta",
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: FINAL -> BETA (INCREMENT MINOR)
+            // FEAT: FINAL -> BETA
             new ReleaseData
             {
                 Type = "feat",
                 BuildQuality = "beta",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "1.1.0-beta",
                 NextRelease = "1.1.0",
                 BreakingChange = false
             },
@@ -688,11 +689,11 @@ namespace AM.Condo.Tasks
                 BuildQuality = "beta",
                 CurrentVersion = "1.0.0",
                 CurrentRelease = "1.0.0",
-                RecommendedRelease = "1.0.1",
+                RecommendedRelease = "2.0.0-beta",
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: NULL -> FINAL (SET NEXT VERSION)
+            // BUGFIX: NULL -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -713,7 +714,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: ALPHA -> FINAL (SET NEXT VERSION)
+            // BUGFIX: ALPHA -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -734,7 +735,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: BETA -> FINAL (SET NEXT VERSION)
+            // BUGFIX: BETA -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -755,7 +756,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: HOTFIX -> FINAL (SET NEXT VERSION)
+            // BUGFIX: HOTFIX -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -776,7 +777,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: SERVICING -> FINAL (SET NEXT VERSION)
+            // BUGFIX: SERVICING -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -797,7 +798,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: RC -> FINAL (SET NEXT VERSION)
+            // BUGFIX: RC -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -818,7 +819,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: FINAL -> FINAL (SET NEXT VERSION)
+            // BUGFIX: FINAL -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -839,7 +840,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: NULL -> FINAL (SET NEXT VERSION)
+            // FEAT: NULL -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -860,7 +861,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: ALPHA -> FINAL (SET NEXT VERSION)
+            // FEAT: ALPHA -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -881,7 +882,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: BETA -> FINAL (SET NEXT VERSION)
+            // FEAT: BETA -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -902,7 +903,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: HOTFIX -> FINAL (SET NEXT VERSION)
+            // FEAT: HOTFIX -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -923,7 +924,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: SERVICING -> FINAL (SET NEXT VERSION)
+            // FEAT: SERVICING -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -944,7 +945,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: RC -> FINAL (SET NEXT VERSION
+            // FEAT: RC -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -965,7 +966,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: FINAL -> FINAL (SET NEXT VERSION)
+            // FEAT: FINAL -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -986,7 +987,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: NULL -> FINAL (SET NEXT VERSION)
+            // BUGFIX: NULL -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1007,7 +1008,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: ALPHA -> FINAL (SET NEXT VERSION)
+            // BUGFIX: ALPHA -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1028,7 +1029,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: BETA -> FINAL (SET NEXT VERSION)
+            // BUGFIX: BETA -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1049,7 +1050,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: HOTFIX -> FINAL (SET NEXT VERSION)
+            // BUGFIX: HOTFIX -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1070,7 +1071,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: SERVICING -> FINAL (SET NEXT VERSION)
+            // BUGFIX: SERVICING -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1091,7 +1092,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: RC -> FINAL (SET NEXT VERSION)
+            // BUGFIX: RC -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1112,7 +1113,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // BUGFIX: FINAL -> FINAL (SET NEXT VERSION)
+            // BUGFIX: FINAL -> FINAL
             new ReleaseData
             {
                 Type = "bugfix",
@@ -1133,7 +1134,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: NULL -> FINAL (SET NEXT VERSION)
+            // FEAT: NULL -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1154,7 +1155,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "1.0.0",
                 BreakingChange = true
             },
-            // FEAT: ALPHA -> FINAL (SET NEXT VERSION)
+            // FEAT: ALPHA -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1175,7 +1176,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: BETA -> FINAL (SET NEXT VERSION)
+            // FEAT: BETA -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1196,7 +1197,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: HOTFIX -> FINAL (SET NEXT VERSION)
+            // FEAT: HOTFIX -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1217,7 +1218,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: SERVICING -> FINAL (SET NEXT VERSION)
+            // FEAT: SERVICING -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1238,7 +1239,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: RC -> FINAL (SET NEXT VERSION)
+            // FEAT: RC -> FINAL
             new ReleaseData
             {
                 Type = "feat",
@@ -1259,7 +1260,7 @@ namespace AM.Condo.Tasks
                 NextRelease = "2.0.0",
                 BreakingChange = true
             },
-            // FEAT: FINAL -> FINAL (SET NEXT VERSION)
+            // FEAT: FINAL -> FINAL
             new ReleaseData
             {
                 Type = "feat",

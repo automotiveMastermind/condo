@@ -13,6 +13,7 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+    using NuGet.Versioning;
 
     /// <summary>
     /// Represents a Microsoft Build task used to save assembly info attributes to a specified path.
@@ -40,7 +41,7 @@ namespace AM.Condo.Tasks
         /// Gets or sets the semantic version of the product.
         /// </summary>
         [Required]
-        public string CurrentRelease { get; set; }
+        public string RecommendedRelease { get; set; }
 
         /// <summary>
         /// Gets or sets the company responsible for the build.
@@ -185,11 +186,8 @@ namespace AM.Condo.Tasks
                 return false;
             }
 
-            // define a variable to retain the version
-            Version version;
-
             // attempt to parse the file version
-            if (!Version.TryParse(this.CurrentRelease, out version))
+            if (!SemanticVersion.TryParse(this.RecommendedRelease, out SemanticVersion version))
             {
                 // log an error
                 this.Log.LogError("A semantic version must be supplied in order to save version info.");
@@ -206,7 +204,7 @@ namespace AM.Condo.Tasks
             {
                 // create an informational version which includes the revision number as a tag
                 this.InformationalVersion = string.Format
-                    (@"{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+                    (@"{0}.{1}.{2}", version.Major, version.Minor, version.Patch);
             }
 
             // define a variable to retain the assembly info contents
