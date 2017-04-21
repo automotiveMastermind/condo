@@ -52,7 +52,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -66,7 +66,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -108,7 +108,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -122,7 +122,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -164,7 +164,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -178,7 +178,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -220,7 +220,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -234,7 +234,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -276,7 +276,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -290,7 +290,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -332,7 +332,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -346,7 +346,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
@@ -390,7 +390,7 @@ namespace AM.Condo.Tasks
 
             var actual = new GetAssemblyInfo
             {
-                CurrentRelease = "1.0.0",
+                RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
                 StartDateUtc = start,
                 BuildDateUtc = now,
@@ -404,7 +404,7 @@ namespace AM.Condo.Tasks
 
             // assert
             Assert.True(result);
-            Assert.Equal(expected.SemanticVersion, actual.CurrentRelease);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
             Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
             Assert.Equal(expected.FileVersion, actual.FileVersion);
             Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);

@@ -47,7 +47,7 @@
     <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)$(slash)Agents$(slash)</AgentTargetsRoot>
     <AgentTargetsRoot Condition=" !HasTrailingSlash('$(AgentTargetsRoot)') ">$(AgentTargetsRoot)$(slash)</AgentTargetsRoot>
 
-    <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' Or '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' OR '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
 
@@ -205,6 +205,7 @@
     <Message Importance="High" Text="Team URI           : $(TeamUri)" Condition=" '$(TeamUri)' != '' " />
     <Message Importance="High" Text="Build URI          : $(BuildUri)" Condition=" '$(BuildUri)' != '' " />
     <Message Importance="High" Text="CI Build           : $(CI)" />
+    <Message Importance="High" Text="PR Build           : $(IsPullRequest)" />
     <Message Importance="High" Text="Package Feed URI   : $(PackageFeedUri)" Condition=" '$(PackageFeedUri)' != '' " />
     <Message Importance="High" Text="Package Symbol URI : $(PackageSymbolUri)" Condition=" '$(PackageSymbolUri)' != '' " />
     <Message Importance="High" Text="Package Feed Key   : $(PackageFeedApiKey)" Condition=" '$(PackageFeedApiKey)' != '' " />
