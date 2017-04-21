@@ -14,7 +14,7 @@
       <Output TaskParameter="Exists" PropertyName="HasMono" />
     </FindCommand>
 
-    <PropertyGroup Condition=" $(IsWindows) OR $(HasMono) ">
+    <PropertyGroup Condition=" $(IsWindows) ">
       <DocFXEnabled>true</DocFXEnabled>
       <DocFXCommand Condition=" $(HasMono) ">mono $(DocFXPath)</DocFXCommand>
       <DocFXOptions Condition=" '$(DocFXOptions)' == '' ">$(DOCFX_OPTIONS.Trim())</DocFXOptions>
@@ -28,6 +28,10 @@
 
     <GetLatestRelease Organization="dotnet" Repository="docfx" Token="$(GH_TOKEN)"
                       Destination="$(DocFXRoot)" Condition=" $(DocFXEnabled) " />
+
+    <Exec Command="$(DocFXCommand) metadata &quot;%(DocFxProjects.FullPath)&quot; $(DocFXArgs)"
+          WorkingDirectory="%(DocFxProjects.WorkingDirectory)"
+          Condition=" $(DocFxEnabled) " />
 
     <Exec Command="$(DocFXCommand) $(DocFXOptions) &quot;%(DocFxProjects.FullPath)&quot; $(DocFXArgs)"
           WorkingDirectory="%(DocFxProjects.WorkingDirectory)"
