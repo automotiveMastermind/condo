@@ -66,7 +66,8 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
 $WorkingPath = Convert-Path (Get-Location)
 
 $ArtifactsRoot = "$WorkingPath\artifacts"
-$CondoRoot = "$HOME\.am\condo"
+$AmRoot = "$HOME\.am"
+$CondoRoot = "$AmRoot\condo"
 $SrcRoot = "$CondoRoot\.src"
 $BuildRoot = "$CondoRoot\.build"
 
@@ -212,6 +213,7 @@ try {
     $MSBuildRspData = @"
 /nologo
 "$CondoProj"
+/p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"

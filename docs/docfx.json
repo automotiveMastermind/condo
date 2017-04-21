@@ -18,8 +18,7 @@
         "files": [
           "api/**.yml",
           "api/index.md"
-        ],
-        "src": "./"
+        ]
       },
       {
         "files": [
@@ -27,8 +26,7 @@
           "conceptual/**/toc.yml",
           "toc.yml",
           "*.md"
-        ],
-        "src": "./"
+        ]
       }
     ],
     "resource": [
