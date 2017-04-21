@@ -21,7 +21,7 @@ MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
 CONDO_PATH="$SRC_ROOT/src/AM.Condo"
 CONDO_PUBLISH="$CONDO_ROOT/cli"
 CONDO_LOG="$BUILD_ROOT/condo.log"
-CONDO_TARGETS="$CONDO_PATH/Targets"
+CONDO_TARGETS="$CONDO_PUBLISH/Targets"
 CONDO_PROJ="$WORKING_PATH/condo.build"
 CONDO_VERBOSITY="normal"
 
@@ -131,6 +131,10 @@ install_condo() {
         info "condo: publishing condo tasks..."
         safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
         cp -R $TEMPLATE_ROOT $CONDO_ROOT
+
+        info "condo: removing temp path..."
+        rm -rf $SRC_ROOT
+
         success "condo: publish complete"
     else
         info "condo was already built: use --reset to get the latest version."

@@ -2,18 +2,19 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="DotNetTest" Condition=" '$(DotNetTest)' != 'skip' AND '@(TestProjects->Count())' != '0' ">
     <PropertyGroup>
+      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-windows</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-macos</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-linux</DotNetTestFilterOptions>
+
+      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Category!=agent-not-ci</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Category!=agent-not-local</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quot;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quot;</DotNetTestFilterOptions>
+
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
       <DotNetTestOptions>$(DotNetTestOptions.Trim()) --no-build</DotNetTestOptions>
       <DotNetTestOptions Condition=" '$(Configuration)' != '' ">$(DotNetTestOptions.Trim()) --configuration &quot;$(Configuration)&quot;</DotNetTestOptions>
       <DotNetTestOptions>$(DotNetTestOptions.Trim())</DotNetTestOptions>
-
-      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Platform!=not-windows</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Platform!=not-macos</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Platform!=not-linux</DotNetTestFilterOptions>
-
-      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Agent!=not-ci</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Agent!=not-local</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quot;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quot;</DotNetTestFilterOptions>
+      <DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>
 
       <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
       <DotNetTestProperties>$(DotNetTestProperties.Trim()) RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;</DotNetTestProperties>
@@ -24,9 +25,6 @@
       <_DotNetTest Include="@(TestProjects)">
         <ProjectName>%(Filename)%(Extension)</ProjectName>
         <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-
-        <!-- removing traits for now as it causes issues with the current implementation of dotnet test -->
-        <!--<DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>-->
         <Args>$(DotNetTestOptions) --logger &quot;trx;LogFileName=%(Filename).dotnet.xml&quot; -- $(DotNetTestProperties)</Args>
       </_DotNetTest>
     </ItemGroup>
