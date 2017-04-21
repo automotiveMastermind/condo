@@ -32,44 +32,60 @@ namespace AM.Condo
             // get the fact type argument from the trait constructor
             var type = (PurposeType)traitAttribute.GetConstructorArguments().First();
 
+            var name = nameof(PurposeType.Unit);
+
             // determine if the type is a unit test
             if (type.HasFlag(PurposeType.Unit))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Unit));
+                yield return new KeyValuePair<string, string>(Constants.FactType, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Unit)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-Not-{name}");
             }
+
+            name = nameof(PurposeType.EndToEnd);
 
             // determine if the type is an end-to-end test
             if (type.HasFlag(PurposeType.EndToEnd))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.EndToEnd));
+                yield return new KeyValuePair<string, string>(Constants.FactType, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.EndToEnd)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-Not-{name}");
             }
+
+            name = nameof(PurposeType.Integration);
 
             // determine if the type is an integration
             if (type.HasFlag(PurposeType.Integration))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Integration));
+                yield return new KeyValuePair<string, string>(Constants.FactType, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Integration)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-Not-{name}");
             }
+
+            name = nameof(PurposeType.Performance);
 
             // determine if the type is a performance test
             if (type.HasFlag(PurposeType.Performance))
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, nameof(PurposeType.Performance));
+                yield return new KeyValuePair<string, string>(Constants.FactType, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{nameof(PurposeType.Performance)}");
+                yield return new KeyValuePair<string, string>(Constants.FactType, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Purpose-Not-{name}");
             }
         }
     }

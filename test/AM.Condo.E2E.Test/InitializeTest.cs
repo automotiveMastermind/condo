@@ -75,7 +75,7 @@ namespace AM.Condo
 
                 repo.Condo(root);
 
-                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -t:initialize "
+                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -- /t:initialize "
                     + $"-p:TF_BUILD={ci} "
                     + $"-p:BUILD_VERSION={version} "
                     + $"-p:BUILD_SOURCEBRANCH={branch} "
@@ -176,7 +176,7 @@ namespace AM.Condo
 
                 repo.Condo(root);
 
-                var args = $@"--source ""{root}/src"" --no-color --verbosity minimal -t:initialize "
+                var args = $@"-Source ""{root}/src"" -NoColor -Verbosity minimal /t:initialize "
                     + $"-p:TF_BUILD={ci} "
                     + $"-p:BUILD_VERSION={version} "
                     + $"-p:BUILD_SOURCEBRANCH={branch} "

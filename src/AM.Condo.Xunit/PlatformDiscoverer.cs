@@ -33,70 +33,97 @@ namespace AM.Condo
             // get the platform type argument from the trait constructor
             var platform = (PlatformType)traitAttribute.GetConstructorArguments().First();
 
+            var name = nameof(PlatformType.Windows);
+
             // determine if the platform has a windows flag
             if (platform.HasFlag(PlatformType.Windows))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.Windows));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.Windows)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.MacOS);
 
             // determine if the platform has a macos flag
             if (platform.HasFlag(PlatformType.MacOS))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.MacOS));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.MacOS)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.Linux);
 
             // determine if the platform has a linux flag
             if (platform.HasFlag(PlatformType.Linux))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.Linux));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.Linux)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.NetBSD);
 
             // determine if the platform has a netbsd flag
             if (platform.HasFlag(PlatformType.NetBSD))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.NetBSD));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.NetBSD)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.FreeBSD);
 
             // determine if the platform has a freebsd flag
             if (platform.HasFlag(PlatformType.FreeBSD))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.FreeBSD));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.FreeBSD)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.UnixFlavor);
 
             // determine if the platform has a unix flag
             if (platform.HasFlag(PlatformType.UnixFlavor))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.UnixFlavor));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{nameof(PlatformType.UnixFlavor)}");
+                yield return new KeyValuePair<string, string>(Constants.Platform, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-Not-{name}");
             }
+
+            name = nameof(PlatformType.Any);
 
             // determine if the platform has an any flag
             if (platform.HasFlag(PlatformType.Any))
             {
-                yield return new KeyValuePair<string, string>(Constants.Platform, nameof(PlatformType.Any));
+                yield return new KeyValuePair<string, string>(Constants.Platform, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Platform-{name}");
             }
         }
         #endregion

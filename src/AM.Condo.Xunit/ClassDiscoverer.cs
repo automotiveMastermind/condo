@@ -42,6 +42,7 @@ namespace AM.Condo
 
             // yield the class trait
             yield return new KeyValuePair<string, string>(Constants.Class, name);
+            yield return new KeyValuePair<string, string>(Constants.Category, $"Class-{name}");
         }
         #endregion
     }

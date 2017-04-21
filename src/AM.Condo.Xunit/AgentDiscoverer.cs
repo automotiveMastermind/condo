@@ -32,30 +32,41 @@ namespace AM.Condo
             // get the agent type argument from the trait constructor
             var agent = (AgentType)traitAttribute.GetConstructorArguments().First();
 
+            var name = nameof(AgentType.Local);
+
             // determine if the type is a local agent
             if (agent.HasFlag(AgentType.Local))
             {
-                yield return new KeyValuePair<string, string>(Constants.Agent, nameof(AgentType.Local));
+                yield return new KeyValuePair<string, string>(Constants.Agent, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Agent-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Agent, $"Not-{nameof(AgentType.Local)}");
+                yield return new KeyValuePair<string, string>(Constants.Agent, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Agent-Not-{name}");
             }
+
+            name = nameof(AgentType.CI);
 
             // determine if the type is a continuous integration agent
             if (agent.HasFlag(AgentType.CI))
             {
-                yield return new KeyValuePair<string, string>(Constants.Agent, nameof(AgentType.CI));
+                yield return new KeyValuePair<string, string>(Constants.Agent, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Agent-{name}");
             }
             else
             {
-                yield return new KeyValuePair<string, string>(Constants.Agent, $"Not-{nameof(AgentType.CI)}");
+                yield return new KeyValuePair<string, string>(Constants.Agent, $"Not-{name}");
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Agent-Not-{name}");
             }
+
+            name = nameof(AgentType.Any);
 
             // determine if the agent has an any flag
             if (agent.HasFlag(AgentType.Any))
             {
-                yield return new KeyValuePair<string, string>(Constants.Agent, nameof(AgentType.Any));
+                yield return new KeyValuePair<string, string>(Constants.Agent, name);
+                yield return new KeyValuePair<string, string>(Constants.Category, $"Agent-{name}");
             }
         }
     }

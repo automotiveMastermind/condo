@@ -16,3 +16,10 @@ addons:
       - zlib1g
       - curl
 script: ./condo.sh -- /t:ci
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/083d3b3e6c59d2c8838d
+    on_success: change
+    on_failure: always
+    on_start: never

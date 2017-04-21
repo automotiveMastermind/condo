@@ -9,7 +9,8 @@ CLR_SUCCESS="\033[1;32m"    # BRIGHT GREEN
 CLR_CLEAR="\033[0m"         # DEFAULT COLOR
 
 ARTIFACTS_ROOT="$WORKING_PATH/artifacts"
-CONDO_ROOT="$HOME/.am/condo"
+AM_ROOT="$HOME/.am"
+CONDO_ROOT="$AM_ROOT/condo"
 SRC_ROOT="$CONDO_ROOT/.src"
 BUILD_ROOT="$CONDO_ROOT/.build"
 TEMPLATE_ROOT="$SRC_ROOT/template"
@@ -20,7 +21,7 @@ MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
 CONDO_PATH="$SRC_ROOT/src/AM.Condo"
 CONDO_PUBLISH="$CONDO_ROOT/cli"
 CONDO_LOG="$BUILD_ROOT/condo.log"
-CONDO_TARGETS="$CONDO_PATH/Targets"
+CONDO_TARGETS="$CONDO_PUBLISH/Targets"
 CONDO_PROJ="$WORKING_PATH/condo.build"
 CONDO_VERBOSITY="normal"
 
@@ -130,6 +131,10 @@ install_condo() {
         info "condo: publishing condo tasks..."
         safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
         cp -R $TEMPLATE_ROOT $CONDO_ROOT
+
+        info "condo: removing temp path..."
+        rm -rf $SRC_ROOT
+
         success "condo: publish complete"
     else
         info "condo was already built: use --reset to get the latest version."
@@ -211,6 +216,8 @@ fi
 cat > $MSBUILD_RSP <<END_MSBUILD_RSP
 -nologo
 "$CONDO_PROJ"
+-p:CondoPath="$CONDO_ROOT/"
+-p:AmRoot="$AM_ROOT/"
 -p:CondoTargetsPath="$CONDO_TARGETS/"
 -p:CondoTasksPath="$CONDO_PUBLISH/"
 -p:PACKAGE_FEED_USERNAME="$PACKAGE_FEED_USERNAME"
