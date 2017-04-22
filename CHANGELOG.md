@@ -2,6 +2,20 @@
 
 > All notable changes to this project will be documented in this file.
 
+<a name="3.0.0-beta-02907"></a>
+## 3.0.0-beta-02907 (2017-04-21)
+
+
+### Bug Fixes
+
+* **detect-pr:** emit detection of pull requests (#68) e791845, closes #68
+
+
+### Features
+
+* **docfx:** add support for docfx (#65) ae95308, closes #65
+
+
 <a name="2.0.1-alpha-02795"></a>
 ## 2.0.1-alpha-02795 (2017-04-12)
 
