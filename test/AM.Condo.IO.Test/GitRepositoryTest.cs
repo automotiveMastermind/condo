@@ -9,11 +9,11 @@ namespace AM.Condo.IO
     using Xunit;
 
     [Class(nameof(GitRepository))]
+    [Priority(2)]
+    [Purpose(PurposeType.Unit)]
     public class GitRepositoryTest
     {
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPathIsNotRepo_DoesNotSetCurrentBranch()
         {
             using (var temp = new TemporaryPath())

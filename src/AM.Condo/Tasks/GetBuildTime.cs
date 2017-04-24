@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GetServerTime.cs" company="automotiveMastermind and contributors">
+// <copyright file="GetBuildTime.cs" company="automotiveMastermind and contributors">
 // © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace AM.Condo.Tasks
     /// The default implementation will use the time server provided by the National Institute of Standards and
     /// Technology (NIST) within the United States.
     /// </remarks>
-    public class GetServerTime : Task
+    public class GetBuildTime : Task
     {
         #region Properties and Indexers
         /// <summary>
@@ -48,11 +48,16 @@ namespace AM.Condo.Tasks
         /// Gets or sets the port of the time server used to get the server time.
         /// </summary>
         public int Port { get; set; } = 123;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to use server (NTP) time.
+        /// </summary>
+        public bool UseServerTime { get; set; } = true;
         #endregion
 
         #region Methods
         /// <summary>
-        /// Executes the <see cref="GetServerTime"/> task.
+        /// Executes the <see cref="GetBuildTime"/> task.
         /// </summary>
         /// <returns>
         /// A value indicating whether or not the task executed successfully.
@@ -61,6 +66,16 @@ namespace AM.Condo.Tasks
         {
             try
             {
+                // determine if we should use server time
+                if (!this.UseServerTime)
+                {
+                    // set the date and time to the local time
+                    this.DateTimeUtc = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+
+                    // move on immediately
+                    return true;
+                }
+
                 // get the current address of the time server from DNS
                 var addresses = Dns.GetHostAddressesAsync(this.Uri).Result;
 

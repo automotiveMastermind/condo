@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' ">
+  <Target Name="DocFXPlatformWarning" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' AND !$(IsWindows) ">
+    <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
+  </Target>
+
+  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' AND $(IsWindows) ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
       <DocFXCommand>$(DocFXPath)</DocFXCommand>
-      <HasMono>false</HasMono>
-      <DocFXEnabled>false</DocFXEnabled>
     </PropertyGroup>
 
-    <FindCommand Command="mono" Condition=" !$(IsWindows) ">
-      <Output TaskParameter="Path" PropertyName="MonoPath" />
-      <Output TaskParameter="Exists" PropertyName="HasMono" />
-    </FindCommand>
-
-    <PropertyGroup Condition=" $(IsWindows) ">
-      <DocFXEnabled>true</DocFXEnabled>
-      <DocFXCommand Condition=" $(HasMono) ">mono $(DocFXPath)</DocFXCommand>
+    <PropertyGroup>
       <DocFXArgs Condition=" '$(DocFXArgs)' == '' ">$(DOCFX_ARGS.Trim())</DocFXArgs>
       <DocFXArgs>$(DocFXArgs) --output $(DocsArtifactsRoot)</DocFXArgs>
       <DocFXArgs>$(DocFXArgs.Trim())</DocFXArgs>
+      <DocFXVersion Condition=" '$(DocFXVersion)' == '' ">latest</DocFXVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,20 +24,17 @@
       </_DocFxDocs>
     </ItemGroup>
 
-    <!--<Warning Text="Mono must be available on the system to build DocFX projects on non-Windows platforms."
-             Condition=" !($(IsWindows) OR $(HasMono)) " />-->
+    <GetRelease Organization="dotnet" Repository="docfx"
+                Tag="$(DocFXVersion)" Token="$(GH_TOKEN)"
+                Destination="$(DocFXRoot)" />
 
-    <GetLatestRelease Organization="dotnet" Repository="docfx" Token="$(GH_TOKEN)"
-                      Destination="$(DocFXRoot)" Condition=" $(DocFXEnabled) " />
-
-    <Exec Command="$(DocFXCommand) $(DocFXArgs)"
-          WorkingDirectory="%(_DocFxDocs.WorkingDirectory)"
-          Condition=" $(DocFxEnabled) " />
+    <Exec Command="$(DocFXCommand) $(DocFXArgs)" WorkingDirectory="%(_DocFxDocs.WorkingDirectory)" />
   </Target>
 
   <PropertyGroup>
     <DocumentDependsOn>
       $(BeforeDocument);
+      DocFXPlatformWarning;
       DocFxDocs;
       $(DocumentDependsOn);
       $(AfterDocument);

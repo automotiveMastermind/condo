@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GetLatestRelease.cs" company="automotiveMastermind and contributors">
+// <copyright file="GetRelease.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace AM.Condo.Tasks
     /// <summary>
     /// Represents a Microsoft Build task used to locate and aquire the latest release of a GitHub project.
     /// </summary>
-    public class GetLatestRelease : Task
+    public class GetRelease : Task
     {
         #region Properties and Indexers
         /// <summary>
@@ -36,6 +36,12 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string Repository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tag of the release to retrieve.
+        /// </summary>
+        [Required]
+        public string Tag { get; set; } = "latest";
 
         /// <summary>
         /// Gets or sets the destination path where the release should be saved.
@@ -74,13 +80,16 @@ namespace AM.Condo.Tasks
             }
 
             // create the repo path
-            var path = $"repos/{this.Organization}/{this.Repository}/releases/latest";
+            var path = $"repos/{this.Organization}/{this.Repository}/releases/";
+
+            // append the tag
+            path += this.Tag.Equals("latest", StringComparison.OrdinalIgnoreCase) ? this.Tag : $"tags/{this.Tag}";
 
             // attempt to create the repository uri
             if (!Uri.TryCreate(baseUri, path, out Uri uri))
             {
                 // log the error
-                this.Log.LogError($"The organization ({this.Organization}) or the repository ({this.Repository}) is invalid.");
+                this.Log.LogError($"The organization ({this.Organization}), repository ({this.Repository}), or tag ({this.Tag}) is invalid.");
 
                 // return false
                 return false;

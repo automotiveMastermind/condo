@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CreateRelease.cs" company="automotiveMastermind and contributors">
+// <copyright file="RemoveRelease.cs" company="automotiveMastermind and contributors">
 // © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,7 +7,7 @@
 namespace AM.Condo.Tasks
 {
     using System;
-
+    using System.Linq;
     using AM.Condo.Diagnostics;
     using AM.Condo.IO;
 
@@ -15,9 +15,9 @@ namespace AM.Condo.Tasks
     using Microsoft.Build.Utilities;
 
     /// <summary>
-    /// Represents a Microsoft Build task that is used to create a release.
+    /// Represents a Microsoft Build task that is used to remove a release.
     /// </summary>
-    public class CreateRelease : Task
+    public class RemoveRelease : Task
     {
         #region Properties and Indexers
         /// <summary>
@@ -27,31 +27,20 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets or sets the version that is being released.
+        /// Gets or sets the version of the release to remove.
         /// </summary>
         [Required]
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the release message.
+        /// Gets or sets the prefix for version tags.
         /// </summary>
-        [Required]
-        public string ReleaseMessage { get; set; } = "chore(release):";
+        public string VersionPrefix { get; set; }
 
         /// <summary>
-        /// Gets or sets the author name used for git commits.
+        /// Gets or sets a value indicating whether or not to remove all prereleases.
         /// </summary>
-        public string AuthorName { get; set; } = "condo";
-
-        /// <summary>
-        /// Gets or sets the author email used for git commits.
-        /// </summary>
-        public string AuthorEmail { get; set; } = "open@amastermind.com";
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to push the release to the remote.
-        /// </summary>
-        public bool Push { get; set; } = false;
+        public bool Prerelease { get; set; } = true;
         #endregion
 
         #region Methods
@@ -81,27 +70,30 @@ namespace AM.Condo.Tasks
                 // load the repository
                 var repository = factory.Load(root, new CondoMSBuildLogger(this.Log));
 
-                // set the username and email
-                repository.Username = this.AuthorName;
-                repository.Email = this.AuthorEmail;
+                // get all of the tags for the repository
+                var tags = repository.Tags;
 
-                // create a release message
-                var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
+                // capture the version
+                var prefix = this.Version;
 
-                // create the commit and tag the release
-                repository.Commit(message).Tag(this.Version, this.Version);
-
-                // log a message
-                this.Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
-
-                // determine if we should push
-                if (this.Push)
+                // determine if their is a prefix
+                if (!string.IsNullOrEmpty(this.VersionPrefix))
                 {
-                    // push the changes to the remote
-                    repository.Push(tags: true);
+                    prefix = this.VersionPrefix + prefix;
+                }
 
-                    // log a message
-                    this.Log.LogMessage(MessageImportance.High, $"Pushed the release for version: {this.Version}...");
+                // determine if a prerelease exists
+                if (this.Prerelease)
+                {
+                    // append a pre-release marker
+                    prefix += "-";
+                }
+
+                // iterate over each tag that starts with the specified prefix
+                foreach (var tag in tags.Where(tag => tag.StartsWith(prefix)))
+                {
+                    // remove the tag
+                    repository.RemoveTag(tag);
                 }
             }
             catch (Exception netEx)

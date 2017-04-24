@@ -454,9 +454,47 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc />
+        public IGitRepositoryInitialized RemoveTag(string tag)
+        {
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            if (tag.Equals(string.Empty))
+            {
+                throw new ArgumentException($"The {nameof(tag)} cannot be empty.");
+            }
+
+            var remote = $"push origin :{tag}";
+            var local = $"tag --delete {tag}";
+
+            var output = this.Execute(remote);
+
+            if (output.Success)
+            {
+                output = this.Execute(local);
+            }
+
+            if (!output.Success)
+            {
+                this.Logger.LogWarning(output.Error);
+            }
+
+            return this;
+        }
+
+        /// <inheritdoc />
         public IGitRepositoryInitialized FinishFlow()
         {
-            throw new NotImplementedException();
+            // create the git flow finish command
+            var cmd = "flow finish";
+
+            // execute the command
+            this.Execute(cmd);
+
+            // return self
+            return this;
         }
 
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)

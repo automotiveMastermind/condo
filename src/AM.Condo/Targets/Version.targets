@@ -15,6 +15,10 @@
     <VersionStrategyTargets>$(CondoTargetsPath)\Versioning\$(VersionStrategy).targets</VersionStrategyTargets>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
+  </PropertyGroup>
+
   <!-- import the branch and version strategy -->
   <Import Project="$(BranchStrategyTargets)" Condition=" Exists('$(BranchStrategyTargets)') "/>
   <Import Project="$(VersionStrategyTargets)" Condition=" Exists('$(VersionStrategyTargets)') "/>
@@ -44,6 +48,7 @@
         NextReleaseBranchBuildQuality="$(NextReleaseBranchBuildQuality)"
         ProductionReleaseBranchBuildQuality="$(ProductionReleaseBranchBuildQuality)">
       <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
+      <Output TaskParameter="CreateRelease" PropertyName="CreateRelease" Condition=" '$(CreateRelease)' == '' " />
     </GetBuildQuality>
   </Target>
 
@@ -108,6 +113,7 @@
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
     <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
+    <Message Importance="High" Text="Create Release     : $(CreateRelease)" />
 
     <Message Importance="High"
              Text="##vso[build.updatebuildnumber]$(InformationalVersion)"

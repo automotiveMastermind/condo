@@ -11,11 +11,11 @@ namespace AM.Condo.IO
     using Xunit;
 
     [Class(nameof(TemporaryPath))]
+    [Priority(1)]
+    [Purpose(PurposeType.Unit)]
     public class TemporaryPathTest
     {
         [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenDefault_CreatesPathWithCondoPrefix()
         {
             // arrange
@@ -29,8 +29,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPrefixNull_CreatesPathWithCondoPrefix()
         {
             // arrange
@@ -46,8 +44,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPrefixEmpty_CreatesPathWithCondoPrefix()
         {
             // arrange
@@ -63,8 +59,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(1)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPrefixSpecified_CreatesPathWithPrefix()
         {
             // arrange

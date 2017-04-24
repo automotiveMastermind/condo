@@ -12,10 +12,10 @@ namespace AM.Condo
 
     [Class(nameof(NtpTimestamp))]
     [Purpose(PurposeType.Unit)]
+    [Priority(2)]
     public class NtpDateTimeTest
     {
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenDateSpecifiedAsUniversalEpoch_Succeeds()
         {
             // arrange
@@ -44,7 +44,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenDateSpecifiedAsLocalEpoch_Succeeds()
         {
             // arrange
@@ -74,7 +73,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenDateSpecifiedAsUniversal_Succeeds()
         {
             // arrange
@@ -103,7 +101,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenDateSpecifiedAsLocal_Succeeds()
         {
             // arrange
@@ -133,7 +130,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTicksSpecifiedAsUniversalEpoch_Succeeds()
         {
             // arrange
@@ -162,7 +158,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTicksSpecifiedAsLocalEpoch_Succeeds()
         {
             // arrange
@@ -191,7 +186,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTicksSpecifiedAsUniversal_Succeeds()
         {
             // arrange
@@ -220,7 +214,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTicksSpecifiedAsLocal_Succeeds()
         {
             // arrange
@@ -249,7 +242,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenNtpSpecifiedAsEpoch_Succeeds()
         {
             // arrange
@@ -285,7 +277,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenNtpSpecified_Succeeds()
         {
             // arrange
@@ -321,7 +312,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampSpecifiedAsEpoch_Succeeds()
         {
             // arrange
@@ -349,7 +339,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampSpecified_Succeeds()
         {
             // arrange
@@ -380,7 +369,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampSpecifiedWithIndex_Succeeds()
         {
             // arrange
@@ -412,7 +400,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampWithIndexBelowZero_Throws()
         {
             // arrange
@@ -427,7 +414,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampWithIndexExceedsBounds_Throws()
         {
             // arrange
@@ -442,7 +428,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampWithIndexWouldOverflow_Throws()
         {
             // arrange
@@ -457,7 +442,6 @@ namespace AM.Condo
         }
 
         [Fact]
-        [Priority(2)]
         public void Ctor_WhenTimestampInvalid_Throws()
         {
             // arrange

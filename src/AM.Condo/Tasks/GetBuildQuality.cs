@@ -108,6 +108,12 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Output]
         public string BuildQuality { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to create a release.
+        /// </summary>
+        [Output]
+        public bool CreateRelease { get; set; }
         #endregion
 
         #region Methods
@@ -178,6 +184,9 @@ namespace AM.Condo.Tasks
                 // set the build quality to the release branch build quality
                 this.BuildQuality = this.ReleaseBranchBuildQuality;
 
+                // set the create release flag
+                this.CreateRelease = true;
+
                 // move on immediately
                 return true;
             }
@@ -189,6 +198,9 @@ namespace AM.Condo.Tasks
                 // set the build quality to the support branch build quality
                 this.BuildQuality = this.SupportBranchBuildQuality;
 
+                // set the create release flag
+                this.CreateRelease = true;
+
                 // move on immediately
                 return true;
             }
@@ -199,6 +211,9 @@ namespace AM.Condo.Tasks
             {
                 // set the build quality to the hotfix branch build quality
                 this.BuildQuality = this.HotfixBranchBuildQuality;
+
+                // set the create release flag
+                this.CreateRelease = true;
 
                 // move on immediately
                 return true;
