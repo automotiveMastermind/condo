@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GetServerTimeTest.cs" company="automotiveMastermind and contributors">
+// <copyright file="GetBuildTimeTest.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -14,8 +14,9 @@ namespace AM.Condo.Tasks
     using AM.Condo.Net;
     using Xunit;
 
-    [Class(nameof(GetServerTime))]
-    public class GetServerTimeTest
+    [Class(nameof(GetBuildTime))]
+    [Purpose(PurposeType.Unit)]
+    public class GetBuildTimeTest
     {
         [Agent(AgentType.Local)]
         [Fact]
@@ -34,7 +35,7 @@ namespace AM.Condo.Tasks
             var clock = Mock.Of<IClockProvider>(mock => mock.NtpNow == expected);
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
-            var actual = new GetServerTime()
+            var actual = new GetBuildTime()
             {
                 Port = port,
                 Uri = uri,
@@ -62,7 +63,7 @@ namespace AM.Condo.Tasks
             var engine = new Mock<IBuildEngine>();
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
-            var actual = new GetServerTime()
+            var actual = new GetBuildTime()
             {
                 BuildEngine = engine.Object,
                 Uri = uri
@@ -86,7 +87,7 @@ namespace AM.Condo.Tasks
             var engine = new Mock<IBuildEngine>();
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
-            var actual = new GetServerTime()
+            var actual = new GetBuildTime()
             {
                 BuildEngine = engine.Object,
                 Uri = uri
@@ -110,7 +111,7 @@ namespace AM.Condo.Tasks
             var engine = new Mock<IBuildEngine>();
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
-            var actual = new GetServerTime()
+            var actual = new GetBuildTime()
             {
                 BuildEngine = engine.Object,
                 Uri = uri
@@ -134,7 +135,7 @@ namespace AM.Condo.Tasks
             var engine = new Mock<IBuildEngine>();
             engine.Setup(mock => mock.LogWarningEvent(It.IsAny<BuildWarningEventArgs>())).Verifiable();
 
-            var actual = new GetServerTime()
+            var actual = new GetBuildTime()
             {
                 BuildEngine = engine.Object,
                 Port = port

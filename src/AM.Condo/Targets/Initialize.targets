@@ -88,10 +88,10 @@
   </ItemGroup>
 
   <!-- get server time from NIST -->
-  <Target Name="GetServerTime" Condition="$(UseServerTime)">
-    <GetServerTime>
+  <Target Name="GetBuildTime">
+    <GetBuildTime UseServerTime="$(UseServerTime)">
       <Output TaskParameter="DateTimeUtc" PropertyName="BuildDateUtc" />
-    </GetServerTime>
+    </GetBuildTime>
   </Target>
 
   <!-- get platform information -->
@@ -232,7 +232,7 @@
   <PropertyGroup>
     <InitializeDependsOn>
       $(BeforeInitialize);
-      GetServerTime;
+      GetBuildTime;
       GetPlatformInfo;
       SetNuGetCredentials;
       GetRepositoryInfo;

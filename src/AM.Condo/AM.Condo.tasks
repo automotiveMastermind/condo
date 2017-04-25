@@ -6,15 +6,15 @@
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.FindCommand" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetAssemblyInfo" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetBuildQuality" />
+  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetBuildTime" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetCommitInfo" />
-  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetLatestRelease" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNodeScripts" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetProjectsForSolution" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
+  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetRelease" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetRepositoryInfo" />
-  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.GetServerTime" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.InstallNuGetPackage" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.LogItemMetadata" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.PushNuGetPackage" />

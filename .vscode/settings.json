@@ -37,6 +37,7 @@
     "**/condo.sh": true,
     "**/condo.ps1": true,
     "**/condo.cmd": true,
-    "artifacts/**": true
+    "artifacts/**": true,
+    "**/docs/api": true
   }
 }

@@ -12,11 +12,11 @@ namespace AM.Condo.IO
     using Xunit;
 
     [Class(nameof(PathManager))]
+    [Priority(2)]
+    [Purpose(PurposeType.Unit)]
     public class PathManagerTest
     {
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPathNull_Throws()
         {
             // arrange
@@ -30,8 +30,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPathEmpty_Throws()
         {
             // arrange
@@ -45,8 +43,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPathDoesNotExist_Throws()
         {
             // arrange
@@ -60,8 +56,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Ctor_WhenPathExists_Succeeds()
         {
             using (var temp = new TemporaryPath())
@@ -79,8 +73,6 @@ namespace AM.Condo.IO
         }
 
         [Fact]
-        [Priority(2)]
-        [Purpose(PurposeType.Unit)]
         public void Exists_WhenPathExists_ReturnsTrue()
         {
             using (var temp = new TemporaryPath())

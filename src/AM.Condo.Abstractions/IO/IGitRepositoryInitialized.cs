@@ -81,6 +81,17 @@ namespace AM.Condo.IO
         IGitRepositoryInitialized Add(string spec, bool force);
 
         /// <summary>
+        /// Removes the specified <paramref name="tag"/> from both the remote and local repository.
+        /// </summary>
+        /// <param name="tag">
+        /// The tag that should be removed.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized RemoveTag(string tag);
+
+        /// <summary>
         /// Creates a new commit with the specified <paramref name="message"/>.
         /// </summary>
         /// <param name="message">

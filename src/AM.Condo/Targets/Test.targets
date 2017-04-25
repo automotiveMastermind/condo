@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="DotNetTest" Condition=" '$(DotNetTest)' != 'skip' AND '@(TestProjects->Count())' != '0' ">
-    <PropertyGroup>
-      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-windows</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-macos</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Category!=platform-not-linux</DotNetTestFilterOptions>
+    <ItemGroup>
+      <TestPurposeFilter Include="$(TestPurposeExclude)" />
+    </ItemGroup>
 
-      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Category!=agent-not-ci</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Category!=agent-not-local</DotNetTestFilterOptions>
+    <PropertyGroup>
+      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-Windows</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-MacOS</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-Linux</DotNetTestFilterOptions>
+
+      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Category!=Agent-Not-CI</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Category!=Agent-Not-Local</DotNetTestFilterOptions>
+      <DotNetTestFilterOptions Condition=" '@(TestPurposeFilter->Count())' != '0' ">$(DotNetTestFilterOptions)&amp;(@(TestPurposeFilter->'Category!=Purpose-%(Identity)', '&amp;'))</DotNetTestFilterOptions>
+
       <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quot;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quot;</DotNetTestFilterOptions>
 
       <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>

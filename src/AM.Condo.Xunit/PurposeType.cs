@@ -15,6 +15,11 @@ namespace AM.Condo
     public enum PurposeType
     {
         /// <summary>
+        /// DEFAULT: No purpose is set.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// The fact type is an end-to-end scenario.
         /// </summary>
         EndToEnd = 1,
