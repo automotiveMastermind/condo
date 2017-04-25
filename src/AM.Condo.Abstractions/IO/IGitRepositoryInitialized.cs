@@ -246,6 +246,20 @@ namespace AM.Condo.IO
         /// The git log for the specified <paramref name="parser"/>.
         /// </returns>
         GitLog Log(string from, string to, GitLogOptions options, IGitLogParser parser);
+
+        /// <summary>
+        /// Removes the items that match the specified <paramref name="spec"/> from the current repository.
+        /// </summary>
+        /// <param name="spec">
+        /// The specification of the items to remove.
+        /// </param>
+        /// <param name="recursive">
+        /// A value indicating whether or not to remove the items recursively.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized Remove(string spec, bool recursive);
         #endregion
     }
 }

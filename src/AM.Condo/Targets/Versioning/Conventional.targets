@@ -53,7 +53,7 @@
   </Target>
 
   <!-- checkout the release branch -->
-  <Target Name="CheckoutReleaseBranch" Condition=" $(CreateRelease) AND !$(IsPullRequest) ">
+  <Target Name="CheckoutReleaseBranch" Condition=" $(CreateRelease) ">
     <CheckoutBranch
       RepositoryRoot="$(RepositoryRoot)"
       Branch="$(Branch)"
@@ -61,7 +61,7 @@
   </Target>
 
   <!-- create a release commit -->
-  <Target Name="CreateRelease" Condition=" $(CreateRelease) AND !$(IsPullRequest) ">
+  <Target Name="CreateRelease" Condition=" $(CreateRelease) ">
     <PropertyGroup>
       <AuthorName Condition=" '$(AuthorName)' == '' ">$(GIT_AUTHOR_NAME)</AuthorName>
       <AuthorName Condition=" '$(AuthorName)' == '' ">$(Company)</AuthorName>

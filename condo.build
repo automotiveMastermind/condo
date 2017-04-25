@@ -10,6 +10,7 @@
 
         <License>MIT</License>
         <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
+        <GitHubPages>True</GitHubPages>
     </PropertyGroup>
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />

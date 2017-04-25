@@ -60,7 +60,6 @@
     <ArtifactPaths Include="$(PublishArtifactsRoot)" />
     <ArtifactPaths Include="$(PackageArtifactsRoot)" />
     <ArtifactPaths Include="$(FeedArtifactsRoot)" />
-    <ArtifactPaths Include="$(DocsArtifactsRoot)" />
   </ItemGroup>
 
   <!-- import default agent configuration -->
@@ -119,6 +118,11 @@
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
+
+    <PropertyGroup>
+      <CreateRelease Condition=" '$(CreateRelease)' == '' AND $(HasGit) AND $(CI) AND !$(IsPullRequest) ">True</CreateRelease>
+      <CreateRelease Condition=" '$(CreateRelease)' == '' ">False</CreateRelease>
+    </PropertyGroup>
   </Target>
 
   <!-- get project metadata based on its location -->
@@ -145,7 +149,6 @@
 
       <SourceProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'src' "/>
       <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' "/>
-      <DocProjects        Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'docs' "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
       <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.Publish) "/>
 

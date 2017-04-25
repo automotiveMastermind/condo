@@ -31,7 +31,16 @@
     <Exec Command="$(DocFXCommand) $(DocFXArgs)" WorkingDirectory="%(_DocFxDocs.WorkingDirectory)" />
   </Target>
 
+  <Target Name="PublishGitHubPages" Condition=" $(CreateRelease) AND $(GitHubPages) AND Exists('$(DocsArtifactsRoot)') ">
+    <PublishGitHubPages Source="$(DocsArtifactsRoot)" RepositoryUri="$(RepositoryUri)" />
+  </Target>
+
   <PropertyGroup>
+    <AfterDocument>
+      $(AfterDocument);
+      PublishGitHubPages;
+    </AfterDocument>
+
     <DocumentDependsOn>
       $(BeforeDocument);
       DocFXPlatformWarning;

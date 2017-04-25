@@ -214,6 +214,19 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc/>
+        public IGitRepositoryInitialized Remove(string spec, bool recursive)
+        {
+            // create the command
+            var cmd = recursive ? $@"rm ""{spec}"" -r" : $@"rm ""{spec}""";
+
+            // execute the command
+            this.Execute(cmd, throwOnError: true);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc/>
         public IGitRepositoryInitialized Branch(string name, string source)
         {
             var cmd = $"checkout -b {name}";
