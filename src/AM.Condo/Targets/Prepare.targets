@@ -10,7 +10,7 @@
   <Target Name="DotNetRestore" Condition=" '$(DotNetRestore)' != 'skip' AND '@(DotNetRestorePaths->Count())' != '0' ">
     <PropertyGroup>
       <DotNetRestoreOptions Condition=" '$(DotNetRestoreOptions)' == '' ">$(DOTNET_RESTORE_OPTIONS)</DotNetRestoreOptions>
-      <DotNetRestoreOptions Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreOptions) --configfile &quot;$(NuGetConfigPath)&quot;</DotNetRestoreOptions>
+      <DotNetRestoreOptions Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreOptions) --ignore-failed-sources --configfile &quot;$(NuGetConfigPath)&quot;</DotNetRestoreOptions>
 
       <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties) /p:Version=$(InformationalVersion)</DotNetRestoreProperties>
 
