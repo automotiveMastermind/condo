@@ -185,7 +185,7 @@ function Install-Condo() {
 
     # restore msbuild
     Write-Info "condo: restoring condo packages..."
-    Invoke-Cmd dotnet restore $SrcRoot --runtime $runtime --verbosity minimal
+    Invoke-Cmd dotnet restore $SrcRoot --runtime $runtime --verbosity minimal --ignore-failed-sources
     Write-Success "condo: restore complete"
 
     # publish condo
