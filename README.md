@@ -30,28 +30,26 @@ It is capable of automatically detecting and executing all of the steps necessar
 These are just some of the most-used features of the build system.
 
 ### Using Condo
+We are currently developing `condo-cli` to make bootstrapping your projects to use condo a snap.
 
-The easiest way to start using Condo is to use the [Yeoman Condo Generator][yo-url], which will configure a new "solution" structure for use with the Condo build system.
+But its not ready yet!..
+So lets do it the old fashion way:
 
-1. Make sure that you have Yeoman installed:
+1. Get the nessesary files:
 
-	```bash
-	npm install -g yo
-	```
+    Copy the four files in the `templates` folder and add them to the root folder of your project.
+    ```
+    condo.build
+    condo.cmd
+    condo.ps1
+    condo.sh
+    ```
 
-2. Install the Condo generator:
+2. Edit the `condo.build` config file:
 
-	```bash
-	npm install -g generator-condo
-	```
+    Configure some stuff, only if ya want
 
-3. Initiate the generator:
-
-	```bash
-	yo condo
-	```
-
-4. Run the build:
+3. Run the build:
 
 	OS X / Linux:
 
@@ -69,6 +67,16 @@ The easiest way to start using Condo is to use the [Yeoman Condo Generator][yo-u
 	```posh
 	./condo.ps1
 	```
+
+### Helpful hints
+
+If you are using any protected nuget feeds then run the following command to add your credentials
+
+    condo -SecureFeed
+
+You can also get the latest and greatest version of condo by running this command
+
+    condo -Reset
 
 ## Documentation
 
