@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DocFXPlatformWarning" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' AND !$(IsWindows) ">
+  <Target Name="DocFXPlatformWarning" Condition=" '$(DocFxDocs)' != 'skip' AND '@(DocFxProjects->Count())' != '0' AND !$(IsWindows) ">
     <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
   </Target>
 
-  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '$(DocFxProjects->Count())' != '0' AND $(IsWindows) ">
+  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '@(DocFxProjects->Count())' != '0' ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
