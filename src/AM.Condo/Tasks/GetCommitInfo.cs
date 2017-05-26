@@ -150,56 +150,60 @@ namespace AM.Condo.Tasks
         /// Will contain a list of all commits that comply with the indicated format.
         /// The SHA value will be the <see cref="ITaskItem.ItemSpec"/>. In addition, the task items will contain
         /// metadata that describes any commit that follows the conventional-changelog style guide. This metadata
-        /// includes the following:
+        /// includes (at least) the following:
         /// <list type="bullet">
         /// <item>
-        ///     <term>Type</term>
+        ///     <term>Hash</term>
         ///     <description>
-        ///     The type (of change) for the commit, which may be Features, Performance Improvements, Bug Fixes,
-        ///     Documentation, Styles, Code Refactoring, Tests or Chores.
+        ///     The full SHA for the commit.
         ///     </description>
         /// </item>
         /// <item>
-        ///     <term>Scope</term>
+        ///     <term>ShortHash</term>
         ///     <description>
-        ///     The component in which the change occurred.
+        ///     The first 7 (or more required for uniqueness) characters of the SHA for the commit.
         ///     </description>
         /// </item>
         /// <item>
-        ///     <term>Subject</term>
+        ///     <term>Header</term>
         ///     <description>
-        ///     The subject, or description, of the change that occurred.
+        ///     The first line of the commit message.
         ///     </description>
         /// </item>
         /// <item>
         ///     <term>Body</term>
         ///     <description>
-        ///     The body that describes additional details about the change that occurred.
+        ///     The remaining lines of the commit message.
         ///     </description>
         /// </item>
         /// <item>
-        ///     <term>Closes</term>
+        ///     <term>Raw</term>
         ///     <description>
-        ///     A semi-colon (;) delimited list of issues (work items) that are closed (resolved) by the commit.
+        ///     The raw payload of the commit message.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Branches</term>
+        ///     <description>
+        ///     A semi-colon delimited list of branches associated with the commit.
+        ///     </description>
+        /// </item>
+        /// <item>
+        ///     <term>Tags</term>
+        ///     <description>
+        ///     A semi-colon delimited list of tags associated with the commit.
         ///     </description>
         /// </item>
         /// <item>
         ///     <term>References</term>
         ///     <description>
-        ///     A semi-colon (;) delimited list of references (work items) that are related to the commit.
+        ///     A semi-colon delimited list of work item ids associated with the commit.
         ///     </description>
         /// </item>
         /// <item>
-        ///     <term>Breaking</term>
+        ///     <term>Notes</term>
         ///     <description>
-        ///     A summary description of breaking changes associated with the commit.
-        ///     </description>
-        /// </item>
-        /// <item>
-        ///     <term>Message</term>
-        ///     <description>
-        ///     The entire commit message including new-lines. This is useful for commits that do not follow the
-        ///     conventional changelog style.
+        ///     The total number of notes or breaking changes associated with the commit.
         ///     </description>
         /// </item>
         /// </list>
