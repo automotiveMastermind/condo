@@ -3,8 +3,8 @@
   <PropertyGroup>
     <FieldPattern           Condition=" '$(FieldPattern)'           == '' ">^-(.*?)-$</FieldPattern>
 
-    <HeaderPattern          Condition=" '$(HeaderPattern)'          == '' ">^(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$</HeaderPattern>
-    <HeaderCorrespondence   Condition=" '$(HeaderCorrespondence)'   == '' ">Type;Scope;Subject</HeaderCorrespondence>
+    <HeaderPattern          Condition=" '$(HeaderPattern)'          == '' ">^(?:[Mm]erged (\w*) (\d*): )?(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$</HeaderPattern>
+    <HeaderCorrespondence   Condition=" '$(HeaderCorrespondence)'   == '' ">MergeType;MergeReference;Type;Scope;Subject</HeaderCorrespondence>
 
     <RevertPattern          Condition=" '$(RevertPattern)'          == '' ">^Revert\s""([\s\S]*)""\s*This reverts commit (\w*)\.</RevertPattern>
     <RevertCorrespondence   Condition=" '$(RevertCorrespondence)'   == '' ">RevertHeader;RevertHash</RevertCorrespondence>
