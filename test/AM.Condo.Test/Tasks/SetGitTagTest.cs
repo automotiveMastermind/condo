@@ -156,7 +156,7 @@ namespace AM.Condo.Tasks
                 {
                     // set the username and email
                     repo.Username = "condo";
-                    repo.Email = "open@amastermind.com";
+                    repo.Email = "open@automotivemastermind.com";
 
                     // commit
                     repo.Commit("initial");

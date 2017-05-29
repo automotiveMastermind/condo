@@ -46,7 +46,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the author email used for git commits.
         /// </summary>
-        public string AuthorEmail { get; set; } = "open@amastermind.com";
+        public string AuthorEmail { get; set; } = "open@automotivemastermind.com";
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to push the release to the remote.

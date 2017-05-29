@@ -97,7 +97,7 @@ namespace AM.Condo.Tasks
             var current = this.gitlog.Versions.LastOrDefault();
             var currentVersion = current.Key ?? new SemanticVersion(major: 0, minor: 0, patch: 0);
 
-            // get the last version of the same build quality
+            // get the last version that was released
             var last = this.gitlog.Versions.LastOrDefault(v => !v.Key.IsPrerelease);
             var lastVersion = last.Key;
             var lastCommit = lastVersion == null ? null : this.gitlog.Tags.First(tag => lastVersion.Equals(tag.Version)).Hash;
