@@ -122,6 +122,39 @@ namespace AM.Condo.Tasks
             return true;
         }
 
+        private static string RecommendRelease(SemanticVersion version, int level, string releaseLabel)
+        {
+            if (version.Major == 0)
+            {
+                if (string.IsNullOrEmpty(releaseLabel))
+                {
+                    level = 0;
+                }
+                else if (level == 0)
+                {
+                    level = 1;
+                }
+            }
+
+            switch (level)
+            {
+                case 0:
+                    version = new SemanticVersion(version.Major + 1, 0, 0, releaseLabel);
+                    break;
+                case 1:
+                    version = new SemanticVersion(version.Major, version.Minor + 1, 0, releaseLabel);
+                    break;
+                case 2:
+                    version = new SemanticVersion(version.Major, version.Minor, version.Patch + 1, releaseLabel);
+                    break;
+                default:
+                    version = new SemanticVersion(version.Major, version.Minor, version.Patch, releaseLabel);
+                    break;
+            }
+
+            return version.ToString();
+        }
+
         private int RecommendLevel(string hash)
         {
             // set the default bump level to patch
@@ -172,39 +205,6 @@ namespace AM.Condo.Tasks
 
             // return the level
             return level;
-        }
-
-        private static string RecommendRelease(SemanticVersion version, int level, string releaseLabel)
-        {
-            if (version.Major == 0)
-            {
-                if (string.IsNullOrEmpty(releaseLabel))
-                {
-                    level = 0;
-                }
-                else if (level == 0)
-                {
-                    level = 1;
-                }
-            }
-
-            switch (level)
-            {
-                case 0:
-                    version = new SemanticVersion(version.Major + 1, 0, 0, releaseLabel);
-                    break;
-                case 1:
-                    version = new SemanticVersion(version.Major, version.Minor + 1, 0, releaseLabel);
-                    break;
-                case 2:
-                    version = new SemanticVersion(version.Major, version.Minor, version.Patch + 1, releaseLabel);
-                    break;
-                default:
-                    version = new SemanticVersion(version.Major, version.Minor, version.Patch, releaseLabel);
-                    break;
-            }
-
-            return version.ToString();
         }
         #endregion
     }
