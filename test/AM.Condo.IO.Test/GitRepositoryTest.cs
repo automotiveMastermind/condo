@@ -6,6 +6,8 @@
 
 namespace AM.Condo.IO
 {
+    using System;
+
     using Xunit;
 
     [Class(nameof(GitRepository))]
@@ -28,6 +30,27 @@ namespace AM.Condo.IO
                 Assert.NotNull(actual.ClientVersion);
                 Assert.Null(actual.CurrentBranch);
                 Assert.Equal(path, actual.RepositoryPath);
+            }
+        }
+
+        [Fact]
+        public void Authorization_WhenSet_ReturnsAuthorizationValue()
+        {
+            using (var temp = new TemporaryPath())
+            {
+                // arrange
+                var path = temp.FullPath;
+                var target = new GitRepository(temp);
+                target.Initialize();
+
+                var expected = Guid.NewGuid().ToString();
+
+                // act
+                target.Authorization = expected;
+                var actual = target.Authorization;
+
+                // assert
+                Assert.Equal(expected, actual);
             }
         }
     }

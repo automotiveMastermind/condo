@@ -33,6 +33,12 @@ namespace AM.Condo.Tasks
         public string RepositoryUri { get; set; }
 
         /// <summary>
+        /// Gets or sets the root of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
         /// Gets or sets the branch to which to publish GitHub Pages.
         /// </summary>
         public string Branch { get; set; } = "gh-pages";
@@ -61,9 +67,29 @@ namespace AM.Condo.Tasks
             // create a repository factory
             var factory = new GitRepositoryFactory();
 
-            // clone the repository to a temporary path
-            using (var repository = factory.Clone(this.RepositoryUri, new CondoMSBuildLogger(this.Log)))
+            // define a variable to retain the authorization header
+            var authorization = default(string);
+
+            // create a logger
+            var logger = new CondoMSBuildLogger(this.Log);
+
+            // load the repository
+            using (var origin = factory.Load(this.RepositoryRoot, logger))
             {
+                // get the authorization
+                authorization = origin.Authorization;
+            }
+
+            // clone the repository to a temporary path
+            using (var repository = factory.Clone(this.RepositoryUri, logger))
+            {
+                // determine if an authorization header is available
+                if (!string.IsNullOrEmpty(authorization))
+                {
+                    // set the authorization header
+                    repository.Authorization = authorization;
+                }
+
                 // checkout the doc branch and remove all existing files
                 repository.Checkout(this.Branch).Remove(".", recursive: true);
 

@@ -32,7 +32,10 @@
   </Target>
 
   <Target Name="PublishGitHubPages" Condition=" $(CreateRelease) AND $(GitHubPages) AND Exists('$(DocsArtifactsRoot)') ">
-    <PublishGitHubPages Source="$(DocsArtifactsRoot)" RepositoryUri="$(RepositoryUri)" />
+    <PublishGitHubPages
+      Source="$(DocsArtifactsRoot)"
+      RepositoryUri="$(RepositoryUri)"
+      RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 
   <PropertyGroup>
