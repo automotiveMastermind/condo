@@ -343,7 +343,7 @@ namespace AM.Condo.IO
                 range += to;
             }
 
-            var cmd = $@"log --tags {range} --format=""{Format}""";
+            var cmd = $@"log {range} --format=""{Format}""";
 
             // create the command used to get the history of commits
             var exec = this.Execute(cmd);

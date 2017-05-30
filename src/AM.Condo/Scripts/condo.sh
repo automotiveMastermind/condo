@@ -124,7 +124,7 @@ install_condo() {
 
         # restore condo
         info "condo: restoring condo packages..."
-        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal
+        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
         success "condo: restore complete"
 
         # publish condo

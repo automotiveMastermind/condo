@@ -5,6 +5,8 @@
     <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)$(slash)changelog.md</ChangeLogInitialize>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CONDO_PUSH_COMMITS)</AllowPushCommits>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">True</AllowPushCommits>
+    <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">$(CONDO_PRINT_COMMITS)</PrintIncludedCommits>
+    <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">False</PrintIncludedCommits>
   </PropertyGroup>
 
   <!-- detect convention strategy -->
@@ -36,7 +38,13 @@
       VersionTagPrefix="$(VersionTagPrefix)">
       <Output TaskParameter="From" PropertyName="CommitFrom" />
       <Output TaskParameter="To" PropertyName="CommitTo" />
+      <Output TaskParameter="Commits" ItemName="IncludedCommits" />
     </GetCommitInfo>
+  </Target>
+
+  <!-- print the commits if requested -->
+  <Target Name="PrintCommits" Condition="$(PrintIncludedCommits) AND '@(IncludedCommits->Count())' != '0' ">
+    <Message Importance="High" Text="(%(IncludedCommits.ShortHash)) %(IncludedCommits.Header)" />
   </Target>
 
   <!-- update semantic version -->
@@ -100,6 +108,7 @@
     <BeforeVersion>
       $(BeforeVersion);
       GetCommitInfo;
+      PrintCommits;
       RecommendVersion;
       CheckoutReleaseBranch;
     </BeforeVersion>
