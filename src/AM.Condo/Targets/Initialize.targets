@@ -118,11 +118,6 @@
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
-
-    <PropertyGroup>
-      <CreateRelease Condition=" '$(CreateRelease)' == '' AND $(HasGit) AND $(CI) AND !$(IsPullRequest) ">True</CreateRelease>
-      <CreateRelease Condition=" '$(CreateRelease)' == '' ">False</CreateRelease>
-    </PropertyGroup>
   </Target>
 
   <!-- get project metadata based on its location -->
