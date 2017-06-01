@@ -132,18 +132,13 @@ function Invoke-Cmd([string] $cmd) {
 function Install-DotNet() {
     $dotnetUrl = $env:DOTNET_INSTALL_URL
     $dotnetChannel = $env:DOTNET_CHANNEL
-    $dotnetVersion = $env:DOTNET_VERSION
 
     if (!$dotnetUrl) {
         $dotnetUrl = "https://github.com/dotnet/cli/raw/rel/1.0.1/scripts/obtain/dotnet-install.ps1"
     }
 
     if (!$dotnetChannel) {
-        $dotnetChannel = "rel-1.0.1"
-    }
-
-    if (!$dotnetVersion) {
-        $dotnetVersion = "1.0.1"
+        $dotnetChannel = "release/1.0.0"
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -158,7 +153,7 @@ function Install-DotNet() {
     try {
         New-Item $dotnetTemp -ItemType Directory > $null
         Get-File -url $dotnetUrl -Path $dotnetInstall
-        Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel -Version $dotnetVersion
+        Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel
     }
     finally {
         Remove-Item -Recurse -Force $dotnetTemp > $null

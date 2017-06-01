@@ -232,7 +232,6 @@
     <Rule Id="IDE0005" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="AD0001" Action="None" />
     <Rule Id="SA1009" Action="None" />
     <Rule Id="SA1024" Action="None" />
     <Rule Id="SA1110" Action="None" />
