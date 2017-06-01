@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <DebugType>portable</DebugType>
-    <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputType>Exe</OutputType>
+    <RuntimeFrameworkVersion>[1.1.2, 2.0.0)</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,17 +30,17 @@
 
   <ItemGroup>
     <PackageReference Include="System.Dynamic.Runtime" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="Newtonsoft.Json" Version="[9.0.1, 10.0.0)" />
+    <PackageReference Include="Newtonsoft.Json" Version="[10.0.2, 11.0.0)" />
     <PackageReference Include="NuGet.CommandLine.Xplat" Version="[4.0.0-rtm-*, 5.0.0)" />
     <PackageReference Include="NuGet.Commands" Version="[4.0.0, 5.0.0)" />
     <PackageReference Include="NuGet.Packaging" Version="[4.0.0, 5.0.0)" />
     <PackageReference Include="NuGet.Versioning" Version="[4.0.0, 5.0.0)" />
-    <PackageReference Include="Microsoft.Build" Version="[15.1.548, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="[15.1.548, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.1.548, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.1.548, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build" Version="[15.1.1012, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="[15.1.1012, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.1.1012, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.1.1012, 16.0.0)" />
 
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.0, 2.0.0)">
+    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.2, 2.0.0)">
         <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
