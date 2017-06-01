@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <DebugType>portable</DebugType>
-    <NetStandardImplicitPackageVersion>[1.6.1, 2.0.0)</NetStandardImplicitPackageVersion>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
