@@ -1,14 +1,15 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GitHubAsset.cs" company="automotiveMastermind and contributors">
+// <copyright file="GitHubRelease.cs" company="automotiveMastermind and contributors">
 //   © automotiveMastermind and contributors. Licensed under MIT. See LICENSE and CREDITS for details.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace AM.Condo.Resources
 {
+    using System.Collections.Generic;
+
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Represents a GitHub release.
     /// </summary>
