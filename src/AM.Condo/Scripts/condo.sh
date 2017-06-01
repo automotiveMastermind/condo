@@ -105,7 +105,7 @@ install_dotnet() {
         success "Retrieved dotnet-install script..."
 
         chmod +x $DOTNET_INSTALL
-        safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL --version $DOTNET_VERSION
+        safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
         safe-exec rm -rf $DOTNET_TEMP
     fi
 
@@ -190,18 +190,7 @@ fi
 # determine if the dotnet install channel is not already set
 if [ -z "${DOTNET_CHANNEL:-}" ]; then
     # set the dotnet channel
-    DOTNET_CHANNEL="rel-1.0.1"
-fi
-
-# determine if the dotnet version is not already set
-if [ -z "$DOTNET_VERSION" ]; then
-    # set the dotnet version
-    DOTNET_VERSION="1.0.1"
-fi
-
-# set the dotnet install path
-if [ -z "$DOTNET_INSTALL_DIR/sdk/$DOTNET_VERSION" ]; then
-    export DOTNET_INSTALL_DIR=~/.dotnet
+    DOTNET_CHANNEL="release/1.0.0"
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
