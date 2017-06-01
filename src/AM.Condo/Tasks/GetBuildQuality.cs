@@ -140,6 +140,9 @@ namespace AM.Condo.Tasks
                 // set the build quality to the master branch build quality
                 this.BuildQuality = this.ProductionReleaseBranchBuildQuality;
 
+                // set the create release flag
+                this.CreateRelease = true;
+
                 // move on immediately
                 return true;
             }
