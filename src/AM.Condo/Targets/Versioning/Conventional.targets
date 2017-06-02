@@ -77,7 +77,7 @@
       <AuthorName Condition=" '$(AuthorName)' == '' ">condo</AuthorName>
 
       <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">$(GIT_AUTHOR_EMAIL)</AuthorEmail>
-      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">open@amastermind.com</AuthorEmail>
+      <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">open@automotivemastermind.com</AuthorEmail>
       <CurrentReleaseTag>$(VersionTagPrefix)$(NextRelease)</CurrentReleaseTag>
     </PropertyGroup>
 
