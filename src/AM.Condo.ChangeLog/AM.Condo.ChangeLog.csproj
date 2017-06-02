@@ -21,6 +21,7 @@
     <PackageReference Include="Handlebars.NetStandard" Version="[1.8.1, 2.0.0)" />
     <PackageReference Include="Newtonsoft.Json" Version="[9.0.1, 11.0.0)" />
 
+    <PackageReference Include="Newtonsoft.Json" Version="[10.0.2, 11.0.0)" />
     <PackageReference Include="StyleCop.Analyzers" Version="[1.0.2, 2.0.0)">
         <PrivateAssets>All</PrivateAssets>
     </PackageReference>
