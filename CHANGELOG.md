@@ -3,7 +3,7 @@
 > All notable changes to this project will be documented in this file.
 
 <a name="2.0.0"></a>
-# 2.0.0 (2017-05-30)
+# 2.0.0 (2017-06-01)
 
 
 ### Bug Fixes
@@ -32,6 +32,7 @@
 
 ### Features
 
+* **dotnet:** update dotnet to latest (#86) dce3e99, closes #86
 * **gh-pages:** set authorization header f1b426f
 * **docs:** add support for github pages c728bac
 * **test:** add filtering by category (#70) 3b75a8e, closes #70
@@ -62,6 +63,6 @@ Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The
 
 
 <a name="1.0.0"></a>
-# 1.0.0 (2016-07-09)
+# 1.0.0 (2016-07-08)
 
 
