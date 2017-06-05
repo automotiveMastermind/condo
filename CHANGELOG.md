@@ -3,7 +3,7 @@
 > All notable changes to this project will be documented in this file.
 
 <a name="2.0.0"></a>
-# 2.0.0 (2017-06-01)
+# 2.0.0 (2017-06-05)
 
 
 ### Bug Fixes
