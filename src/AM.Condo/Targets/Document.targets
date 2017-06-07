@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DocFXPlatformWarning" Condition=" '$(DocFxDocs)' != 'skip' AND '@(DocFxProjects->Count())' != '0' AND !$(IsWindows) ">
+  <Target Name="DocFXPlatformWarning" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' AND !$(IsWindows) ">
     <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
   </Target>
 
-  <Target Name="DocFxDocs" Condition=" '$(DocFxDocs)' != 'skip' AND '@(DocFxProjects->Count())' != '0' ">
+  <PropertyGroup>
+    <DocsGenerated>false</DocsGenerated>
+  </PropertyGroup>
+
+  <Target Name="DocFXDocs" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
       <DocFXCommand>$(DocFXPath)</DocFXCommand>
+      <DocsGenerated>true</DocsGenerated>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -16,22 +21,23 @@
       <DocFXArgs>$(DocFXArgs) --output $(DocsArtifactsRoot)</DocFXArgs>
       <DocFXArgs>$(DocFXArgs.Trim())</DocFXArgs>
       <DocFXVersion Condition=" '$(DocFXVersion)' == '' ">latest</DocFXVersion>
+      <DocFXReferenceMapRoot>$(DocsRoot)$(slash)xref$(slash)</DocFXReferenceMapRoot>
     </PropertyGroup>
 
     <ItemGroup>
-      <_DocFxDocs Include="@(DocFxProjects)">
+      <_DocFXDocs Include="@(DocFXProjects)">
         <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-      </_DocFxDocs>
+      </_DocFXDocs>
     </ItemGroup>
 
     <GetRelease Organization="dotnet" Repository="docfx"
                 Tag="$(DocFXVersion)" Token="$(GH_TOKEN)"
                 Destination="$(DocFXRoot)" />
 
-    <Exec Command="$(DocFXCommand) $(DocFXArgs)" WorkingDirectory="%(_DocFxDocs.WorkingDirectory)" />
+    <Exec Command="$(DocFXCommand) $(DocFXArgs)" WorkingDirectory="%(_DocFXDocs.WorkingDirectory)" />
   </Target>
 
-  <Target Name="PublishGitHubPages" Condition=" $(CreateRelease) AND $(GitHubPages) AND Exists('$(DocsArtifactsRoot)') ">
+  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND $(GitHubPages) AND $(DocsGenerated) ">
     <PublishGitHubPages
       Source="$(DocsArtifactsRoot)"
       RepositoryUri="$(RepositoryUri)"
@@ -39,15 +45,15 @@
   </Target>
 
   <PropertyGroup>
-    <AfterDocument>
-      $(AfterDocument);
+    <AfterPublish>
+      $(AfterPublish);
       PublishGitHubPages;
-    </AfterDocument>
+    </AfterPublish>
 
     <DocumentDependsOn>
       $(BeforeDocument);
       DocFXPlatformWarning;
-      DocFxDocs;
+      DocFXDocs;
       $(DocumentDependsOn);
       $(AfterDocument);
     </DocumentDependsOn>

@@ -76,8 +76,8 @@ namespace AM.Condo.Tasks
             var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
 
             // set the default publish and pack
-            project.SetMetadata("Publish", (!library).ToString());
-            project.SetMetadata("Pack", library.ToString());
+            project.SetMetadata("IsPublishable", (!library).ToString());
+            project.SetMetadata("IsPackable", library.ToString());
 
             // get the target framework node
             var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
@@ -88,8 +88,8 @@ namespace AM.Condo.Tasks
             if (frameworks == null || !frameworks.Any())
             {
                 // set publish and pack to false
-                project.SetMetadata("Publish", "false");
-                project.SetMetadata("Pack", "false");
+                project.SetMetadata("IsPublishable", "false");
+                project.SetMetadata("IsPackable", "false");
 
                 // move on immediately
                 return;
@@ -100,26 +100,26 @@ namespace AM.Condo.Tasks
                 .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
 
             // set the publish to true
-            project.SetMetadata("Publish", (tfm != null).ToString());
+            project.SetMetadata("IsPublishable", (tfm != null).ToString());
 
             // get the publish property
-            var publish = xml.Descendants("Publish").FirstOrDefault()?.Value;
+            var publish = xml.Descendants("IsPublishable").FirstOrDefault()?.Value;
 
             // determine if the publish property exists
             if (!string.IsNullOrEmpty(publish))
             {
                 // set the publish value
-                project.SetMetadata("Publish", publish);
+                project.SetMetadata("IsPublishable", publish);
             }
 
-            // get the pack property
-            var pack = xml.Descendants("Pack").FirstOrDefault()?.Value;
+            // get the is-packable property
+            var pack = xml.Descendants("IsPackable").FirstOrDefault()?.Value;
 
             // determine if the pack property exists
             if (!string.IsNullOrEmpty(pack))
             {
-                // set the pack metadata
-                project.SetMetadata("Pack", pack);
+                // set the is-packable metadata
+                project.SetMetadata("IsPackable", pack);
             }
 
             // set the target frameworks property
