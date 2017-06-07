@@ -62,6 +62,9 @@ function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     }
 }
 
+# disable dotnet cli telemetry to speed up the build
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
+
 # set well-known paths
 $WorkingPath = Convert-Path (Get-Location)
 

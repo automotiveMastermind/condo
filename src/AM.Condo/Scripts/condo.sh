@@ -25,6 +25,9 @@ CONDO_TARGETS="$CONDO_PUBLISH/Targets"
 CONDO_PROJ="$WORKING_PATH/condo.build"
 CONDO_VERBOSITY="normal"
 
+# disable dotnet cli telemetry to speed up the build
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 success() {
     echo -e "${CLR_SUCCESS}$@${CLR_CLEAR}"
     echo "log  : $@" >> $CONDO_LOG
