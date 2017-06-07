@@ -5,12 +5,12 @@
         <Product>AM.Condo</Product>
         <StartDateUtc>2015-05-28</StartDateUtc>
 
-        <Company>automotiveMastermind</Company>
-        <Authors>automotiveMastermind</Authors>
+        <Company>automotiveMastermind and contributors</Company>
+        <Authors>automotiveMastermind and contributors</Authors>
 
         <License>MIT</License>
         <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
-        <GitHubPages>True</GitHubPages>
+        <GitHubPages>true</GitHubPages>
     </PropertyGroup>
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
