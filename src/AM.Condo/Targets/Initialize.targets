@@ -60,7 +60,6 @@
     <ArtifactPaths Include="$(PublishArtifactsRoot)" />
     <ArtifactPaths Include="$(PackageArtifactsRoot)" />
     <ArtifactPaths Include="$(FeedArtifactsRoot)" />
-    <ArtifactPaths Include="$(DocsArtifactsRoot)" />
   </ItemGroup>
 
   <!-- import default agent configuration -->
@@ -145,11 +144,11 @@
 
       <SourceProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'src' "/>
       <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' "/>
-      <DocProjects        Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'docs' "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
-      <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.Publish) "/>
+      <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPublishable) "/>
+      <PackProjects       Include="@(SourceProjects)"      Condition="  '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPackable) " />
 
-      <DocFxProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
+      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
     </ItemGroup>
   </Target>
 

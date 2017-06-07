@@ -2,27 +2,17 @@
 
 > All notable changes to this project will be documented in this file.
 
-<a name="3.0.0-beta-02907"></a>
-## 3.0.0-beta-02907 (2017-04-21)
+<a name="2.0.0"></a>
+# 2.0.0 (2017-06-05)
 
 
 ### Bug Fixes
 
+* **restore:** ignore failed sources on initial restore (#72) ff79b2f, closes #72
+* **publish:** improve publish target detection (#69) 42b1c9c, closes #69 #66
 * **detect-pr:** emit detection of pull requests (#68) e791845, closes #68
-
-
-### Features
-
-* **docfx:** add support for docfx (#65) ae95308, closes #65
-
-
-<a name="2.0.1-alpha-02795"></a>
-## 2.0.1-alpha-02795 (2017-04-12)
-
-
-### Bug Fixes
-
-* **semver:** ensure master branch always uses next version 14b3d65
+* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
+* ensure master branch always uses next version (#63) 0777c6b, closes #63
 * **test:** add configuration to dotnet-test (#62) 9c46c5f, closes #62
 * **windows:** fix bootstrapping on windows (#60) b3ce495, closes #60 #59
 * **install:** fix install on windows (#46) 98993f1, closes #46
@@ -42,6 +32,11 @@
 
 ### Features
 
+* **dotnet:** update dotnet to latest (#86) dce3e99, closes #86
+* **gh-pages:** set authorization header f1b426f
+* **docs:** add support for github pages c728bac
+* **test:** add filtering by category (#70) 3b75a8e, closes #70
+* **docfx:** add support for docfx (#65) ae95308, closes #65
 * **package:** use dotnet nuget in place of custom task (#48) 0e46525, closes #48 #50 dotnet/cli/#6123
 * **msbuild:** add support for msbuild project system (#44) 86c588a, closes #44
 * **logging:** add msbuild logging everywhere (#38) 3fa4633, closes #38
@@ -67,28 +62,7 @@ Any existing bootstrap scripts *MUST* be updated due to some changes in how cond
 Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The version is now based on git tags.
 
 
-<a name="0.1.0-alpha-02838"></a>
-## 0.1.0-alpha-02838 (2017-04-18)
-
-
-### Bug Fixes
-
-* **releases:** detect PR after agent is imported 68eee00
-* **nuget-push:** remove trailing slash on windows (#64) 2692f5d, closes #64
-* ensure master branch always uses next version (#63) 0777c6b, closes #63
-
-
-### Features
-
-* **semver:** simplify recommend release logic d885914
-
-
-<a name="0.0.1-alpha-02857"></a>
-## 0.0.1-alpha-02857 (2017-04-18)
-
-
-### Bug Fixes
-
-* **publish:** improve publish target detection aafb52d, closes #66
+<a name="1.0.0"></a>
+# 1.0.0 (2016-07-08)
 
 

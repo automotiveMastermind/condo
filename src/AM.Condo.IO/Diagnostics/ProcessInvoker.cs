@@ -173,9 +173,6 @@ namespace AM.Condo.Diagnostics
             // determine if we were not successful
             if (!output.Success)
             {
-                // log the output
-                this.logger.LogWarning(output.Error);
-
                 // determine if we should throw
                 if (throwOnError)
                 {

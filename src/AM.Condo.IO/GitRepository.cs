@@ -117,6 +117,21 @@ namespace AM.Condo.IO
                 return result.Success ? result.Output : new List<string>();
             }
         }
+
+        /// <inheritdoc/>
+        public string Authorization
+        {
+            get
+            {
+                // get the authorization header
+                return this.Config($"http.{this.OriginUri}.extraheader");
+            }
+
+            set
+            {
+                this.Config($"http.{this.OriginUri}.extraheader", value);
+            }
+        }
         #endregion
 
         #region Methods
@@ -205,6 +220,19 @@ namespace AM.Condo.IO
         {
             // create the command
             var cmd = force ? $@"add ""{spec}"" --force" : $@"add ""{spec}""";
+
+            // execute the command
+            this.Execute(cmd, throwOnError: true);
+
+            // return self
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IGitRepositoryInitialized Remove(string spec, bool recursive)
+        {
+            // create the command
+            var cmd = recursive ? $@"rm ""{spec}"" -r" : $@"rm ""{spec}""";
 
             // execute the command
             this.Execute(cmd, throwOnError: true);
@@ -495,6 +523,29 @@ namespace AM.Condo.IO
 
             // return self
             return this;
+        }
+
+        /// <inheritdoc />
+        public string Config(string key)
+        {
+            // create the command
+            var cmd = $"config --get {key}";
+
+            // get the result
+            var result = this.Execute(cmd);
+
+            // return the result
+            return result.Success ? result.Output.FirstOrDefault() : null;
+        }
+
+        /// <inheritdoc />
+        public void Config(string key, string value)
+        {
+            // create the command
+            var cmd = $@"config --replace-all {key} ""{value}""";
+
+            // execute the command
+            this.Execute(cmd, throwOnError: true);
         }
 
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)
