@@ -6,7 +6,7 @@
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Pack>false</Pack>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
