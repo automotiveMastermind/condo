@@ -8,7 +8,7 @@
     <DocsGenerated>false</DocsGenerated>
   </PropertyGroup>
 
-  <Target Name="DocFXDocs" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' ">
+  <Target Name="DocFXDocs" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' AND $(IsWindows) ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
