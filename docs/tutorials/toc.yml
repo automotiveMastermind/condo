@@ -1,0 +1,18 @@
+- name: Get Started
+  href: get-started.md
+- name: .NET Core Projects
+  href: dotnet.md
+- name: Docker Containers
+  href: docker.md
+- name: Angular Projects
+  href: angular.md
+- name: Polymer Projects
+  href: polymer.md
+- name: NodeJS and NPM
+  href: npm.md
+- name: Task Runners (Grunt or Gulp)
+  href: task-runners.md
+- name: Generating Documentation
+  href: docfx.md
+- name: Extending Condo
+  href: extensibility.md

@@ -1,5 +1,9 @@
-- name: Conceptual
-  href: conceptual/
-- name: Api
+- name: Quick Start
+  href: /
+- name: Concepts
+  href: concepts/
+- name: Tutorials
+  href: tutorials/
+- name: API Reference
   href: api/
   homepage: api/index.md
