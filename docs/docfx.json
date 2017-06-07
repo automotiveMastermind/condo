@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json.schemastore.org/docfx",
   "metadata": [
     {
       "src": [
@@ -22,8 +23,10 @@
       },
       {
         "files": [
-          "conceptual/**/*.md",
-          "conceptual/**/toc.yml",
+          "concepts/**/*.md",
+          "concepts/**/toc.yml",
+          "tutorials/**/*.md",
+          "tutorials/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
@@ -42,7 +45,7 @@
     "overwrite": [
       {
         "files": [
-          "xmldocs/**.md"
+          "overwrite/**.md"
         ],
         "exclude": [
           "obj/**"
@@ -57,6 +60,9 @@
     ],
     "template": [
       "default"
+    ],
+    "xref": [
+      "https://raw.githubusercontent.com/dotnet/docs/master/_zip/msdnsmallset.yml"
     ],
     "postProcessors": [],
     "noLangKeyword": false

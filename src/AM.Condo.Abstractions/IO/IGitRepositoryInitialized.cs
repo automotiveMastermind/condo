@@ -33,6 +33,11 @@ namespace AM.Condo.IO
         /// Gets the list of tags associated with the repository.
         /// </summary>
         IEnumerable<string> Tags { get; }
+
+        /// <summary>
+        /// Gets or sets the authorization header for the repository.
+        /// </summary>
+        string Authorization { get; set; }
         #endregion
 
         #region Methods
@@ -246,6 +251,43 @@ namespace AM.Condo.IO
         /// The git log for the specified <paramref name="parser"/>.
         /// </returns>
         GitLog Log(string from, string to, GitLogOptions options, IGitLogParser parser);
+
+        /// <summary>
+        /// Removes the items that match the specified <paramref name="spec"/> from the current repository.
+        /// </summary>
+        /// <param name="spec">
+        /// The specification of the items to remove.
+        /// </param>
+        /// <param name="recursive">
+        /// A value indicating whether or not to remove the items recursively.
+        /// </param>
+        /// <returns>
+        /// The current repository instance.
+        /// </returns>
+        IGitRepositoryInitialized Remove(string spec, bool recursive);
+
+        /// <summary>
+        /// Gets the configuration value for the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        /// The key used to retrieve the configuration value.
+        /// </param>
+        /// <returns>
+        /// The configuration value for the specified <paramref name="key"/> if it exists; otherwise,
+        /// <see langword="null"/>.
+        /// </returns>
+        string Config(string key);
+
+        /// <summary>
+        /// Sets the configuration <paramref name="value"/> for the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        /// The key for the specified <paramref name="value"/>.
+        /// </param>
+        /// <param name="value">
+        /// The value to set for the specified <paramref name="key"/>.
+        /// </param>
+        void Config(string key, string value);
         #endregion
     }
 }
