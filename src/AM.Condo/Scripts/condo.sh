@@ -28,6 +28,9 @@ CONDO_VERBOSITY="normal"
 # disable dotnet cli telemetry to speed up the build
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+# disable xml creation on nuget restore to speed up the build
+export NUGET_XMLDOC_MODE="skip"
+
 success() {
     echo -e "${CLR_SUCCESS}$@${CLR_CLEAR}"
     echo "log  : $@" >> $CONDO_LOG
