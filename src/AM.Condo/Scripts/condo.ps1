@@ -68,6 +68,9 @@ $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 # disable xml creation on nuget restore to speed up the build
 $env:NUGET_XMLDOC_MODE = "skip"
 
+# prevent the CLI from pre-populating the packages cache to speed up the build
+$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+
 # set well-known paths
 $WorkingPath = Convert-Path (Get-Location)
 
