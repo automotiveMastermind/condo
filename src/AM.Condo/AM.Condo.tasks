@@ -26,6 +26,7 @@
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.SaveChangeLog" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.SetGitTag" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.SetNuGetPackageSources" />
+  <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.SetEnvironmentVariable" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.WaitForDebugger" />
   <UsingTask AssemblyFile="AM.Condo.dll" TaskName="AM.Condo.Tasks.WaitForFile" />
 </Project>
