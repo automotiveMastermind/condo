@@ -7,6 +7,7 @@
 namespace AM.Condo.Tasks
 {
     using System;
+    using System.Security;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -126,7 +127,7 @@ namespace AM.Condo.Tasks
         public override bool Execute()
         {
             // set the prelrease tag to alpha by default
-            this.BuildQuality = this.DefaultBuildQuality;
+            this.SetBuildQuality(this.DefaultBuildQuality);
 
             // only inspect the current branch when running on a build server
             if (!this.CI)
@@ -138,7 +139,7 @@ namespace AM.Condo.Tasks
             if (this.Branch.Equals(this.ProductionReleaseBranch, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the master branch build quality
-                this.BuildQuality = this.ProductionReleaseBranchBuildQuality;
+                this.SetBuildQuality(this.ProductionReleaseBranchBuildQuality);
 
                 // set the create release flag
                 this.CreateRelease = true;
@@ -152,7 +153,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.Equals(this.NextReleaseBranch, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the develop branch build quality
-                this.BuildQuality = this.NextReleaseBranchBuildQuality;
+                this.SetBuildQuality(this.NextReleaseBranchBuildQuality);
 
                 // move on immediately
                 return true;
@@ -163,7 +164,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.StartsWith(this.FeatureBranchPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the feature branch build quality
-                this.BuildQuality = this.FeatureBranchBuildQuality;
+                this.SetBuildQuality(this.FeatureBranchBuildQuality);
 
                 // move on immediately
                 return true;
@@ -174,7 +175,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.StartsWith(this.BugfixBranchPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the bugfix branch build quality
-                this.BuildQuality = this.BugfixBranchBuildQuality;
+                this.SetBuildQuality(this.BugfixBranchBuildQuality);
 
                 // move on immediately
                 return true;
@@ -185,7 +186,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.StartsWith(this.ReleaseBranchPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the release branch build quality
-                this.BuildQuality = this.ReleaseBranchBuildQuality;
+                this.SetBuildQuality(this.ReleaseBranchBuildQuality);
 
                 // set the create release flag
                 this.CreateRelease = true;
@@ -199,7 +200,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.StartsWith(this.SupportBranchPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the support branch build quality
-                this.BuildQuality = this.SupportBranchBuildQuality;
+                this.SetBuildQuality(this.SupportBranchBuildQuality);
 
                 // set the create release flag
                 this.CreateRelease = true;
@@ -213,7 +214,7 @@ namespace AM.Condo.Tasks
                 && this.Branch.StartsWith(this.HotfixBranchPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 // set the build quality to the hotfix branch build quality
-                this.BuildQuality = this.HotfixBranchBuildQuality;
+                this.SetBuildQuality(this.HotfixBranchBuildQuality);
 
                 // set the create release flag
                 this.CreateRelease = true;
@@ -224,6 +225,20 @@ namespace AM.Condo.Tasks
 
             // assume there is nothing to do
             return true;
+        }
+
+        private void SetBuildQuality(string quality)
+        {
+            this.BuildQuality = quality;
+
+            try
+            {
+                Environment.SetEnvironmentVariable(nameof(this.BuildQuality), this.BuildQuality);
+            }
+            catch (SecurityException securityEx)
+            {
+                this.Log.LogWarningFromException(securityEx);
+            }
         }
         #endregion
     }

@@ -95,12 +95,22 @@ namespace AM.Condo.Tasks
             // act
             var result = actual.Execute();
 
+            var currentVersionVariable = Environment.GetEnvironmentVariable(nameof(release.CurrentVersion));
+            var currentReleaseVariable = Environment.GetEnvironmentVariable(nameof(release.CurrentRelease));
+            var recommendedReleaseVariable = Environment.GetEnvironmentVariable(nameof(release.RecommendedRelease));
+            var nextReleaseVariable = Environment.GetEnvironmentVariable(nameof(release.NextRelease));
+
             // assert
             Assert.True(result);
             Assert.Equal(release.CurrentVersion ?? "0.0.0", actual.CurrentVersion);
             Assert.Equal(release.CurrentRelease, actual.CurrentRelease);
             Assert.Equal(release.RecommendedRelease, actual.RecommendedRelease);
             Assert.Equal(release.NextRelease, actual.NextRelease);
+
+            Assert.Equal(release.CurrentVersion ?? "0.0.0", currentVersionVariable);
+            Assert.Equal(release.CurrentRelease, currentReleaseVariable);
+            Assert.Equal(release.RecommendedRelease, recommendedReleaseVariable);
+            Assert.Equal(release.NextRelease, nextReleaseVariable);
         }
 
         public static TheoryData<ReleaseData> Releases => new TheoryData<ReleaseData>
