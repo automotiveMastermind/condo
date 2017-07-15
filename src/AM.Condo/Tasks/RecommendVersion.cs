@@ -8,6 +8,7 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Linq;
+    using System.Security;
 
     using AM.Condo.IO;
 
@@ -109,6 +110,10 @@ namespace AM.Condo.Tasks
             this.CurrentVersion = version.ToNormalizedString();
             this.CurrentRelease = version.ToString("V", VersionFormatter.Instance);
 
+            // set the current version and release variables
+            this.SetReleaseEnvironmentVariable(nameof(this.CurrentVersion), this.CurrentVersion);
+            this.SetReleaseEnvironmentVariable(nameof(this.CurrentRelease), this.CurrentRelease);
+
             // get the level for the next version
             var level = this.RecommendLevel(lastCommit);
 
@@ -117,6 +122,10 @@ namespace AM.Condo.Tasks
 
             // set the recommended version
             this.RecommendedRelease = RecommendRelease(version, level, this.BuildQuality);
+
+            // set the next release and recommended release variables
+            this.SetReleaseEnvironmentVariable(nameof(this.NextRelease), this.NextRelease);
+            this.SetReleaseEnvironmentVariable(nameof(this.RecommendedRelease), this.RecommendedRelease);
 
             // move on immediately
             return true;
@@ -205,6 +214,18 @@ namespace AM.Condo.Tasks
 
             // return the level
             return level;
+        }
+
+        private void SetReleaseEnvironmentVariable(string name, string value)
+        {
+            try
+            {
+                Environment.SetEnvironmentVariable(name, value);
+            }
+            catch (SecurityException securityEx)
+            {
+                this.Log.LogWarningFromException(securityEx);
+            }
         }
         #endregion
     }
