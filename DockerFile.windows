@@ -1,0 +1,11 @@
+FROM microsoft/dotnet:nanoserver-core
+
+ARG source=./artifacts/publish/AM.Condo/
+ARG runtime=./artifacts/publish/AM.Condo/runtimes/win/
+ARG targets=./artifacts/publish/AM.Condo/Targets/
+WORKDIR /condo
+
+COPY $source .
+COPY $runtime ./runtimes
+COPY $targets ./targets
+COPY template/condo.ps1 .

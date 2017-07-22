@@ -1,0 +1,7 @@
+FROM debian:jessie
+
+ARG source=./artifacts/publish/AM.Condo/
+WORKDIR /condo
+
+COPY $source .
+COPY template/condo.sh .
