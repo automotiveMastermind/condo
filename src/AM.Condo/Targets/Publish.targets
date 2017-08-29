@@ -18,7 +18,7 @@
 
     <ItemGroup>
       <_DotNetPublish Include="@(DotNetPublishProjects)">
-        <OutputPath>&quot;$(PublishArtifactsRoot)%(ProjectName)&quot;</OutputPath>
+        <OutputPath>.$(slash)obj$(slash)docker$(slash)publish</OutputPath>
         <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
         <PublishName>&quot;%(Filename)%(Extension)&quot;</PublishName>
       </_DotNetPublish>
@@ -28,6 +28,33 @@
         Command="dotnet publish %(_DotNetPublish.PublishName) --output %(_DotNetPublish.OutputPath) $(DotNetPublishOptions) $(DotNetPublishProperties)"
         WorkingDirectory="%(_DotNetPublish.WorkingDirectory)"
         Condition=" Exists('%(_DotNetPublish.FullPath)') " />
+  </Target>
+
+  <Target Name="CopyDotNetPublish" Condition=" '$(DotNetPublish)' != 'skip' AND '@(DotNetPublishProjects->Count())' != '0' ">
+    <ItemGroup>
+      <_CopyDotNetPublish Include="%(DotNetPublishProjects.ProjectDir)obj$(slash)docker$(slash)publish$(slash)**">
+        <ProjectName>%(DotNetPublishProjects.ProjectName)</ProjectName>
+        <PublishPath>&quot;$(PublishArtifactsRoot)%(DotNetPublishProjects.ProjectName)&quot;</PublishPath>
+      </_CopyDotNetPublish>
+    </ItemGroup>
+
+    <Copy
+        SourceFiles="@(_CopyDotNetPublish)"
+        DestinationFiles="@(_CopyDotNetPublish->'$(PublishArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+
+  <Target Name="DockerBuild" Condition=" $(HasDocker) AND '$(DockerBuild)' != 'skip' AND '@(DockerProjects->Count())' != '0' ">
+    <ItemGroup>
+      <_DockerBuild Include="@(DockerProjects)">
+        <DockerLabel>%(DockerName)</DockerLabel>
+        <DockerTag>%(DockerName):$(InformationalVersion)</DockerTag>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+      </_DockerBuild>
+    </ItemGroup>
+
+    <Exec Command="docker build --label %(_DockerBuild.DockerLabel) --tag %(_DockerBuild.DockerTag) ."
+          WorkingDirectory="%(_DockerBuild.WorkingDirectory)" />
   </Target>
 
   <Target Name="InstallPackages" Condition=" '@(Packages->Count())' != '0' ">
@@ -52,9 +79,15 @@
   </Target>
 
   <PropertyGroup>
+    <AfterPublish>
+      $(AfterPublish);
+      DockerBuild;
+    </AfterPublish>
+
     <PublishDependsOn>
       $(BeforePublish);
       DotNetPublish;
+      CopyDotNetPublish;
       InstallPackages;
       PublishPackages;
       $(PublishDependsOn);
