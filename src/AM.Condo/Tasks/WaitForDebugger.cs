@@ -28,7 +28,7 @@ namespace AM.Condo.Tasks
             if (!Debugger.IsAttached)
             {
                 var process = Process.GetCurrentProcess();
-                this.Log.LogWarning($"Waiting for debugger to attach to process {process.Id}: {process.ProcessName}");
+                this.Log.LogWarning($"Waiting for debugger to attach to process {process.Id} : {process.ProcessName}");
             }
 
             while (!Debugger.IsAttached)

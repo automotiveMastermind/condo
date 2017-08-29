@@ -5,7 +5,11 @@
       "name": "Debug (attach)",
       "type": "coreclr",
       "request": "attach",
-      "processId": "${command:pickProcess}"
+      "processId": "${command:pickProcess}",
+      "requireExactSource": false,
+      "sourceFileMap": {
+        "~/.am/condo/.src/**": "${workspaceRoot}/**"
+      }
     }
   ]
 }
