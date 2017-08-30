@@ -107,7 +107,6 @@ namespace AM.Condo.Tasks
             project.SetProperty("IsPublishable", xml);
             project.SetProperty("IsPackable", xml);
             project.SetProperty("IsTestable", xml);
-            project.SetProperty("TestPurpose", xml);
 
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", frameworks));
@@ -134,11 +133,34 @@ namespace AM.Condo.Tasks
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
 
+            // get the docker file path
+            var dockerFile = Path.Combine(directory, "Dockerfile");
+
+            // get the project name
+            var projectName = Path.GetFileNameWithoutExtension(path);
+
+            // determine if the docker file exists
+            if (File.Exists(dockerFile))
+            {
+                // set the has docker bit
+                project.SetMetadata("HasDocker", "true");
+
+                // set the path to the dockerfile
+                project.SetMetadata("DockerfilePath", dockerFile);
+
+                // set the project name for docker
+                project.SetMetadata("DockerName", projectName.ToLower());
+            }
+            else
+            {
+                project.SetMetadata("HasDocker", "false");
+            }
+
             // set the project group
             project.SetMetadata("ProjectGroup", group);
 
             // set the name of the project based on the name of the csproj
-            project.SetMetadata("ProjectName", Path.GetFileNameWithoutExtension(path));
+            project.SetMetadata("ProjectName", projectName);
 
             // set the shared sources directory
             project.SetMetadata("SharedSourcesDir", Path.Combine(parent, "shared") + Path.DirectorySeparatorChar);

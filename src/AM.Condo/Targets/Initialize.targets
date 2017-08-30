@@ -47,6 +47,8 @@
     <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)$(slash)Agents$(slash)</AgentTargetsRoot>
     <AgentTargetsRoot Condition=" !HasTrailingSlash('$(AgentTargetsRoot)') ">$(AgentTargetsRoot)$(slash)</AgentTargetsRoot>
 
+    <DockerRoot Condition=" '$(DockerRoot)' == '' ">$(RepositoryRoot).docker$(slash)</DockerRoot>
+
     <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' OR '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
@@ -103,6 +105,18 @@
     </GetPlatformInfo>
   </Target>
 
+  <!-- attempt to find docker info -->
+  <Target Name="GetDockerInfo">
+    <FindCommand Command="docker">
+      <Output TaskParameter="Path" PropertyName="DockerPath" />
+      <Output TaskParameter="Exists" PropertyName="HasDocker" />
+    </FindCommand>
+
+    <ItemGroup>
+      <DockerComposeFiles Include="$(DockerRoot)docker-compose.*" Exclude="$(DockerRoot)docker-compose.debug.*" />
+    </ItemGroup>
+  </Target>
+
   <!-- get repository information -->
   <!-- NOTE: this will not replace values set by environment variables from the build server -->
   <Target Name="GetRepositoryInfo">
@@ -146,7 +160,9 @@
       <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' AND %(DotNetProjects.IsTestable) "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
       <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPublishable) "/>
-      <PackProjects       Include="@(SourceProjects)"      Condition="  '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPackable) " />
+      <PackProjects       Include="@(SourceProjects)"       Condition="  '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPackable) " />
+
+      <DockerProjects     Include="@(PublishProjects)"      Condition=" '@(PublishProjects->Count())' != '0' AND %(PublishProjects.HasDocker) " />
 
       <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
     </ItemGroup>
@@ -233,6 +249,7 @@
       $(BeforeInitialize);
       GetBuildTime;
       GetPlatformInfo;
+      GetDockerInfo;
       SetNuGetCredentials;
       GetRepositoryInfo;
       GetProjectMetadata;
