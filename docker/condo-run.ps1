@@ -33,19 +33,28 @@ try
         #docker exists lets check what container system we are using
         if(docker version | Where-Object {$_ | Select-String "linux"})
         {
-            Write-Info "Running with linux containers"
-            docker run -it -v ${pwd}:/src $DockerLinux bash -c ./condo.sh /t:publish
+            Write-Info "Running with linux container"
+            #docker pull $DockerLinux
+            docker run -it `
+                -v ${pwd}/src:/src `
+                -v ${pwd}/artifacts:/artifacts `
+                -v ${Home}/.nuget/packages:/root/.nuget/packages:ro `
+                -v ${Home}/.microsoft/usersecrets:/root/.microsoft/usersecrets `
+                $DockerLinux bash -c ./condo.sh /t:publish
+
         }
         else
         {
-            Write-Info "Running with windows containers"
-            docker run -it -v ${pwd}:/src $DockerWindows powershell -c ./condo.ps1 /t:publish
+            #docker pull $DockerWindows
+            Write-Info "Running with windows container"
+            docker run -it -v ${pwd}/src:/src:ro -v ${pwd}/artifacts:/artifacts $DockerWindows powershell -c ./condo.ps1 /t:publish
         }
     }
     else
     {
         #docker does not exist run condo without container
-        Invoke-Cmd ./condo.ps1
+        Write-Info "Docker not found on this machine. Falling back to native install"
+        Invoke-Cmd ./condo.ps1 /t:publish
     }
 }
 finally

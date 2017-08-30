@@ -124,7 +124,7 @@ install_dotnet() {
 
 # restore and publish msbuild
 install_condo() {
-    if [ ! -d "$CONDO_PUBLISH" ]; then
+    if [ ! -z "$SKIP_CONDO_PUBLISH" && ! -d "$CONDO_PUBLISH"]; then
         # make the publish directory
         mkdir -p $CONDO_PUBLISH
 
