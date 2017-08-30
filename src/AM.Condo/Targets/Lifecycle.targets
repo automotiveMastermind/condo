@@ -9,6 +9,11 @@
       $(BeforeInitialize);
     </BeforeInitialize>
 
+    <BeforeClean Condition=" $(CONDO_DEBUG) ">
+      Debugging;
+      $(BeforeClean);
+    </BeforeClean>
+
     <AfterPublish Condition=" $(CONDO_WAIT) ">
       $(AfterPublish);
       Waiting;

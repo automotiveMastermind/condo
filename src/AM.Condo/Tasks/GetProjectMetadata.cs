@@ -78,6 +78,7 @@ namespace AM.Condo.Tasks
             // set the default publish and pack
             project.SetMetadata("IsPublishable", (!library).ToString());
             project.SetMetadata("IsPackable", library.ToString());
+            project.SetMetadata("IsTestable", "true");
 
             // get the target framework node
             var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
@@ -90,6 +91,7 @@ namespace AM.Condo.Tasks
                 // set publish and pack to false
                 project.SetMetadata("IsPublishable", "false");
                 project.SetMetadata("IsPackable", "false");
+                project.SetMetadata("IsTestable", "false");
 
                 // move on immediately
                 return;
@@ -102,25 +104,10 @@ namespace AM.Condo.Tasks
             // set the publish to true
             project.SetMetadata("IsPublishable", (tfm != null).ToString());
 
-            // get the publish property
-            var publish = xml.Descendants("IsPublishable").FirstOrDefault()?.Value;
-
-            // determine if the publish property exists
-            if (!string.IsNullOrEmpty(publish))
-            {
-                // set the publish value
-                project.SetMetadata("IsPublishable", publish);
-            }
-
-            // get the is-packable property
-            var pack = xml.Descendants("IsPackable").FirstOrDefault()?.Value;
-
-            // determine if the pack property exists
-            if (!string.IsNullOrEmpty(pack))
-            {
-                // set the is-packable metadata
-                project.SetMetadata("IsPackable", pack);
-            }
+            project.SetProperty("IsPublishable", xml);
+            project.SetProperty("IsPackable", xml);
+            project.SetProperty("IsTestable", xml);
+            project.SetProperty("TestPurpose", xml);
 
             // set the target frameworks property
             project.SetMetadata("TargetFrameworks", string.Join(";", frameworks));

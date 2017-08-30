@@ -20,10 +20,12 @@
 
   <PropertyGroup>
     <CleanDependsOn>
+      $(BeforeClean);
       CleanArtifacts;
       GetProjectMetadata;
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
+      $(AfterClean);
     </CleanDependsOn>
 
     <BeforeInitialize>

@@ -143,7 +143,7 @@
       <DotNetBuildPaths   Include="@(FilteredDotNetSolutions)" />
 
       <SourceProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'src' "/>
-      <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' "/>
+      <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' AND %(DotNetProjects.IsTestable) "/>
       <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
       <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPublishable) "/>
       <PackProjects       Include="@(SourceProjects)"      Condition="  '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPackable) " />
