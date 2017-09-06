@@ -7,12 +7,14 @@
 namespace AM.Condo.Tasks
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the
@@ -58,7 +60,7 @@ namespace AM.Condo.Tasks
             return true;
         }
 
-        private static void SetMSBuildMetadata(ITaskItem project, string path)
+        private void SetMSBuildMetadata(ITaskItem project, string path)
         {
             // set the dotnet build type
             project.SetMetadata("DotNetType", "MSBuild");
@@ -113,6 +115,30 @@ namespace AM.Condo.Tasks
             project.SetMetadata("NetCoreFramework", tfm);
         }
 
+        private void SetJsonMetadata(ITaskItem project, string path)
+        {
+            try
+            {
+                // load the json
+                var json = File.ReadAllText(path);
+
+                // attempt to parse the json
+                var properties = new { Name = default(string) };
+                properties = JsonConvert.DeserializeAnonymousType(json, properties);
+
+                // determine if the json was parseable
+                if (!string.IsNullOrEmpty(properties.Name))
+                {
+                    // set the project name
+                    project.SetMetadata("ProjectName", properties.Name);
+                }
+            }
+            catch (Exception netEx)
+            {
+                this.Log.LogWarningFromException(netEx);
+            }
+        }
+
         private void SetMetadata(ITaskItem project)
         {
             // get the full path of the project file
@@ -122,6 +148,11 @@ namespace AM.Condo.Tasks
             var directory = Path.GetDirectoryName(path);
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
+
+            // get the project name
+            var projectName = path.EndsWith("proj")
+                ? Path.GetFileNameWithoutExtension(path)
+                : group;
 
             // determine if the group is a well-known folder path
             if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
@@ -135,9 +166,6 @@ namespace AM.Condo.Tasks
 
             // get the docker file path
             var dockerFile = Path.Combine(directory, "Dockerfile");
-
-            // get the project name
-            var projectName = Path.GetFileNameWithoutExtension(path);
 
             // determine if the docker file exists
             if (File.Exists(dockerFile))
@@ -168,8 +196,19 @@ namespace AM.Condo.Tasks
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
 
-            // set msbuild metadata
-            SetMSBuildMetadata(project, path);
+            // determine if this is an msbuild project file
+            if (path.EndsWith("proj"))
+            {
+                // set msbuild metadata
+                this.SetMSBuildMetadata(project, path);
+            }
+
+            // determine if this is a json file
+            if (path.EndsWith("json"))
+            {
+                // set the json metadata
+                this.SetJsonMetadata(project, path);
+            }
         }
         #endregion
     }

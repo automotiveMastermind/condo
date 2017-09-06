@@ -77,11 +77,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- locate all npm, bower, gulp, and grunt projects -->
-    <NpmInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)package.json" />
-    <BowerInstallPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)bower.json" />
-    <GulpPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gulpfile.*" />
-    <GruntPaths Include="$(RepositoryRoot)$(Slash)**$(Slash)gruntfile.*" />
+    <!-- locate submodule paths -->
     <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
 
     <!-- add prefixes to well-known authenticated feeds -->
@@ -108,13 +104,16 @@
   <!-- attempt to find docker info -->
   <Target Name="GetDockerInfo">
     <FindCommand Command="docker">
-      <Output TaskParameter="Path" PropertyName="DockerPath" />
+      <Output TaskParameter="ExecutablePath" PropertyName="DockerPath" />
       <Output TaskParameter="Exists" PropertyName="HasDocker" />
     </FindCommand>
 
     <ItemGroup>
-      <DockerComposeFiles Include="$(DockerRoot)docker-compose.*" Exclude="$(DockerRoot)docker-compose.debug.*" />
+      <DockerComposePaths Include="$(DockerRoot)docker-compose.*" Exclude="$(DockerRoot)docker-compose.debug.*" />
     </ItemGroup>
+
+    <Warning Condition="!$(HasDocker) AND '$(DockerComposePaths->Count())' != '0' "
+             Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
   </Target>
 
   <!-- get repository information -->
