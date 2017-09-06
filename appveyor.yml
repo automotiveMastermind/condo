@@ -1,4 +1,7 @@
 version: 1.0.{build}
+environment:
+  nodejs_version: ''
+
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -12,11 +15,13 @@ cache:
   - '%USERPROFILE%\.nuget'
   - '%USERPROFILE%\.am'
   - '%LOCALAPPDATA%\Microsoft\dotnet'
+install:
+  - ps: Install-Product node $env:nodejs_version
 build_script:
   - cmd: condo.cmd -- /t:ci
 test: off
 skip_commits:
-  message: "***NO_CI***"
+  message: '***NO_CI***'
 notifications:
   - provider: Webhook
     url: https://webhooks.gitter.im/e/c731d7b3fd486219480c

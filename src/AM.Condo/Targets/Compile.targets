@@ -34,19 +34,44 @@
     </ItemGroup>
 
     <Copy
-        SourceFiles="@(_CopyDotNetBuild)"
-        DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+      SourceFiles="@(_CopyDotNetBuild)"
+      DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <Target Name="PolymerBuild" Condition=" $(PolymerBuild) ">
+    <PropertyGroup>
+      <PolymerBuildPreset Condition=" '$(PolymerBuildPreset)' == '' ">$(POLYMER_BUILD_PRESET)</PolymerBuildPreset>
+      <PolymerBuildOptions Condition=" '$(PolymerBuildOptions)' == '' ">$(POLYMER_BUILD_OPTIONS)</PolymerBuildOptions>
+      <PolymerBuildOptions Condition=" '$(PolymerBuildPreset)' != '' ">$(PolymerBuildOptions.Trim()) --preset $(PolymerBuildPreset)</PolymerBuildOptions>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(PolymerPath)&quot; build $(PolymerBuildOptions)"
+          WorkingDirectory="%(PolymerJsonProjects.ProjectDir)" />
+  </Target>
+
+  <Target Name="CopyPolymerBuild" Condition=" $(PolymerBuild) ">
+    <ItemGroup>
+      <_CopyPolymerBuild Include="%(PolymerJsonProjects.ProjectDir)build$(Slash)**">
+        <ProjectName>%(PolymerJsonProjects.ProjectName)</ProjectName>
+      </_CopyPolymerBuild>
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(_CopyPolymerBuild)"
+      DestinationFiles="@(_CopyPolymerBuild->'$(BuildArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <PropertyGroup>
     <AfterCompile>
       $(AfterCompile);
       CopyDotNetBuild;
+      CopyPolymerBuild;
     </AfterCompile>
 
     <CompileDependsOn>
       $(BeforeCompile);
       DotNetBuild;
+      PolymerBuild;
       $(CompileDependsOn);
       $(AfterCompile);
     </CompileDependsOn>

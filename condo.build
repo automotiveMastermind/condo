@@ -11,6 +11,8 @@
         <License>MIT</License>
         <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
         <GitHubPages>true</GitHubPages>
+
+        <TestPurposeExclude>None</TestPurposeExclude>
     </PropertyGroup>
 
     <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
