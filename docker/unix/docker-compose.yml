@@ -2,13 +2,12 @@ version: '3.3'
 
 services:
     condo:
-        image: amastermind/condo
+        image: amastermind/condo:unix-core1
         build:
             context: ../../
             dockerfile: ./docker/unix/Dockerfile.unix
         volumes:
-            - ./:/app
+            - ./../../:/app
             - ~/.nuget/:/root/.nuget/:ro
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
-        command:
-            - ./condo.sh /t:publish
+        entrypoint: dotnet --version
