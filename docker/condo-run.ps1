@@ -37,7 +37,7 @@ try
             if(docker version | Where-Object {$_ | Select-String "linux"})
             {
                 Write-Info "Running with linux containers"
-                docker run -it -v ${pwd}:/app ($ContainerName + ":unix-core" + $matches[0]) bash -c ./condo.sh /t:publish
+                docker run -it -v ${pwd}:/app ($ContainerName + ":unix-core" + $matches[0]) bash -c ./condo.sh -- /t:publish
             }
             else
             {

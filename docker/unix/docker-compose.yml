@@ -3,11 +3,12 @@ version: '3.3'
 services:
     condo:
         image: automotivemastermind/condo:unix-core1
+        container_name: condo
         build:
             context: ../../
             dockerfile: ./docker/unix/Dockerfile.unix
         volumes:
             - ./../../:/app
-            - ~/.nuget/:/root/.nuget/:ro
+            - ~/.nuget/:/root/.nuget/
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
         entrypoint: ./condo.sh -- /t:publish

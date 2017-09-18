@@ -232,6 +232,9 @@ safe-join $'\n' "$@" >> $MSBUILD_RSP
 
 cat $MSBUILD_RSP >> $CONDO_LOG
 
+pwd
+ls -la /root/.am/condo
+
 info "Starting build..."
 info "msbuild '$CONDO_PROJ'"
 
