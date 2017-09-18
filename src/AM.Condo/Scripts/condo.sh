@@ -124,29 +124,31 @@ install_dotnet() {
 
 # restore and publish msbuild
 install_condo() {
-    if [ ! -z "$SKIP_CONDO_PUBLISH" && ! -d "$CONDO_PUBLISH"]; then
-        # make the publish directory
-        mkdir -p $CONDO_PUBLISH
+    if [ -z "$SKIP_CONDO_PUBLISH" ]; then
+        if [ ! -d "$CONDO_PUBLISH" ]; then
+            # make the publish directory
+            mkdir -p $CONDO_PUBLISH
 
-        # get the current runtime
-        RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
+            # get the current runtime
+            RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
-        # restore condo
-        info "condo: restoring condo packages..."
-        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
-        success "condo: restore complete"
+            # restore condo
+            info "condo: restoring condo packages..."
+            safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
+            success "condo: restore complete"
 
-        # publish condo
-        info "condo: publishing condo tasks..."
-        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
-        cp -R $TEMPLATE_ROOT $CONDO_ROOT
+            # publish condo
+            info "condo: publishing condo tasks..."
+            safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+            cp -R $TEMPLATE_ROOT $CONDO_ROOT
 
-        info "condo: removing temp path..."
-        rm -rf $SRC_ROOT
+            info "condo: removing temp path..."
+            rm -rf $SRC_ROOT
 
-        success "condo: publish complete"
-    else
-        info "condo was already built: use --reset to get the latest version."
+            success "condo: publish complete"
+        else
+            info "condo was already built: use --reset to get the latest version."
+        fi
     fi
 }
 
