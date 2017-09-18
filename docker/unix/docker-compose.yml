@@ -11,4 +11,5 @@ services:
             - ./../../:/app
             - ~/.nuget/:/root/.nuget/
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+            - ./../../artifacts/log/:/root/.am/condo/.build
         entrypoint: ./condo.sh -- /t:publish
