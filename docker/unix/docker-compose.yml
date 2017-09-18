@@ -10,4 +10,4 @@ services:
             - ./../../:/app
             - ~/.nuget/:/root/.nuget/:ro
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
-        entrypoint: dotnet --version
+        entrypoint: ./condo.sh
