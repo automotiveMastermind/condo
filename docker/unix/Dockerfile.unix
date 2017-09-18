@@ -1,7 +1,7 @@
 FROM microsoft/dotnet:1.0-sdk
 
-ENV SKIP_DOTNET_INSTALL = "true"
-ENV SKIP_CONDO_PUBLISH = "true"
+ENV SKIP_DOTNET_INSTALL true
+ENV SKIP_CONDO_PUBLISH true
 ARG cli=./artifacts/publish/AM.Condo
 ARG src=./src/AM.Condo
 
