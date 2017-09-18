@@ -20,8 +20,7 @@ function Write-Info([string] $message) {
     Write-Message -Color Yellow -Message $message
 }
 
-$DockerLinux = "condo"
-$DockerWindows = $DockerLinux+":windows"
+$ContainerName = "automotivemastermind/condo"
 
 try
 {
@@ -30,16 +29,21 @@ try
     if(Get-Command 'docker' -errorAction SilentlyContinue)
     {
         Write-Info "Docker was found!"
-        #docker exists lets check what container system we are using
-        if(docker version | Where-Object {$_ | Select-String "linux"})
+        #check global.json for sdk version
+        $config = Get-Content -Raw -Path global.json | ConvertFrom-Json
+        if($config.sdk.version -match "[0-9]\.?")
         {
-            Write-Info "Running with linux containers"
-            docker run -it -v ${pwd}:/src $DockerLinux bash -c ./condo.sh /t:publish
-        }
-        else
-        {
-            Write-Info "Running with windows containers"
-            docker run -it -v ${pwd}:/src $DockerWindows powershell -c ./condo.ps1 /t:publish
+            #docker exists lets check what container system we are using
+            if(docker version | Where-Object {$_ | Select-String "linux"})
+            {
+                Write-Info "Running with linux containers"
+                docker run -it -v ${pwd}:/src (ContainerName + ":unix-core" + $matches[0]) bash -c ./condo.sh /t:publish
+            }
+            else
+            {
+                Write-Info "Running with windows containers"
+                docker run -it -v ${pwd}:/src (ContainerName + ":win-core" + $matches[0]) powershell -c ./condo.ps1 /t:publish
+            }
         }
     }
     else
