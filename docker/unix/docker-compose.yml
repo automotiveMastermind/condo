@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
     condo:
-        image: automotivemastermind/condo:unix-core1
+        image: automotivemastermind/condo:unix
         container_name: condo
         build:
             context: ../../
@@ -11,5 +11,4 @@ services:
             - ./../../:/app
             - ~/.nuget/:/root/.nuget/
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
-            - ./../../artifacts/log/:/root/.am/condo/.build
-        entrypoint: ./condo.sh -- /t:publish
+        entrypoint: ./condo.sh

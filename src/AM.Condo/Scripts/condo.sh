@@ -93,6 +93,7 @@ safe-join() {
 install_dotnet() {
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
+
     else
         DOTNET_TEMP=$(mktemp -d)
         DOTNET_INSTALL="$DOTNET_TEMP/dotnet-install.sh"
@@ -116,39 +117,43 @@ install_dotnet() {
         chmod +x $DOTNET_INSTALL
         safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
         safe-exec rm -rf $DOTNET_TEMP
-    fi
 
-    export PATH="$DOTNET_INSTALL_DIR:$PATH"
-    success "dotnet-cli was installed..."
+        export PATH="$DOTNET_INSTALL_DIR:$PATH"
+        success "dotnet-cli was installed..."
+
+    fi
 }
 
 # restore and publish msbuild
 install_condo() {
-    if [ -z "$SKIP_CONDO_PUBLISH" ]; then
-        if [ ! -d "$CONDO_PUBLISH" ]; then
-            # make the publish directory
-            mkdir -p $CONDO_PUBLISH
+    if [ ! -z "$SKIP_CONDO_PUBLISH" ]; then
+        info "Skipping publish of condo by request (SKIP_CONDO_PUBLISH is set)..."
+        return
+    fi
 
-            # get the current runtime
-            RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
+    if [ ! -d "$CONDO_PUBLISH" ]; then
+        # make the publish directory
+        mkdir -p $CONDO_PUBLISH
 
-            # restore condo
-            info "condo: restoring condo packages..."
-            safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
-            success "condo: restore complete"
+        # get the current runtime
+        RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
-            # publish condo
-            info "condo: publishing condo tasks..."
-            safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
-            cp -R $TEMPLATE_ROOT $CONDO_ROOT
+        # restore condo
+        info "condo: restoring condo packages..."
+        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
+        success "condo: restore complete"
 
-            info "condo: removing temp path..."
-            rm -rf $SRC_ROOT
+        # publish condo
+        info "condo: publishing condo tasks..."
+        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+        cp -R $TEMPLATE_ROOT $CONDO_ROOT
 
-            success "condo: publish complete"
-        else
-            info "condo was already built: use --reset to get the latest version."
-        fi
+        info "condo: removing temp path..."
+        rm -rf $SRC_ROOT
+
+        success "condo: publish complete"
+    else
+        info "condo was already built: use --reset to get the latest version."
     fi
 }
 
@@ -231,9 +236,6 @@ END_MSBUILD_RSP
 safe-join $'\n' "$@" >> $MSBUILD_RSP
 
 cat $MSBUILD_RSP >> $CONDO_LOG
-
-pwd
-ls -la /root/.am/condo
 
 info "Starting build..."
 info "msbuild '$CONDO_PROJ'"
