@@ -5,7 +5,7 @@ CLR_FAILURE='\033[1;31m'    # BRIGHT RED
 #Known paths
 CONDO_ROOT="$HOME/.am/condo/unix"
 CONDO_URI="https://raw.githubusercontent.com/automotiveMastermind/condo"
-CONDO_DOCKER_URI="$CONDO_URI/feature/docker-files-for-days/docker/unix/docker-compose.yml"
+CONDO_DOCKER_URI="$CONDO_URI/feature/docker-files-for-days/docker-compose-unix.yml"
 CONDO_LEGACY_URI="$CONDO_URI/feature/docker-files-for-days/template/condo.sh"
 
 function failure() {
@@ -27,8 +27,6 @@ function getFile {
         return 0
     fi
 
-    info $CONDO_SHA > $SHA_PATH
-
     retries=3
     until (wget -O $CONDO_ROOT $1 2>/dev/null || curl -o $CONDO_ROOT --location $CONDO_URI 2>/dev/null); do
         failure "Unable to retrieve condo: '$CONDO_URI'"
@@ -48,7 +46,7 @@ docker --version | grep "Docker version" > /dev/null
 if [ $? -eq 0 ]; then
     info "Checking for latest compose..."
     getFile $CONDO_DOCKER_URI
-    docker-compose -f /$CONDO_ROOT/docker-compose.yml run condo -- $@
+    docker-compose -f /$CONDO_ROOT/docker-compose-unix.yml run condo -- $@
 else
     info "Docker is not installed falling back to legacy build"
     #pull condo script
