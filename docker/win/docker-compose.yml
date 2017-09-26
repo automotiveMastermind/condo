@@ -2,14 +2,13 @@ version: '3.3'
 
 services:
     condo:
-        image: automotivemastermind/condo:win-core1
+        image: automotivemastermind/condo:windows
         container_name: condo
         build:
             context: ../../
             dockerfile: ./docker/win/Dockerfile.win
         volumes:
-            - ./../../:/app
-            - ~/.nuget/:/root/.nuget/
-            - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
-            - ./../../artifacts/log/:/root/.am/condo/.build
-        entrypoint: ./condo.ps1 /t:publish
+            - ./../../:c:/app
+            - ~/.nuget/:c:/root/.nuget/
+            - ~/.microsoft/usersecrets:c:/root/.microsoft/usersecrets
+        entrypoint: powershell.exe git --version
