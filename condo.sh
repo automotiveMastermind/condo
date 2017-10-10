@@ -1,12 +1,16 @@
 #!/bin/bash
+export CONDO_BUILD_PATH=$(pwd)
+
+#pretty colors
 CLR_INFO='\033[1;33m'       # BRIGHT YELLOW
 CLR_FAILURE='\033[1;31m'    # BRIGHT RED
 
 #Known paths
 CONDO_ROOT="$HOME/.am/condo/unix"
+CONDO_BRANCH="feature/docker-files-for-days"
 CONDO_URI="https://raw.githubusercontent.com/automotiveMastermind/condo"
-CONDO_DOCKER_URI="$CONDO_URI/feature/docker-files-for-days/docker-compose-unix.yml"
-CONDO_LEGACY_URI="$CONDO_URI/feature/docker-files-for-days/template/condo.sh"
+CONDO_DOCKER_URI="$CONDO_URI/$CONDO_BRANCH/docker-compose-unix.yml"
+CONDO_RUN_URI="$CONDO_URI/$CONDO_BRANCH/run/condo.sh"
 
 function failure() {
     echo -e "${CLR_FAILURE}$@${CLR_CLEAR}"
@@ -16,20 +20,28 @@ function info() {
         echo -e "${CLR_INFO}$@${CLR_CLEAR}"
 }
 
+# cleanup code even if script fails
+function finish {
+    rm condo-local.sh
+}
+
+# get file from remote repo if does not already exist locally. files are cached via latest git SHA
 function getFile {
 
-    local SHA_URI="https://api.github.com/repos/automotivemastermind/condo/commits/develop"
+    local SHA_URI="https://api.github.com/repos/automotivemastermind/condo/commits/$CONDO_BRANCH"
     local CONDO_SHA=$(curl -s $SHA_URI | grep sha | head -n 1 | sed 's#.*\:.*"\(.*\).*",#\1#')
     local SHA_PATH=$CONDO_ROOT/$CONDO_SHA
 
-    if [ -f $SHA_PATH ]; then
+    if [[ -f $SHA_PATH && ! -f $CONDO_ROOT/$2 ]]; then
         info "condo: latest version already installed: $CONDO_SHA"
         return 0
     fi
 
+    touch $SHA_PATH
+
     retries=3
-    until (wget -O $CONDO_ROOT $1 2>/dev/null || curl -o $CONDO_ROOT --location $CONDO_URI 2>/dev/null); do
-        failure "Unable to retrieve condo: '$CONDO_URI'"
+    until (curl -o $CONDO_ROOT/$2 --create-dirs $1 2>/dev/null || wget -O $CONDO_ROOT/$2 $1 2>/dev/null); do
+        failure "Unable to retrieve condo: '$1'"
 
         if [ "$retries" -le 0 ]; then
             return 1
@@ -39,17 +51,28 @@ function getFile {
         failure "Retrying in 5 seconds... attempts left: $retries"
         sleep 5s
     done
+    info "latest version installed $CONDO_SHA"
 }
 
+### setup condo project
 
+# check if condo is cached or get it from repo
+getFile $CONDO_RUN_URI condo.sh
+# copy cached condo into project as condo-local.sh
+cp $CONDO_ROOT/condo.sh $CONDO_BUILD_PATH/condo-local.sh
+# cleanup file on exit
+trap finish EXIT
+
+# Does thou have the docker?
 docker --version | grep "Docker version" > /dev/null
 if [ $? -eq 0 ]; then
-    info "Checking for latest compose..."
-    getFile $CONDO_DOCKER_URI
-    docker-compose -f /$CONDO_ROOT/docker-compose-unix.yml run condo -- $@
+    info "condo: checking for latest compose..."
+    # check if condo is cached or get it from repo
+    getFile $CONDO_DOCKER_URI docker-compose.yml
+    # run condo in docker container
+    docker-compose -f $CONDO_ROOT/docker-compose.yml run condo -- $@
 else
-    info "Docker is not installed falling back to legacy build"
-    #pull condo script
-    getFile CONDO_LEGACY_URI
-    /$CONDO_ROOT/condo.sh -- $@
+    info "condo: docker is not installed falling back to local build"
+    # run condo
+    ./condo-local.sh -- $@
 fi

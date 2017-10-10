@@ -5,9 +5,10 @@ services:
         image: automotivemastermind/condo:unix
         container_name: condo
         build:
+            context: ./
             dockerfile: ./docker/unix/Dockerfile.unix
         volumes:
-            - ./:/app
+            - ${CONDO_BUILD_PATH}:/app
             - ~/.nuget/:/root/.nuget/
             - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
         entrypoint: ./condo.sh

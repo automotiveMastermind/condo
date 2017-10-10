@@ -29,21 +29,16 @@ try
     if(Get-Command 'docker' -errorAction SilentlyContinue)
     {
         Write-Info "Docker was found!"
-        #check global.json for sdk version
-        $config = Get-Content -Raw -Path ${pwd}/global.json | ConvertFrom-Json
-        if($config.sdk.version -match "[0-9]")
+        #docker exists lets check what container system we are using
+        if(docker version | Where-Object {$_ | Select-String "linux"})
         {
-            #docker exists lets check what container system we are using
-            if(docker version | Where-Object {$_ | Select-String "linux"})
-            {
-                Write-Info "Running with linux containers"
-                docker run -it -v ${pwd}:/app ($ContainerName + ":unix-core" + $matches[0]) bash -c ./condo.sh /t:publish
-            }
-            else
-            {
-                Write-Info "Running with windows containers"
-                docker run -it -v ${pwd}:/app ($ContainerName + ":win-core" + $matches[0]) powershell -c ./condo.ps1 /t:publish
-            }
+            Write-Info "Running with linux containers"
+            docker-compose -f $CONDO_ROOT/docker-compose.yml run condo $@
+        }
+        else
+        {
+            Write-Info "Running with windows containers"
+            docker run -it -v ${pwd}:/app ($ContainerName + ":win-core" + $matches[0]) powershell -c ./condo.ps1 /t:publish
         }
     }
     else
