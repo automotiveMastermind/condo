@@ -8,7 +8,7 @@ namespace AM.Condo
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading.Tasks;
     using NuGet.Common;
 
     /// <summary>
@@ -21,96 +21,77 @@ namespace AM.Condo
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a debug message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
+        public void Log(LogLevel level, string data)
+        {
+            this.actions.Add(logger => logger.Log(level, data));
+        }
+
+        /// <inheritdoc />
+        public void Log(ILogMessage message)
+        {
+            this.actions.Add(logger => logger.Log(message));
+        }
+
+        /// <inheritdoc />
+        public Task LogAsync(LogLevel level, string data)
+        {
+            this.actions.Add(logger => logger.Log(level, data));
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task LogAsync(ILogMessage message)
+        {
+            this.actions.Add(logger => logger.Log(message));
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
         public void LogDebug(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an error.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogError(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an error summary.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
-        public void LogErrorSummary(string data)
-        {
-            // add an action for logging a debug message
-            this.actions.Add(logger => logger.LogDebug(data));
-        }
-
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an information message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogInformation(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an information summary.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogInformationSummary(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a minimal message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogMinimal(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a verbose message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogVerbose(string data)
         {
             // add an action for logging a debug message
             this.actions.Add(logger => logger.LogDebug(data));
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a warning.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogWarning(string data)
         {
             // add an action for logging a debug message

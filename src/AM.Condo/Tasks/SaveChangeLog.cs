@@ -34,16 +34,16 @@ namespace AM.Condo.Tasks
         [Required]
         public ITaskItem[] Partials { get; set; } = new[]
         {
-            new TaskItem("Targets/Versioning/Angular/header.hbs"),
-            new TaskItem("Targets/Versioning/Angular/footer.hbs"),
-            new TaskItem("Targets/Versioning/Angular/commit.hbs")
+            new TaskItem("Targets/Version/Angular/header.hbs"),
+            new TaskItem("Targets/Version/Angular/footer.hbs"),
+            new TaskItem("Targets/Version/Angular/commit.hbs")
         };
 
         /// <summary>
         /// Gets or sets the template used to generate the changelog.
         /// </summary>
         [Required]
-        public string Template { get; set; } = "Targets/Versioning/Angular/template.hbs";
+        public string Template { get; set; } = "Targets/Version/Angular/template.hbs";
 
         /// <summary>
         /// Gets or sets the types to include in the change log.

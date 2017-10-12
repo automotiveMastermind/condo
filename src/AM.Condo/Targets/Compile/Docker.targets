@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="DockerBuild" Condition=" $(DockerBuild) ">
+    <Exec Command="docker build --label %(DockerMetadata.Label) --tag %(DockerMetadata.VersionLabel) ."
+          WorkingDirectory="%(RootDir)%(Directory)" />
+  </Target>
+
+  <Target Name="DockerTag" Condition=" $(DockerBuild) ">
+    <ItemGroup>
+      <DockerTags Include="%(DockerMetadata.DockerLabels)">
+        <VersionLabel>%(DockerMetadata.VersionLabel)</VersionLabel>
+      </DockerTags>
+    </ItemGroup>
+
+    <Exec Command="docker tag %(DockerTags.VersionLabel) %(DockerTags.Identity)" />
+  </Target>
+
+  <PropertyGroup>
+    <AfterPublish>
+      $(AfterCompile);
+      DockerBuild;
+      DockerTag;
+    </AfterPublish>
+  </PropertyGroup>
+</Project>
+

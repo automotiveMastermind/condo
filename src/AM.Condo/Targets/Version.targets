@@ -5,18 +5,24 @@
   <PropertyGroup Condition=" '$(BranchStrategyTargets)' == '' ">
     <BranchStrategy  Condition=" '$(BranchStrategy)' == '' ">GitFlow</BranchStrategy>
 
-    <BranchStrategyTargets>$(CondoTargetsPath)\Versioning\$(BranchStrategy).targets</BranchStrategyTargets>
+    <BranchStrategyTargets>$(CondoTargetsPath)\Version\$(BranchStrategy).targets</BranchStrategyTargets>
   </PropertyGroup>
 
   <!-- detect version strategy -->
   <PropertyGroup Condition=" '$(VersionStrategyTargets)' == '' ">
     <VersionStrategy Condition=" '$(VersionStrategy)' == '' ">Conventional</VersionStrategy>
 
-    <VersionStrategyTargets>$(CondoTargetsPath)\Versioning\$(VersionStrategy).targets</VersionStrategyTargets>
+    <VersionStrategyTargets>$(CondoTargetsPath)\Version\$(VersionStrategy).targets</VersionStrategyTargets>
   </PropertyGroup>
 
   <PropertyGroup>
     <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SetVersionVariables Condition=" $(SetVersionVariables) == '' ">$(SET_VERSION_VARIABLES)</SetVersionVariables>
+    <SetVersionVariables Condition=" $(SetVersionVariables) == '' ">false</SetVersionVariables>
+    <SetVersionVariables Condition=" '$(SetVersionVariables.ToLower())' != 'true' ">false</SetVersionVariables>
   </PropertyGroup>
 
   <!-- import the branch and version strategy -->
@@ -70,6 +76,7 @@
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="BuildDateUtc" PropertyName="BuildDateUtc" />
       <Output TaskParameter="PreReleaseTag" PropertyName="PreReleaseTag" />
+      <Output TaskParameter="MajorVersion" PropertyName="MajorVersion" />
     </GetAssemblyInfo>
   </Target>
 
@@ -113,11 +120,25 @@
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
     <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
+    <Message Importance="High" Text="Major Version      : $(MajorVersion)" />
     <Message Importance="High" Text="Create Release     : $(CreateRelease)" />
 
     <Message Importance="High"
              Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
              Condition=" '$(BuildHost)' == 'tfs' " />
+  </Target>
+
+  <Target Name="SetVersionVariables" Condition=" $(SetVersionVariables) ">
+    <SetEnvironmentVariable Name="InformationalVersion" Value="$(InformationalVersion)" />
+    <SetEnvironmentVariable Name="CurrentVersion"       Value="$(CurrentVersion)" />
+    <SetEnvironmentVariable Name="CurrentRelease"       Value="$(CurrentRelease)" />
+    <SetEnvironmentVariable Name="RecommendedRelease"   Value="$(RecommendedRelease)" />
+    <SetEnvironmentVariable Name="NextRelease"          Value="$(NextRelease)" />
+
+    <SetEnvironmentVariable Name="BuildQuality"         Value="$(BuildQuality)" />
+    <SetEnvironmentVariable Name="PreReleaseTag"        Value="$(PreReleaseTag)" />
+    <SetEnvironmentVariable Name="CurrentRelease"       Value="$(CurrentRelease)" />
+    <SetEnvironmentVariable Name="MajorVersion"         Value="$(MajorVersion)" />
   </Target>
 
   <PropertyGroup>
@@ -129,6 +150,7 @@
     <AfterVersion>
       $(AfterVersion);
       PrintVersionInfo;
+      SetVersionVariables;
     </AfterVersion>
 
     <VersionDependsOn>

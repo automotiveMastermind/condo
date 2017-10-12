@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="GetDotNetInfo">
+    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
+      <DotNetSolutions Include="$(RepositoryRoot)*.sln" />
+    </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(DotNetSolutions)">
+      <Output TaskParameter="Filtered" ItemName="FilteredDotNetSolutions" />
+    </RemoveDuplicates>
+
+    <GetProjectsForSolution Solutions="@(FilteredDotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
+      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
+    </GetProjectsForSolution>
+
+    <PropertyGroup>
+      <DotNetRestore Condition=" '$(SKIP_DOTNET_RESTORE)' != '' ">false</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' != '' AND '$(DotNetRestore.ToLower())' != 'true' ">false</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">true</DotNetRestore>
+
+      <DotNetBuild Condition=" '$(SKIP_DOTNET_BUILD)' != '' ">false</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' == '' ">true</DotNetBuild>
+
+      <DotNetPack Condition=" '$(SKIP_DOTNET_PACK)' != '' ">false</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' != '' AND '$(DotNetPack.ToLower())' != 'true' ">false</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' == '' ">true</DotNetPack>
+
+      <DotNetTest Condition=" '$(SKIP_DOTNET_TEST)' != '' ">false</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' != '' AND '$(DotNetTest.ToLower())' != 'true' ">false</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' == '' ">true</DotNetTest>
+
+      <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
+    </PropertyGroup>
+
+    <GetProjectMetadata Projects="@(DotNetProjects)"
+      Restore="$(DotNetRestore)" Build="$(DotNetBuild)" Pack="$(DotNetPack)" Test="$(DotNetTest)" Publish="$(DotNetPublish)">
+      <Output TaskParameter="Projects" ItemName="DotNetMetadata" />
+    </GetProjectMetadata>
+
+    <ItemGroup>
+      <RestoreProjects    Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsRestorable) " />
+      <BuildProjects      Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsBuildable) " />
+      <SourceProjects     Include="@(DotNetMetadata)"       Condition=" '%(DotNetMetadata.ProjectGroup)' == 'src' " />
+      <TestProjects       Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsTestable) " />
+      <SampleProjects     Include="@(DotNetMetadata)"       Condition=" '%(DotNetMetadata.ProjectGroup)' == 'samples' "/>
+      <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPublishable) " />
+      <PackProjects       Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPackable) " />
+      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PrintDotNetProjects" Condition=" $(DotNetBuild) OR $(DotNetPack) OR $(DotNetTest) OR $(DotNetPublish) ">
+    <Message Importance="High" Text="Project: %(DotNetMetadata.Description)" />
+  </Target>
+
+  <Target Name="DotNetRestore" Condition=" $(DotNetRestore) ">
+    <PropertyGroup>
+      <DotNetRestoreProperties Condition=" '$(DotNetRestoreProperties)' == '' ">$(DOTNET_RESTORE_PROPS)</DotNetRestoreProperties>
+      <DotNetRestoreProperties Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreProperties);RestoreConfigFile=&quot;$(NuGetConfigPath)&quot;</DotNetRestoreProperties>
+      <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties);Version=$(InformationalVersion)</DotNetRestoreProperties>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_DotNetRestore Include="@(RestoreProjects)">
+        <AdditionalProperties>$(DotNetRestoreProperties)</AdditionalProperties>
+      </_DotNetRestore>
+    </ItemGroup>
+
+    <MSBuild Projects="@(_DotNetRestore)" Targets="Restore" />
+  </Target>
+
+  <PropertyGroup>
+    <RestoreDependsOn>
+      $(RestoreDependsOn);
+      DotNetRestore;
+    </RestoreDependsOn>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetDotNetInfo;
+      PrintDotNetProjects;
+    </BeforePrepare>
+  </PropertyGroup>
+</Project>

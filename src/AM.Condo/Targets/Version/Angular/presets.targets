@@ -18,7 +18,7 @@
     <ReferencePrefixes      Condition=" '$(ReferencePrefixes)'      == '' ">#</ReferencePrefixes>
     <MentionPrefixes        Condition=" '$(MentionPrefixes)'        == '' ">@</MentionPrefixes>
 
-    <IncludeInvalidCommits  Condition=" '$(IncludeInvalidCommits)'  == '' ">False</IncludeInvalidCommits>
+    <IncludeInvalidCommits  Condition=" '$(IncludeInvalidCommits)'  == '' ">false</IncludeInvalidCommits>
 
     <ReleaseMessage         Condition=" '$(ReleaseMessage)'         == '' ">chore(release): </ReleaseMessage>
 

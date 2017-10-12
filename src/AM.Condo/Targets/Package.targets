@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="DotNetPack" Condition=" '$(DotNetPack)' != 'skip' ">
+  <Target Name="DotNetPack" Condition=" $(DotNetPack) ">
     <PropertyGroup>
-      <DotNetPackOptions Condition=" '$(DotNetPackOptions)' == '' ">$(DOTNET_PACK_OPTIONS)</DotNetPackOptions>
-      <DotNetPackOptions>$(DotNetPackOptions) --output &quot;$(PackageArtifactsRoot.TrimEnd('$(slash)'))&quot;</DotNetPackOptions>
-      <DotNetPackOptions>$(DotNetPackOptions) --no-build</DotNetPackOptions>
-      <DotNetPackOptions Condition=" '$(Configuration)' != '' ">$(DotNetPackOptions) --configuration &quot;$(Configuration)&quot;</DotNetPackOptions>
-
       <DotNetPackProperties Condition=" '$(DotNetPackProperties)' == '' ">$(DOTNET_PACK_PROPS)</DotNetPackProperties>
-      <DotNetPackProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetPackProperties) /p:Version=$(InformationalVersion)</DotNetPackProperties>
+      <DotNetPackProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetPackProperties);Version=$(InformationalVersion)</DotNetPackProperties>
+      <DotNetPackProperties>$(DotNetPackProperties);PackageOutputPath=$(PackageArtifactsRoot.TrimEnd('$(slash)'))</DotNetPackProperties>
+      <DotNetPackProperties>$(DotNetPackProperties);NoBuild=true</DotNetPackProperties>
+      <DotNetPackProperties>$(DotNetPackProperties.Trim(';'))</DotNetPackProperties>
     </PropertyGroup>
 
     <ItemGroup>
-      <DotNetPackProjects Include="@(PackProjects)" Condition=" '@(DotNetPackProjects->Count())' == '0' " />
+      <_DotNetPack Include="@(PackProjects)">
+        <AdditionalProperties>$(DotNetPackProperties)</AdditionalProperties>
+      </_DotNetPack>
     </ItemGroup>
 
-    <Exec
-        Command="dotnet pack &quot;%(DotNetPackProjects.FullPath)&quot; $(DotNetPackOptions.Trim()) $(DotNetPackProperties.Trim())"
-        WorkingDirectory="$(RepositoryRoot)" />
+    <MSBuild Projects="@(_DotNetPack)" Targets="Pack" />
 
     <ItemGroup>
       <AllPackages Include="$(PackageArtifactsRoot)*.nupkg" />

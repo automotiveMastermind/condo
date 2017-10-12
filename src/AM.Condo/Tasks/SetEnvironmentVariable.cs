@@ -42,7 +42,7 @@ namespace AM.Condo.Tasks
         {
             try
             {
-                Environment.SetEnvironmentVariable(this.Name, this.Value);
+                Environment.SetEnvironmentVariable(this.Name, this.Value, EnvironmentVariableTarget.Machine);
             }
             catch (ArgumentException argEx)
             {

@@ -7,13 +7,17 @@
 namespace AM.Condo
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
+    using NuGet.Common;
 
     using static System.FormattableString;
 
     using ILogger = NuGet.Common.ILogger;
+    using Task = System.Threading.Tasks.Task;
 
     /// <summary>
     /// Represents a NuGet logger that emits log messages to an underlying Microsoft Build log.
@@ -43,96 +47,80 @@ namespace AM.Condo
             // set the log
             this.log = log;
         }
+
+        /// <inheritdoc />
+        public void Log(LogLevel level, string data)
+        {
+            switch (level)
+            {
+                case LogLevel.Error:
+                    this.log.LogError(data);
+                    break;
+                case LogLevel.Warning:
+                    this.log.LogWarning(data);
+                    break;
+                default:
+                    this.log.LogMessage(MessageImportance.Low, data);
+                    break;
+            }
+        }
+
+        /// <inheritdoc />
+        public void Log(ILogMessage message)
+        {
+            this.Log(message.Level, message.Message);
+        }
+
+        /// <inheritdoc />
+        public Task LogAsync(LogLevel level, string data)
+        {
+            return Task.Run(() => this.Log(level, data));
+        }
+
+        /// <inheritdoc />
+        public Task LogAsync(ILogMessage message)
+        {
+            return Task.Run(() => this.Log(message.Level, message.Message));
+        }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a debug message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogDebug(string data)
         {
             this.log.LogMessage(MessageImportance.Low, data);
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an error.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogError(string data)
         {
             this.log.LogError(data);
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an error summary.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
-        /// <remarks>
-        /// This is a no-op as Microsoft Build already provides summary information.
-        /// </remarks>
-        public void LogErrorSummary(string data)
-        {
-        }
-
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an information message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogInformation(string data)
         {
             this.log.LogMessage(data);
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as an information summary.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
-        /// <remarks>
-        /// This is a no-op as Microsoft Build already provides summary information.
-        /// </remarks>
+        /// <inheritdoc />
         public void LogInformationSummary(string data)
         {
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a minimal message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogMinimal(string data)
         {
             this.log.LogMessage(MessageImportance.High, data);
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a verbose message.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogVerbose(string data)
         {
             this.log.LogMessage(MessageImportance.Low, data);
         }
 
-        /// <summary>
-        /// Logs the specified <paramref name="data"/> as a warning.
-        /// </summary>
-        /// <param name="data">
-        /// The data that should be logged.
-        /// </param>
+        /// <inheritdoc />
         public void LogWarning(string data)
         {
             this.log.LogWarning(data);

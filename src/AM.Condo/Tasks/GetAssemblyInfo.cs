@@ -50,6 +50,12 @@ namespace AM.Condo.Tasks
         public string PreReleaseTag { get; private set; }
 
         /// <summary>
+        /// Gets the major version number of the release.
+        /// </summary>
+        [Output]
+        public string MajorVersion { get; private set; }
+
+        /// <summary>
         /// Gets the assembly version.
         /// </summary>
         [Output]
@@ -210,6 +216,9 @@ namespace AM.Condo.Tasks
                 // append the prerelease tag to the informational version
                 this.InformationalVersion += Invariant($"-{this.PreReleaseTag}");
             }
+
+            // set the major version
+            this.MajorVersion = version.Major.ToString();
 
             // we are successful
             return true;

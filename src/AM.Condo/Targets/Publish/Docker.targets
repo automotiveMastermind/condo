@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="DockerRegistryTag" Condition=" $(DockerPush) AND '$(DockerRegistry)' != '' ">
+    <ItemGroup>
+      <DockerRegistryTags Include="%(DockerMetadata.DockerLabels)">
+        <VersionLabel>%(DockerMetadata.VersionLabel)</VersionLabel>
+      </DockerRegistryTags>
+    </ItemGroup>
+
+    <Exec Command="docker tag %(DockerRegistryTags.VersionLabel) $(DockerOrganization)%(DockerRegistryTags.Identity)" />
+  </Target>
+
+  <Target Name="DockerPush" Condition=" $(DockerPush) ">
+    <Exec Command="docker push $(DockerOrganization)%(DockerRegistryTags.Identity)" />
+  </Target>
+
+  <PropertyGroup>
+    <AfterPublish>
+      $(AfterPublish);
+      DockerRegistryTag;
+      DockerPush;
+    </AfterPublish>
+  </PropertyGroup>
+</Project>
+
