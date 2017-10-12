@@ -5,7 +5,7 @@ CLR_FAILURE='\033[1;31m'    # BRIGHT RED
 CLR_CLEAR="\033[0m"         # DEFAULT COLOR
 
 # get the current path
-CURRENT_PATH=$(pwd) 
+CURRENT_PATH=$(pwd)
 
 # find the script path
 ROOT_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -93,7 +93,8 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-CONDO_OPTS+=("$@")
+# remove single quotes to msbuild can accept params
+CONDO_OPTS+=("${@//\'/}")
 
 if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
