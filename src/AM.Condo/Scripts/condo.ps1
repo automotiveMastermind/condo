@@ -86,7 +86,7 @@ $MSBuildRsp = "$BuildRoot\condo.msbuild.rsp"
 $CondoPath = "$SrcRoot\src\AM.Condo"
 $CondoPublish = "$CondoRoot\cli"
 $CondoLog = "$BuildRoot\condo.log"
-$CondoTargets = "$CondoPath\Targets"
+$CondoTargets = "$CondoPublish\Targets"
 $CondoProj = "$WorkingPath\condo.build"
 
 if (!(Test-Path $ArtifactsRoot)) {
@@ -140,14 +140,14 @@ function Invoke-Cmd([string] $cmd) {
 
 function Install-DotNet() {
     $dotnetUrl = $env:DOTNET_INSTALL_URL
-    $dotnetChannel = $env:DOTNET_CHANNEL
+    $dotnetChannels = @($env:DOTNET_CHANNEL)
 
     if (!$dotnetUrl) {
-        $dotnetUrl = "https://github.com/dotnet/cli/raw/release/2.0.0/scripts/obtain/dotnet-install.ps1"
+        $dotnetUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
     }
 
-    if (!$dotnetChannel) {
-        $dotnetChannel = "release/2.0.0"
+    if (!$dotnetChannels) {
+        $dotnetChannels = @("1.1","2.0")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -162,7 +162,9 @@ function Install-DotNet() {
     try {
         New-Item $dotnetTemp -ItemType Directory > $null
         Get-File -url $dotnetUrl -Path $dotnetInstall
-        Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel
+        foreach ($dotnetChannel in $dotnetChannels) {
+            Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel
+        }
     }
     finally {
         Remove-Item -Recurse -Force $dotnetTemp > $null
