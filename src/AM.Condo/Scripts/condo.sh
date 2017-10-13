@@ -129,14 +129,7 @@ install_condo() {
         mkdir -p $CONDO_PUBLISH
 
         # get the current runtime
-        local RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
-        local SDK=`dotnet --info | grep -e "^ Version:" | awk '{ print $2 }'`
-
-        if [[ $SDK == 1* ]]; then
-            local TFM="netcoreapp1.1"
-        else
-            local TFM="netcoreapp2.0"
-        fi
+        RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
         # restore condo
         info "condo: restoring condo packages..."
@@ -145,7 +138,7 @@ install_condo() {
 
         # publish condo
         info "condo: publishing condo tasks..."
-        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --framework $TFM --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
         cp -R $TEMPLATE_ROOT $CONDO_ROOT
 
         info "condo: removing temp path..."
@@ -199,14 +192,14 @@ done
 
 # determine if the dotnet install url is not already set
 if [ -z "$DOTNET_INSTALL_URL" ]; then
-    # set the dotnet install url to the 1.0.1 release
-    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/master/scripts/obtain/dotnet-install.sh"
+    # set the dotnet install url to the 2.0.0 release
+    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/release/2.0.0/scripts/obtain/dotnet-install.sh"
 fi
 
 # determine if the dotnet install channel is not already set
 if [ -z "${DOTNET_CHANNEL:-}" ]; then
     # set the dotnet channel
-    DOTNET_CHANNEL="release/1.0.0"
+    DOTNET_CHANNEL="release/2.0.0"
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
@@ -241,4 +234,5 @@ info "Starting build..."
 info "msbuild '$CONDO_PROJ'"
 
 dotnet msbuild @"$MSBUILD_RSP"
+
 safe-exit $?
