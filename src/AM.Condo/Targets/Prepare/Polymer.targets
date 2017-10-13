@@ -54,13 +54,9 @@
   <PropertyGroup>
     <RestoreDependsOn>
       $(RestoreDependsOn);
-      PolymerInstall;
-    </RestoreDependsOn>
-
-    <BeforePrepare>
-      $(BeforePrepare);
       GetPolymerInfo;
       PrintPolymerProjects;
-    </BeforePrepare>
+      PolymerInstall;
+    </RestoreDependsOn>
   </PropertyGroup>
 </Project>

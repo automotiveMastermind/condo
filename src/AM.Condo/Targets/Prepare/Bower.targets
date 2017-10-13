@@ -48,13 +48,9 @@
   <PropertyGroup>
     <RestoreDependsOn>
       $(RestoreDependsOn);
-      BowerInstall;
-    </RestoreDependsOn>
-
-    <BeforePrepare>
-      $(BeforePrepare);
       GetBowerInfo;
       PrintBowerProjects;
-    </BeforePrepare>
+      BowerInstall;
+    </RestoreDependsOn>
   </PropertyGroup>
 </Project>
