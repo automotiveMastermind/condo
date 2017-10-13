@@ -34,7 +34,7 @@
   <Target Name="InstallPackages" Condition=" '@(Packages->Count())' != '0' ">
     <PropertyGroup>
       <DotNetLocalPushOptions Condition=" '$(DotNetPushLocalOptions)' == '' ">$(DOTNET_LOCAL_PUSH_OPTIONS)</DotNetLocalPushOptions>
-      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim()) --source &quot;$(FeedArtifactsRoot.TrimEnd('$(slash)'))&quot;</DotNetLocalPushOptions>
+      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim()) --source $(FeedArtifactsRoot.TrimEnd('$(slash)'))</DotNetLocalPushOptions>
       <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim())</DotNetLocalPushOptions>
     </PropertyGroup>
 

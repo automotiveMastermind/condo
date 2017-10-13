@@ -59,7 +59,7 @@
   <Target Name="DotNetRestore" Condition=" $(DotNetRestore) ">
     <PropertyGroup>
       <DotNetRestoreProperties Condition=" '$(DotNetRestoreProperties)' == '' ">$(DOTNET_RESTORE_PROPS)</DotNetRestoreProperties>
-      <DotNetRestoreProperties Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreProperties);RestoreConfigFile=&quot;$(NuGetConfigPath)&quot;</DotNetRestoreProperties>
+      <DotNetRestoreProperties Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreProperties);RestoreConfigFile=$(NuGetConfigPath)</DotNetRestoreProperties>
       <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties);Version=$(InformationalVersion)</DotNetRestoreProperties>
     </PropertyGroup>
 
