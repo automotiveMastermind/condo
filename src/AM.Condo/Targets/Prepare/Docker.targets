@@ -29,7 +29,7 @@
       <DockerRegistry Condition=" !$(DockerRegistry.EndsWith('/')) ">$(DockerRegistry)/</DockerRegistry>
 
       <DockerOrganization Condition=" '$(DockerOrganization)' == '' ">$(DOCKER_REGISTRY_ORGANIZATION)</DockerOrganization>
-      <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerRegistry.StartsWith('http')) ">$(DockerRegistry)/$(DockerOrganization)</DockerOrganization>
+      <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerRegistry.StartsWith('http')) ">$(DockerRegistry)$(DockerOrganization)</DockerOrganization>
       <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerOrganization.EndsWith('/')) ">$(DockerOrganization)/</DockerOrganization>
 
       <DockerBuild Condition=" '$(SKIP_DOCKER_BUILD)' != '' ">false</DockerBuild>
