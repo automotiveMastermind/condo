@@ -11,10 +11,6 @@ branches:
 skip_tags: true
 skip_branch_with_pr: true
 image: Visual Studio 2017
-cache:
-  - '%USERPROFILE%\.nuget'
-  - '%USERPROFILE%\.am'
-  - '%LOCALAPPDATA%\Microsoft\dotnet'
 install:
   - ps: Install-Product node $env:nodejs_version
 build_script:

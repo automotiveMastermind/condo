@@ -64,7 +64,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_DotNetRestore Include="@(RestoreProjects)">
+      <_DotNetRestore Include="@(FilteredDotNetSolutions)">
         <AdditionalProperties>$(DotNetRestoreProperties)</AdditionalProperties>
       </_DotNetRestore>
     </ItemGroup>
