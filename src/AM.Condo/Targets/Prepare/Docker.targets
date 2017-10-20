@@ -91,7 +91,7 @@
       <Output TaskParameter="ConfigPath" PropertyName="DockerConfigPath" />
     </SetDockerConfig>
 
-    <Message Importance="High" Text="Docker Configuration Path: $(DockerConfigPath)" />
+    <Message Importance="High" Text="Docker Configuration Path: $(DockerConfigPath)" Condition=" $(DockerLogin) " />
   </Target>
 
   <PropertyGroup>

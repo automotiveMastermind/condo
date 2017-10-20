@@ -16,7 +16,7 @@
       </_DotNetPublish>
     </ItemGroup>
 
-    <MSBuild Projects="@(_DotNetPublish)" BuildInParallel="true" Targets="Publish" />
+    <MSBuild Projects="@(_DotNetPublish)" Targets="Publish" />
   </Target>
 
   <Target Name="CopyDotNetPublish" Condition=" $(DotNetPublish) ">

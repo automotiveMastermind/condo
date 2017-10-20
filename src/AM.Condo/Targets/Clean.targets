@@ -16,6 +16,8 @@
 
     <ItemGroup>
       <IntermediateArtifacts Include="%(CleanProjects.OutputPath)" Condition=" Exists('%(CleanProjects.OutputPath)') " />
+      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)bin" Condition=" Exists('%(CleanProjects.ProjectDir)bin') " />
+      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)obj" Condition=" Exists('%(CleanProjects.ProjectDir)obj') " />
 
       <IntermediateFiles Include="%(CleanProjects.CondoAssemblyInfo)" Condition=" Exists('%(CleanProjects.CondoAssemblyInfo)') " />
     </ItemGroup>

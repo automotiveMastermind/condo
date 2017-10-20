@@ -9,13 +9,7 @@
       <DotNetBuildProperties>$(DotNetBuildProperties);Configuration=$(Configuration)</DotNetBuildProperties>
     </PropertyGroup>
 
-    <ItemGroup>
-      <_DotNetBuild Include="@(BuildProjects)">
-        <AdditionalProperties>$(DotNetBuildProperties)</AdditionalProperties>
-      </_DotNetBuild>
-    </ItemGroup>
-
-    <MSBuild Projects="@(_DotNetBuild)" Targets="Build" />
+    <MSBuild Projects="@(BuildProjects)" Properties="$(DotNetBuildProperties)" Targets="Build" />
   </Target>
 
   <Target Name="CopyDotNetBuild" Condition=" $(DotNetBuild) ">

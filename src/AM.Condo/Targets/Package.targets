@@ -7,16 +7,10 @@
       <DotNetPackProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetPackProperties);Version=$(InformationalVersion)</DotNetPackProperties>
       <DotNetPackProperties>$(DotNetPackProperties);PackageOutputPath=$(PackageArtifactsRoot.TrimEnd('$(slash)'))</DotNetPackProperties>
       <DotNetPackProperties>$(DotNetPackProperties);NoBuild=true</DotNetPackProperties>
-      <DotNetPackProperties>$(DotNetPackProperties.Trim(';'))</DotNetPackProperties>
+      <DotNetPackProperties>$(DotNetPackProperties);Configuration=$(Configuration)</DotNetPackProperties>
     </PropertyGroup>
 
-    <ItemGroup>
-      <_DotNetPack Include="@(PackProjects)">
-        <AdditionalProperties>$(DotNetPackProperties)</AdditionalProperties>
-      </_DotNetPack>
-    </ItemGroup>
-
-    <MSBuild Projects="@(_DotNetPack)" Targets="Pack" />
+    <MSBuild Projects="@(PackProjects)" Properties="$(DotNetPackProperties)" Targets="Pack" />
 
     <ItemGroup>
       <AllPackages Include="$(PackageArtifactsRoot)*.nupkg" />
