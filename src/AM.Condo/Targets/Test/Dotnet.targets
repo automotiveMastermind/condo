@@ -23,7 +23,7 @@
 
       <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
       <DotNetTestProperties>$(DotNetTestProperties);VSTestNoBuild=true</DotNetTestProperties>
-      <DotNetTestProperties>$(DotNetTestProperties);VSTestResultsDirectory=$(TestArtifactsRoot)</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties);VSTestResultsDirectory=$(TestArtifactsRoot)$(slash)</DotNetTestProperties>
       <DotNetTestProperties Condition=" '$(DotNetTestFilterProperties)' != '' ">$(DotNetTestProperties);$(DotNetTestFilterProperties)</DotNetTestProperties>
     </PropertyGroup>
 
