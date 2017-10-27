@@ -4,9 +4,9 @@
   <PropertyGroup>
     <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)$(slash)changelog.md</ChangeLogInitialize>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CONDO_PUSH_COMMITS)</AllowPushCommits>
-    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">True</AllowPushCommits>
+    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">true</AllowPushCommits>
     <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">$(CONDO_PRINT_COMMITS)</PrintIncludedCommits>
-    <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">False</PrintIncludedCommits>
+    <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">false</PrintIncludedCommits>
   </PropertyGroup>
 
   <!-- detect convention strategy -->

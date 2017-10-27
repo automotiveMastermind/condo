@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- attempt to find npm paths -->
+  <Target Name="GetNpmInfo">
+    <FindCommand Command="npm">
+      <Output TaskParameter="ExecutablePath" PropertyName="NpmPath" />
+      <Output TaskParameter="Exists" PropertyName="HasNpm" />
+    </FindCommand>
+
+    <ItemGroup>
+      <PackageJsonPaths Include="$(RepositoryRoot)package.json" Condition=" Exists('$(RepositoryRoot)package.json') " />
+      <PackageJsonPaths
+        Include="$(RepositoryRoot)**$(slash)package.json"
+        Exclude="$(RepositoryRoot)**$(slash)node_modules$(slash)**$(slash)package.json;$(RepositoryRoot)**$(slash)bower_components$(slash)**$(slash)package.json" />
+
+      <FindCommandSearchPaths Include="%(PackageJsonPaths.RootDir)%(PackageJsonPaths.Directory)$(slash)node_modules$(slash).bin$(slash)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <NpmRequired>false</NpmRequired>
+      <NpmRequired Condition=" @(PackageJsonPaths->Count()) > 0 ">true</NpmRequired>
+
+      <NpmInstall Condition=" '$(SKIP_NPM_INSTALL)' != '' ">false</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' != '' AND '$(NpmInstall.ToLower())' != 'true' ">false</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' == '' AND $(HasNpm) AND $(NpmRequired) ">true</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' == '' ">false</NpmInstall>
+    </PropertyGroup>
+
+    <GetProjectMetadata Projects="@(PackageJsonPaths)">
+      <Output TaskParameter="Projects" ItemName="PackageJsonProjects" />
+    </GetProjectMetadata>
+
+    <Warning Condition=" !$(HasNpm) AND $(NpmRequired) "
+             Text="A package.json file was located at: %(PackageJsonPaths.Identity), but the npm command or executable could not be found." />
+  </Target>
+
+  <Target Name="PrintNpmProjects" Condition=" $(NpmInstall) ">
+    <Message Importance="High" Text="Project: %(PackageJsonProjects.ProjectName)" />
+  </Target>
+
+  <Target Name="NpmInstall" Condition=" $(NpmInstall) ">
+    <PropertyGroup>
+      <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(NpmPath)&quot; set progress=false" />
+
+    <Exec Command="&quot;$(NpmPath)&quot; install $(NpmInstallOptions.Trim())"
+          WorkingDirectory="%(PackageJsonProjects.ProjectDir)" />
+  </Target>
+
+  <PropertyGroup>
+    <RestoreDependsOn>
+      $(RestoreDependsOn);
+      NpmInstall;
+    </RestoreDependsOn>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetNpmInfo;
+      PrintNpmProjects;
+    </BeforePrepare>
+  </PropertyGroup>
+</Project>

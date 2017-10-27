@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- attempt to find docker info -->
+  <Target Name="GetDockerInfo">
+    <FindCommand Command="docker">
+      <Output TaskParameter="ExecutablePath" PropertyName="DockerPath" />
+      <Output TaskParameter="Exists" PropertyName="HasDocker" />
+    </FindCommand>
+
+    <ItemGroup>
+      <DockerfilePaths     Include="$(RepositoryRoot)**$(slash)Dockerfile" Exclude="$(DockerRoot)Dockerfile" />
+      <DockerfilePaths     Include="$(RepositoryRoot)**$(slash)Dockerfile.*"
+                           Exclude="$(DockerRoot)Dockerfile.*;$(RepositoryRoot)**$(slash)Dockerfile.debug;$(RepositoryRoot)**$(slash)Dockerfile.test" />
+
+      <DockerfilePaths     Include="$(RepositoryRoot)Dockerfile" Condition=" Exists('$(RepositoryRoot)Dockerfile') " />
+
+      <DockerComposePaths  Include="$(DockerRoot)docker-compose.*" Exclude="$(DockerRoot)docker-compose.debug.*" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <DockerBuildRequired>false</DockerBuildRequired>
+      <DockerBuildRequired Condition=" @(DockerfilePaths->Count()) > 0 ">true</DockerBuildRequired>
+
+      <DockerComposeRequired>false</DockerComposeRequired>
+      <DockerComposeRequired Condition=" @(DockerComposePaths->Count()) > 0 ">true</DockerComposeRequired>
+
+      <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">$(DOCKER_REGISTRY_URI)</DockerRegistry>
+      <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">https://index.docker.io/v1/</DockerRegistry>
+      <DockerRegistry Condition=" !$(DockerRegistry.EndsWith('/')) ">$(DockerRegistry)/</DockerRegistry>
+
+      <DockerOrganization Condition=" '$(DockerOrganization)' == '' ">$(DOCKER_REGISTRY_ORGANIZATION)</DockerOrganization>
+      <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerRegistry.StartsWith('http')) ">$(DockerRegistry)$(DockerOrganization)</DockerOrganization>
+      <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerOrganization.EndsWith('/')) ">$(DockerOrganization)/</DockerOrganization>
+
+      <DockerBuild Condition=" '$(SKIP_DOCKER_BUILD)' != '' ">false</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' != '' AND '$(DockerBuild.ToLower())' != 'true' ">false</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' == '' AND $(DockerBuildRequired) ">true</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' == '' ">false</DockerBuild>
+
+      <DockerCompose Condition=" '$(SKIP_DOCKER_COMPOSE)' != '' ">false</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' != '' AND '$(DockerCompose.ToLower())' != 'true' ">false</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' == '' AND $(DockerComposeRequired) ">true</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' == '' ">false</DockerCompose>
+
+      <DockerPush Condition=" '$(SKIP_DOCKER_PUSH)' != '' ">false</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' == '' AND $(DockerBuild) AND '$(DockerOrganization)' != '' ">true</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' == '' ">false</DockerPush>
+    </PropertyGroup>
+
+    <Warning Condition="!$(HasDocker) AND $(DockerBuildRequired) "
+             Text="A dockerfile was located at: %(DockerfilePaths.Identity), but the docker command or executable could not be found." />
+
+    <Warning Condition="!$(HasDocker) AND $(DockerComposeRequired) "
+             Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
+
+    <GetDockerMetadata
+        DockerFiles="@(DockerfilePaths)"
+        BuildQuality="$(BuildQuality)"
+        Version="$(InformationalVersion)"
+        Condition=" $(DockerBuild) ">
+      <Output TaskParameter="DockerFiles" ItemName="DockerMetadata" />
+    </GetDockerMetadata>
+  </Target>
+
+  <Target Name="PrintDockerProjects" Condition=" $(DockerBuild) ">
+    <Message Importance="High" Text="Project: %(DockerMetadata.Label)" />
+  </Target>
+
+  <Target Name="DockerLogin" DependsOnTargets="GetDockerInfo" Condition=" $(HasDocker) ">
+    <DecodeBase64 Encoded="$(DOCKER_REGISTRY_USERNAME_BASE64)" Condition=" '$(DOCKER_REGISTRY_USERNAME_BASE64)' != '' ">
+      <Output TaskParameter="Decoded" PropertyName="DockerUsername" />
+    </DecodeBase64>
+
+    <DecodeBase64 Encoded="$(DOCKER_REGISTRY_PASSWORD_BASE64)" Condition=" '$(DOCKER_REGISTRY_PASSWORD_BASE64)' != '' ">
+      <Output TaskParameter="Decoded" PropertyName="DockerPassword" />
+    </DecodeBase64>
+
+    <PropertyGroup>
+      <DockerUsername Condition=" '$(DockerUsername)' == '' ">$(DOCKER_REGISTRY_USERNAME)</DockerUsername>
+      <DockerPassword Condition=" '$(DockerPassword)' == '' ">$(DOCKER_REGISTRY_PASSWORD)</DockerPassword>
+
+      <DockerLogin Condition=" '$(SKIP_DOCKER_LOGIN)' != '' ">false</DockerLogin>
+      <DockerLogin Condition=" '$(DockerLogin)' != '' AND '$(DockerLogin.ToLower())' != 'true' ">false</DockerLogin>
+      <DockerLogin Condition=" '$(DockerLogin)' == '' AND '$(DockerUsername)' != '' AND '$(DockerPassword)' != '' ">true</DockerLogin>
+      <DockerLogin Condition=" '$(DockerLogin)' == '' ">false</DockerLogin>
+    </PropertyGroup>
+
+    <SetDockerConfig Username="$(DockerUsername)" Password="$(DockerPassword)" RegistryUri="$(DockerRegistry)"
+                     Condition=" $(DockerLogin) ">
+      <Output TaskParameter="ConfigPath" PropertyName="DockerConfigPath" />
+    </SetDockerConfig>
+
+    <Message Importance="High" Text="Docker Configuration Path: $(DockerConfigPath)" Condition=" $(DockerLogin) " />
+  </Target>
+
+  <PropertyGroup>
+    <PrepareDependsOn>
+      $(PrepareDependsOn);
+      DockerLogin;
+    </PrepareDependsOn>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetDockerInfo;
+      PrintDockerProjects;
+    </BeforePrepare>
+  </PropertyGroup>
+</Project>
+

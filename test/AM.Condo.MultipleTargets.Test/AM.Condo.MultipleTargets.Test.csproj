@@ -1,15 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <DebugType>portable</DebugType>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../src/AM.Condo/condo.csproj" />
-    <ProjectReference Include="../../src/AM.Condo.Xunit/AM.Condo.Xunit.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="[15.3.0, 16.0.0)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="[2.3.0, 3.0.0)" />

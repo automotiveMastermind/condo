@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <DebugType>portable</DebugType>
     <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputType>Exe</OutputType>
-    <RuntimeFrameworkVersion>[1.1.2, 2.0.0)</RuntimeFrameworkVersion>
+    <RuntimeIdentifiers>osx-x64;win-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,16 +31,15 @@
   <ItemGroup>
     <PackageReference Include="System.Dynamic.Runtime" Version="[4.3.0, 5.0.0)" />
     <PackageReference Include="System.IO.FileSystem" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="Newtonsoft.Json" Version="[9.0.1, 11.0.0)" />
-    <PackageReference Include="NuGet.CommandLine.Xplat" Version="[4.0.0-rtm-*, 5.0.0)" />
-    <PackageReference Include="NuGet.Commands" Version="[4.0.0, 5.0.0)" />
-    <PackageReference Include="NuGet.Packaging" Version="[4.0.0, 5.0.0)" />
-    <PackageReference Include="NuGet.Versioning" Version="[4.0.0, 5.0.0)" />
-    <PackageReference Include="Microsoft.Build" Version="[15.1.1012, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="[15.1.1012, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.1.1012, 16.0.0)" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.1.1012, 16.0.0)" />
-
+    <PackageReference Include="Newtonsoft.Json" Version="[10.0.3, 11.0.0)" />
+    <PackageReference Include="NuGet.CommandLine.Xplat" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="NuGet.Commands" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="NuGet.Packaging" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="NuGet.Versioning" Version="[4.3.0, 5.0.0)" />
+    <PackageReference Include="Microsoft.Build" Version="[15.3.409, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="[15.3.409, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="[15.3.409, 16.0.0)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="[15.3.409, 16.0.0)" />
     <PackageReference Include="StyleCop.Analyzers" Version="[1.0.2, 2.0.0)">
         <PrivateAssets>All</PrivateAssets>
     </PackageReference>

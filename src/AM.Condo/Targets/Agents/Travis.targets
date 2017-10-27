@@ -3,9 +3,11 @@
   <!-- capture details from a continuous integration build hosted by Travis-CI -->
   <PropertyGroup>
     <BuildHost>travis</BuildHost>
-    <CI>True</CI>
-    <Branch>$(TRAVIS_PULL_REQUEST_BRANCH)</Branch>
-    <Branch Condition=" '$(Branch)' == '' ">$(TRAVIS_BRANCH)</Branch>
+    <CI>true</CI>
+    <SourceBranch>$(TRAVIS_PULL_REQUEST_BRANCH)</SourceBranch>
+    <TargetBranch>$(TRAVIS_BRANCH)</TargetBranch>
+    <Branch>$(SourceBranch)</Branch>
+    <Branch Condition=" '$(Branch)' == '' ">$(TargetBranch)</Branch>
     <CommitId>$(TRAVIS_COMMIT)</CommitId>
     <BuildId>$(TRAVIS_BUILD_NUMBER)</BuildId>
     <JobId>$(TRAVIS_JOB_ID)</JobId>

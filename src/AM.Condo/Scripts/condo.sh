@@ -114,7 +114,11 @@ install_dotnet() {
         success "Retrieved dotnet-install script..."
 
         chmod +x $DOTNET_INSTALL
-        safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
+
+        for DOTNET_CHANNEL in ${DOTNET_CHANNELS[@]}; do
+            safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
+        done
+
         safe-exec rm -rf $DOTNET_TEMP
     fi
 
@@ -192,14 +196,12 @@ done
 
 # determine if the dotnet install url is not already set
 if [ -z "$DOTNET_INSTALL_URL" ]; then
-    # set the dotnet install url to the 1.0.1 release
-    DOTNET_INSTALL_URL="https://github.com/dotnet/cli/raw/rel/1.0.1/scripts/obtain/dotnet-install.sh"
+    DOTNET_INSTALL_URL="https://dot.net/v1/dotnet-install.sh"
 fi
 
 # determine if the dotnet install channel is not already set
-if [ -z "${DOTNET_CHANNEL:-}" ]; then
-    # set the dotnet channel
-    DOTNET_CHANNEL="release/1.0.0"
+if [ ${#DOTNET_CHANNELS[@]} -eq 0 ]; then
+    DOTNET_CHANNELS=('1.1' '2.0')
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
@@ -234,4 +236,5 @@ info "Starting build..."
 info "msbuild '$CONDO_PROJ'"
 
 dotnet msbuild @"$MSBUILD_RSP"
+
 safe-exit $?

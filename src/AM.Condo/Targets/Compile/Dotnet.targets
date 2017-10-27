@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="DotNetBuild" Condition=" $(DotNetBuild) ">
+    <PropertyGroup>
+      <DotNetBuildProperties Condition=" '$(DotNetBuildProperties)' == '' ">$(DOTNET_BUILD_PROPS)</DotNetBuildProperties>
+      <DotNetBuildProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetBuildProperties);Version=$(InformationalVersion)</DotNetBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties);GenerateAssemblyInfo=false</DotNetBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties);Configuration=$(Configuration)</DotNetBuildProperties>
+    </PropertyGroup>
+
+    <MSBuild Projects="@(BuildProjects)" Properties="$(DotNetBuildProperties)" Targets="Build" />
+  </Target>
+
+  <Target Name="CopyDotNetBuild" Condition=" $(DotNetBuild) ">
+    <ItemGroup>
+      <_CopyDotNetBuild Include="%(BuildProjects.ProjectDir)bin$(slash)**" Exclude="%(BuildProjects.ProjectDir)bin$(slash)publish$(slash)**">
+        <ProjectName>%(BuildProjects.ProjectName)</ProjectName>
+      </_CopyDotNetBuild>
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(_CopyDotNetBuild)"
+      DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <PropertyGroup>
+    <AfterCompile>
+      $(AfterCompile);
+      CopyDotNetBuild;
+    </AfterCompile>
+
+    <CompileDependsOn>
+      $(CompileDependsOn);
+      DotNetBuild;
+    </CompileDependsOn>
+  </PropertyGroup>
+</Project>

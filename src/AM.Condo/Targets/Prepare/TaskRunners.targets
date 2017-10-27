@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- attempt to find gulp and gulp paths -->
+  <Target Name="GetGulpInfo">
+    <FindCommand Command="gulp" SearchPaths="@(FindCommandSearchPaths)">
+      <Output TaskParameter="ExecutablePath" PropertyName="GulpPath" />
+      <Output TaskParameter="Exists" PropertyName="HasGulp" />
+    </FindCommand>
+
+    <ItemGroup>
+      <GulpFilePaths Include="$(RepositoryRoot)gulpfile.*" Condition=" Exists('$(RepositoryRoot)gulpfile.*') " />
+      <GulpFilePaths
+        Include="$(RepositoryRoot)**$(slash)gulpfile.*"
+        Exclude="$(RepositoryRoot)**$(slash)node_modules$(slash)**$(slash)gulpfile.*;$(RepositoryRoot)**$(slash)bower_components$(slash)**$(slash)gulpfile.*" />
+    </ItemGroup>
+
+    <Warning Condition="!$(HasGulp) AND '$(GulpFilePaths->Count())' != '0' "
+             Text="A gulpfile was located at: %(GulpFilePaths.Identity), but the gulp command or executable could not be found." />
+  </Target>
+
+  <!-- attempt to find grunt and grunt paths -->
+  <Target Name="GetGruntInfo">
+    <FindCommand Command="grunt" SearchPaths="@(FindCommandSearchPaths)">
+      <Output TaskParameter="ExecutablePath" PropertyName="GruntPath" />
+      <Output TaskParameter="Exists" PropertyName="HasGrunt" />
+    </FindCommand>
+
+    <ItemGroup>
+      <GruntFilePaths Include="$(RepositoryRoot)gruntfile.*" Condition=" Exists('$(RepositoryRoot)gruntfile.*') " />
+      <GruntFilePaths
+        Include="$(RepositoryRoot)**$(slash)gruntfile.*"
+        Exclude="$(RepositoryRoot)**$(slash)node_modules$(slash)**$(slash)gruntfile.*;$(RepositoryRoot)**$(slash)bower_components$(slash)**$(slash)gruntfile.*" />
+    </ItemGroup>
+
+    <Warning Condition="!$(HasGrunt) AND '$(GruntFilePaths->Count())' != '0' "
+             Text="A gruntfile was located at: %(GruntFilePaths.Identity), but the grunt command or executable could not be found." />
+  </Target>
+</Project>

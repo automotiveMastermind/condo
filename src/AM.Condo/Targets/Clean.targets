@@ -7,7 +7,19 @@
 
   <Target Name="CleanIntermediateArtifacts">
     <ItemGroup>
-      <IntermediateFiles Include="%(Projects.CondoAssemblyInfo)" Condition=" Exists('%(Projects.CondoAssemblyInfo)') " />
+      <Projects Include="$(RepositoryRoot)**$(slash)*.*proj" />
+    </ItemGroup>
+
+    <GetProjectMetadata Projects="@(Projects)">
+      <Output TaskParameter="Projects" ItemName="CleanProjects" />
+    </GetProjectMetadata>
+
+    <ItemGroup>
+      <IntermediateArtifacts Include="%(CleanProjects.OutputPath)" Condition=" Exists('%(CleanProjects.OutputPath)') " />
+      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)bin" Condition=" Exists('%(CleanProjects.ProjectDir)bin') " />
+      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)obj" Condition=" Exists('%(CleanProjects.ProjectDir)obj') " />
+
+      <IntermediateFiles Include="%(CleanProjects.CondoAssemblyInfo)" Condition=" Exists('%(CleanProjects.CondoAssemblyInfo)') " />
     </ItemGroup>
 
     <RemoveDir Directories="@(IntermediateArtifacts)" ContinueOnError="true" />
@@ -22,7 +34,6 @@
     <CleanDependsOn>
       $(BeforeClean);
       CleanArtifacts;
-      GetProjectMetadata;
       CleanIntermediateArtifacts;
       $(CleanDependsOn);
       $(AfterClean);

@@ -1,95 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DotNetPublish" Condition=" '$(DotNetPublish)' != 'skip' ">
-    <PropertyGroup>
-      <DotNetPublishOptions Condition=" '$(DotNetPublishOptions)' == '' ">$(DOTNET_PUBLISH_OPTIONS)</DotNetPublishOptions>
-      <DotNetPublishOptions Condition=" '$(Configuration)' != '' ">$(DotNetPublishOptions) --configuration &quot;$(Configuration)&quot;</DotNetPublishOptions>
-      <DotNetPublishOptions>$(DotNetPublishOptions.Trim())</DotNetPublishOptions>
-
-      <DotNetPublishProperties Condition=" '$(DotNetPublishProperties)' == '' ">$(DOTNET_PUBLISH_PROPS)</DotNetPublishProperties>
-      <DotNetPublishProperties>$(DotNetPublishProperties) /p:Version=$(InformationalVersion)</DotNetPublishProperties>
-      <DotNetPublishProperties>$(DotNetPublishProperties) /p:GenerateAssemblyInfo=false</DotNetPublishProperties>
-      <DotNetPublishProperties>$(DotNetPublishProperties.Trim())</DotNetPublishProperties>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <DotNetPublishProjects Include="@(PublishProjects)" Condition=" '@(DotNetPublishProjects->Count())' == '0' " />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DotNetPublish Include="@(DotNetPublishProjects)">
-        <OutputPath>.$(slash)obj$(slash)docker$(slash)publish</OutputPath>
-        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-        <PublishName>&quot;%(Filename)%(Extension)&quot;</PublishName>
-      </_DotNetPublish>
-    </ItemGroup>
-
-    <Exec
-        Command="dotnet publish %(_DotNetPublish.PublishName) --output %(_DotNetPublish.OutputPath) $(DotNetPublishOptions) $(DotNetPublishProperties)"
-        WorkingDirectory="%(_DotNetPublish.WorkingDirectory)"
-        Condition=" Exists('%(_DotNetPublish.FullPath)') " />
-  </Target>
-
-  <Target Name="CopyDotNetPublish" Condition=" '$(DotNetPublish)' != 'skip' AND '@(DotNetPublishProjects->Count())' != '0' ">
-    <ItemGroup>
-      <_CopyDotNetPublish Include="%(DotNetPublishProjects.ProjectDir)obj$(slash)docker$(slash)publish$(slash)**">
-        <ProjectName>%(DotNetPublishProjects.ProjectName)</ProjectName>
-        <PublishPath>&quot;$(PublishArtifactsRoot)%(DotNetPublishProjects.ProjectName)&quot;</PublishPath>
-      </_CopyDotNetPublish>
-    </ItemGroup>
-
-    <Copy
-        SourceFiles="@(_CopyDotNetPublish)"
-        DestinationFiles="@(_CopyDotNetPublish->'$(PublishArtifactsRoot)$(slash)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
-
-
-  <Target Name="DockerBuild" Condition=" $(HasDocker) AND '$(DockerBuild)' != 'skip' AND '@(DockerProjects->Count())' != '0' ">
-    <ItemGroup>
-      <_DockerBuild Include="@(DockerProjects)">
-        <DockerLabel>%(DockerName)</DockerLabel>
-        <DockerTag>%(DockerName):$(InformationalVersion)</DockerTag>
-        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-      </_DockerBuild>
-    </ItemGroup>
-
-    <Exec Command="docker build --label %(_DockerBuild.DockerLabel) --tag %(_DockerBuild.DockerTag) ."
-          WorkingDirectory="%(_DockerBuild.WorkingDirectory)" />
-  </Target>
-
-  <Target Name="InstallPackages" Condition=" '@(Packages->Count())' != '0' ">
-    <PropertyGroup>
-      <DotNetLocalPushOptions Condition=" '$(DotNetPushLocalOptions)' == '' ">$(DOTNET_LOCAL_PUSH_OPTIONS)</DotNetLocalPushOptions>
-      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim()) --source &quot;$(FeedArtifactsRoot.TrimEnd('$(slash)'))&quot;</DotNetLocalPushOptions>
-      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim())</DotNetLocalPushOptions>
-    </PropertyGroup>
-
-    <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; $(DotNetLocalPushOptions)" />
-  </Target>
-
-  <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' AND '@(Packages->Count())' != '0' ">
-    <PushNuGetPackage
-      NuGetConfigPath="$(NuGetConfigPath)"
-      Packages="@(Packages)"
-      Uri="$(PackageFeedUri)"
-      ApiKey="$(PackageFeedApiKey)"
-      SymbolUri="$(PackageSymbolUri)"
-      SymbolApiKey="$(PackageSymbolApiKey)"
-      NoSymbols="$(PackageNoSymbols)" />
-  </Target>
+  <Import Project="$(CondoTargetsPath)$(slash)Publish$(slash)Dotnet.targets" />
+  <Import Project="$(CondoTargetsPath)$(slash)Publish$(slash)Docker.targets" />
 
   <PropertyGroup>
-    <AfterPublish>
-      $(AfterPublish);
-      DockerBuild;
-    </AfterPublish>
-
     <PublishDependsOn>
       $(BeforePublish);
-      DotNetPublish;
-      CopyDotNetPublish;
-      InstallPackages;
-      PublishPackages;
       $(PublishDependsOn);
       $(AfterPublish);
     </PublishDependsOn>

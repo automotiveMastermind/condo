@@ -10,6 +10,7 @@ namespace AM.Condo.Tasks
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Xml;
     using System.Xml.Linq;
 
     using Microsoft.Build.Framework;
@@ -22,15 +23,44 @@ namespace AM.Condo.Tasks
     /// </summary>
     public class GetProjectMetadata : Task
     {
-        #region Properties and Indexers
+        #region Private Fields
         private static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
 
+        private readonly List<ITaskItem> projects = new List<ITaskItem>();
+        #endregion
+
+        #region Properties and Indexers
         /// <summary>
         /// Gets or sets the list of projects for which to set additional metadata.
         /// </summary>
         [Required]
         [Output]
         public ITaskItem[] Projects { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether restore is enabled.
+        /// </summary>
+        public bool Restore { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not build is enabled.
+        /// </summary>
+        public bool Build { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not pack is enabled.
+        /// </summary>
+        public bool Pack { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not test is enabled.
+        /// </summary>
+        public bool Test { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not publish is enabled.
+        /// </summary>
+        public bool Publish { get; set; }
         #endregion
 
         #region Methods
@@ -56,87 +86,11 @@ namespace AM.Condo.Tasks
                     );
             }
 
+            // set the projects output
+            this.Projects = this.projects.ToArray();
+
             // assume its always true
             return true;
-        }
-
-        private void SetMSBuildMetadata(ITaskItem project, string path)
-        {
-            // set the dotnet build type
-            project.SetMetadata("DotNetType", "MSBuild");
-
-            // parse the file
-            var xml = XDocument.Load(path);
-
-            // get the output type (default to library)
-            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value.ToLower() ?? "library";
-
-            // set the output type
-            project.SetMetadata("OutputType", output);
-
-            // determine if the project is a library
-            var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
-
-            // set the default publish and pack
-            project.SetMetadata("IsPublishable", (!library).ToString());
-            project.SetMetadata("IsPackable", library.ToString());
-            project.SetMetadata("IsTestable", "true");
-
-            // get the target framework node
-            var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
-                .SelectMany(node => node.Value.Split(';'))
-                .OrderByDescending(name => name);
-
-            // determine if the frameworks node did not exist
-            if (frameworks == null || !frameworks.Any())
-            {
-                // set publish and pack to false
-                project.SetMetadata("IsPublishable", "false");
-                project.SetMetadata("IsPackable", "false");
-                project.SetMetadata("IsTestable", "false");
-
-                // move on immediately
-                return;
-            }
-
-            // get the highest netcore tfm
-            var tfm = frameworks
-                .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
-
-            // set the publish to true
-            project.SetMetadata("IsPublishable", (tfm != null).ToString());
-
-            project.SetProperty("IsPublishable", xml);
-            project.SetProperty("IsPackable", xml);
-            project.SetProperty("IsTestable", xml);
-
-            // set the target frameworks property
-            project.SetMetadata("TargetFrameworks", string.Join(";", frameworks));
-            project.SetMetadata("NetCoreFramework", tfm);
-        }
-
-        private void SetJsonMetadata(ITaskItem project, string path)
-        {
-            try
-            {
-                // load the json
-                var json = File.ReadAllText(path);
-
-                // attempt to parse the json
-                var properties = new { Name = default(string) };
-                properties = JsonConvert.DeserializeAnonymousType(json, properties);
-
-                // determine if the json was parseable
-                if (!string.IsNullOrEmpty(properties.Name))
-                {
-                    // set the project name
-                    project.SetMetadata("ProjectName", properties.Name);
-                }
-            }
-            catch (Exception netEx)
-            {
-                this.Log.LogWarningFromException(netEx);
-            }
         }
 
         private void SetMetadata(ITaskItem project)
@@ -149,10 +103,11 @@ namespace AM.Condo.Tasks
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
 
+            // determine if this is an msbuild project
+            var msbuild = path.EndsWith("proj");
+
             // get the project name
-            var projectName = path.EndsWith("proj")
-                ? Path.GetFileNameWithoutExtension(path)
-                : group;
+            var projectName = msbuild ? Path.GetFileNameWithoutExtension(path) : group;
 
             // determine if the group is a well-known folder path
             if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
@@ -161,28 +116,11 @@ namespace AM.Condo.Tasks
                 group = Path.GetFileName(parent);
             }
 
+            // set the group to lower
+            group = group.ToLower();
+
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
-
-            // get the docker file path
-            var dockerFile = Path.Combine(directory, "Dockerfile");
-
-            // determine if the docker file exists
-            if (File.Exists(dockerFile))
-            {
-                // set the has docker bit
-                project.SetMetadata("HasDocker", "true");
-
-                // set the path to the dockerfile
-                project.SetMetadata("DockerfilePath", dockerFile);
-
-                // set the project name for docker
-                project.SetMetadata("DockerName", projectName.ToLower());
-            }
-            else
-            {
-                project.SetMetadata("HasDocker", "false");
-            }
 
             // set the project group
             project.SetMetadata("ProjectGroup", group);
@@ -190,24 +128,181 @@ namespace AM.Condo.Tasks
             // set the name of the project based on the name of the csproj
             project.SetMetadata("ProjectName", projectName);
 
+            // determine if the project is not an msbuild project
+            if (!msbuild)
+            {
+                // add the project to the output
+                this.projects.Add(project);
+
+                // move on immediately
+                return;
+            }
+
+            // set the description
+            project.SetMetadata("Description", Path.Combine(group, projectName));
+
+            // get the root output path
+            var root = Path.Combine(directory, "obj", "docker", "publish");
+
             // set the shared sources directory
             project.SetMetadata("SharedSourcesDir", Path.Combine(parent, "shared") + Path.DirectorySeparatorChar);
 
             // set the condo assembly info path
             project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
 
-            // determine if this is an msbuild project file
-            if (path.EndsWith("proj"))
+            // create the targets
+            var targets = new List<string>();
+
+            // determine if restore is enabled
+            if (this.Restore)
             {
-                // set msbuild metadata
-                this.SetMSBuildMetadata(project, path);
+                // set the is restorable bit
+                project.SetMetadata("IsRestorable", true.ToString());
             }
 
-            // determine if this is a json file
-            if (path.EndsWith("json"))
+            // determine if build is enabled
+            if (this.Build)
             {
-                // set the json metadata
-                this.SetJsonMetadata(project, path);
+                // set the is buildable bit
+                project.SetMetadata("IsBuildable", true.ToString());
+            }
+
+            // create the xml variable
+            var xml = default(XDocument);
+
+            try
+            {
+                // parse the file
+                xml = XDocument.Load(path);
+            }
+            catch (XmlException xmlEx)
+            {
+                // log the eception as an error
+                this.Log.LogErrorFromException(xmlEx, showStackTrace: true, showDetail: true, file: path);
+
+                // move on immediately
+                return;
+            }
+
+            // get the output type (default to library)
+            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value.ToLower() ?? "library";
+
+            // set the output type
+            project.SetMetadata("OutputType", output);
+
+            // set publish and pack to false
+            project.SetMetadata("IsBuildable", this.Build.ToString());
+            project.SetMetadata("IsRestorable", this.Restore.ToString());
+            project.SetMetadata("IsPublishable", false.ToString());
+            project.SetMetadata("IsPackable", false.ToString());
+            project.SetMetadata("IsTestable", false.ToString());
+            project.SetMetadata("SelfContained", false.ToString());
+
+            // get the target framework node
+            var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
+                .Distinct()
+                .SelectMany(node => node.Value.Split(';'))
+                .OrderByDescending(name => name);
+
+            // determine if the frameworks node did not exist
+            if (frameworks == null || !frameworks.Any())
+            {
+                // add the project to the output
+                this.projects.Add(project);
+
+                // move on immediately
+                return;
+            }
+
+            // get the highest netcore tfm
+            var tfm = frameworks
+                .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+
+            // determine if the project is a library
+            var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
+
+            // determine if the project is in the source group
+            if (string.Equals(group, "src", StringComparison.OrdinalIgnoreCase))
+            {
+                // set the publish to true
+                if (this.Publish)
+                {
+                    project.SetMetadata("IsPublishable", (!library).ToString());
+                    project.SetMetadata("IsPublishable", (tfm != null).ToString());
+                    project.SetProperty("IsPublishable", xml);
+                }
+
+                // set the pack to true
+                if (this.Pack)
+                {
+                    project.SetMetadata("IsPackable", library.ToString());
+                    project.SetProperty("IsPackable", xml);
+                }
+            }
+
+            // determine if this is a test project
+            if (this.Test && string.Equals(group, nameof(this.Test), StringComparison.OrdinalIgnoreCase))
+            {
+                // set the default publish and pack
+                project.SetMetadata("IsTestable", true.ToString());
+                project.SetProperty("IsTestable", xml);
+            }
+
+            // get the target framework node
+            var rids = xml.Descendants("RuntimeIdentifier").Union(xml.Descendants("RuntimeIdentifiers"))
+                .Distinct()
+                .SelectMany(node => node.Value.Split(';'))
+                .OrderByDescending(name => name);
+
+            // iterate over each framework
+            foreach (var framework in frameworks)
+            {
+                // create a new project
+                var any = new TaskItem(project.ItemSpec);
+
+                // copy metadata from the project
+                project.CopyMetadataTo(any);
+
+                // update the description
+                any.SetMetadata("Description", Path.Combine(group, projectName, framework));
+
+                // add the project to the project collection
+                this.projects.Add(any);
+
+                // set the target framework
+                any.SetMetadata("TargetFramework", framework);
+                any.SetMetadata("RuntimeIdentifier", string.Empty);
+                any.SetMetadata("OutputPath", Path.Combine(root, framework, "dotnet") + Path.DirectorySeparatorChar);
+
+                // iterate over each runtime identifier
+                foreach (var rid in rids)
+                {
+                    // create the publish path
+                    var publish = Path.Combine(root, framework, rid);
+
+                    // create the publish directory
+                    Directory.CreateDirectory(publish);
+
+                    // create a self contained project
+                    var contained = new TaskItem(project.ItemSpec);
+
+                    // copy the metadata
+                    any.CopyMetadataTo(contained);
+
+                    // update the description
+                    any.SetMetadata("Description", Path.Combine(group, projectName, framework, rid));
+
+                    // add the project to the project collection
+                    this.projects.Add(contained);
+
+                    // update the target framework and runtime identifier
+                    contained.SetMetadata("RuntimeIdentifier", rid);
+                    contained.SetMetadata("IsRestorable", false.ToString());
+                    contained.SetMetadata("IsBuildable", false.ToString());
+                    contained.SetMetadata("SelfContained", true.ToString());
+
+                    contained.SetMetadata("OutputPath", Path.Combine(root, framework, rid) + Path.DirectorySeparatorChar);
+                }
             }
         }
         #endregion

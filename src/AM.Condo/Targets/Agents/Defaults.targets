@@ -8,10 +8,10 @@
     <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">0.0.0</CurrentRelease>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
     <BuildHost Condition=" '$(BuildHost)' == '' ">local</BuildHost>
-    <CI Condition=" '$(CI)' != '' ">True</CI>
-    <CI Condition=" '$(CI)' == '' ">False</CI>
-    <HasGit Condition=" '$(HasGit)' == '' ">False</HasGit>
-    <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">False</IsPullRequest>
+    <CI Condition=" '$(CI)' != '' ">true</CI>
+    <CI Condition=" '$(CI)' == '' ">false</CI>
+    <HasGit Condition=" '$(HasGit)' == '' ">false</HasGit>
+    <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">false</IsPullRequest>
 
     <BuildOn Condition=" '$(BuildOn)' == '' ">$([System.Environment]::MachineName)</BuildOn>
     <BuildName Condition=" '$(BuildName)' == '' ">$(BuildOn)-$(BuildHost)</BuildName>
@@ -27,9 +27,9 @@
     <PackageFeedPassword Condition=" '$(PackageFeedPassword)' == '' ">$(PACKAGE_FEED_PASSWORD)</PackageFeedPassword>
 
     <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">$(PACKAGE_NO_SYMBOLS)</PackageNoSymbols>
-    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">True</PackageNoSymbols>
+    <PackageNoSymbols Condition=" '$(PackageNoSymbols)' == '' ">true</PackageNoSymbols>
 
-    <UseServerTime Condition=" '$(UseServerTime)' == '' ">False</UseServerTime>
+    <UseServerTime Condition=" '$(UseServerTime)' == '' ">false</UseServerTime>
   </PropertyGroup>
 
 </Project>

@@ -3,12 +3,15 @@
   <!-- capture details from a continuous integration build hosted by TFS -->
   <PropertyGroup>
     <BuildHost>tfs</BuildHost>
-    <CI>True</CI>
+    <CI>true</CI>
     <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
     <Branch>$(BUILD_SOURCEBRANCH)</Branch>
+    <SourceBranch>$(SYSTEM_PULLREQUEST_SOURCEBRANCH)</SourceBranch>
+    <SourceBranch Condition=" '$(SourceBranch)' == '' ">$(Branch)</SourceBranch>
+    <TargetBranch>$(SYSTEM_PULLREQUEST_TARGETBRANCH)</TargetBranch>
     <CommitId>$(BUILD_SOURCEVERSION)</CommitId>
     <BuildId>$(BUILD_BUILDID)</BuildId>
-    <PullRequestId Condition=" $(Branch.StartsWith('refs/pull/')) ">$(Branch.Split("/")[2])</PullRequestId>
+    <PullRequestId>$(SYSTEM_PULLREQUEST_PULLREQUESTID)</PullRequestId>
     <BuildFor>$(BUILD_REQUESTEDFOR)</BuildFor>
     <BuildOn>$(AGENT_NAME)</BuildOn>
     <RepositoryProvider>$(BUILD_REPOSITORY_PROVIDER)</RepositoryProvider>

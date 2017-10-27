@@ -4,6 +4,7 @@
   <PropertyGroup Condition = " '$(APPVEYOR)' != '' ">
     <BuildHost>AppVeyor</BuildHost>
     <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
+    <SourceBranch>$(Branch)</SourceBranch>
     <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
     <BuildId>$(APPVEYOR_BUILD_NUMBER)</BuildId>
     <JobId>$(APPVEYOR_JOB_ID)</JobId>
@@ -13,6 +14,6 @@
     <TeamProject>$(APPVEYOR_PROJECT_SLUG)</TeamProject>
     <BuildUri>https://ci.appveyor.com/project/$(TeamProject)/build/$(APPVEYOR_BUILD_NUMBER)</BuildUri>
     <BuildName>$(TeamProject) - $(Branch) - #$(PullRequestId):$(JobId)</BuildName>
-    <CI>True</CI>
+    <CI>true</CI>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="DotNetTest" Condition=" $(DotNetTest) ">
+    <PropertyGroup>
+      <TestPurposeExclude Condition=" '$(TestPurposeExclude)' == '' ">Integration;EndToEnd;</TestPurposeExclude>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <TestPurposeFilter Include="$(TestPurposeExclude)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <DotNetTestFilterProperties Condition=" $(IsWIndows) ">$(DotNetTestFilterProperties)&amp;Category!=Platform-Not-Windows</DotNetTestFilterProperties>
+      <DotNetTestFilterProperties Condition=" $(IsMacOS) ">$(DotNetTestFilterProperties)&amp;Category!=Platform-Not-MacOS</DotNetTestFilterProperties>
+      <DotNetTestFilterProperties Condition=" $(IsLinux) ">$(DotNetTestFilterProperties)&amp;Category!=Platform-Not-Linux</DotNetTestFilterProperties>
+
+      <DotNetTestFilterProperties Condition=" $(CI) ">$(DotNetTestFilterProperties)&amp;Category!=Agent-Not-CI</DotNetTestFilterProperties>
+      <DotNetTestFilterProperties Condition=" !$(CI) ">$(DotNetTestFilterProperties)&amp;Category!=Agent-Not-Local</DotNetTestFilterProperties>
+      <DotNetTestFilterProperties Condition=" '@(TestPurposeFilter->Count())' != '0' ">$(DotNetTestFilterProperties)&amp;(@(TestPurposeFilter->'Category!=Purpose-%(Identity)', '&amp;'))</DotNetTestFilterProperties>
+
+      <DotNetTestFilterProperties Condition=" '$(DotNetTestFilterProperties)' != '' ">VSTestTestCaseFilter=$(DotNetTestFilterProperties.Trim('&amp;').Trim())</DotNetTestFilterProperties>
+
+      <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties);VSTestNoBuild=true</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties);VSTestResultsDirectory=$(TestArtifactsRoot)$(slash)</DotNetTestProperties>
+      <DotNetTestProperties Condition=" '$(DotNetTestFilterProperties)' != '' ">$(DotNetTestProperties);$(DotNetTestFilterProperties)</DotNetTestProperties>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_DotNetTest Include="@(TestProjects)">
+        <AdditionalProperties>VSTestLogger=trx%3bLogFileName=%(Filename).dotnet.xml</AdditionalProperties>
+      </_DotNetTest>
+    </ItemGroup>
+
+    <MSBuild Projects="@(_DotNetTest)" Properties="$(DotNetTestProperties)" Targets="VSTest" />
+  </Target>
+
+  <PropertyGroup>
+    <TestDependsOn>
+      $(TestDependsOn);
+      DotNetTest;
+    </TestDependsOn>
+  </PropertyGroup>
+</Project>

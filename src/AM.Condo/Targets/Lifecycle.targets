@@ -42,7 +42,7 @@
   <Target Name="Bootstrap" />
 
   <!-- semantic versioning -->
-  <Target Name="Version" DependsOnTargets="Initialize" />
+  <Target Name="Version" DependsOnTargets="Initialize;Clean" />
 
   <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
   <Target Name="Prepare" DependsOnTargets="Version" />
@@ -63,7 +63,7 @@
   <Target Name="Document" DependsOnTargets="Version" />
 
   <!-- publish final build artifacts -->
-  <Target Name="Publish" DependsOnTargets="Verify;Document" />
+  <Target Name="Publish" DependsOnTargets="Clean;Verify;Document" />
 
   <!-- the default target for build -->
   <Target Name="Build" DependsOnTargets="Package" />

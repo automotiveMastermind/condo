@@ -47,7 +47,8 @@
     <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)$(slash)Agents$(slash)</AgentTargetsRoot>
     <AgentTargetsRoot Condition=" !HasTrailingSlash('$(AgentTargetsRoot)') ">$(AgentTargetsRoot)$(slash)</AgentTargetsRoot>
 
-    <DockerRoot Condition=" '$(DockerRoot)' == '' ">$(RepositoryRoot).docker$(slash)</DockerRoot>
+    <DockerRoot Condition=" '$(DockerRoot)' == '' ">$(RepositoryRoot).docker</DockerRoot>
+    <DockerRoot Condition=" !HasTrailingSlash('$(DockerRoot)') ">$(DockerRoot)$(slash)</DockerRoot>
 
     <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' OR '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
@@ -72,13 +73,13 @@
 
   <!-- determine if the repository is managed by git -->
   <PropertyGroup>
-    <IsPullRequest Condition=" '$(PullRequestId)' != '' ">True</IsPullRequest>
+    <IsPullRequest Condition=" '$(PullRequestId)' != '' ">true</IsPullRequest>
     <RepositoryProvider Condition=" '$(RepositoryProvider)' == '' AND Exists('$(RepositoryRoot)$(slash).git') ">git</RepositoryProvider>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- locate submodule paths -->
-    <SubmodulePaths Include="$(RepositoryRoot)$(Slash).gitmodules" />
+    <SubmodulePaths Include="$(RepositoryRoot).gitmodules" />
 
     <!-- add prefixes to well-known authenticated feeds -->
     <NuGetProtectedFeedPrefixes Include="pkgs.visualstudio.com" />
@@ -101,21 +102,6 @@
     </GetPlatformInfo>
   </Target>
 
-  <!-- attempt to find docker info -->
-  <Target Name="GetDockerInfo">
-    <FindCommand Command="docker">
-      <Output TaskParameter="ExecutablePath" PropertyName="DockerPath" />
-      <Output TaskParameter="Exists" PropertyName="HasDocker" />
-    </FindCommand>
-
-    <ItemGroup>
-      <DockerComposePaths Include="$(DockerRoot)docker-compose.*" Exclude="$(DockerRoot)docker-compose.debug.*" />
-    </ItemGroup>
-
-    <Warning Condition="!$(HasDocker) AND '$(DockerComposePaths->Count())' != '0' "
-             Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
-  </Target>
-
   <!-- get repository information -->
   <!-- NOTE: this will not replace values set by environment variables from the build server -->
   <Target Name="GetRepositoryInfo">
@@ -131,40 +117,6 @@
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
-  </Target>
-
-  <!-- get project metadata based on its location -->
-  <Target Name="GetProjectMetadata">
-    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
-      <DotNetSolutions Include="$(RepositoryRoot)$(slash)*.sln" />
-    </ItemGroup>
-
-    <RemoveDuplicates Inputs="@(DotNetSolutions)">
-      <Output TaskParameter="Filtered" ItemName="FilteredDotNetSolutions" />
-    </RemoveDuplicates>
-
-    <GetProjectsForSolution Solutions="@(FilteredDotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
-    </GetProjectsForSolution>
-
-    <GetProjectMetadata Projects="@(DotNetProjects)">
-      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
-    </GetProjectMetadata>
-
-    <ItemGroup>
-      <DotNetRestorePaths Include="@(FilteredDotNetSolutions)" />
-      <DotNetBuildPaths   Include="@(FilteredDotNetSolutions)" />
-
-      <SourceProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'src' "/>
-      <TestProjects       Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'test' AND %(DotNetProjects.IsTestable) "/>
-      <SampleProjects     Include="@(DotNetProjects)"       Condition=" '%(DotNetProjects.ProjectGroup)' == 'samples' "/>
-      <PublishProjects    Include="@(SourceProjects)"       Condition=" '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPublishable) "/>
-      <PackProjects       Include="@(SourceProjects)"       Condition="  '@(SourceProjects->Count())' != '0' AND %(SourceProjects.IsPackable) " />
-
-      <DockerProjects     Include="@(PublishProjects)"      Condition=" '@(PublishProjects->Count())' != '0' AND %(PublishProjects.HasDocker) " />
-
-      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
-    </ItemGroup>
   </Target>
 
   <!-- set nuget credentials -->
@@ -192,11 +144,6 @@
     <Message Importance="High" Text="Platform           : $(Platform)" />
     <Message Importance="High" Text="Authors            : $(Authors)" />
     <Message Importance="High" Text="Copyright          : $(Copyright)" Condition=" '$(Copyright)' != '' " />
-  </Target>
-
-  <!-- print project information -->
-  <Target Name="PrintProjects">
-    <LogItemMetadata Items="@(Projects)" Name="Project" />
   </Target>
 
   <!-- print repository information -->
@@ -248,13 +195,10 @@
       $(BeforeInitialize);
       GetBuildTime;
       GetPlatformInfo;
-      GetDockerInfo;
       SetNuGetCredentials;
       GetRepositoryInfo;
-      GetProjectMetadata;
       PrintProperties;
       PrintRepositoryInfo;
-      PrintProjects;
       PrintBuildInfo;
       PrintPaths;
       $(InitializeDependsOn);

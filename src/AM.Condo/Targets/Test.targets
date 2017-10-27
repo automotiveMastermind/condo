@@ -1,58 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DotNetTest" Condition=" '$(DotNetTest)' != 'skip' AND '@(TestProjects->Count())' != '0' ">
-    <PropertyGroup>
-      <TestPurposeExclude Condition=" '$(TestPurposeExclude)' == '' ">Integration;EndToEnd;</TestPurposeExclude>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <TestPurposeFilter Include="$(TestPurposeExclude)" />
-    </ItemGroup>
-
-    <PropertyGroup>
-      <DotNetTestFilterOptions Condition=" $(IsWIndows) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-Windows</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsMacOS) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-MacOS</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" $(IsLinux) ">$(DotNetTestFilterOptions)&amp;Category!=Platform-Not-Linux</DotNetTestFilterOptions>
-
-      <DotNetTestFilterOptions Condition=" $(CI) ">$(DotNetTestFilterOptions)&amp;Category!=Agent-Not-CI</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" !$(CI) ">$(DotNetTestFilterOptions)&amp;Category!=Agent-Not-Local</DotNetTestFilterOptions>
-      <DotNetTestFilterOptions Condition=" '@(TestPurposeFilter->Count())' != '0' ">$(DotNetTestFilterOptions)&amp;(@(TestPurposeFilter->'Category!=Purpose-%(Identity)', '&amp;'))</DotNetTestFilterOptions>
-
-      <DotNetTestFilterOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">--filter &quot;$(DotNetTestFilterOptions.Trim('&amp;').Trim())&quot;</DotNetTestFilterOptions>
-
-      <DotNetTestOptions Condition=" '$(DotNetTestOptions)' == '' ">$(DOTNET_TEST_OPTIONS)</DotNetTestOptions>
-      <DotNetTestOptions>$(DotNetTestOptions.Trim()) --no-build</DotNetTestOptions>
-      <DotNetTestOptions Condition=" '$(Configuration)' != '' ">$(DotNetTestOptions.Trim()) --configuration &quot;$(Configuration)&quot;</DotNetTestOptions>
-      <DotNetTestOptions>$(DotNetTestOptions.Trim())</DotNetTestOptions>
-      <DotNetTestOptions Condition=" '$(DotNetTestFilterOptions)' != '' ">$(DotNetTestOptions) $(DotNetTestFilterOptions.Trim())</DotNetTestOptions>
-
-      <DotNetTestProperties Condition=" '$(DotNetTestProperties)' == '' ">$(DOTNET_TEST_PROPS)</DotNetTestProperties>
-      <DotNetTestProperties>$(DotNetTestProperties.Trim()) RunConfiguration.ResultsDirectory=&quot;$(TestArtifactsRoot)&quot;</DotNetTestProperties>
-      <DotNetTestProperties>$(DotNetTestProperties.Trim())</DotNetTestProperties>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <_DotNetTest Include="@(TestProjects)">
-        <ProjectName>%(Filename)%(Extension)</ProjectName>
-        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-        <Args>$(DotNetTestOptions) --logger &quot;trx;LogFileName=%(Filename).dotnet.xml&quot; -- $(DotNetTestProperties)</Args>
-      </_DotNetTest>
-    </ItemGroup>
-
-    <Exec
-        Command="dotnet test &quot;%(_DotNetTest.ProjectName)&quot; %(_DotNetTest.Args)"
-        WorkingDirectory="%(_DotNetTest.WorkingDirectory)"
-        IgnoreStandardErrorWarningFormat="true"
-        CustomErrorRegularExpression="\[FAIL\]$" />
-  </Target>
+  <Import Project="$(CondoTargetsPath)$(slash)Test$(slash)Dotnet.targets" />
 
   <PropertyGroup>
-    <TestDependsOn>
+    <TestDepeondsOn>
       $(BeforeTest);
-      DotNetTest;
       $(TestDependsOn);
       $(AfterTest);
-    </TestDependsOn>
+    </TestDepeondsOn>
   </PropertyGroup>
 
   <Target Name="Testing" DependsOnTargets="$(TestDependsOn)" BeforeTargets="Test" />
