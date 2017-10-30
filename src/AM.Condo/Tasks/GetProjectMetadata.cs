@@ -98,6 +98,9 @@ namespace AM.Condo.Tasks
             // get the full path of the project file
             var path = project.GetMetadata("FullPath");
 
+            // get the file name
+            var file = project.GetMetadata("FileName");
+
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
             var parent = Path.GetDirectoryName(directory);
@@ -214,9 +217,10 @@ namespace AM.Condo.Tasks
                 return;
             }
 
-            // get the highest netcore tfm
-            var tfm = frameworks
-                .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+            // determine if the project is publishable
+            var publishable = frameworks
+                .Where(name => !name.StartsWith("netstandard", StringComparison.CurrentCultureIgnoreCase))
+                .Any(name => name.StartsWith("net", StringComparison.OrdinalIgnoreCase));
 
             // determine if the project is a library
             var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
@@ -228,7 +232,7 @@ namespace AM.Condo.Tasks
                 if (this.Publish)
                 {
                     project.SetMetadata("IsPublishable", (!library).ToString());
-                    project.SetMetadata("IsPublishable", (tfm != null).ToString());
+                    project.SetMetadata("IsPublishable", publishable.ToString());
                     project.SetProperty("IsPublishable", xml);
                 }
 
@@ -273,6 +277,7 @@ namespace AM.Condo.Tasks
                 any.SetMetadata("TargetFramework", framework);
                 any.SetMetadata("RuntimeIdentifier", string.Empty);
                 any.SetMetadata("OutputPath", Path.Combine(root, framework, "dotnet") + Path.DirectorySeparatorChar);
+                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, "dotnet"));
 
                 // iterate over each runtime identifier
                 foreach (var rid in rids)
@@ -301,7 +306,9 @@ namespace AM.Condo.Tasks
                     contained.SetMetadata("IsBuildable", false.ToString());
                     contained.SetMetadata("SelfContained", true.ToString());
 
+                    // set the output path
                     contained.SetMetadata("OutputPath", Path.Combine(root, framework, rid) + Path.DirectorySeparatorChar);
+                    contained.SetMetadata("TestLogFileName", string.Join('.', file, framework, rid));
                 }
             }
         }
