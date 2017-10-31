@@ -10,7 +10,7 @@
       <Projects Include="$(RepositoryRoot)**$(slash)*.*proj" />
     </ItemGroup>
 
-    <GetProjectMetadata Projects="@(Projects)">
+    <GetProjectMetadata Projects="@(Projects)" Product="$(Product)">
       <Output TaskParameter="Projects" ItemName="CleanProjects" />
     </GetProjectMetadata>
 

@@ -24,7 +24,10 @@ namespace AM.Condo.Tasks
     public class GetProjectMetadata : Task
     {
         #region Private Fields
-        private static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
+        /// <summary>
+        /// The list of well-known folders used for project layouts.
+        /// </summary>
+        public static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
 
         private readonly List<ITaskItem> projects = new List<ITaskItem>();
         #endregion
@@ -36,6 +39,12 @@ namespace AM.Condo.Tasks
         [Required]
         [Output]
         public ITaskItem[] Projects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product name to use when only a single project is present.
+        /// </summary>
+        [Required]
+        public string Product { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether restore is enabled.
@@ -106,21 +115,31 @@ namespace AM.Condo.Tasks
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
 
-            // determine if this is an msbuild project
-            var msbuild = path.EndsWith("proj");
-
-            // get the project name
-            var projectName = msbuild ? Path.GetFileNameWithoutExtension(path) : group;
+            // get the product name
+            var projectName = this.Product;
 
             // determine if the group is a well-known folder path
             if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
             {
+                // set the project name to the group
+                projectName = group;
+
                 // use the parent of the group folder, which means multiple projects are contained within the folder
                 group = Path.GetFileName(parent);
             }
 
+            // determine if this is an msbuild project
+            var msbuild = path.EndsWith("proj");
+
+            // if the project is an msbuild project
+            if (msbuild)
+            {
+                // set the project name to the project name
+                projectName = Path.GetFileNameWithoutExtension(path);
+            }
+
             // set the group to lower
-            group = group.ToLower();
+            projectName = projectName.ToLower();
 
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);

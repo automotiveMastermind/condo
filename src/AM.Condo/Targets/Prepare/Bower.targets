@@ -27,7 +27,7 @@
     <Warning Condition=" !$(HasBower) AND $(BowerRequired) "
              Text="A bower.json file was located at: %(BowerJsonPaths.Identity), but the bower command or executable could not be found." />
 
-    <GetProjectMetadata Projects="@(BowerJsonPaths)">
+    <GetProjectMetadata Projects="@(BowerJsonPaths)" Product="$(Product)">
       <Output TaskParameter="Projects" ItemName="BowerJsonProjects" />
     </GetProjectMetadata>
   </Target>

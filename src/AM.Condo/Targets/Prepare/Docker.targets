@@ -54,11 +54,11 @@
     <Warning Condition="!$(HasDocker) AND $(DockerComposeRequired) "
              Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
 
-    <DockerLabel
+    <GetDockerMetadata
         DockerFiles="@(DockerfilePaths)"
         BuildQuality="$(BuildQuality)"
         Version="$(InformationalVersion)"
-        Label="$(DockerLabel)"
+        Product="$(Product)"
         Condition=" $(DockerBuild) ">
       <Output TaskParameter="DockerFiles" ItemName="DockerMetadata" />
     </GetDockerMetadata>

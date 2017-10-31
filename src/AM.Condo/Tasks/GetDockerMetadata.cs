@@ -31,6 +31,12 @@ namespace AM.Condo.Tasks
         public ITaskItem[] Dockerfiles { get; set; }
 
         /// <summary>
+        /// Gets or sets the product name to use when only a single project is present.
+        /// </summary>
+        [Required]
+        public string Product { get; set; }
+
+        /// <summary>
         /// Gets or sets the build quality associated with the tag.
         /// </summary>
         [Required]
@@ -41,11 +47,6 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string Version { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default label to use for docker images when present within the root folder.
-        /// </summary>
-        public string Label { get; set; }
         #endregion
 
         #region Methods
@@ -83,16 +84,22 @@ namespace AM.Condo.Tasks
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
             var parent = Path.GetDirectoryName(directory);
-            var group = string.IsNullOrEmpty(this.Label) ? Path.GetFileName(directory) : this.Label;
+            var group = Path.GetFileName(directory);
+
+            // get the product name
+            var dockerName = !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase)
+                ? group
+                : this.Product;
 
             // get the docker file path
             var projectFile = Directory.GetFiles(directory, "*.*proj").FirstOrDefault();
 
-            // get the name of the docker file from the project file sitting next to it; or from the parent folder name
-            // otherwise
-            var dockerName = string.IsNullOrEmpty(projectFile)
-                ? group
-                : Path.GetFileNameWithoutExtension(projectFile);
+            // determine if the project file existed
+            if (!string.IsNullOrEmpty(projectFile))
+            {
+                // use the name of the project as the docker name
+                dockerName = Path.GetFileNameWithoutExtension(projectFile);
+            }
 
             // calculate the label
             dockerName = dockerName.ToLower();
