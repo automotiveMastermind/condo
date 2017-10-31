@@ -59,6 +59,7 @@
         BuildQuality="$(BuildQuality)"
         Version="$(InformationalVersion)"
         Product="$(Product)"
+        RepositoryRoot="$(RepositoryRoot)"
         Condition=" $(DockerBuild) ">
       <Output TaskParameter="DockerFiles" ItemName="DockerMetadata" />
     </GetDockerMetadata>

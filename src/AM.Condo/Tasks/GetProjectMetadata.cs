@@ -47,6 +47,12 @@ namespace AM.Condo.Tasks
         public string Product { get; set; }
 
         /// <summary>
+        /// Gets or sets the root of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether restore is enabled.
         /// </summary>
         public bool Restore { get; set; }
@@ -118,8 +124,16 @@ namespace AM.Condo.Tasks
             // get the product name
             var projectName = this.Product;
 
-            // determine if the group is a well-known folder path
-            if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
+            // determine if the project is rooted
+            var rooted = string.Equals
+            (
+                Path.GetFullPath(directory),
+                Path.GetFullPath(this.RepositoryRoot),
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            // determine if we are not rooted and the group is a well-known path
+            if (!rooted && !WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
             {
                 // set the project name to the group
                 projectName = group;

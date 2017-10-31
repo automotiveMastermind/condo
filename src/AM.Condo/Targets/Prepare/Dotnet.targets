@@ -35,7 +35,7 @@
       <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
     </PropertyGroup>
 
-    <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)"
+    <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)"
       Restore="$(DotNetRestore)" Build="$(DotNetBuild)" Pack="$(DotNetPack)" Test="$(DotNetTest)" Publish="$(DotNetPublish)">
       <Output TaskParameter="Projects" ItemName="DotNetMetadata" />
     </GetProjectMetadata>

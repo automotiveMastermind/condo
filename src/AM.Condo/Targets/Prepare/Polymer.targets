@@ -33,7 +33,7 @@
     <Warning Condition=" !$(HasPolymer) AND $(PolymerRequired) "
              Text="A polymer.json file was located at: %(PolymerJsonPaths.Identity), but the polymer command or executable could not be found." />
 
-    <GetProjectMetadata Projects="@(PolymerJsonPaths)" Product="$(Product)">
+    <GetProjectMetadata Projects="@(PolymerJsonPaths)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
       <Output TaskParameter="Projects" ItemName="PolymerJsonProjects" />
     </GetProjectMetadata>
   </Target>

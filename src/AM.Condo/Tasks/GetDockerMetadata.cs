@@ -37,6 +37,12 @@ namespace AM.Condo.Tasks
         public string Product { get; set; }
 
         /// <summary>
+        /// Gets or sets the root path of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
         /// Gets or sets the build quality associated with the tag.
         /// </summary>
         [Required]
@@ -86,10 +92,26 @@ namespace AM.Condo.Tasks
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
 
-            // get the product name
-            var dockerName = !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase)
-                ? group
-                : this.Product;
+            // set the docker name to the product name by default
+            var dockerName = this.Product;
+
+            // determine if the project is rooted
+            var rooted = string.Equals
+            (
+                Path.GetFullPath(directory),
+                Path.GetFullPath(this.RepositoryRoot),
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            // determine if we are not rooted and the group is a well-known path
+            if (!rooted && !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
+            {
+                // set the project name to the group
+                dockerName = group;
+
+                // use the parent of the group folder, which means multiple projects are contained within the folder
+                group = Path.GetFileName(parent);
+            }
 
             // get the docker file path
             var projectFile = Directory.GetFiles(directory, "*.*proj").FirstOrDefault();
