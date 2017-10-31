@@ -39,6 +39,8 @@
   <Target Name="BowerInstall" Condition=" $(BowerInstall) ">
     <PropertyGroup>
       <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
+      <BowerInstallOptions>$(BowerInstallOptions) --allow-root</BowerInstallOptions>
+      <BowerInstallOptions>$(BowerInstallOptions.Trim())</BowerInstallOptions>
     </PropertyGroup>
 
     <Exec Command="&quot;$(BowerPath)&quot; install $(BowerInstallOptions.Trim())"
