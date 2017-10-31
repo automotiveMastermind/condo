@@ -41,6 +41,11 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default label to use for docker images when present within the root folder.
+        /// </summary>
+        public string Label { get; set; }
         #endregion
 
         #region Methods
@@ -78,7 +83,7 @@ namespace AM.Condo.Tasks
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
             var parent = Path.GetDirectoryName(directory);
-            var group = Path.GetFileName(directory);
+            var group = string.IsNullOrEmpty(this.Label) ? Path.GetFileName(directory) : this.Label;
 
             // get the docker file path
             var projectFile = Directory.GetFiles(directory, "*.*proj").FirstOrDefault();
