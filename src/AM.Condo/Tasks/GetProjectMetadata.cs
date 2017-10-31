@@ -127,8 +127,8 @@ namespace AM.Condo.Tasks
             // determine if the project is rooted
             var rooted = string.Equals
             (
-                Path.GetFullPath(directory),
-                Path.GetFullPath(this.RepositoryRoot),
+                Path.GetFullPath(directory + Path.DirectorySeparatorChar),
+                Path.GetFullPath(this.RepositoryRoot + Path.DirectorySeparatorChar),
                 StringComparison.OrdinalIgnoreCase
             );
 
