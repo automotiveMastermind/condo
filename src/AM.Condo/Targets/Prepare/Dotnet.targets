@@ -41,6 +41,10 @@
     </GetProjectMetadata>
 
     <ItemGroup>
+      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" @(DotNetMetadata->Count()) > 0 ">
       <RestoreProjects    Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsRestorable) " />
       <BuildProjects      Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsBuildable) " />
       <SourceProjects     Include="@(DotNetMetadata)"       Condition=" '%(DotNetMetadata.ProjectGroup)' == 'src' " />
@@ -48,8 +52,15 @@
       <SampleProjects     Include="@(DotNetMetadata)"       Condition=" '%(DotNetMetadata.ProjectGroup)' == 'samples' "/>
       <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPublishable) " />
       <PackProjects       Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPackable) " />
-      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
     </ItemGroup>
+
+    <PropertyGroup>
+      <DotNetRestore Condition=" @(RestoreProjects->Count()) == 0 ">false</DotNetRestore>
+      <DotNetBuild Condition=" @(SourceProjects->Count()) == 0 ">false</DotNetBuild>
+      <DotNetPack Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPack>
+      <DotNetTest Condition=" @(TestProjects->Count()) == 0 ">false</DotNetTest>
+      <DotNetPublish Condition=" @(PublishProjects->Count()) == 0 ">false</DotNetPublish>
+    </PropertyGroup>
   </Target>
 
   <Target Name="PrintDotNetProjects" Condition=" $(DotNetBuild) OR $(DotNetPack) OR $(DotNetTest) OR $(DotNetPublish) ">

@@ -29,7 +29,7 @@
 
     <ItemGroup>
       <_DotNetTest Include="@(TestProjects)">
-        <AdditionalProperties>%(AdditionalProperties);$(DotNetTestProperties)</AdditionalProperties>
+        <AdditionalProperties>%(TestProjects.AdditionalProperties);$(DotNetTestProperties)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(RuntimeIdentifier)' != '' ">%(_DotNetTest.AdditionalProperties);RuntimeIdentifier=%(RuntimeIdentifier)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(TargetFramework)' != '' ">%(_DotNetTest.AdditionalProperties);TargetFramework=%(TargetFramework)</AdditionalProperties>
         <AdditionalProperties>%(_DotNetTest.AdditionalProperties);VSTestLogger=trx%3bLogFileName=%(TestLogFileName)</AdditionalProperties>
