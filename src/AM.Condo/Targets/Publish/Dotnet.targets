@@ -8,7 +8,7 @@
   <Target Name="DotNetPublish" Condition=" $(DotNetPublish) ">
     <ItemGroup>
       <_DotNetPublish Include="@(PublishProjects)">
-        <AdditionalProperties>$(DotNetPublishProperties)</AdditionalProperties>
+        <AdditionalProperties>%(PublishProjects.AdditionalProperties);$(DotNetPublishProperties)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(RuntimeIdentifier)' != '' ">%(_DotNetPublish.AdditionalProperties);RuntimeIdentifier=%(RuntimeIdentifier)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(TargetFramework)' != '' ">%(_DotNetPublish.AdditionalProperties);TargetFramework=%(TargetFramework)</AdditionalProperties>
         <AdditionalProperties>%(_DotNetPublish.AdditionalProperties);PublishDir=%(OutputPath)</AdditionalProperties>

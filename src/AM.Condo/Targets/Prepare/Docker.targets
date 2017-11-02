@@ -46,6 +46,9 @@
       <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
       <DockerPush Condition=" '$(DockerPush)' == '' AND $(DockerBuild) AND '$(DockerOrganization)' != '' ">true</DockerPush>
       <DockerPush Condition=" '$(DockerPush)' == '' ">false</DockerPush>
+
+      <DockerEnableExtendedTags Condition=" '$(DockerEnableExtendedTags)' == '' ">$(DOCKER_ENABLE_EXTENDED_TAGS)</DockerEnableExtendedTags>
+      <DockerEnableExtendedTags Condition=" '$(DockerEnableExtendedTags)' == '' ">false</DockerEnableExtendedTags>
     </PropertyGroup>
 
     <Warning Condition="!$(HasDocker) AND $(DockerBuildRequired) "
@@ -58,6 +61,9 @@
         DockerFiles="@(DockerfilePaths)"
         BuildQuality="$(BuildQuality)"
         Version="$(InformationalVersion)"
+        Product="$(Product)"
+        RepositoryRoot="$(RepositoryRoot)"
+        EnableExtendedTags="$(DockerEnableExtendedTags)"
         Condition=" $(DockerBuild) ">
       <Output TaskParameter="DockerFiles" ItemName="DockerMetadata" />
     </GetDockerMetadata>

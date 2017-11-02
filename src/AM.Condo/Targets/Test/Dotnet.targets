@@ -29,11 +29,14 @@
 
     <ItemGroup>
       <_DotNetTest Include="@(TestProjects)">
-        <AdditionalProperties>VSTestLogger=trx%3bLogFileName=%(Filename).dotnet.xml</AdditionalProperties>
+        <AdditionalProperties>%(TestProjects.AdditionalProperties);$(DotNetTestProperties)</AdditionalProperties>
+        <AdditionalProperties Condition=" '%(RuntimeIdentifier)' != '' ">%(_DotNetTest.AdditionalProperties);RuntimeIdentifier=%(RuntimeIdentifier)</AdditionalProperties>
+        <AdditionalProperties Condition=" '%(TargetFramework)' != '' ">%(_DotNetTest.AdditionalProperties);TargetFramework=%(TargetFramework)</AdditionalProperties>
+        <AdditionalProperties>%(_DotNetTest.AdditionalProperties);VSTestLogger=trx%3bLogFileName=%(TestLogFileName)</AdditionalProperties>
       </_DotNetTest>
     </ItemGroup>
 
-    <MSBuild Projects="@(_DotNetTest)" Properties="$(DotNetTestProperties)" Targets="VSTest" />
+    <MSBuild Projects="@(_DotNetTest)" Targets="VSTest" />
   </Target>
 
   <PropertyGroup>

@@ -31,6 +31,18 @@ namespace AM.Condo.Tasks
         public ITaskItem[] Dockerfiles { get; set; }
 
         /// <summary>
+        /// Gets or sets the product name to use when only a single project is present.
+        /// </summary>
+        [Required]
+        public string Product { get; set; }
+
+        /// <summary>
+        /// Gets or sets the root path of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
         /// Gets or sets the build quality associated with the tag.
         /// </summary>
         [Required]
@@ -41,6 +53,11 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable extended tags.
+        /// </summary>
+        public bool EnableExtendedTags { get; set; }
         #endregion
 
         #region Methods
@@ -80,14 +97,36 @@ namespace AM.Condo.Tasks
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
 
+            // set the docker name to the product name by default
+            var dockerName = this.Product;
+
+            // determine if the project is rooted
+            var rooted = string.Equals
+            (
+                Path.GetFullPath(directory + Path.DirectorySeparatorChar),
+                Path.GetFullPath(this.RepositoryRoot + Path.DirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            // determine if we are not rooted and the group is a well-known path
+            if (!rooted && !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
+            {
+                // set the project name to the group
+                dockerName = group;
+
+                // use the parent of the group folder, which means multiple projects are contained within the folder
+                group = Path.GetFileName(parent);
+            }
+
             // get the docker file path
             var projectFile = Directory.GetFiles(directory, "*.*proj").FirstOrDefault();
 
-            // get the name of the docker file from the project file sitting next to it; or from the parent folder name
-            // otherwise
-            var dockerName = string.IsNullOrEmpty(projectFile)
-                ? group
-                : Path.GetFileNameWithoutExtension(projectFile);
+            // determine if the project file existed
+            if (!string.IsNullOrEmpty(projectFile))
+            {
+                // use the name of the project as the docker name
+                dockerName = Path.GetFileNameWithoutExtension(projectFile);
+            }
 
             // calculate the label
             dockerName = dockerName.ToLower();
@@ -106,33 +145,38 @@ namespace AM.Condo.Tasks
             tags.Add("VersionTag", $"{this.Version}");
             labels.Add("VersionLabel", $"{dockerName}:{this.Version}");
 
-            if (string.IsNullOrEmpty(this.BuildQuality))
+            // determine if we should calculate extended tags
+            if (this.EnableExtendedTags)
             {
-                tags.Add("LatestTag", "latest");                            // :latest
-                labels.Add("LatestLabel", $"{dockerName}:latest");
+                // determine if the build quality is set
+                if (string.IsNullOrEmpty(this.BuildQuality))
+                {
+                    tags.Add("LatestTag", "latest");                            // :latest
+                    labels.Add("LatestLabel", $"{dockerName}:latest");
 
-                tags.Add("StableTag", "stable");                            // :stable
-                labels.Add("StableLabel", $"{dockerName}:stable");
+                    tags.Add("StableTag", "stable");                            // :stable
+                    labels.Add("StableLabel", $"{dockerName}:stable");
 
-                tags.Add("MajorTag", $"{version.Major}");                   // :1
-                labels.Add("MajorLabel", $"{dockerName}:{version.Major}");
+                    tags.Add("MajorTag", $"{version.Major}");                   // :1
+                    labels.Add("MajorLabel", $"{dockerName}:{version.Major}");
 
-                tags.Add("MinorTag", $"{version.Major}-{version.Minor}");   // :1.1
-                labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}");
-            }
-            else
-            {
-                tags.Add("BuildQualityTag", this.BuildQuality);             // :beta
-                labels.Add("BuildQualityLabel", $"{dockerName}:{this.BuildQuality}");
+                    tags.Add("MinorTag", $"{version.Major}-{version.Minor}");   // :1.1
+                    labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}");
+                }
+                else
+                {
+                    tags.Add("BuildQualityTag", this.BuildQuality);             // :beta
+                    labels.Add("BuildQualityLabel", $"{dockerName}:{this.BuildQuality}");
 
-                tags.Add("PrereleaseTag", "prerelease");                    // :prerelease
-                labels.Add("PrereleaseLabel", $"{dockerName}:prerelease");
+                    tags.Add("PrereleaseTag", "prerelease");                    // :prerelease
+                    labels.Add("PrereleaseLabel", $"{dockerName}:prerelease");
 
-                tags.Add("MajorTag", $"{version.Major}-{this.BuildQuality}");
-                labels.Add("MajorLabel", $"{dockerName}:{version.Major}-{this.BuildQuality}");
+                    tags.Add("MajorTag", $"{version.Major}-{this.BuildQuality}");
+                    labels.Add("MajorLabel", $"{dockerName}:{version.Major}-{this.BuildQuality}");
 
-                tags.Add("MinorTag", $"{version.Major}-{version.Minor}-{this.BuildQuality}");
-                labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}-{this.BuildQuality}");
+                    tags.Add("MinorTag", $"{version.Major}-{version.Minor}-{this.BuildQuality}");
+                    labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}-{this.BuildQuality}");
+                }
             }
 
             // get the extension (platform) of the dockerfile

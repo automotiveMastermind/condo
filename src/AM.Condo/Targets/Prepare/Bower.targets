@@ -27,7 +27,7 @@
     <Warning Condition=" !$(HasBower) AND $(BowerRequired) "
              Text="A bower.json file was located at: %(BowerJsonPaths.Identity), but the bower command or executable could not be found." />
 
-    <GetProjectMetadata Projects="@(BowerJsonPaths)">
+    <GetProjectMetadata Projects="@(BowerJsonPaths)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
       <Output TaskParameter="Projects" ItemName="BowerJsonProjects" />
     </GetProjectMetadata>
   </Target>
@@ -39,6 +39,8 @@
   <Target Name="BowerInstall" Condition=" $(BowerInstall) ">
     <PropertyGroup>
       <BowerInstallOptions Condition=" '$(BowerInstallOptions)' == '' ">$(BOWER_INSTALL_OPTIONS)</BowerInstallOptions>
+      <BowerInstallOptions>$(BowerInstallOptions) --allow-root</BowerInstallOptions>
+      <BowerInstallOptions>$(BowerInstallOptions.Trim())</BowerInstallOptions>
     </PropertyGroup>
 
     <Exec Command="&quot;$(BowerPath)&quot; install $(BowerInstallOptions.Trim())"

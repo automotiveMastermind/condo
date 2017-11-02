@@ -26,7 +26,7 @@
       <NpmInstall Condition=" '$(NpmInstall)' == '' ">false</NpmInstall>
     </PropertyGroup>
 
-    <GetProjectMetadata Projects="@(PackageJsonPaths)">
+    <GetProjectMetadata Projects="@(PackageJsonPaths)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
       <Output TaskParameter="Projects" ItemName="PackageJsonProjects" />
     </GetProjectMetadata>
 

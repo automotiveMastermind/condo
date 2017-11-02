@@ -24,7 +24,10 @@ namespace AM.Condo.Tasks
     public class GetProjectMetadata : Task
     {
         #region Private Fields
-        private static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
+        /// <summary>
+        /// The list of well-known folders used for project layouts.
+        /// </summary>
+        public static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
 
         private readonly List<ITaskItem> projects = new List<ITaskItem>();
         #endregion
@@ -36,6 +39,18 @@ namespace AM.Condo.Tasks
         [Required]
         [Output]
         public ITaskItem[] Projects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product name to use when only a single project is present.
+        /// </summary>
+        [Required]
+        public string Product { get; set; }
+
+        /// <summary>
+        /// Gets or sets the root of the repository.
+        /// </summary>
+        [Required]
+        public string RepositoryRoot { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether restore is enabled.
@@ -98,26 +113,47 @@ namespace AM.Condo.Tasks
             // get the full path of the project file
             var path = project.GetMetadata("FullPath");
 
+            // get the file name
+            var file = project.GetMetadata("FileName");
+
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
             var parent = Path.GetDirectoryName(directory);
             var group = Path.GetFileName(directory);
 
-            // determine if this is an msbuild project
-            var msbuild = path.EndsWith("proj");
+            // get the product name
+            var projectName = this.Product;
 
-            // get the project name
-            var projectName = msbuild ? Path.GetFileNameWithoutExtension(path) : group;
+            // determine if the project is rooted
+            var rooted = string.Equals
+            (
+                Path.GetFullPath(directory + Path.DirectorySeparatorChar),
+                Path.GetFullPath(this.RepositoryRoot + Path.DirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase
+            );
 
-            // determine if the group is a well-known folder path
-            if (!WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
+            // determine if we are not rooted and the group is a well-known path
+            if (!rooted && !WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
             {
+                // set the project name to the group
+                projectName = group;
+
                 // use the parent of the group folder, which means multiple projects are contained within the folder
                 group = Path.GetFileName(parent);
             }
 
+            // determine if this is an msbuild project
+            var msbuild = path.EndsWith("proj");
+
+            // if the project is an msbuild project
+            if (msbuild)
+            {
+                // set the project name to the project name
+                projectName = Path.GetFileNameWithoutExtension(path);
+            }
+
             // set the group to lower
-            group = group.ToLower();
+            projectName = projectName.ToLower();
 
             // set the project directory path
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
@@ -214,9 +250,10 @@ namespace AM.Condo.Tasks
                 return;
             }
 
-            // get the highest netcore tfm
-            var tfm = frameworks
-                .FirstOrDefault(name => name.StartsWith("netcoreapp", StringComparison.OrdinalIgnoreCase));
+            // determine if the project is publishable
+            var publishable = frameworks
+                .Where(name => !name.StartsWith("netstandard", StringComparison.CurrentCultureIgnoreCase))
+                .Any(name => name.StartsWith("net", StringComparison.OrdinalIgnoreCase));
 
             // determine if the project is a library
             var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
@@ -228,7 +265,7 @@ namespace AM.Condo.Tasks
                 if (this.Publish)
                 {
                     project.SetMetadata("IsPublishable", (!library).ToString());
-                    project.SetMetadata("IsPublishable", (tfm != null).ToString());
+                    project.SetMetadata("IsPublishable", publishable.ToString());
                     project.SetProperty("IsPublishable", xml);
                 }
 
@@ -273,6 +310,7 @@ namespace AM.Condo.Tasks
                 any.SetMetadata("TargetFramework", framework);
                 any.SetMetadata("RuntimeIdentifier", string.Empty);
                 any.SetMetadata("OutputPath", Path.Combine(root, framework, "dotnet") + Path.DirectorySeparatorChar);
+                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, "dotnet"));
 
                 // iterate over each runtime identifier
                 foreach (var rid in rids)
@@ -301,7 +339,9 @@ namespace AM.Condo.Tasks
                     contained.SetMetadata("IsBuildable", false.ToString());
                     contained.SetMetadata("SelfContained", true.ToString());
 
+                    // set the output path
                     contained.SetMetadata("OutputPath", Path.Combine(root, framework, rid) + Path.DirectorySeparatorChar);
+                    contained.SetMetadata("TestLogFileName", string.Join('.', file, framework, rid));
                 }
             }
         }
