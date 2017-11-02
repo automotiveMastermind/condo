@@ -1,33 +1,53 @@
 #requires -version 4
-
-# find the script path
-$RootPath = $PSScriptRoot
-
-# setup well-known paths
-$CondoScriptPath = Join-Path $RootPath "condo-local.ps1"
-$TemplatePath = Join-Path $RootPath "template"
-$CondoTemplatePath = Join-Path $TemplatePath "condo.ps1"
-
-# determine if condo-local.ps1 already exists and delete it if it does
-if (Test-Path $CondoScriptPath) {
-    Remove-Item -Force $CondoScriptPath
+function Write-Message([string] $message, [System.ConsoleColor] $color) {
+    if ($NoColor)
+    {
+        Write-Host $message
+        return
+    }
+    Write-Host -ForegroundColor $color $message
 }
 
-# copy the template to the local path
-Copy-Item $CondoTemplatePath $CondoScriptPath > $null
-
-# run condo using local build
-try {
-    # change to the root path
-    Push-Location $RootPath
-
-    # execute the local script
-    & $CondoScriptPath -Reset -Local @args
+function Write-Success([string] $message) {
+    Write-Message -Color Green -Message $message
 }
-finally {
-    # change back to the current path
-    Pop-Location
 
-    # remove the local condo script
-    Remove-Item -Force $CondoScriptPath -ErrorAction SilentlyContinue
+function Write-Failure([string] $message) {
+    Write-Message -Color Red -Message $message
+}
+
+function Write-Info([string] $message) {
+    Write-Message -Color Yellow -Message $message
+}
+
+$ContainerName = "automotivemastermind/condo"
+
+try
+{
+    Write-Info "Checking if docker exists"
+    #check if docker exists
+    if(Get-Command 'docker' -errorAction SilentlyContinue)
+    {
+        Write-Info "Docker was found!"
+        #docker exists lets check what container system we are using
+        if(docker version | Where-Object {$_ | Select-String "linux"})
+        {
+            Write-Info "Running with linux containers"
+            docker-compose -f $CONDO_ROOT/docker-compose.yml run condo $@
+        }
+        else
+        {
+            Write-Info "Running with windows containers"
+            docker run -it -v ${pwd}:/app ($ContainerName + ":win-core" + $matches[0]) powershell -c ./condo.ps1 /t:publish
+        }
+    }
+    else
+    {
+        #docker does not exist run condo without container
+        Invoke-Cmd ./condo.ps1
+    }
+}
+finally
+{
+
 }

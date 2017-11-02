@@ -93,6 +93,7 @@ safe-join() {
 install_dotnet() {
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
+
     else
         DOTNET_TEMP=$(mktemp -d)
         DOTNET_INSTALL="$DOTNET_TEMP/dotnet-install.sh"
@@ -120,14 +121,20 @@ install_dotnet() {
         done
 
         safe-exec rm -rf $DOTNET_TEMP
-    fi
 
-    export PATH="$DOTNET_INSTALL_DIR:$PATH"
-    success "dotnet-cli was installed..."
+        export PATH="$DOTNET_INSTALL_DIR:$PATH"
+        success "dotnet-cli was installed..."
+
+    fi
 }
 
 # restore and publish msbuild
 install_condo() {
+    if [ ! -z "$SKIP_CONDO_PUBLISH" ]; then
+        info "Skipping publish of condo by request (SKIP_CONDO_PUBLISH is set)..."
+        return
+    fi
+
     if [ ! -d "$CONDO_PUBLISH" ]; then
         # make the publish directory
         mkdir -p $CONDO_PUBLISH

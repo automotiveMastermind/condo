@@ -152,7 +152,6 @@ function Install-DotNet() {
 
     if ($env:SKIP_DOTNET_INSTALL) {
         Write-Info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
-        $env:PATH = "$env:PATH;$DotNetPath"
         return
     }
 
@@ -178,6 +177,11 @@ function Install-DotNet() {
 }
 
 function Install-Condo() {
+    if($env:SKIP_CONDO_PUBLISH) {
+        Write-Info "Skipping publish of condo by request (SKIP_CONDO_PUBLISH is set)..."
+        return
+    }
+
     if (Test-Path $CondoPublish) {
         Write-Info "condo was already built: use -Reset to get the latest version."
         return
@@ -201,8 +205,8 @@ function Install-Condo() {
 }
 
 try {
-    Install-DotNet
-    Install-Condo
+        Install-DotNet
+        Install-Condo
 
     if ($Credential) {
         $username = $Credential.UserName

@@ -1,0 +1,17 @@
+FROM microsoft/dotnet:1.1.1-sdk-nanoserver
+
+#Install Git client
+RUN powershell iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); \
+        choco install -y git -params "/GitAndUnixToolsOnPath"
+
+ENV SKIP_DOTNET_INSTALL true
+ENV SKIP_CONDO_PUBLISH true
+
+ARG cli=./artifacts/publish/AM.Condo/
+ARG scripts=./src/AM.Condo/Scripts/
+
+WORKDIR c:/Users/ContainerAdministrator/.am/condo
+COPY $cli ./cli
+COPY $scripts ./.src/src/AM.Condo/Scripts
+
+WORKDIR c:/app

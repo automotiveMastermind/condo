@@ -1,0 +1,14 @@
+FROM microsoft/dotnet:1.1.2-sdk
+
+ENV SKIP_DOTNET_INSTALL true
+ENV SKIP_CONDO_PUBLISH true
+
+ARG cli=./artifacts/publish/AM.Condo/
+ARG scripts=./src/AM.Condo/Scripts/
+
+WORKDIR root/.am/condo
+COPY $cli ./cli
+COPY $scripts ./
+RUN mkdir ./.src
+
+WORKDIR /app
