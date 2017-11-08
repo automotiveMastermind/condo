@@ -91,6 +91,9 @@ safe-join() {
 
 # download dotnet
 install_dotnet() {
+    # force remove 2.0.0 SDK because SDK detection is borked for patch versions
+    rm -rf "$DOTNET_INSTALL_DIR/sdk/2.0.0" 1>/dev/null 2>&1
+
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
     else
@@ -115,8 +118,8 @@ install_dotnet() {
 
         chmod +x $DOTNET_INSTALL
 
-        for DOTNET_CHANNEL in ${DOTNET_CHANNELS[@]}; do
-            safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
+        for DOTNET_VERSION in ${DOTNET_VERSIONS[@]}; do
+            safe-exec $DOTNET_INSTALL --version $DOTNET_VERSION
         done
 
         safe-exec rm -rf $DOTNET_TEMP
@@ -200,8 +203,8 @@ if [ -z "$DOTNET_INSTALL_URL" ]; then
 fi
 
 # determine if the dotnet install channel is not already set
-if [ ${#DOTNET_CHANNELS[@]} -eq 0 ]; then
-    DOTNET_CHANNELS=('1.1' '2.0')
+if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
+    DOTNET_VERSIONS=('1.1.4' '2.0.2')
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT

@@ -177,6 +177,7 @@ if ($PSCmdlet.ParameterSetName -eq 'ByBranch') {
 
 if ($Reset.IsPresent -and (Test-Path $CondoRoot)) {
     Write-Info 'Resetting condo build system...'
+
     Remove-Item -Recurse -Force $CondoRoot > $null
 }
 
