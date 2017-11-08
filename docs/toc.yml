@@ -10,3 +10,5 @@
   href: extensibility/
 - name: Services
   href: services/
+- name: Change Log
+  href: ../changelog.md

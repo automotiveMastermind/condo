@@ -79,7 +79,7 @@
       <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties);Version=$(InformationalVersion)</DotNetRestoreProperties>
     </PropertyGroup>
 
-    <MSBuild Projects="@(FilteredDotNetSolutions)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
+    <MSBuild Projects="@(RestoreProjects)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
   </Target>
 
   <PropertyGroup>

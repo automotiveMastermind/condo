@@ -15,27 +15,30 @@
   "build": {
     "content": [
       {
-        "files": [ "**/*.yml" ],
+        "files": [
+          "**/*.yml"
+        ],
         "src": "obj/docfx",
         "dest": "api"
       },
       {
         "files": [
+          "changelog.md"
+        ],
+        "src": ".."
+      },
+      {
+        "files": [
           "concepts/**/*.md",
           "concepts/**/toc.yml",
-
           "tutorials/**/*.md",
           "tutorials/**/toc.yml",
-
           "extensibility/**/*.md",
           "extensibility/**/toc.yml",
-
           "contributions/**/*.md",
           "contributions/**/toc.yml",
-
           "services/**/*.swagger.json",
           "services/**/toc.yml",
-
           "toc.yml",
           "*.md"
         ]
@@ -43,7 +46,12 @@
     ],
     "resource": [
       {
-        "files": [ "**/images/**", "**/artifacts/**", "snippets/**", "langwords/**" ],
+        "files": [
+          "**/images/**",
+          "**/artifacts/**",
+          "snippets/**",
+          "langwords/**"
+        ],
         "exclude": [
           "obj/**",
           "**/*.meta"
@@ -61,7 +69,9 @@
       "default"
     ],
     // "xrefService": [ "https://xref.docs.microsoft.com/query/{uid}" ],
-    "postProcessors": ["ExtractSearchIndex"],
+    "postProcessors": [
+      "ExtractSearchIndex"
+    ],
     "markdownEngineName": "dfm-latest",
     "noLangKeyword": false
   }

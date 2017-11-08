@@ -1,7 +1,8 @@
 version: 1.0.{build}
 environment:
-  nodejs_version: ''
-
+  NODEJS_VERSION: ''
+  GH_TOKEN:
+    secure: HXDr0rstXSt8dsyX7xzWLlzcKCNxQQGPGyEoWv9Cu5eZMwe4T8wJm2K2qaVgcsQr
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -10,14 +11,14 @@ branches:
     - master
 skip_tags: true
 skip_branch_with_pr: true
-image: Visual Studio 2017
-install:
-  - ps: Install-Product node $env:nodejs_version
-build_script:
-  - cmd: condo.cmd -- /t:ci
-test: off
 skip_commits:
   message: '***NO_CI***'
+image: Visual Studio 2017
+install:
+  - ps: Install-Product node $env:NODEJS_VERSION
+build_script:
+  - cmd: condo.cmd -- /t:publish
+test: off
 notifications:
   - provider: Webhook
     url: https://webhooks.gitter.im/e/c731d7b3fd486219480c
