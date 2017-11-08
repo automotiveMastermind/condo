@@ -5,11 +5,11 @@
     <GitHubPages Condition=" '$(GitHubPages)' == '' ">false</GitHubPages>
   </PropertyGroup>
 
-<Target Name="DocFXPlatformWarning" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' AND !$(IsWindows) ">
+<Target Name="DocFXPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
     <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
   </Target>
 
-  <Target Name="DocFXDocs" Condition=" '$(DocFXDocs)' != 'skip' AND '@(DocFXProjects->Count())' != '0' AND $(IsWindows) ">
+  <Target Name="DocFXBuild" Condition=" $(DocFxBuild) AND $(IsWindows) ">
     <PropertyGroup>
       <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
       <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
@@ -19,23 +19,23 @@
 
     <PropertyGroup>
       <DocFXArgs Condition=" '$(DocFXArgs)' == '' ">$(DOCFX_ARGS.Trim())</DocFXArgs>
-      <DocFXArgs>$(DocFXArgs) --output $(DocsArtifactsRoot)</DocFXArgs>
+      <DocFXArgs>$(DocFXArgs) --force --output $(DocsArtifactsRoot)</DocFXArgs>
       <DocFXArgs>$(DocFXArgs.Trim())</DocFXArgs>
       <DocFXVersion Condition=" '$(DocFXVersion)' == '' ">latest</DocFXVersion>
       <DocFXReferenceMapRoot>$(DocsRoot)$(slash)xref$(slash)</DocFXReferenceMapRoot>
     </PropertyGroup>
 
     <ItemGroup>
-      <_DocFXDocs Include="@(DocFXProjects)">
+      <_DocFXBuild Include="@(DocFXProjects)">
         <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-      </_DocFXDocs>
+      </_DocFXBuild>
     </ItemGroup>
 
     <GetRelease Organization="dotnet" Repository="docfx"
                 Tag="$(DocFXVersion)" Token="$(GH_TOKEN)"
                 Destination="$(DocFXRoot)" />
 
-    <Exec Command="$(DocFXCommand) $(DocFXArgs)" WorkingDirectory="%(_DocFXDocs.WorkingDirectory)" />
+    <Exec Command="$(DocFXCommand) build $(DocFXArgs)" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
   </Target>
 
   <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND $(GitHubPages) AND $(DocsGenerated) ">
@@ -54,7 +54,7 @@
     <DocumentDependsOn>
       $(BeforeDocument);
       DocFXPlatformWarning;
-      DocFXDocs;
+      DocFXBuild;
       $(DocumentDependsOn);
       $(AfterDocument);
     </DocumentDependsOn>

@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json.schemastore.org/docfx",
   "metadata": [
     {
       "src": [
@@ -10,23 +9,33 @@
           "src": "../"
         }
       ],
-      "dest": "api"
+      "dest": "../../docs/obj/docfx"
     }
   ],
   "build": {
     "content": [
       {
-        "files": [
-          "api/**.yml",
-          "api/index.md"
-        ]
+        "files": [ "**/*.yml" ],
+        "src": "obj/docfx",
+        "dest": "api"
       },
       {
         "files": [
           "concepts/**/*.md",
           "concepts/**/toc.yml",
+
           "tutorials/**/*.md",
           "tutorials/**/toc.yml",
+
+          "extensibility/**/*.md",
+          "extensibility/**/toc.yml",
+
+          "contributions/**/*.md",
+          "contributions/**/toc.yml",
+
+          "services/**/*.swagger.json",
+          "services/**/toc.yml",
+
           "toc.yml",
           "*.md"
         ]
@@ -34,24 +43,14 @@
     ],
     "resource": [
       {
-        "files": [
-          "images/**"
-        ],
+        "files": [ "**/images/**", "**/artifacts/**", "snippets/**", "langwords/**" ],
         "exclude": [
-          "obj/**"
+          "obj/**",
+          "**/*.meta"
         ]
       }
     ],
-    "overwrite": [
-      {
-        "files": [
-          "overwrite/**.md"
-        ],
-        "exclude": [
-          "obj/**"
-        ]
-      }
-    ],
+    "overwrite": "overwrite/**.md",
     "globalMetadataFiles": [
       "global-metadata.json"
     ],
@@ -61,10 +60,9 @@
     "template": [
       "default"
     ],
-    "xref": [
-      "https://raw.githubusercontent.com/dotnet/docs/master/_zip/msdnsmallset.yml"
-    ],
-    "postProcessors": [],
+    // "xrefService": [ "https://xref.docs.microsoft.com/query/{uid}" ],
+    "postProcessors": ["ExtractSearchIndex"],
+    "markdownEngineName": "dfm-latest",
     "noLangKeyword": false
   }
 }

@@ -15,11 +15,10 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents a Microsoft Build task used to set additional project metadata for .NET CoreCLR projects using the
-    /// project.json format.
+    /// modern MSBuild format.
     /// </summary>
     public class GetProjectMetadata : Task
     {

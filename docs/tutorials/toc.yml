@@ -10,9 +10,9 @@
   href: polymer.md
 - name: NodeJS and NPM
   href: npm.md
+- name: Bower Projects
+  href: bower.md
 - name: Task Runners (Grunt or Gulp)
   href: task-runners.md
 - name: Generating Documentation
   href: docfx.md
-- name: Extending Condo
-  href: extensibility.md

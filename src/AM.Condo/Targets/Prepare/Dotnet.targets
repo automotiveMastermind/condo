@@ -33,6 +33,10 @@
       <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
+
+      <DocFxBuild    Condition=" '$(SKIP_DOCFX_BUILD)' != '' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' != '' AND '$(DocFxBuild.ToLower())' != 'true' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' == '' ">true</DocFxBuild>
     </PropertyGroup>
 
     <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)"
@@ -60,6 +64,7 @@
       <DotNetPack Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPack>
       <DotNetTest Condition=" @(TestProjects->Count()) == 0 ">false</DotNetTest>
       <DotNetPublish Condition=" @(PublishProjects->Count()) == 0 ">false</DotNetPublish>
+      <DocFxBuild Condition=" @(DocFxProjects->Count()) == 0 ">false</DocFxBuild>
     </PropertyGroup>
   </Target>
 

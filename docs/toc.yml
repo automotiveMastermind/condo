@@ -4,6 +4,9 @@
   href: concepts/
 - name: Tutorials
   href: tutorials/
-- name: API Reference
-  href: api/
-  homepage: api/index.md
+- name: Condo API
+  href: obj/docfx/
+- name: Extensibility
+  href: extensibility/
+- name: Services
+  href: services/
