@@ -38,7 +38,7 @@
     <Exec Command="$(DocFXCommand) build $(DocFXArgs)" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
   </Target>
 
-  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND $(GitHubPages) AND $(DocsGenerated) ">
+  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(GitHubPages) AND $(DocsGenerated) ">
     <PublishGitHubPages
       Source="$(DocsArtifactsRoot)"
       RepositoryUri="$(RepositoryUri)"
