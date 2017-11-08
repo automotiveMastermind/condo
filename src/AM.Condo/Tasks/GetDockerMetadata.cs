@@ -45,7 +45,6 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the build quality associated with the tag.
         /// </summary>
-        [Required]
         public string BuildQuality { get; set; }
 
         /// <summary>
