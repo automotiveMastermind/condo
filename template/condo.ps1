@@ -177,7 +177,11 @@ if ($PSCmdlet.ParameterSetName -eq 'ByBranch') {
 
 if ($Reset.IsPresent -and (Test-Path $CondoRoot)) {
     Write-Info 'Resetting condo build system...'
+
+    $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
+
     Remove-Item -Recurse -Force $CondoRoot > $null
+    Remove-Item -Recurse -Force $DotNetPath > $null
 }
 
 if ($Local) {
