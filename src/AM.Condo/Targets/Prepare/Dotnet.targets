@@ -40,10 +40,6 @@
       <Output TaskParameter="Projects" ItemName="DotNetMetadata" />
     </GetProjectMetadata>
 
-    <ItemGroup>
-      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
-    </ItemGroup>
-
     <ItemGroup Condition=" @(DotNetMetadata->Count()) > 0 ">
       <RestoreProjects    Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsRestorable) " />
       <BuildProjects      Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsBuildable) " />
@@ -74,7 +70,7 @@
       <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties);Version=$(InformationalVersion)</DotNetRestoreProperties>
     </PropertyGroup>
 
-    <MSBuild Projects="@(FilteredDotNetSolutions)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
+    <MSBuild Projects="@(RestoreProjects)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
   </Target>
 
   <PropertyGroup>

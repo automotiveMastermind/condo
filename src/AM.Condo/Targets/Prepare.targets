@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)Dotnet.targets" />
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)Docker.targets" />
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)Npm.targets" />
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)Bower.targets" />
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)Polymer.targets" />
-  <Import Project="$(CondoTargetsPath)$(slash)Prepare$(slash)TaskRunners.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Dotnet.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Docker.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Npm.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Bower.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Polymer.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)TaskRunners.targets" />
 
   <Target Name="SubmoduleRestore" Condition=" '$(SubmoduleRestore)' != 'skip' AND '@(SubmodulePaths->Count())' != '0' AND $(HasGit) ">
     <RestoreSubmodules RepositoryRoot="$(RepositoryRoot)" />
-  </Target>
-
-  <Target Name="CreateOutputPaths">
-    <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 
   <PropertyGroup>
@@ -24,7 +20,6 @@
 
     <PrepareDependsOn>
       $(BeforePrepare);
-      CreateOutputPaths;
       SubmoduleRestore;
       Restore;
       $(PrepareDependsOn);

@@ -63,11 +63,11 @@
   <Target Name="Document" DependsOnTargets="Version" />
 
   <!-- publish final build artifacts -->
-  <Target Name="Publish" DependsOnTargets="Clean;Verify;Document" />
+  <Target Name="Publish" DependsOnTargets="Verify;Document" />
 
   <!-- the default target for build -->
   <Target Name="Build" DependsOnTargets="Package" />
 
   <!-- the default target for continuous integration -->
-  <Target Name="CI" DependsOnTargets="Clean;Verify" />
+  <Target Name="CI" DependsOnTargets="Verify" />
 </Project>

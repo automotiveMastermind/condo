@@ -12,6 +12,6 @@
         <LicenseUri><!--https://opensource.org/licenses/MIT--></LicenseUri>
     </PropertyGroup>
 
-    <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
-    <Import Project="$(CondoTargetsPath)\Goals.targets" />
+    <Import Project="$(CondoTargetsPath)Lifecycle.targets" />
+    <Import Project="$(CondoTargetsPath)Goals.targets" />
 </Project>

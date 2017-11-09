@@ -8,6 +8,7 @@
   <Target Name="CleanIntermediateArtifacts">
     <ItemGroup>
       <Projects Include="$(RepositoryRoot)**$(slash)*.*proj" />
+      <Projects Include="$(RepositoryRoot)**$(slash)docfx.json" />
     </ItemGroup>
 
     <GetProjectMetadata Projects="@(Projects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
@@ -15,7 +16,7 @@
     </GetProjectMetadata>
 
     <ItemGroup>
-      <IntermediateArtifacts Include="%(CleanProjects.OutputPath)" Condition=" Exists('%(CleanProjects.OutputPath)') " />
+      <IntermediateArtifacts Include="%(CleanProjects.OutputPath)"    Condition=" Exists('%(CleanProjects.OutputPath)') " />
       <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)bin" Condition=" Exists('%(CleanProjects.ProjectDir)bin') " />
       <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)obj" Condition=" Exists('%(CleanProjects.ProjectDir)obj') " />
 

@@ -14,7 +14,6 @@ namespace AM.Condo.Tasks
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-    using Newtonsoft.Json;
     using NuGet.Versioning;
 
     /// <summary>

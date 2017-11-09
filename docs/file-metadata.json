@@ -1,1 +1,15 @@
-{}
+{
+  "priority": {
+    "obj/docfx/**": 1.0,
+    "**.md": 2.5,
+    "extensibility/**.md": 3,
+    "concepts/**.md": 1.2,
+    "tutorials/**.md": 1.5
+  },
+  "keywords": {
+    "obj/docfx/**": ["API", "Reference"],
+    "extensibility/**.md": ["Extensibility", "Conceptual"],
+    "tutorials/**.md": ["Tutorials", "Tutorial", "Conceptual"],
+    "concepts/**.md": ["Conceptual"]
+  }
+}
