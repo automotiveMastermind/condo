@@ -103,7 +103,6 @@
       GetCommitInfo;
       PrintCommits;
       RecommendVersion;
-      CheckoutReleaseBranch;
     </BeforeVersion>
 
     <VersionDependsOn>
@@ -111,6 +110,11 @@
       SaveAssemblyInfo;
       $(VersionDependsOn);
     </VersionDependsOn>
+
+    <AfterVersion>
+      $(AfterVersion);
+      CheckoutReleaseBranch;
+    </AfterVersion>
 
     <AfterPublish>
       $(AfterPublish);
