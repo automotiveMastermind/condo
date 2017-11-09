@@ -1,87 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <DocsGenerated>false</DocsGenerated>
-    <GitHubPages Condition=" '$(GitHubPages)' == '' ">false</GitHubPages>
-  </PropertyGroup>
+  <Import Project="$(CondoTargetsPath)$(slash)Document$(slash)Dotnet.targets" />
 
-  <Target Name="GetDocFXInfo">
-    <PropertyGroup>
-      <DocFxBuild    Condition=" '$(SKIP_DOCFX_BUILD)' != '' ">false</DocFxBuild>
-      <DocFxBuild    Condition=" '$(DocFxBuild)' != '' AND '$(DocFxBuild.ToLower())' != 'true' ">false</DocFxBuild>
-      <DocFxBuild    Condition=" '$(DocFxBuild)' == '' ">true</DocFxBuild>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
-    </ItemGroup>
-
-    <PropertyGroup>
-      <DocFxBuild Condition=" @(DocFxProjects->Count()) == 0 ">false</DocFxBuild>
-    </PropertyGroup>
-  </Target>
-
-  <Target Name="PrintDocFXProjects" Condition=" $(DocFxBuild) ">
-    <Message Importance="High" Text="Project: %(DocFXProjects.Identity)" />
-  </Target>
-
-  <Target Name="DocFXPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
-    <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
-  </Target>
-
-  <Target Name="DocFXBuild" Condition=" $(DocFxBuild) AND $(IsWindows) ">
-    <PropertyGroup>
-      <DocFXRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFXRoot>
-      <DocFXPath>$(DocFXRoot)docfx.exe</DocFXPath>
-      <DocFXCommand>$(DocFXPath)</DocFXCommand>
-      <DocsGenerated>true</DocsGenerated>
-    </PropertyGroup>
-
-    <PropertyGroup>
-      <DocFXArgs Condition=" '$(DocFXArgs)' == '' ">$(DOCFX_ARGS.Trim())</DocFXArgs>
-      <DocFXArgs>$(DocFXArgs) --force --output $(DocsArtifactsRoot)</DocFXArgs>
-      <DocFXArgs>$(DocFXArgs.Trim())</DocFXArgs>
-      <DocFXVersion Condition=" '$(DocFXVersion)' == '' ">latest</DocFXVersion>
-      <DocFXReferenceMapRoot>$(DocsRoot)$(slash)xref$(slash)</DocFXReferenceMapRoot>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <_DocFXBuild Include="@(DocFXProjects)">
-        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
-      </_DocFXBuild>
-    </ItemGroup>
-
-    <GetRelease Organization="dotnet" Repository="docfx"
-                Tag="$(DocFXVersion)" Token="$(GH_TOKEN)"
-                Destination="$(DocFXRoot)" />
-
-    <Exec Command="$(DocFXCommand) metadata" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
-    <Exec Command="$(DocFXCommand) build $(DocFXArgs)" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
-  </Target>
-
-  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(GitHubPages) AND $(DocsGenerated) ">
-    <PublishGitHubPages
-      Source="$(DocsArtifactsRoot)"
-      RepositoryUri="$(RepositoryUri)"
-      RepositoryRoot="$(RepositoryRoot)" />
-  </Target>
+  <Target Name="Documentation" DependsOnTargets="$(DocumentDependsOn)" BeforeTargets="Document" />
 
   <PropertyGroup>
-    <AfterPublish>
-      $(AfterPublish);
-      PublishGitHubPages;
-    </AfterPublish>
-
     <DocumentDependsOn>
       $(BeforeDocument);
-      GetDocFXInfo;
-      PrintDocFXProjects;
-      DocFXPlatformWarning;
-      DocFXBuild;
       $(DocumentDependsOn);
       $(AfterDocument);
     </DocumentDependsOn>
   </PropertyGroup>
-
-  <Target Name="Documentation" DependsOnTargets="$(DocumentDependsOn)" BeforeTargets="Document" />
 </Project>

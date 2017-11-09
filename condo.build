@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
          InitialTargets="Clean" DefaultTargets="Build">
-    <PropertyGroup>
-        <Product>AM.Condo</Product>
-        <StartDateUtc>2015-05-28</StartDateUtc>
+  <PropertyGroup>
+    <Product>AM.Condo</Product>
+    <StartDateUtc>2015-05-28</StartDateUtc>
 
-        <Company>automotiveMastermind and contributors</Company>
-        <Authors>automotiveMastermind and contributors</Authors>
+    <Company>automotiveMastermind and contributors</Company>
+    <Authors>automotiveMastermind and contributors</Authors>
 
-        <License>MIT</License>
-        <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
-        <GitHubPages>true</GitHubPages>
+    <License>MIT</License>
+    <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
 
-        <TestPurposeExclude>None</TestPurposeExclude>
-    </PropertyGroup>
+    <TestPurposeExclude>None</TestPurposeExclude>
+  </PropertyGroup>
 
-    <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
-    <Import Project="$(CondoTargetsPath)\Goals.targets" />
+  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(DotNetDocsGenerated) ">
+    <PublishGitHubPages
+      Source="$(DocsArtifactsRoot)"
+      RepositoryUri="$(RepositoryUri)"
+      RepositoryRoot="$(RepositoryRoot)" />
+  </Target>
+
+  <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
+  <Import Project="$(CondoTargetsPath)\Goals.targets" />
+
+  <PropertyGroup>
+    <AfterPublish>
+      $(AfterPublish);
+      PublishGitHubPages;
+    </AfterPublish>
+  </PropertyGroup>
 </Project>

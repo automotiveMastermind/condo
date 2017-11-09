@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DotNetDocsGenerated>false</DotNetDocsGenerated>
+  </PropertyGroup>
+
+  <Target Name="GetDocFxInfo">
+    <PropertyGroup>
+      <DocFxBuild    Condition=" '$(SKIP_DOCFX_BUILD)' != '' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' != '' AND '$(DocFxBuild.ToLower())' != 'true' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' == '' ">true</DocFxBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <DocFxProjects Include="$(DocsRoot)**$(slash)docfx.json" />
+    </ItemGroup>
+
+    <GetDocsMetadata Projects="@(DocFxProjects)">
+      <Output TaskParameter="Projects" ItemName="DocFxMetadata" />
+    </GetDocsMetadata>
+
+    <PropertyGroup>
+      <DocFxBuild Condition=" @(DocFxMetadata->Count()) == 0 ">false</DocFxBuild>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PrintDocFxProjects" Condition=" $(DocFxBuild) ">
+    <Message Importance="High" Text="Project: %(DocFxMetadata.ProjectName) : %(DocFxMetadata.ProjectDir)" />
+  </Target>
+
+  <Target Name="DocFxPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
+    <Warning Text="DocFx is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
+  </Target>
+
+  <Target Name="DocFxBuild" Condition=" $(DocFxBuild) AND $(IsWindows) ">
+    <PropertyGroup>
+      <DocFxRoot>$(CondoPath)..$(slash)docfx$(slash)</DocFxRoot>
+      <DocFxPath>$(DocFxRoot)docfx.exe</DocFxPath>
+      <DocFxCommand>$(DocFxPath)</DocFxCommand>
+      <DotNetDocsGenerated>true</DotNetDocsGenerated>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <DocFxArgs Condition=" '$(DocFxArgs)' == '' ">$(DOCFX_ARGS.Trim())</DocFxArgs>
+      <DocFxVersion Condition=" '$(DocFxVersion)' == '' ">latest</DocFxVersion>
+    </PropertyGroup>
+
+    <GetRelease Organization="dotnet" Repository="docfx"
+                Tag="$(DocFxVersion)" Token="$(GH_TOKEN)"
+                Destination="$(DocFxRoot)" />
+
+    <Exec Command="$(DocFxCommand) metadata"
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" />
+
+    <Exec Command="$(DocFxCommand) build --force --output &quot;%(DocFxMetadata.OutputPath)&quot; $(DocFxArgs)"
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" />
+  </Target>
+
+  <Target Name="CopyDocFxBuild" Condition=" $(DotNetDocsGenerated) ">
+    <ItemGroup>
+      <_CopyDocFxBuild Include="%(DocFxMetadata.ProjectDir)bin$(slash)**" Exclude="%(DocFxMetadata.OutputPath)**">
+        <ProjectName>%(DocFxMetadata.ProjectName)</ProjectName>
+      </_CopyDocFxBuild>
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(_CopyDocFxBuild)"
+      DestinationFiles="@(_CopyDocFxBuild->'$(DocsArtifactsRoot)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <PropertyGroup>
+    <AfterDocument>
+      $(AfterDocument);
+      CopyDocFxBuild;
+    </AfterDocument>
+
+    <BeforeDocument>
+      $(BeforeDocument);
+      GetDocFxInfo;
+      PrintDocFxProjects;
+      DocFxPlatformWarning;
+    </BeforeDocument>
+
+    <DocumentDependsOn>
+      $(DocumentDependsOn);
+      DocFxBuild;
+    </DocumentDependsOn>
+  </PropertyGroup>
+</Project>
