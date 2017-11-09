@@ -166,16 +166,16 @@ namespace AM.Condo.IO
         /// <param name="factory">
         /// The current factory instance.
         /// </param>
-        /// <param name="uri">
-        /// The URI of the git repository that should be cloned.
-        /// </param>
         /// <param name="path">
         /// The path in which the cloned repository should be created.
+        /// </param>
+        /// <param name="uri">
+        /// The URI of the git repository that should be cloned.
         /// </param>
         /// <returns>
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
-        public static IGitRepositoryInitialized Clone(this IGitRepositoryFactory factory, string uri, string path)
+        public static IGitRepositoryInitialized Clone(this IGitRepositoryFactory factory, string path, string uri)
         {
             // clone the git repository
             return factory.Clone(path, uri, NoOpLogger);
@@ -188,11 +188,11 @@ namespace AM.Condo.IO
         /// <param name="factory">
         /// The current factory instance.
         /// </param>
-        /// <param name="uri">
-        /// The URI of the git repository that should be cloned.
-        /// </param>
         /// <param name="path">
         /// The path in which the cloned repository should be created.
+        /// </param>
+        /// <param name="uri">
+        /// The URI of the git repository that should be cloned.
         /// </param>
         /// <param name="logger">
         /// The logger used by the repository.
@@ -201,7 +201,7 @@ namespace AM.Condo.IO
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
         public static IGitRepositoryInitialized Clone
-            (this IGitRepositoryFactory factory, string uri, string path, ILogger logger)
+            (this IGitRepositoryFactory factory, string path, string uri, ILogger logger)
         {
             // clone the git repository
             return factory.Clone(new PathManager(path), uri, logger);

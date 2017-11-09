@@ -10,6 +10,15 @@
     <!-- define the default project name -->
     <ProjectName Condition=" '$(ProjectName)' == '' ">$(MSBuildProjectName)</ProjectName>
 
+    <!-- set defaults for git related activities -->
+    <AuthorName Condition=" '$(AuthorName)' == '' ">$(GIT_AUTHOR_NAME)</AuthorName>
+    <AuthorName Condition=" '$(AuthorName)' == '' ">$(Company)</AuthorName>
+    <AuthorName Condition=" '$(AuthorName)' == '' ">$(Authors)</AuthorName>
+    <AuthorName Condition=" '$(AuthorName)' == '' ">condo</AuthorName>
+
+    <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">$(GIT_AUTHOR_EMAIL)</AuthorEmail>
+    <AuthorEmail Condition=" '$(AuthorEmail)' == '' ">open@automotivemastermind.com</AuthorEmail>
+
     <!-- get the solution and package root paths -->
     <RepositoryRoot     Condition=" '$(RepositoryRoot)'     == '' ">$(MSBuildStartupDirectory)</RepositoryRoot>
     <RepositoryRoot     Condition=" !HasTrailingSlash('$(RepositoryRoot)') ">$(RepositoryRoot)$(slash)</RepositoryRoot>
