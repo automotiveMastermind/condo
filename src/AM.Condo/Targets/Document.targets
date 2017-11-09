@@ -5,7 +5,27 @@
     <GitHubPages Condition=" '$(GitHubPages)' == '' ">false</GitHubPages>
   </PropertyGroup>
 
-<Target Name="DocFXPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
+  <Target Name="GetDocFXInfo">
+    <PropertyGroup>
+      <DocFxBuild    Condition=" '$(SKIP_DOCFX_BUILD)' != '' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' != '' AND '$(DocFxBuild.ToLower())' != 'true' ">false</DocFxBuild>
+      <DocFxBuild    Condition=" '$(DocFxBuild)' == '' ">true</DocFxBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <DocFxBuild Condition=" @(DocFxProjects->Count()) == 0 ">false</DocFxBuild>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PrintDocFXProjects" Condition=" $(DocFxBuild) ">
+    <Message Importance="High" Text="Project: %(DocFXProjects.Identity)" />
+  </Target>
+
+  <Target Name="DocFXPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
     <Warning Text="DocFX is only supported on Windows, currently. Mono is no longer supported as of version 2.6." />
   </Target>
 
@@ -35,6 +55,7 @@
                 Tag="$(DocFXVersion)" Token="$(GH_TOKEN)"
                 Destination="$(DocFXRoot)" />
 
+    <Exec Command="$(DocFXCommand) metadata" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
     <Exec Command="$(DocFXCommand) build $(DocFXArgs)" WorkingDirectory="%(_DocFXBuild.WorkingDirectory)" />
   </Target>
 
@@ -53,6 +74,8 @@
 
     <DocumentDependsOn>
       $(BeforeDocument);
+      GetDocFXInfo;
+      PrintDocFXProjects;
       DocFXPlatformWarning;
       DocFXBuild;
       $(DocumentDependsOn);

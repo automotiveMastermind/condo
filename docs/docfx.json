@@ -9,7 +9,7 @@
           "src": "../"
         }
       ],
-      "dest": "../../docs/obj/docfx"
+      "dest": "obj/docfx"
     }
   ],
   "build": {

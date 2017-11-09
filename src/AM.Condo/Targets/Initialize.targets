@@ -63,6 +63,7 @@
     <ArtifactPaths Include="$(PublishArtifactsRoot)" />
     <ArtifactPaths Include="$(PackageArtifactsRoot)" />
     <ArtifactPaths Include="$(FeedArtifactsRoot)" />
+    <ArtifactPaths Include="$(DocsArtifactsRoot)" />
   </ItemGroup>
 
   <!-- import default agent configuration -->
@@ -130,6 +131,10 @@
                          Password="$(PackageFeedPassword)">
       <Output TaskParameter="NuGetConfigPath" PropertyName="NuGetConfigPath" />
     </SetNuGetPackageSources>
+  </Target>
+
+  <Target Name="CreateOutputPaths">
+    <MakeDir Directories="@(ArtifactPaths)" ContinueOnError="true" />
   </Target>
 
   <!-- print all of the properties that were used to perform the build -->
@@ -200,6 +205,7 @@
       PrintProperties;
       PrintRepositoryInfo;
       PrintBuildInfo;
+      CreateOutputPaths;
       PrintPaths;
       $(InitializeDependsOn);
       $(AfterInitialize);

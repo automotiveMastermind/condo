@@ -60,7 +60,7 @@
   <Target Name="Verify" DependsOnTargets="Package" />
 
   <!-- generate documentation from build output -->
-  <Target Name="Document" DependsOnTargets="Prepare" />
+  <Target Name="Document" DependsOnTargets="Version" />
 
   <!-- publish final build artifacts -->
   <Target Name="Publish" DependsOnTargets="Verify;Document" />

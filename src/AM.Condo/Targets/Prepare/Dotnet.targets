@@ -33,20 +33,12 @@
       <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
-
-      <DocFxBuild    Condition=" '$(SKIP_DOCFX_BUILD)' != '' ">false</DocFxBuild>
-      <DocFxBuild    Condition=" '$(DocFxBuild)' != '' AND '$(DocFxBuild.ToLower())' != 'true' ">false</DocFxBuild>
-      <DocFxBuild    Condition=" '$(DocFxBuild)' == '' ">true</DocFxBuild>
     </PropertyGroup>
 
     <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)"
       Restore="$(DotNetRestore)" Build="$(DotNetBuild)" Pack="$(DotNetPack)" Test="$(DotNetTest)" Publish="$(DotNetPublish)">
       <Output TaskParameter="Projects" ItemName="DotNetMetadata" />
     </GetProjectMetadata>
-
-    <ItemGroup>
-      <DocFXProjects      Include="$(DocsRoot)**$(slash)docfx.json" />
-    </ItemGroup>
 
     <ItemGroup Condition=" @(DotNetMetadata->Count()) > 0 ">
       <RestoreProjects    Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsRestorable) " />
@@ -64,7 +56,6 @@
       <DotNetPack Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPack>
       <DotNetTest Condition=" @(TestProjects->Count()) == 0 ">false</DotNetTest>
       <DotNetPublish Condition=" @(PublishProjects->Count()) == 0 ">false</DotNetPublish>
-      <DocFxBuild Condition=" @(DocFxProjects->Count()) == 0 ">false</DocFxBuild>
     </PropertyGroup>
   </Target>
 

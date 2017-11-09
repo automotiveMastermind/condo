@@ -8,6 +8,7 @@
   <Target Name="CleanIntermediateArtifacts">
     <ItemGroup>
       <Projects Include="$(RepositoryRoot)**$(slash)*.*proj" />
+      <Projects Include="$(DocsRoot)**$(slash)docfx.json" />
     </ItemGroup>
 
     <GetProjectMetadata Projects="@(Projects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
