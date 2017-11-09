@@ -18,7 +18,9 @@
     <PublishGitHubPages
       Source="$(DocsArtifactsRoot)condo"
       RepositoryUri="$(RepositoryUri)"
-      RepositoryRoot="$(RepositoryRoot)" />
+      RepositoryRoot="$(RepositoryRoot)"
+      AuthorName="$(AuthorName)"
+      AuthorEmail="$(AuthorEmail)" />
   </Target>
 
   <Import Project="$(CondoTargetsPath)Lifecycle.targets" />

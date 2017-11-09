@@ -39,6 +39,16 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
+        /// Gets or sets the author name used for git commits.
+        /// </summary>
+        public string AuthorName { get; set; } = "condo";
+
+        /// <summary>
+        /// Gets or sets the author email used for git commits.
+        /// </summary>
+        public string AuthorEmail { get; set; } = "open@automotivemastermind.com";
+
+        /// <summary>
         /// Gets or sets the branch to which to publish GitHub Pages.
         /// </summary>
         public string Branch { get; set; } = "gh-pages";
@@ -83,6 +93,10 @@ namespace AM.Condo.Tasks
             // clone the repository to a temporary path
             using (var repository = factory.Clone(this.RepositoryUri, logger))
             {
+                // set the username and email
+                repository.Username = this.AuthorName;
+                repository.Email = this.AuthorEmail;
+
                 // determine if an authorization header is available
                 if (!string.IsNullOrEmpty(authorization))
                 {

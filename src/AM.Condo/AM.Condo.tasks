@@ -2,6 +2,7 @@
   <!-- include the individual tasks provided by condo -->
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.CheckoutBranch" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.CleanRepository" />
+  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.CloneRepository" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.CreateRelease" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.DecodeBase64" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.FindCommand" />
