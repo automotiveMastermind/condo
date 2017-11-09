@@ -44,7 +44,7 @@
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$(ArtifactsRoot)docs$(slash)</DocsArtifactsRoot>
     <DocsArtifactsRoot      Condition=" !HasTrailingSlash('$(DocsArtifactsRoot)') ">$(DocsArtifactsRoot)$(slash)</DocsArtifactsRoot>
 
-    <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)$(slash)Agents$(slash)</AgentTargetsRoot>
+    <AgentTargetsRoot Condition=" '$(AgentTargetsRoot)' == '' ">$(CondoTargetsPath)Agents$(slash)</AgentTargetsRoot>
     <AgentTargetsRoot Condition=" !HasTrailingSlash('$(AgentTargetsRoot)') ">$(AgentTargetsRoot)$(slash)</AgentTargetsRoot>
 
     <DockerRoot Condition=" '$(DockerRoot)' == '' ">$(RepositoryRoot).docker</DockerRoot>

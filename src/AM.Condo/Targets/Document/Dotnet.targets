@@ -12,10 +12,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <DocFxProjects Include="$(DocsRoot)**$(slash)docfx.json" />
+      <DocFxProjects Include="$(RepositoryRoot)**$(slash)docfx.json" />
     </ItemGroup>
 
-    <GetDocsMetadata Projects="@(DocFxProjects)">
+    <GetDocsMetadata Projects="@(DocFxProjects)" DocsRoot="$(DocsRoot)">
       <Output TaskParameter="Projects" ItemName="DocFxMetadata" />
     </GetDocsMetadata>
 
@@ -25,7 +25,7 @@
   </Target>
 
   <Target Name="PrintDocFxProjects" Condition=" $(DocFxBuild) ">
-    <Message Importance="High" Text="Project: %(DocFxMetadata.ProjectName) : %(DocFxMetadata.ProjectDir)" />
+    <Message Importance="High" Text="Project: %(DocFxMetadata.ProjectName), Root: %(DocFxMetadata.IsRootDocs)" />
   </Target>
 
   <Target Name="DocFxPlatformWarning" Condition=" $(DocFxBuild) AND !$(IsWindows) ">
@@ -50,10 +50,16 @@
                 Destination="$(DocFxRoot)" />
 
     <Exec Command="$(DocFxCommand) metadata"
-      WorkingDirectory="%(DocFxMetadata.ProjectDir)" />
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" Condition=" !%(DocFxMetadata.IsRootDocs) " />
 
     <Exec Command="$(DocFxCommand) build --force --output &quot;%(DocFxMetadata.OutputPath)&quot; $(DocFxArgs)"
-      WorkingDirectory="%(DocFxMetadata.ProjectDir)" />
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" Condition=" !%(DocFxMetadata.IsRootDocs) " />
+
+    <Exec Command="$(DocFxCommand) metadata"
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" Condition=" %(DocFxMetadata.IsRootDocs) " />
+
+    <Exec Command="$(DocFxCommand) build --force --output &quot;%(DocFxMetadata.OutputPath)&quot; $(DocFxArgs)"
+      WorkingDirectory="%(DocFxMetadata.ProjectDir)" Condition=" %(DocFxMetadata.IsRootDocs) " />
   </Target>
 
   <Target Name="CopyDocFxBuild" Condition=" $(DotNetDocsGenerated) ">

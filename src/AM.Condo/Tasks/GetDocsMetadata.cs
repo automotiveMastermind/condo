@@ -28,6 +28,12 @@ namespace AM.Condo.Tasks
         [Required]
         [Output]
         public ITaskItem[] Projects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the root path for documentation generation.
+        /// </summary>
+        [Required]
+        public string DocsRoot { get; set; }
         #endregion
 
         #region Methods
@@ -86,6 +92,17 @@ namespace AM.Condo.Tasks
             // set the project name
             project.SetMetadata("ProjectName", projectName);
             project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+
+            // determine if the project is rooted
+            var rooted = string.Equals
+            (
+                Path.GetFullPath(directory + Path.DirectorySeparatorChar),
+                Path.GetFullPath(this.DocsRoot + Path.DirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            // set the rooted flag
+            project.SetMetadata("IsRootDocs", rooted.ToString());
 
             // set the output path
             project.SetMetadata("OutputPath", Path.Combine(directory, "bin"));

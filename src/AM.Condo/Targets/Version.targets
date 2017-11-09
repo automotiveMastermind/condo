@@ -5,14 +5,14 @@
   <PropertyGroup Condition=" '$(BranchStrategyTargets)' == '' ">
     <BranchStrategy  Condition=" '$(BranchStrategy)' == '' ">GitFlow</BranchStrategy>
 
-    <BranchStrategyTargets>$(CondoTargetsPath)\Version\$(BranchStrategy).targets</BranchStrategyTargets>
+    <BranchStrategyTargets>$(CondoTargetsPath)Version$(slash)$(BranchStrategy).targets</BranchStrategyTargets>
   </PropertyGroup>
 
   <!-- detect version strategy -->
   <PropertyGroup Condition=" '$(VersionStrategyTargets)' == '' ">
     <VersionStrategy Condition=" '$(VersionStrategy)' == '' ">Conventional</VersionStrategy>
 
-    <VersionStrategyTargets>$(CondoTargetsPath)\Version\$(VersionStrategy).targets</VersionStrategyTargets>
+    <VersionStrategyTargets>$(CondoTargetsPath)Version$(slash)$(VersionStrategy).targets</VersionStrategyTargets>
   </PropertyGroup>
 
   <PropertyGroup>

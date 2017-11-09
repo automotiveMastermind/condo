@@ -16,13 +16,13 @@
 
   <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(DotNetDocsGenerated) ">
     <PublishGitHubPages
-      Source="$(DocsArtifactsRoot)"
+      Source="$(DocsArtifactsRoot)condo"
       RepositoryUri="$(RepositoryUri)"
       RepositoryRoot="$(RepositoryRoot)" />
   </Target>
 
-  <Import Project="$(CondoTargetsPath)\Lifecycle.targets" />
-  <Import Project="$(CondoTargetsPath)\Goals.targets" />
+  <Import Project="$(CondoTargetsPath)Lifecycle.targets" />
+  <Import Project="$(CondoTargetsPath)Goals.targets" />
 
   <PropertyGroup>
     <AfterPublish>
