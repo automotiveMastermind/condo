@@ -47,9 +47,6 @@
     <PackageArtifactsRoot   Condition=" '$(PackageArtifactsRoot)'   == '' ">$(ArtifactsRoot)packages$(slash)</PackageArtifactsRoot>
     <PackageArtifactsRoot   Condition=" !HasTrailingSlash('$(PackageArtifactsRoot)') ">$(PackageArtifactsRoot)$(slash)</PackageArtifactsRoot>
 
-    <FeedArtifactsRoot      Condition=" '$(FeedArtifactsRoot)'      == '' ">$(ArtifactsRoot)feed$(slash)</FeedArtifactsRoot>
-    <FeedArtifactsRoot      Condition=" !HasTrailingSlash('$(FeedArtifactsRoot)') ">$(FeedArtifactsRoot)feed$(slash)</FeedArtifactsRoot>
-
     <DocsArtifactsRoot      Condition=" '$(DocsArtifactsRoot)'      == '' ">$(ArtifactsRoot)docs$(slash)</DocsArtifactsRoot>
     <DocsArtifactsRoot      Condition=" !HasTrailingSlash('$(DocsArtifactsRoot)') ">$(DocsArtifactsRoot)$(slash)</DocsArtifactsRoot>
 
@@ -71,7 +68,6 @@
     <ArtifactPaths Include="$(TestArtifactsRoot)" />
     <ArtifactPaths Include="$(PublishArtifactsRoot)" />
     <ArtifactPaths Include="$(PackageArtifactsRoot)" />
-    <ArtifactPaths Include="$(FeedArtifactsRoot)" />
     <ArtifactPaths Include="$(DocsArtifactsRoot)" />
   </ItemGroup>
 
@@ -200,7 +196,6 @@
     <Message Importance="High" Text="Artifacts (Test)   : $(TestArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Publish): $(PublishArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Package): $(PackageArtifactsRoot)" />
-    <Message Importance="High" Text="Artifacts (Feed)   : $(FeedArtifactsRoot)" />
     <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
   </Target>
 

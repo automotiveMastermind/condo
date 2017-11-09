@@ -31,16 +31,6 @@
         DestinationFiles="@(_CopyDotNetPublish->'$(PublishArtifactsRoot)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
-  <Target Name="InstallPackages" Condition=" '@(Packages->Count())' != '0' ">
-    <PropertyGroup>
-      <DotNetLocalPushOptions Condition=" '$(DotNetPushLocalOptions)' == '' ">$(DOTNET_LOCAL_PUSH_OPTIONS)</DotNetLocalPushOptions>
-      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim()) --source $(FeedArtifactsRoot.TrimEnd('$(slash)'))</DotNetLocalPushOptions>
-      <DotNetLocalPushOptions>$(DotNetLocalPushOptions.Trim())</DotNetLocalPushOptions>
-    </PropertyGroup>
-
-    <Exec Command="dotnet nuget push &quot;%(Packages.Identity)&quot; $(DotNetLocalPushOptions)" />
-  </Target>
-
   <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' AND '@(Packages->Count())' != '0' ">
     <PushNuGetPackage
       NuGetConfigPath="$(NuGetConfigPath)"
@@ -57,7 +47,6 @@
       $(PublishDependsOn);
       DotNetPublish;
       CopyDotNetPublish;
-      InstallPackages;
       PublishPackages;
     </PublishDependsOn>
   </PropertyGroup>

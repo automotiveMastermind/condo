@@ -22,10 +22,10 @@
 
     <ReleaseMessage         Condition=" '$(ReleaseMessage)'         == '' ">chore(release): </ReleaseMessage>
 
-    <HeaderPartial          Condition=" '$(HeaderPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)header.hbs</HeaderPartial>
-    <FooterPartial          Condition=" '$(FooterPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)footer.hbs</FooterPartial>
-    <CommitPartial          Condition=" '$(CommitPartial)'          == '' ">$(MSBuildThisFileDirectory)$(slash)commit.hbs</CommitPartial>
-    <ChangeLogTemplate      Condition=" '$(ChangeLogTemplate)'      == '' ">$(MSBuildThisFileDirectory)$(slash)template.hbs</ChangeLogTemplate>
+    <HeaderPartial          Condition=" '$(HeaderPartial)'          == '' ">$(MSBuildThisFileDirectory)header.hbs</HeaderPartial>
+    <FooterPartial          Condition=" '$(FooterPartial)'          == '' ">$(MSBuildThisFileDirectory)footer.hbs</FooterPartial>
+    <CommitPartial          Condition=" '$(CommitPartial)'          == '' ">$(MSBuildThisFileDirectory)commit.hbs</CommitPartial>
+    <ChangeLogTemplate      Condition=" '$(ChangeLogTemplate)'      == '' ">$(MSBuildThisFileDirectory)template.hbs</ChangeLogTemplate>
 
     <GroupByHeader          Condition=" '$(GroupByHeader)'          == '' ">Type</GroupByHeader>
     <SortByHeader           Condition=" '$(SortByHeader)'           == '' ">Scope</SortByHeader>
