@@ -17,7 +17,7 @@ environment:
 install:
 - ps: Install-Product node lts
 build_script:
-- cmd: condo.cmd /t:publish
+- cmd: condo.cmd /t:ci /t:document
 test: off
 notifications:
 - provider: Webhook

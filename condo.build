@@ -25,9 +25,10 @@
   <Import Project="$(CondoTargetsPath)Goals.targets" />
 
   <PropertyGroup>
-    <AfterPublish>
+    <AfterDocument>
       $(AfterPublish);
+      CreateRelease;
       PublishGitHubPages;
-    </AfterPublish>
+    </AfterDocument>
   </PropertyGroup>
 </Project>
