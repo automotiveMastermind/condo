@@ -41,6 +41,17 @@ namespace AM.Condo.IO
         /// The current repository instance.
         /// </returns>
         IGitRepositoryInitialized Clone(string uri);
+
+        /// <summary>
+        /// Sets the configuration <paramref name="value"/> for the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        /// The key for the specified <paramref name="value"/>.
+        /// </param>
+        /// <param name="value">
+        /// The value to set for the specified <paramref name="key"/>.
+        /// </param>
+        void GlobalConfig(string key, string value);
         #endregion
     }
 }

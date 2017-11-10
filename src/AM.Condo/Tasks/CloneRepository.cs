@@ -25,6 +25,12 @@ namespace AM.Condo.Tasks
         /// Gets or sets the root of the repository.
         /// </summary>
         [Required]
+        public string RepositoryRoot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the root of the repository for the clone.
+        /// </summary>
+        [Required]
         public string CloneRoot { get; set; }
 
         /// <summary>
@@ -56,6 +62,19 @@ namespace AM.Condo.Tasks
             // create a new git repository factory
             var factory = new GitRepositoryFactory();
 
+            // define a variable to retain the authorization header
+            var authorization = default(string);
+
+            // create a logger
+            var logger = new CondoMSBuildLogger(this.Log);
+
+            // load the repository
+            using (var origin = factory.Load(this.RepositoryRoot, logger))
+            {
+                // get the authorization header if it exists
+                authorization = origin.Authorization;
+            }
+
             try
             {
                 // determine if the name is specified
@@ -72,8 +91,11 @@ namespace AM.Condo.Tasks
                     Directory.CreateDirectory(this.CloneRoot);
                 }
 
-                // clone the repository
-                var repository = factory.Clone(this.CloneRoot, this.RemoteUri);
+                // clone the repository using the remote with authorization
+                var repository = factory.Clone(this.CloneRoot, this.RemoteUri, authorization, logger);
+
+                // pull the remote
+                repository.Pull(all: true);
 
                 // determine if the checkout is set
                 if (!string.IsNullOrEmpty(this.Checkout))
@@ -83,7 +105,11 @@ namespace AM.Condo.Tasks
                 }
 
                 // log a message
-                this.Log.LogMessage(MessageImportance.High, $"Cloned repository: {this.RemoteUri} to {this.CloneRoot}.");
+                this.Log.LogMessage
+                    (
+                        MessageImportance.High,
+                        $"Cloned repository: {repository.OriginUri}:{repository.CurrentBranch} to {repository.RepositoryPath}."
+                    );
             }
             catch (Exception netEx)
             {

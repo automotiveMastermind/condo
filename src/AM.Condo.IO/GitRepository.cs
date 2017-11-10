@@ -129,7 +129,8 @@ namespace AM.Condo.IO
 
             set
             {
-                this.Config($"http.{this.OriginUri}.extraheader", value);
+                // set the config value
+                this.GlobalConfig($"http.{this.OriginUri}.extraheader", value);
             }
         }
         #endregion
@@ -431,14 +432,14 @@ namespace AM.Condo.IO
             }
 
             // set the gitflow options
-            this.Execute($"config --local gitflow.branch.master ${options.ProductionReleaseBranch}");
-            this.Execute($"config --local gitflow.branch.develop ${options.NextReleaseBranch}");
-            this.Execute($"config --local gitflow.prefix.feature ${options.FeatureBranchPrefix}/");
-            this.Execute($"config --local gitflow.branch.bugfix ${options.BugfixBranchPrefix}/");
-            this.Execute($"config --local gitflow.branch.release ${options.ReleaseBranchPrefix}/");
-            this.Execute($"config --local gitflow.branch.hotfix ${options.HotfixBranchPrefix}/");
-            this.Execute($"config --local gitflow.branch.support ${options.SupportBranchPrefix}/");
-            this.Execute($"config --local gitflow.branch.versiontag ${options.VersionTagPrefix}");
+            this.Config("gitflow.branch.master", options.ProductionReleaseBranch);
+            this.Config("gitflow.branch.develop", options.NextReleaseBranch);
+            this.Config("gitflow.prefix.feature", $"{options.FeatureBranchPrefix}/");
+            this.Config("gitflow.prefix.bugfix", $"{options.BugfixBranchPrefix}/");
+            this.Config("gitflow.prefix.release", $"{options.ReleaseBranchPrefix}/");
+            this.Config("gitflow.prefix.hotfix", $"{options.HotfixBranchPrefix}/");
+            this.Config("gitflow.prefix.support", $"{options.SupportBranchPrefix}/");
+            this.Config("gitflow.prefix.versiontag", $"{options.VersionTagPrefix}/");
 
             // return self
             return this;
@@ -539,13 +540,33 @@ namespace AM.Condo.IO
         }
 
         /// <inheritdoc />
-        public void Config(string key, string value)
+        public void GlobalConfig(string key, string value)
         {
+            // determine if the value is not set
+            var unset = string.IsNullOrEmpty(value);
+
             // create the command
-            var cmd = $@"config --replace-all {key} ""{value}""";
+            var cmd = unset
+                ? $"config --global --unset-all {key}"
+                : $@"config --global --replace-all {key} ""{value}""";
 
             // execute the command
-            this.Execute(cmd, throwOnError: true);
+            this.Execute(cmd, throwOnError: !unset);
+        }
+
+        /// <inheritdoc />
+        public void Config(string key, string value)
+        {
+            // determine if the value is not set
+            var unset = string.IsNullOrEmpty(value);
+
+            // create the command
+            var cmd = unset
+                ? $"config --unset-all {key}"
+                : $@"config --replace-all {key} ""{value}""";
+
+            // execute the command
+            this.Execute(cmd, throwOnError: !unset);
         }
 
         private static IEnumerable<IList<string>> GetCommits(IEnumerable<string> lines)

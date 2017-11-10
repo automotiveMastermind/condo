@@ -24,13 +24,16 @@ namespace AM.Condo.IO
         /// <param name="uri">
         /// The URI of the git repository that should be cloned.
         /// </param>
+        /// <param name="authorization">
+        /// The authorization header to use for access the repository.
+        /// </param>
         /// <param name="logger">
         /// The logger to use with the repository.
         /// </param>
         /// <returns>
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
-        IGitRepositoryInitialized Clone(IPathManager path, string uri, ILogger logger);
+        IGitRepositoryInitialized Clone(IPathManager path, string uri, string authorization, ILogger logger);
 
         /// <summary>
         /// Initializes a new bare repository.

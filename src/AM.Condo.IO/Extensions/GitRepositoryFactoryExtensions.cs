@@ -38,6 +38,24 @@ namespace AM.Condo.IO
         /// <param name="factory">
         /// The factory used to initialize a new repository.
         /// </param>
+        /// <param name="path">
+        /// The path in which to initialize the repository.
+        /// </param>
+        /// <returns>
+        /// A newly initialized git repository.
+        /// </returns>
+        public static IGitRepositoryInitialized Initialize(this IGitRepositoryFactory factory, string path)
+        {
+            // initialize using the path and no-op logger
+            return factory.Initialize(path, NoOpLogger);
+        }
+
+        /// <summary>
+        /// Initializes a new git repository.
+        /// </summary>
+        /// <param name="factory">
+        /// The factory used to initialize a new repository.
+        /// </param>
         /// <param name="logger">
         /// The logger used by the repository.
         /// </param>
@@ -46,7 +64,30 @@ namespace AM.Condo.IO
         /// </returns>
         public static IGitRepositoryInitialized Initialize(this IGitRepositoryFactory factory, ILogger logger)
         {
+            // initialize using a temporary path
             return factory.Initialize(new TemporaryPath(), logger);
+        }
+
+        /// <summary>
+        /// Initializes a new git repository.
+        /// </summary>
+        /// <param name="factory">
+        /// The factory used to initialize a new repository.
+        /// </param>
+        /// <param name="path">
+        /// The path in which to initialize the repository.
+        /// </param>
+        /// <param name="logger">
+        /// The logger used by the repository.
+        /// </param>
+        /// <returns>
+        /// A newly initialized git repository.
+        /// </returns>
+        public static IGitRepositoryInitialized Initialize
+            (this IGitRepositoryFactory factory, string path, ILogger logger)
+        {
+            // use the specified path
+            return factory.Initialize(new PathManager(path), logger);
         }
 
         /// <summary>
@@ -96,7 +137,30 @@ namespace AM.Condo.IO
         public static IGitRepositoryInitialized Clone(this IGitRepositoryFactory factory, string uri)
         {
             // clone the git repository
-            return factory.Clone(uri, NoOpLogger);
+            return factory.Clone(new TemporaryPath(), uri, authorization: null, logger: NoOpLogger);
+        }
+
+        /// <summary>
+        /// Creates a new git repository instance after cloning the repository from the specified
+        /// <paramref name="uri"/>.
+        /// </summary>
+        /// <param name="factory">
+        /// The current factory instance.
+        /// </param>
+        /// <param name="uri">
+        /// The URI of the git repository that should be cloned.
+        /// </param>
+        /// <param name="authorization">
+        /// The authorization header to use when accessing the remote uri.
+        /// </param>
+        /// <returns>
+        /// A new git repository instance that is tracking a cloned repository.
+        /// </returns>
+        public static IGitRepositoryInitialized Clone
+            (this IGitRepositoryFactory factory, string uri, string authorization)
+        {
+            // clone the git repository
+            return factory.Clone(new TemporaryPath(), uri, authorization, NoOpLogger);
         }
 
         /// <summary>
@@ -118,7 +182,33 @@ namespace AM.Condo.IO
         public static IGitRepositoryInitialized Clone(this IGitRepositoryFactory factory, string uri, ILogger logger)
         {
             // clone the git repository
-            return factory.Clone(new TemporaryPath(), uri, logger);
+            return factory.Clone(new TemporaryPath(), uri, authorization: null, logger: logger);
+        }
+
+        /// <summary>
+        /// Creates a new git repository instance after cloning the repository from the specified
+        /// <paramref name="uri"/>.
+        /// </summary>
+        /// <param name="factory">
+        /// The current factory instance.
+        /// </param>
+        /// <param name="uri">
+        /// The URI of the git repository that should be cloned.
+        /// </param>
+        /// <param name="authorization">
+        /// The authorization header to use when accessing the remote uri.
+        /// </param>
+        /// <param name="logger">
+        /// The logger used by the repository.
+        /// </param>
+        /// <returns>
+        /// A new git repository instance that is tracking a cloned repository.
+        /// </returns>
+        public static IGitRepositoryInitialized Clone
+            (this IGitRepositoryFactory factory, string uri, string authorization, ILogger logger)
+        {
+            // clone the git repository
+            return factory.Clone(new TemporaryPath(), uri, authorization, logger);
         }
 
         /// <summary>
@@ -172,13 +262,17 @@ namespace AM.Condo.IO
         /// <param name="uri">
         /// The URI of the git repository that should be cloned.
         /// </param>
+        /// <param name="authorization">
+        /// The authorization header to use when accessing the remote uri.
+        /// </param>
         /// <returns>
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
-        public static IGitRepositoryInitialized Clone(this IGitRepositoryFactory factory, string path, string uri)
+        public static IGitRepositoryInitialized Clone
+            (this IGitRepositoryFactory factory, string path, string uri, string authorization)
         {
             // clone the git repository
-            return factory.Clone(path, uri, NoOpLogger);
+            return factory.Clone(new PathManager(path), uri, authorization, NoOpLogger);
         }
 
         /// <summary>
@@ -194,6 +288,9 @@ namespace AM.Condo.IO
         /// <param name="uri">
         /// The URI of the git repository that should be cloned.
         /// </param>
+        /// <param name="authorization">
+        /// The authorization header to use when accessing the remote uri.
+        /// </param>
         /// <param name="logger">
         /// The logger used by the repository.
         /// </param>
@@ -201,10 +298,10 @@ namespace AM.Condo.IO
         /// A new git repository instance that is tracking a cloned repository.
         /// </returns>
         public static IGitRepositoryInitialized Clone
-            (this IGitRepositoryFactory factory, string path, string uri, ILogger logger)
+            (this IGitRepositoryFactory factory, string path, string uri, string authorization, ILogger logger)
         {
             // clone the git repository
-            return factory.Clone(new PathManager(path), uri, logger);
+            return factory.Clone(new PathManager(path), uri, authorization, logger);
         }
         #endregion
     }
