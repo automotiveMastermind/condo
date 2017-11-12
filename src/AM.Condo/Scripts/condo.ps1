@@ -18,6 +18,10 @@ Param (
     [pscredential]
     $Credential,
 
+    [Parameter()]
+    [string]
+    $DockerDaemon = "linux",
+
     [Parameter(ValueFromRemainingArguments)]
     [string[]]
     $MSBuildArgs
@@ -162,6 +166,8 @@ function Install-DotNet() {
         return
     }
 
+    Write-Info "Starting installation of dotnet SDK..."
+
     $dotnetTemp = Join-Path ([System.IO.Path]::GetTempPath()) $([System.IO.Path]::GetRandomFileName())
     $dotnetInstall = Join-Path $dotnetTemp "dotnet-install.ps1"
 
@@ -169,7 +175,7 @@ function Install-DotNet() {
         New-Item $dotnetTemp -ItemType Directory > $null
         Get-File -url $dotnetUrl -Path $dotnetInstall
         foreach ($dotnetVersion in $dotnetVersions) {
-            Invoke-Cmd "$dotnetInstall" -Version $dotnetVersion
+            Invoke-Cmd "$dotnetInstall" -Version $dotnetVersion | Out-Null
         }
     }
     finally {
