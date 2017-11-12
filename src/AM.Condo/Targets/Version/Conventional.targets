@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)$(slash)changelog.md</ChangeLogInitialize>
+    <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)changelog.md</ChangeLogInitialize>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CONDO_PUSH_COMMITS)</AllowPushCommits>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">true</AllowPushCommits>
     <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">$(CONDO_PRINT_COMMITS)</PrintIncludedCommits>
@@ -13,7 +13,7 @@
   <PropertyGroup Condition=" '$(ConventionStrategyTargets)' == '' ">
     <ConventionStrategy Condition=" '$(ConventionStrategy)' == '' ">Angular</ConventionStrategy>
 
-    <ConventionStrategyTargets>$(MSBuildThisFileDirectory)$(slash)$(ConventionStrategy)$(slash)presets.targets</ConventionStrategyTargets>
+    <ConventionStrategyTargets>$(MSBuildThisFileDirectory)$(ConventionStrategy)$(slash)presets.targets</ConventionStrategyTargets>
   </PropertyGroup>
 
   <!-- import the convention strategy -->
@@ -103,7 +103,6 @@
       GetCommitInfo;
       PrintCommits;
       RecommendVersion;
-      CheckoutReleaseBranch;
     </BeforeVersion>
 
     <VersionDependsOn>
@@ -111,6 +110,11 @@
       SaveAssemblyInfo;
       $(VersionDependsOn);
     </VersionDependsOn>
+
+    <AfterVersion>
+      $(AfterVersion);
+      CheckoutReleaseBranch;
+    </AfterVersion>
 
     <AfterPublish>
       $(AfterPublish);
