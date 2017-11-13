@@ -25,7 +25,7 @@ namespace AM.Condo.IO
         /// The URI of the git repository that should be cloned.
         /// </param>
         /// <param name="authorization">
-        /// The authorization header to use for access the repository.
+        /// The authorization header to use for accessing the repository.
         /// </param>
         /// <param name="logger">
         /// The logger to use with the repository.
