@@ -18,10 +18,6 @@ Param (
     [pscredential]
     $Credential,
 
-    [Parameter()]
-    [string]
-    $DockerDaemon = "linux",
-
     [Parameter(ValueFromRemainingArguments)]
     [string[]]
     $MSBuildArgs
