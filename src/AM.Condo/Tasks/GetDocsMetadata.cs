@@ -34,6 +34,11 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Required]
         public string DocsRoot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the product.
+        /// </summary>
+        public string Product { get; set; }
         #endregion
 
         #region Methods
@@ -83,7 +88,7 @@ namespace AM.Condo.Tasks
             if (string.Equals(projectName, group, StringComparison.OrdinalIgnoreCase))
             {
                 // get the file name of the parent as the project name
-                projectName = Path.GetFileName(parent);
+                projectName = string.IsNullOrEmpty(this.Product) ? Path.GetFileName(parent) : this.Product;
             }
 
             // lower the project name

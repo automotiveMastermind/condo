@@ -15,10 +15,20 @@ namespace AM.Condo.IO
     {
         #region Methods
         /// <inheritdoc />
-        public IGitRepositoryInitialized Clone(IPathManager path, string uri, ILogger logger)
+        public IGitRepositoryInitialized Clone(IPathManager path, string uri, string authorization, ILogger logger)
         {
-            // clone the git repository
-            return new GitRepository(path, logger).Clone(uri);
+            // initialize the repository on the given path
+            var repository = new GitRepository(path, logger);
+
+            // determine if the authorization is specified
+            if (!string.IsNullOrEmpty(authorization))
+            {
+                // set the authorization
+                repository.GlobalConfig($"http.{uri}.extraheader", authorization);
+            }
+
+            // clone the repository
+            return repository.Clone(uri);
         }
 
         /// <inheritdoc />

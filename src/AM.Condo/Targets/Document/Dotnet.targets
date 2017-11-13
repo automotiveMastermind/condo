@@ -15,7 +15,7 @@
       <DocFxProjects Include="$(RepositoryRoot)**$(slash)docfx.json" />
     </ItemGroup>
 
-    <GetDocsMetadata Projects="@(DocFxProjects)" DocsRoot="$(DocsRoot)">
+    <GetDocsMetadata Projects="@(DocFxProjects)" DocsRoot="$(DocsRoot)" Product="$(Product)">
       <Output TaskParameter="Projects" ItemName="DocFxMetadata" />
     </GetDocsMetadata>
 

@@ -91,18 +91,11 @@ namespace AM.Condo.Tasks
             }
 
             // clone the repository to a temporary path
-            using (var repository = factory.Clone(this.RepositoryUri, logger))
+            using (var repository = factory.Clone(this.RepositoryUri, authorization, logger))
             {
                 // set the username and email
                 repository.Username = this.AuthorName;
                 repository.Email = this.AuthorEmail;
-
-                // determine if an authorization header is available
-                if (!string.IsNullOrEmpty(authorization))
-                {
-                    // set the authorization header
-                    repository.Authorization = authorization;
-                }
 
                 // checkout the doc branch and remove all existing files
                 repository.Checkout(this.Branch).Remove(".", recursive: true);

@@ -125,7 +125,7 @@
 
     <Message Importance="High"
              Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
-             Condition=" '$(BuildHost)' == 'tfs' " />
+             Condition=" '$(BuildHost)' == 'VSTS' " />
   </Target>
 
   <Target Name="SetVersionVariables" Condition=" $(SetVersionVariables) ">
