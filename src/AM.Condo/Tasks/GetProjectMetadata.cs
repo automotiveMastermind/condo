@@ -206,7 +206,7 @@ namespace AM.Condo.Tasks
             }
             catch (InvalidProjectFileException buildEx)
             {
-                // log the eception as an error
+                // log the exception as an error
                 this.Log.LogErrorFromException(buildEx, showStackTrace: true, showDetail: true, file: path);
 
                 // move on immediately
