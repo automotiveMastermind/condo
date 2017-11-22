@@ -6,9 +6,11 @@
 
 namespace AM.Condo
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
 
+    using Microsoft.Build.Evaluation;
     using Microsoft.Build.Framework;
 
     /// <summary>
@@ -19,7 +21,7 @@ namespace AM.Condo
         #region Methods
         /// <summary>
         /// Sets the metadata on the specified <paramref name="item"/> for property with the specified
-        /// <paramref name="name"/> if the value exists within the specified <paramref name="xml"/>.
+        /// <paramref name="name"/> if the value exists within the specified <paramref name="properties"/>.
         /// </summary>
         /// <param name="item">
         /// The item in which to set the metadata.
@@ -27,13 +29,13 @@ namespace AM.Condo
         /// <param name="name">
         /// The name of the property to set.
         /// </param>
-        /// <param name="xml">
-        /// The XML that may or may not contain a property with the specified <paramref name="name"/>.
+        /// <param name="properties">
+        /// The collection of <see cref="ProjectProperty"/> properties from which to retrieve the evaluated value.
         /// </param>
-        public static void SetProperty(this ITaskItem item, string name, XDocument xml)
+        public static void SetProperty(this ITaskItem item, string name, ICollection<ProjectProperty> properties)
         {
-            // parse the value from the xml
-            var value = xml.Descendants(name).FirstOrDefault()?.Value;
+            // attempt to get the evaluated value for the specified name
+            var value = properties.GetEvaluatedValue(name);
 
             // determine if the value exists
             if (!string.IsNullOrEmpty(value))
