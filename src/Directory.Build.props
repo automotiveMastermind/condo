@@ -1,7 +1,6 @@
 <Project>
 
   <PropertyGroup>
-    <TargetFramework Condition=" '$(TargetFramework)' == '' AND '$(TargetFrameworks)' == '' ">netstandard2.0</TargetFramework>
     <DebugType>portable</DebugType>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
