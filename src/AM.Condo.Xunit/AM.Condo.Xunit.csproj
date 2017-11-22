@@ -2,16 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <DebugType>portable</DebugType>
-    <CodeAnalysisRuleSet>../../stylecop.ruleset</CodeAnalysisRuleSet>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="../../stylecop.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Diagnostics.Process" Version="[4.3.0, 5.0.0)" />
@@ -19,13 +11,6 @@
     <PackageReference Include="System.Threading.Thread" Version="[4.3.0, 5.0.0)" />
     <PackageReference Include="xunit" Version="[2.3.1, 3.0.0)" />
 
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.2, 2.0.0)">
-        <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
 
 </Project>

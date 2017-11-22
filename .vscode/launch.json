@@ -8,7 +8,7 @@
       "processId": "${command:pickProcess}",
       "requireExactSource": false,
       "sourceFileMap": {
-        "~/.am/condo/.src/**": "${workspaceRoot}/**"
+        "~/.am/condo/.src": "${workspaceRoot}"
       }
     }
   ]

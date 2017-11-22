@@ -10,9 +10,10 @@ namespace AM.Condo.Tasks
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Xml;
-    using System.Xml.Linq;
 
+    using Microsoft.Build.Construction;
+    using Microsoft.Build.Evaluation;
+    using Microsoft.Build.Exceptions;
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
@@ -107,13 +108,13 @@ namespace AM.Condo.Tasks
             return true;
         }
 
-        private void SetMetadata(ITaskItem project)
+        private void SetMetadata(ITaskItem item)
         {
             // get the full path of the project file
-            var path = project.GetMetadata("FullPath");
+            var path = item.GetMetadata("FullPath");
 
             // get the file name
-            var file = project.GetMetadata("FileName");
+            var file = item.GetMetadata("FileName");
 
             // get the directory name from the path
             var directory = Path.GetDirectoryName(path);
@@ -155,104 +156,111 @@ namespace AM.Condo.Tasks
             projectName = projectName.ToLower();
 
             // set the project directory path
-            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
+            item.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
 
             // set the project group
-            project.SetMetadata("ProjectGroup", group);
+            item.SetMetadata("ProjectGroup", group);
 
             // set the name of the project based on the name of the csproj
-            project.SetMetadata("ProjectName", projectName);
+            item.SetMetadata("ProjectName", projectName);
 
             // determine if the project is not an msbuild project
             if (!msbuild)
             {
                 // add the project to the output
-                this.projects.Add(project);
+                this.projects.Add(item);
 
                 // move on immediately
                 return;
             }
 
             // set the description
-            project.SetMetadata("Description", Path.Combine(group, projectName));
+            item.SetMetadata("Description", Path.Combine(group, projectName));
 
             // get the root output path
             var root = Path.Combine(directory, "obj", "docker", "publish");
 
             // set the shared sources directory
-            project.SetMetadata("SharedSourcesDir", Path.Combine(parent, "shared") + Path.DirectorySeparatorChar);
+            item.SetMetadata("SharedSourcesDir", Path.Combine(parent, "shared") + Path.DirectorySeparatorChar);
 
             // set the condo assembly info path
-            project.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
+            item.SetMetadata("CondoAssemblyInfo", Path.Combine(directory, "Properties", "Condo.AssemblyInfo.cs"));
 
             // create the targets
             var targets = new List<string>();
 
-            // determine if restore is enabled
-            if (this.Restore)
-            {
-                // set the is restorable bit
-                project.SetMetadata("IsRestorable", true.ToString());
-            }
+            // set the restore and build properties
+            item.SetMetadata("IsRestorable", this.Restore.ToString());
+            item.SetMetadata("IsBuildable", this.Build.ToString());
 
-            // determine if build is enabled
-            if (this.Build)
-            {
-                // set the is buildable bit
-                project.SetMetadata("IsBuildable", true.ToString());
-            }
+            // create a project collection
+            var collection = new ProjectCollection();
 
-            // create the xml variable
-            var xml = default(XDocument);
+            // define a variable to retain the project
+            var project = default(Project);
 
             try
             {
-                // parse the file
-                xml = XDocument.Load(path);
+                // attempt to load the project
+                project = new Project(path, null, null, collection);
             }
-            catch (XmlException xmlEx)
+            catch (InvalidProjectFileException buildEx)
             {
-                // log the eception as an error
-                this.Log.LogErrorFromException(xmlEx, showStackTrace: true, showDetail: true, file: path);
+                // log the exception as an error
+                this.Log.LogErrorFromException(buildEx, showStackTrace: true, showDetail: true, file: path);
 
                 // move on immediately
                 return;
             }
 
-            // get the output type (default to library)
-            var output = xml.Descendants("OutputType").FirstOrDefault()?.Value.ToLower() ?? "library";
+            // capture all of the project properties
+            var properties = project.AllEvaluatedProperties;
+
+            // get the output type
+            var output = properties.GetEvaluatedValue("OutputType") ?? "library";
 
             // set the output type
-            project.SetMetadata("OutputType", output);
+            item.SetMetadata("OutputType", output);
 
             // set publish and pack to false
-            project.SetMetadata("IsBuildable", this.Build.ToString());
-            project.SetMetadata("IsRestorable", this.Restore.ToString());
-            project.SetMetadata("IsPublishable", false.ToString());
-            project.SetMetadata("IsPackable", false.ToString());
-            project.SetMetadata("IsTestable", false.ToString());
-            project.SetMetadata("SelfContained", false.ToString());
+            item.SetMetadata("IsPublishable", false.ToString());
+            item.SetMetadata("IsPackable", false.ToString());
+            item.SetMetadata("IsTestable", false.ToString());
+            item.SetMetadata("SelfContained", false.ToString());
 
-            // get the target framework node
-            var frameworks = xml.Descendants("TargetFramework").Union(xml.Descendants("TargetFrameworks"))
-                .Distinct()
-                .SelectMany(node => node.Value.Split(';'))
-                .OrderByDescending(name => name);
+            // initialize the frameworks
+            var frameworks = new List<string>();
 
-            // determine if the frameworks node did not exist
-            if (frameworks == null || !frameworks.Any())
+            // attempt to get the vanilla target framework moniker
+            if (properties.TryGetEvaluatedValue("TargetFramework", out string tfm))
+            {
+                // add the tfm to the frameworks
+                frameworks.Add(tfm);
+            }
+
+            // attempt to get the target framework list
+            if (properties.TryGetEvaluatedValue("TargetFrameworks", out string tfms))
+            {
+                // add the tfms to the frameworks
+                frameworks.AddRange(tfms.Split(';'));
+            }
+
+            // determine if at least one framework exists
+            if (!frameworks.Any())
             {
                 // add the project to the output
-                this.projects.Add(project);
+                this.projects.Add(item);
 
                 // move on immediately
                 return;
             }
+
+            // order the frameworks
+            frameworks = frameworks.Distinct().OrderByDescending(name => name).ToList();
 
             // determine if the project is publishable
             var publishable = frameworks
-                .Where(name => !name.StartsWith("netstandard", StringComparison.CurrentCultureIgnoreCase))
-                .Any(name => name.StartsWith("net", StringComparison.OrdinalIgnoreCase));
+                .Any(name => name.StartsWith("netcore", StringComparison.OrdinalIgnoreCase));
 
             // determine if the project is a library
             var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
@@ -263,16 +271,15 @@ namespace AM.Condo.Tasks
                 // set the publish to true
                 if (this.Publish)
                 {
-                    project.SetMetadata("IsPublishable", (!library).ToString());
-                    project.SetMetadata("IsPublishable", publishable.ToString());
-                    project.SetProperty("IsPublishable", xml);
+                    item.SetMetadata("IsPublishable", publishable.ToString());
+                    item.SetProperty("IsPublishable", properties);
                 }
 
                 // set the pack to true
                 if (this.Pack)
                 {
-                    project.SetMetadata("IsPackable", library.ToString());
-                    project.SetProperty("IsPackable", xml);
+                    item.SetMetadata("IsPackable", library.ToString());
+                    item.SetProperty("IsPackable", properties);
                 }
             }
 
@@ -280,24 +287,38 @@ namespace AM.Condo.Tasks
             if (this.Test && string.Equals(group, nameof(this.Test), StringComparison.OrdinalIgnoreCase))
             {
                 // set the default publish and pack
-                project.SetMetadata("IsTestable", true.ToString());
-                project.SetProperty("IsTestable", xml);
+                item.SetMetadata("IsTestable", true.ToString());
+                item.SetProperty("IsTestable", properties);
             }
 
-            // get the target framework node
-            var rids = xml.Descendants("RuntimeIdentifier").Union(xml.Descendants("RuntimeIdentifiers"))
-                .Distinct()
-                .SelectMany(node => node.Value.Split(';'))
-                .OrderByDescending(name => name);
+            // create a runtime identifiers list
+            var runtimeIdentifiers = new List<string>();
+
+            // try to get the vanilla runtime identifier
+            if (properties.TryGetEvaluatedValue("RuntimeIdentifier", out string rid))
+            {
+                // add the rid to the runtime identifiers
+                runtimeIdentifiers.Add(rid);
+            }
+
+            // try to get the runtime identifiers list
+            if (properties.TryGetEvaluatedValue("RuntimeIdentifiers", out string rids))
+            {
+                // add the range of rids
+                runtimeIdentifiers.AddRange(rids.Split(';'));
+            }
+
+            // order the runtime identifiers
+            runtimeIdentifiers = runtimeIdentifiers.Distinct().OrderByDescending(name => name).ToList();
 
             // iterate over each framework
             foreach (var framework in frameworks)
             {
                 // create a new project
-                var any = new TaskItem(project.ItemSpec);
+                var any = new TaskItem(item.ItemSpec);
 
                 // copy metadata from the project
-                project.CopyMetadataTo(any);
+                item.CopyMetadataTo(any);
 
                 // update the description
                 any.SetMetadata("Description", Path.Combine(group, projectName, framework));
@@ -312,35 +333,35 @@ namespace AM.Condo.Tasks
                 any.SetMetadata("TestLogFileName", string.Join('.', file, framework, "dotnet"));
 
                 // iterate over each runtime identifier
-                foreach (var rid in rids)
+                foreach (var runtimeIdentifier in runtimeIdentifiers)
                 {
                     // create the publish path
-                    var publish = Path.Combine(root, framework, rid);
+                    var publish = Path.Combine(root, framework, runtimeIdentifier);
 
                     // create the publish directory
                     Directory.CreateDirectory(publish);
 
                     // create a self contained project
-                    var contained = new TaskItem(project.ItemSpec);
+                    var contained = new TaskItem(item.ItemSpec);
 
                     // copy the metadata
                     any.CopyMetadataTo(contained);
 
                     // update the description
-                    any.SetMetadata("Description", Path.Combine(group, projectName, framework, rid));
+                    any.SetMetadata("Description", Path.Combine(group, projectName, framework, runtimeIdentifier));
 
                     // add the project to the project collection
                     this.projects.Add(contained);
 
                     // update the target framework and runtime identifier
-                    contained.SetMetadata("RuntimeIdentifier", rid);
+                    contained.SetMetadata("RuntimeIdentifier", runtimeIdentifier);
                     contained.SetMetadata("IsRestorable", false.ToString());
                     contained.SetMetadata("IsBuildable", false.ToString());
                     contained.SetMetadata("SelfContained", true.ToString());
 
                     // set the output path
-                    contained.SetMetadata("OutputPath", Path.Combine(root, framework, rid) + Path.DirectorySeparatorChar);
-                    contained.SetMetadata("TestLogFileName", string.Join('.', file, framework, rid));
+                    contained.SetMetadata("OutputPath", Path.Combine(root, framework, runtimeIdentifier) + Path.DirectorySeparatorChar);
+                    contained.SetMetadata("TestLogFileName", string.Join('.', file, framework, runtimeIdentifier));
                 }
             }
         }

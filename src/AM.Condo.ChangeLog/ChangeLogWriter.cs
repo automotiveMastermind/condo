@@ -12,6 +12,7 @@ namespace AM.Condo.ChangeLog
     using System.Linq;
 
     using AM.Condo.IO;
+
     using HandlebarsDotNet;
     using NuGet.Versioning;
 

@@ -24,7 +24,7 @@
       <BowerInstall Condition=" '$(BowerInstall)' == '' ">false</BowerInstall>
     </PropertyGroup>
 
-    <Warning Condition=" !$(HasBower) AND $(BowerRequired) "
+    <Warning Condition=" !$(HasBower) AND $(BowerRequired) AND $(NpmInstall)"
              Text="A bower.json file was located at: %(BowerJsonPaths.Identity), but the bower command or executable could not be found." />
 
     <GetProjectMetadata Projects="@(BowerJsonPaths)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
