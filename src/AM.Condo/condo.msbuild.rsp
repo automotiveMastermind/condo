@@ -1,0 +1,7 @@
+-nologo
+"/src/condo.build"
+-p:CondoPath="/condo/"
+-p:AmRoot="/condo/.build"
+-p:CondoTargetsPath="/condo/Targets"
+-p:CondoTasksPath="/condo/"
+-fl

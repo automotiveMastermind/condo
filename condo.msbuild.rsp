@@ -1,0 +1,3 @@
+-flp:LogFile="C:\Users\sjk\projects\opensource\condo/condo.msbuild.log";Encoding=UTF-8;Verbosity=normal
+-clp:DisableConsoleColor;Verbosity=normal
+System.String[]
