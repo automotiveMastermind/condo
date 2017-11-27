@@ -15,4 +15,4 @@ WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
 
 ENTRYPOINT [ "./docker.sh" ]
-CMD [ "condo", "/t:publish" ]
+CMD [ "condo", "--local", "--", "/t:publish" ]

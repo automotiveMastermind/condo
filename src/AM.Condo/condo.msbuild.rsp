@@ -1,7 +1,8 @@
 -nologo
-"/src/condo.build"
+"/target/condo.build"
 -p:CondoPath="/condo/"
 -p:AmRoot="/condo/.build"
--p:CondoTargetsPath="/condo/Targets"
 -p:CondoTasksPath="/condo/"
+-p:CondoTargetsPath="/condo/Targets/"
+-p:RepositoryRoot="/target/"
 -fl

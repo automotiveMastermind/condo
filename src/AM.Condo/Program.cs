@@ -28,8 +28,16 @@ namespace AM.Condo
         /// </returns>
         public static int Main(string[] args)
         {
+            // Defaults
             var condoVerbosity = "normal";
+            var condoColor = "DisableConsoleColor";
+            var condoSkipFrontend = string.Empty;
             string[] options = { };
+
+            // Build paths
+            var path = Directory.GetCurrentDirectory();
+            var buildSettingsPath = Path.Combine(path, "condo.msbuild.rsp");
+            var msbuildLog = Path.Combine(string.Empty, "/target/src/artifacts/log/condo.msbuild.log");
 
             // Test for arguments
             for (int i = 0; i < args.Length; i++)
@@ -42,31 +50,42 @@ namespace AM.Condo
                         i++;
                         condoVerbosity = args[i];
                         break;
+                    case "-c":
+                    case "--color":
+                        i++;
+                        condoColor = args[i];
+                        break;
+                    case "-l":
+                    case "--local":
+                        condoSkipFrontend = "/p:NpmInstall=false \n/p:BowerInstall=false \n/p:PolymerInstall=false \n";
+                        break;
                     case "--":
+                        i++;
                         options = args.Skip(i).ToArray();
                         break;
+                    default:
+                        throw new ArgumentException($"Unknown argument: {arg}");
                 }
             }
 
-            // Build paths
-            var path = Directory.GetCurrentDirectory();
-            var buildSettings = Path.Combine(path, "condo.msbuild.rsp");
-            var msbuildLog = Path.Combine(string.Empty, "/src/artifacts/log/condo.msbuild.log");
-
-            Console.WriteLine(path);
-            Console.WriteLine(buildSettings);
-            Console.WriteLine(msbuildLog);
-
-            // Append verbosity and additional options to msbuild script
-            using (var build = new StreamWriter(buildSettings, append: true))
+            // Get default build arguments from file
+            using (var build = new StreamWriter(buildSettingsPath))
             {
-                build.WriteLine($"-flp:LogFile=\"{msbuildLog}\";Encoding=UTF-8;Verbosity={condoVerbosity}");
-                build.WriteLine($"-clp:DisableConsoleColor;Verbosity={condoVerbosity}");
-                build.Write(options);
+                // Append args and options to build arguments
+                build.WriteLine($"-flp:LogFile=\"{msbuildLog}\";Encoding=UTF-8;Verbosity={condoVerbosity} \n");
+                build.WriteLine($"-clp:{condoColor};Verbosity={condoVerbosity} \n");
+                build.WriteLine(condoSkipFrontend);
+
+                foreach (var option in options)
+                {
+                    build.WriteLine(option);
+                }
             }
 
-            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: null, logger: new NoOpLogger());
-            var output = invoker.Execute($"msbuild {buildSettings}", throwOnError: true);
+            // Execute dotnet msbuild
+            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger());
+            var output = invoker.Execute($"@\"{buildSettingsPath}\"", throwOnError: true);
+
             return output.ExitCode;
         }
     }

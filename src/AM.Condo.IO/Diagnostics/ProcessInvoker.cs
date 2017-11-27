@@ -176,6 +176,7 @@ namespace AM.Condo.Diagnostics
                 // determine if we should throw
                 if (throwOnError)
                 {
+                    this.logger.LogMessage(output.Output, LogLevel.Low);
                     throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
                 }
             }
