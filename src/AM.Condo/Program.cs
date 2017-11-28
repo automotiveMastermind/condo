@@ -37,7 +37,7 @@ namespace AM.Condo
             // Build paths
             var path = Directory.GetCurrentDirectory();
             var buildSettingsPath = Path.Combine(path, "condo.msbuild.rsp");
-            var msbuildLog = Path.Combine(string.Empty, "/target/src/artifacts/log/condo.msbuild.log");
+            var msbuildLog = Path.Combine(string.Empty, "/target/artifacts/log/condo.msbuild.log");
 
             // Test for arguments
             for (int i = 0; i < args.Length; i++)
