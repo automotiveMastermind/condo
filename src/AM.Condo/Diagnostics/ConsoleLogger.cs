@@ -52,11 +52,6 @@ namespace AM.Condo.Diagnostics
                 throw new ArgumentNullException(nameof(message));
             }
 
-            if (message.Length == 0)
-            {
-                throw new ArgumentException($"The {nameof(message)} argument must not be empty.", nameof(message));
-            }
-
             Console.WriteLine($"{level}: {message}");
         }
 

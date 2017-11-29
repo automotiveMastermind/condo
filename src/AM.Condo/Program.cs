@@ -83,7 +83,7 @@ namespace AM.Condo
             }
 
             // Execute dotnet msbuild
-            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger());
+            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger(), realTimeOutput: true);
             var output = invoker.Execute($"@{buildSettingsPath}", throwOnError: true);
 
             return output.ExitCode;
