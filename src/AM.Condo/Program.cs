@@ -69,7 +69,7 @@ namespace AM.Condo
             }
 
             // Get default build arguments from file
-            using (var build = new StreamWriter(buildSettingsPath))
+            using (var build = new StreamWriter(buildSettingsPath, append: true))
             {
                 // Append args and options to build arguments
                 build.WriteLine($"-flp:LogFile=\"{msbuildLog}\";Encoding=UTF-8;Verbosity={condoVerbosity} \n");
@@ -84,7 +84,7 @@ namespace AM.Condo
 
             // Execute dotnet msbuild
             IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger());
-            var output = invoker.Execute($"@\"{buildSettingsPath}\"", throwOnError: true);
+            var output = invoker.Execute($"@{buildSettingsPath}", throwOnError: true);
 
             return output.ExitCode;
         }
