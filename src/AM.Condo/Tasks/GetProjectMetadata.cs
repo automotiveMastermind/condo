@@ -271,15 +271,13 @@ namespace AM.Condo.Tasks
                 // set the publish to true
                 if (this.Publish)
                 {
-                    item.SetMetadata("IsPublishable", publishable.ToString());
-                    item.SetProperty("IsPublishable", properties);
+                    item.SetMetadata("IsPublishable", properties, !library);
                 }
 
                 // set the pack to true
                 if (this.Pack)
                 {
-                    item.SetMetadata("IsPackable", library.ToString());
-                    item.SetProperty("IsPackable", properties);
+                    item.SetMetadata("IsPackable", properties, library);
                 }
             }
 
@@ -287,8 +285,7 @@ namespace AM.Condo.Tasks
             if (this.Test && string.Equals(group, nameof(this.Test), StringComparison.OrdinalIgnoreCase))
             {
                 // set the default publish and pack
-                item.SetMetadata("IsTestable", true.ToString());
-                item.SetProperty("IsTestable", properties);
+                item.SetMetadata("IsTestable", properties, true);
             }
 
             // create a runtime identifiers list
