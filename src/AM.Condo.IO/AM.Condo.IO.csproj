@@ -9,12 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.Process" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="System.IO.FileSystem" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="System.Net.NameResolution" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="System.Linq" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="[4.3.0, 5.0.0)" />
-    <PackageReference Include="NuGet.Versioning" Version="[4.4.0, 5.0.0)" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersion)" />
   </ItemGroup>
 
 </Project>

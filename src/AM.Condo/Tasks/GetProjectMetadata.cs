@@ -271,12 +271,21 @@ namespace AM.Condo.Tasks
                 // set the publish to true
                 if (this.Publish)
                 {
-                    item.SetMetadata("IsPublishable", properties, !library);
+                    // determine if the publish bit exists
+                    var hasPublish = properties.TryGetEvaluatedValue("IsPublishable", out string value);
+
+                    // determine if the value for publishing is true or did not exist
+                    if ((hasPublish && bool.TryParse(value, out bool result)) || !hasPublish)
+                    {
+                        // set the value based on whether or not the project is a library
+                        item.SetMetadata("IsPublishable", !library);
+                    }
                 }
 
-                // set the pack to true
+                // determine if packing is enabled
                 if (this.Pack)
                 {
+                    // set the packable bit based on whether or not the project is a library
                     item.SetMetadata("IsPackable", properties, library);
                 }
             }
