@@ -1,5 +1,7 @@
 <Project>
 
+  <Import Project="$(MSBuildThisFileDirectory)../build/dependencies.props" />
+
   <PropertyGroup>
     <DebugType>portable</DebugType>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
@@ -12,13 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="[1.0.2, 2.0.0)">
-        <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-
-    <PackageReference Include="JetBrains.Annotations" Version="[11.1.0, 12.0.0)">
-        <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

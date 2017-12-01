@@ -8,4 +8,9 @@
     <ProjectReference Include="../../src/AM.Condo/condo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="$(MSBuildVersion)" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MSBuildVersion)" />
+  </ItemGroup>
+
 </Project>
