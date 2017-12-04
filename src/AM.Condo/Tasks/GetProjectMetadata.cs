@@ -216,12 +216,6 @@ namespace AM.Condo.Tasks
             // capture all of the project properties
             var properties = project.AllEvaluatedProperties;
 
-            // get the output type
-            var output = properties.GetEvaluatedValue("OutputType") ?? "library";
-
-            // set the output type
-            item.SetMetadata("OutputType", output);
-
             // set publish and pack to false
             item.SetMetadata("IsPublishable", false.ToString());
             item.SetMetadata("IsPackable", false.ToString());
@@ -260,10 +254,7 @@ namespace AM.Condo.Tasks
 
             // determine if the project is publishable
             var publishable = frameworks
-                .Any(name => name.StartsWith("netcore", StringComparison.OrdinalIgnoreCase));
-
-            // determine if the project is a library
-            var library = output.Equals("library", StringComparison.OrdinalIgnoreCase);
+                .All(name => !name.StartsWith("netstandard", StringComparison.OrdinalIgnoreCase));
 
             // determine if the project is in the source group
             if (string.Equals(group, "src", StringComparison.OrdinalIgnoreCase))
@@ -275,10 +266,10 @@ namespace AM.Condo.Tasks
                     var hasPublish = properties.TryGetEvaluatedValue("IsPublishable", out string value);
 
                     // determine if the value for publishing is true or did not exist
-                    if ((hasPublish && bool.TryParse(value, out bool result)) || !hasPublish)
+                    if ((hasPublish && bool.TryParse(value, out bool result) && result) || !hasPublish)
                     {
                         // set the value based on whether or not the project is a library
-                        item.SetMetadata("IsPublishable", !library);
+                        item.SetMetadata("IsPublishable", publishable);
                     }
                 }
 
@@ -286,7 +277,7 @@ namespace AM.Condo.Tasks
                 if (this.Pack)
                 {
                     // set the packable bit based on whether or not the project is a library
-                    item.SetMetadata("IsPackable", properties, library);
+                    item.SetMetadata("IsPackable", properties, !publishable);
                 }
             }
 
