@@ -19,7 +19,7 @@ namespace AM.Condo.Diagnostics
     {
         #region Fields
         private readonly ILogger logger;
-        private readonly bool realTimeOutput = false;
+        private readonly bool isRealtime = false;
         #endregion
 
         #region Constructors and Finalizers
@@ -94,13 +94,13 @@ namespace AM.Condo.Diagnostics
         /// <param name="logger">
         /// The logger used for logging messages to output.
         /// </param>
-        /// <param name="realTimeLogging">
+        /// <param name="isRealtime">
         /// Specifies if logging will happen while the process is currently being executed.
         /// </param>
-        public ProcessInvoker(string workingDirectory, string rootCommand, string subCommand, ILogger logger, bool realTimeOutput)
+        public ProcessInvoker(string workingDirectory, string rootCommand, string subCommand, ILogger logger, bool isRealtime)
             : this(workingDirectory, rootCommand, subCommand, logger: logger)
         {
-            this.realTimeOutput = realTimeOutput;
+            this.isRealtime = isRealtime;
         }
 
         #endregion
@@ -140,7 +140,7 @@ namespace AM.Condo.Diagnostics
             {
                 if (args.Data != null)
                 {
-                    if (this.realTimeOutput)
+                    if (this.isRealtime)
                     {
                         this.logger.LogError(args.Data);
                     }
@@ -153,7 +153,7 @@ namespace AM.Condo.Diagnostics
             {
                 if (args.Data != null)
                 {
-                    if (this.realTimeOutput)
+                    if (this.isRealtime)
                     {
                         this.logger.LogMessage(args.Data, LogLevel.Normal);
                     }
@@ -211,7 +211,7 @@ namespace AM.Condo.Diagnostics
                 // determine if we should throw
                 if (throwOnError)
                 {
-                    if (!this.realTimeOutput)
+                    if (!this.isRealtime)
                     {
                         this.logger.LogMessage(output.Output, LogLevel.Low);
                     }
@@ -220,7 +220,7 @@ namespace AM.Condo.Diagnostics
             }
             else
             {
-                if (!this.realTimeOutput)
+                if (!this.isRealtime)
                 {
                     // log the output
                     this.logger.LogMessage(output.Output, LogLevel.Low);

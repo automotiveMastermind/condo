@@ -30,7 +30,7 @@ namespace AM.Condo
         {
             // Defaults
             var condoVerbosity = "normal";
-            var condoColor = "DisableConsoleColor";
+            var condoColor = string.Empty;
             var condoSkipFrontend = string.Empty;
             string[] options = { };
 
@@ -50,10 +50,9 @@ namespace AM.Condo
                         i++;
                         condoVerbosity = args[i];
                         break;
-                    case "-c":
-                    case "--color":
-                        i++;
-                        condoColor = args[i];
+                    case "-nc":
+                    case "--no-color":
+                        condoColor = "DisableConsoleColor";
                         break;
                     case "-l":
                     case "--local":
@@ -83,7 +82,7 @@ namespace AM.Condo
             }
 
             // Execute dotnet msbuild
-            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger(), realTimeOutput: true);
+            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger(), isRealtime: true);
             var output = invoker.Execute($"@{buildSettingsPath}", throwOnError: true);
 
             return output.ExitCode;

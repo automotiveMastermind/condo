@@ -52,7 +52,7 @@ namespace AM.Condo.Diagnostics
                 throw new ArgumentNullException(nameof(message));
             }
 
-            Console.WriteLine($"{level}: {message}");
+            Console.WriteLine($"{message}");
         }
 
         /// <inheritdoc />
