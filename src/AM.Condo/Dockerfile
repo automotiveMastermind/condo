@@ -30,7 +30,7 @@ RUN set -ex \
  && rm docker.tgz \
  && docker -v
 
-#Install docker-compose
+# Install docker-compose
 ENV DOCKER_COMPOSE_VERSION "1.17.1"
 
 RUN set -x \

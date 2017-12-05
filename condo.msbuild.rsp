@@ -1,8 +1,0 @@
--flp:LogFile="/target/src/artifacts/log/condo.msbuild.log";Encoding=UTF-8;Verbosity=normal 
-
--clp:DisableConsoleColor;Verbosity=normal 
-
-/p:NpmInstall=false 
-/p:BowerInstall=false 
-/p:PolymerInstall=false 
-
