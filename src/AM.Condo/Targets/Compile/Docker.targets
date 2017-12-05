@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="DockerBuild" Condition=" $(DockerBuild) ">
-    <Exec Command="docker build --label %(DockerMetadata.Label) --tag %(DockerMetadata.VersionLabel) ."
+    <Exec Command="docker build --label %(DockerMetadata.Label) --tag %(DockerMetadata.VersionLabel) -f %(DockerMetadata.Identity) ."
           WorkingDirectory="%(RootDir)%(Directory)" />
   </Target>
 

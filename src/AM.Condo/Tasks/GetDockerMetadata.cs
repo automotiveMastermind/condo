@@ -129,6 +129,16 @@ namespace AM.Condo.Tasks
             // calculate the label
             dockerName = dockerName.ToLower();
 
+            // get the extension (platform) of the dockerfile
+            var extension = Path.GetExtension(path);
+
+            // determine if the platform was specified
+            if (!string.IsNullOrEmpty(extension))
+            {
+                // strip the extension from the substring
+                dockerName = $"{dockerName}-{extension.Substring(1)}";
+            }
+
             // set the project name for docker
             dockerfile.SetMetadata("Label", dockerName);
 
@@ -177,41 +187,18 @@ namespace AM.Condo.Tasks
                 }
             }
 
-            // get the extension (platform) of the dockerfile
-            var extension = Path.GetExtension(path);
-
-            // determine if the platform is specified
-            var hasPlatform = !string.IsNullOrEmpty(extension);
-
-            // determine if the platform was specified
-            if (hasPlatform)
-            {
-                // strip the extension from the substring
-                extension = extension.Substring(1);
-            }
-
             // set the metadata for the docker tags
             dockerfile.SetMetadata("DockerTags", string.Join(";", tags.Select(tag => tag.Value)));
             dockerfile.SetMetadata("DockerLabels", string.Join(";", labels.Select(label => label.Value)));
 
-            // iterate over each tag
             foreach (var tag in tags)
             {
-                // append the platform to the tag
-                var value = hasPlatform ? $"{tag.Value}-{extension}" : tag.Value;
-
-                // set the metadata
-                dockerfile.SetMetadata(tag.Key, value);
+                dockerfile.SetMetadata(tag.Key, tag.Value);
             }
 
-            // iterate over each tag
             foreach (var label in labels)
             {
-                // append the platform to the tag
-                var value = hasPlatform ? $"{label.Value}-{extension}" : label.Value;
-
-                // set the metadata
-                dockerfile.SetMetadata(label.Key, value);
+                dockerfile.SetMetadata(label.Key, label.Value);
             }
         }
         #endregion
