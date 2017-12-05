@@ -20,10 +20,30 @@ RUN mkdir warmup \
     && rm -rf warmup \
     && rm -rf /tmp/NuGetScratch
 
+# Install docker
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION "17.09.0-ce"
+
+RUN set -ex \
+ && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
+ && tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin \
+ && rm docker.tgz \
+ && docker -v
+
+#Install docker-compose
+ENV DOCKER_COMPOSE_VERSION "1.17.1"
+
+RUN set -x \
+ && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
+ && chmod +x /usr/local/bin/docker-compose \
+ && docker-compose -v
+
+# Move condo into image
 ARG CONDO
 
 WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
 
+# Run condo
 ENTRYPOINT [ "./docker.sh" ]
-CMD [ "condo", "--local", "--", "/t:publish" ]
+CMD [ "condo", "--local", "--", "/t:ci" ]

@@ -12,6 +12,7 @@
     <LicenseUri>https://opensource.org/licenses/MIT</LicenseUri>
 
     <TestPurposeExclude>None</TestPurposeExclude>
+    <DockerEnableExtendedTags>true</DockerEnableExtendedTags>
   </PropertyGroup>
 
   <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(DotNetDocsGenerated) ">

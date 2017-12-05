@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <RuntimeIdentifiers>osx-x64;win-x64;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <OutputType>exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
