@@ -19,6 +19,7 @@ namespace AM.Condo.Diagnostics
     {
         #region Fields
         private readonly ILogger logger;
+        private readonly bool isRealtime = false;
         #endregion
 
         #region Constructors and Finalizers
@@ -77,6 +78,31 @@ namespace AM.Condo.Diagnostics
 
             this.SubCommand = subCommand;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProcessInvoker"/> class.
+        /// </summary>
+        /// <param name="workingDirectory">
+        /// The directory in which to invoke the process.
+        /// </param>
+        /// <param name="rootCommand">
+        /// The root command to invoke.
+        /// </param>
+        /// <param name="subCommand">
+        /// The subcommand to invoke.
+        /// </param>
+        /// <param name="logger">
+        /// The logger used for logging messages to output.
+        /// </param>
+        /// <param name="isRealtime">
+        /// Specifies if logging will happen while the process is currently being executed.
+        /// </param>
+        public ProcessInvoker(string workingDirectory, string rootCommand, string subCommand, ILogger logger, bool isRealtime)
+            : this(workingDirectory, rootCommand, subCommand, logger: logger)
+        {
+            this.isRealtime = isRealtime;
+        }
+
         #endregion
 
         #region Properties and Indexers
@@ -114,6 +140,11 @@ namespace AM.Condo.Diagnostics
             {
                 if (args.Data != null)
                 {
+                    if (this.isRealtime)
+                    {
+                        this.logger.LogError(args.Data);
+                    }
+
                     errorQueue.Enqueue(args.Data);
                 }
             };
@@ -122,6 +153,10 @@ namespace AM.Condo.Diagnostics
             {
                 if (args.Data != null)
                 {
+                    if (this.isRealtime)
+                    {
+                        this.logger.LogMessage(args.Data, LogLevel.Normal);
+                    }
                     outputQueue.Enqueue(args.Data);
                 }
             };
@@ -176,13 +211,20 @@ namespace AM.Condo.Diagnostics
                 // determine if we should throw
                 if (throwOnError)
                 {
+                    if (!this.isRealtime)
+                    {
+                        this.logger.LogMessage(output.Output, LogLevel.Low);
+                    }
                     throw new InvalidOperationException(string.Join(Environment.NewLine, output.Error));
                 }
             }
             else
             {
-                // log the output
-                this.logger.LogMessage(output.Output, LogLevel.Low);
+                if (!this.isRealtime)
+                {
+                    // log the output
+                    this.logger.LogMessage(output.Output, LogLevel.Low);
+                }
             }
 
             // return the output

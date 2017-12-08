@@ -1,11 +1,49 @@
-FROM microsoft/dotnet:2-sdk
+FROM microsoft/dotnet:1-sdk
 
+# Install .NET Core 2 SDK
+ENV DOTNET_SDK_VERSION 2.0.3
+ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz
+ENV DOTNET_SDK_DOWNLOAD_SHA 74A0741D4261D6769F29A5F1BA3E8FF44C79F17BBFED5E240C59C0AA104F92E93F5E76B1A262BDFAB3769F3366E33EA47603D9D725617A75CAD839274EBC5F2B
+
+RUN curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz \
+    && echo "$DOTNET_SDK_DOWNLOAD_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz
+
+# Trigger the population of the local package cache
+ENV NUGET_XMLDOC_MODE skip
+RUN mkdir warmup \
+    && cd warmup \
+    && dotnet new \
+    && cd .. \
+    && rm -rf warmup \
+    && rm -rf /tmp/NuGetScratch
+
+# Install docker
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION "17.09.0-ce"
+
+RUN set -ex \
+ && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
+ && tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin \
+ && rm docker.tgz \
+ && docker -v
+
+# Install docker-compose
+ENV DOCKER_COMPOSE_VERSION "1.17.1"
+
+RUN set -x \
+ && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
+ && chmod +x /usr/local/bin/docker-compose \
+ && docker-compose -v
+
+# Move condo into image
 ARG CONDO
-ARG SOURCE
+
 WORKDIR /condo
+COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
 
-COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64/} .
-
-WORKDIR /src
-
-ENTRYPOINT [ "./condo.sh", "--", "/t:publish" ]
+# Run condo
+ENTRYPOINT [ "./docker.sh" ]
+CMD [ "condo", "--local", "--", "/t:ci" ]
