@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  condo:
+    working_directory: /target
+    docker:
+      - image: automotivemastermind/condo:prerelease
+    steps:
+      - checkout
+      - run:
+          name: Run condo
+          command: 'cd /condo && docker.sh condo --local -- /t:ci'

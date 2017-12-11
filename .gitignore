@@ -59,3 +59,6 @@ _TeamCity*
 
 #vscode
 !.vscode/*
+
+#circleci
+!.circleci/*
