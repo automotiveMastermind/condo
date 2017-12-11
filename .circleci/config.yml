@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  condo:
+    working_directory: /target
+    docker:
+      - image: automotivemastermind/condo:latest
+    steps:
+      - checkout
+      - run:
+          name: Run condo
+          command: 'cd /condo && ./docker.sh condo --local -- /t:ci'
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+    - condo
+
