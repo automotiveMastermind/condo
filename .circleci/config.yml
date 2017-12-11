@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Run condo
-          command: 'cd /condo && docker.sh condo --local -- /t:ci'
+          command: 'cd /condo && ./docker.sh condo --local -- /t:ci'
 
 workflows:
   version: 2
