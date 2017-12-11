@@ -3,7 +3,7 @@ jobs:
   condo:
     working_directory: /target
     docker:
-      - image: automotivemastermind/condo:prerelease
+      - image: automotivemastermind/condo:latest
     steps:
       - checkout
       - run:
