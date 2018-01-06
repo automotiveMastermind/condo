@@ -7,14 +7,10 @@
 namespace AM.Condo.Tasks
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Xml.Linq;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
-    using NuGet.Versioning;
 
     /// <summary>
     /// Represents a Microsoft Build task used to set additional project metadata for documentation generation projects.

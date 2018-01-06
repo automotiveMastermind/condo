@@ -7,8 +7,6 @@
 namespace AM.Condo
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml.Linq;
 
     using Microsoft.Build.Evaluation;
     using Microsoft.Build.Framework;

@@ -9,8 +9,8 @@ namespace AM.Condo
     using System;
     using System.IO;
     using System.Linq;
+
     using AM.Condo.Diagnostics;
-    using AM.Condo.IO;
 
     /// <summary>
     /// Represents the default entry point of the module.

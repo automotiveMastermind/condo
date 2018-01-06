@@ -11,7 +11,6 @@ namespace AM.Condo.Tasks
     using System.IO;
     using System.Linq;
 
-    using Microsoft.Build.Construction;
     using Microsoft.Build.Evaluation;
     using Microsoft.Build.Exceptions;
     using Microsoft.Build.Framework;

@@ -8,9 +8,6 @@ namespace AM.Condo.Diagnostics
 {
     using System;
 
-    using Microsoft.Build.Framework;
-    using Microsoft.Build.Utilities;
-
     /// <summary>
     /// Represents a logger used to log messages, warnings, errors, and exceptions through the console.
     /// </summary>
