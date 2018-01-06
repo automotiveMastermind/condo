@@ -33,6 +33,11 @@
       <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
+
+      <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' == '' AND $(DotNetBuild) AND $(CI) AND !$(IsPullRequest) AND '$(PackageFeedUri)' != '' ">true</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' == '' ">false</DotNetPush>
     </PropertyGroup>
 
     <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)"
@@ -56,6 +61,7 @@
       <DotNetPack Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPack>
       <DotNetTest Condition=" @(TestProjects->Count()) == 0 ">false</DotNetTest>
       <DotNetPublish Condition=" @(PublishProjects->Count()) == 0 ">false</DotNetPublish>
+      <DotNetPush Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPush>
     </PropertyGroup>
   </Target>
 

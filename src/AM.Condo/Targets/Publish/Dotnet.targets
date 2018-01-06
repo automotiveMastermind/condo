@@ -31,7 +31,7 @@
         DestinationFiles="@(_CopyDotNetPublish->'$(PublishArtifactsRoot)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
-  <Target Name="PublishPackages" Condition=" $(CI) AND '$(PackageFeedUri)' != '' AND '@(Packages->Count())' != '0' ">
+  <Target Name="PushPackages" Condition=" $(DotNetPush) ">
     <PushNuGetPackage
       NuGetConfigPath="$(NuGetConfigPath)"
       Packages="@(Packages)"
@@ -47,7 +47,7 @@
       $(PublishDependsOn);
       DotNetPublish;
       CopyDotNetPublish;
-      PublishPackages;
+      PushPackages;
     </PublishDependsOn>
   </PropertyGroup>
 </Project>
