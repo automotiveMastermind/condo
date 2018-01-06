@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- capture details from a continuous integration build hosted by VSTS -->
   <PropertyGroup>
-    <BuildHost>VSTS</BuildHost>
     <CI>true</CI>
     <AssemblyVersion>$(BUILD_VERSION)</AssemblyVersion>
     <Branch>$(BUILD_SOURCEBRANCH)</Branch>

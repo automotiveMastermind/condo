@@ -59,6 +59,7 @@
     <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' OR '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(CIRCLECI)' != '' ">CircleCI</BuildHost>
 
     <AgentTargetsPath Condition=" '$(AgentTargetsPath)' == '' ">$(AgentTargetsRoot)$(BuildHost).targets</AgentTargetsPath>
   </PropertyGroup>

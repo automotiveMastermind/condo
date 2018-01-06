@@ -10,7 +10,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run condo
-          command: 'cd /condo && ./docker.sh condo --local -- /t:ci'
+          command: 'cd /condo && ./docker.sh condo --local -- /t:publish'
 
 workflows:
   version: 2

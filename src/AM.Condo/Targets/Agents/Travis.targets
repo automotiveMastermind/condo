@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- capture details from a continuous integration build hosted by Travis-CI -->
   <PropertyGroup>
-    <BuildHost>travis</BuildHost>
     <CI>true</CI>
     <SourceBranch>$(TRAVIS_PULL_REQUEST_BRANCH)</SourceBranch>
     <TargetBranch>$(TRAVIS_BRANCH)</TargetBranch>
