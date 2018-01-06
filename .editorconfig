@@ -6,5 +6,5 @@ indent_size = 4
 char_set = utf-8
 insert_final_newline = true
 
-[*.{js,json,targets,html,csproj,build}]
+[*.{js,json,targets,html,csproj,build,yml,yaml}]
 indent_size = 2
