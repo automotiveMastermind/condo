@@ -8,7 +8,7 @@ Info          | Badges
 --------------|--------------
 Version       | [![Version][release-v-image]][release-url]
 License       | [![License][license-image]][license]
-Build Status  | [![Circle CI Build Status][travis-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
+Build Status  | [![Circle CI Build Status][circleci-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 Issues        | [![Issues][issues-image]][issues-url]
 
@@ -112,4 +112,4 @@ details.
 [issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?columns=backlog,ready,in%20progress,needs%20review
 
 [circleci-url]: //circleci.com/gh/automotiveMastermind/condo
-[circleci-image]: https://img.shields.io/circleci/project/github/automotiveMastermind/condo.svg
+[circleci-image]: https://img.shields.io/circleci/project/github/automotiveMastermind/condo.svg?label=circle-ci

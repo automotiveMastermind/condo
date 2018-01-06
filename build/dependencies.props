@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <MSBuildVersion>15.4.8</MSBuildVersion>
-    <NuGetVersion>4.4.0</NuGetVersion>
+    <MSBuildVersion>15.5.180</MSBuildVersion>
+    <NuGetVersion>4.5.0</NuGetVersion>
     <XUnitVersion>2.3.1</XUnitVersion>
   </PropertyGroup>
 </Project>
