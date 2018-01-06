@@ -1,0 +1,8 @@
+FROM microsoft/dotnet:2-sdk
+
+WORKDIR /condo
+COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
+
+# Run condo
+ENTRYPOINT [ "./docker.sh" ]
+CMD [ "condo", "--", "/t:ci" ]
