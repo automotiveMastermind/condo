@@ -6,9 +6,9 @@
 
 Info          | Badges
 --------------|--------------
-Version       | [![Version][release-v-image]][release-url] [![NuGet Version][nuget-v-image]][nuget-url]
+Version       | [![Version][release-v-image]][release-url]
 License       | [![License][license-image]][license]
-Build Status  | [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
+Build Status  | [![Circle CI Build Status][circleci-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 Issues        | [![Issues][issues-image]][issues-url]
 
@@ -16,8 +16,9 @@ Issues        | [![Issues][issues-image]][issues-url]
 
 ### What is Condo?
 
-Condo is a cross-platform command line interface (CLI) build system for projects using NodeJS, CoreCLR, .NET Framework, or... well, anything.
-It is capable of automatically detecting and executing all of the steps necessary to make <any> project function correctly, including, but not limited to:
+Condo is a cross-platform command line interface (CLI) build system for projects using NodeJS, CoreCLR, .NET Framework,
+or... well, anything. It is capable of automatically detecting and executing all of the steps necessary to make <any>
+project function correctly, including, but not limited to:
 
 * Automatic semantic versioning
 * Restoring package manager dependencies (NuGet, NPM, Bower)
@@ -84,7 +85,8 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for details.
+&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for
+details.
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
@@ -99,10 +101,6 @@ For more information, please refer to the [official documentation][docs-url].
 [appveyor-url]: //ci.appveyor.com/project/automotivemastermind/condo
 [appveyor-image]: https://img.shields.io/appveyor/ci/automotivemastermind/condo.svg?label=appveyor
 
-[nuget-url]: //www.nuget.org/packages/automotivemastermind.condo
-[nuget-v-image]: https://img.shields.io/nuget/v/automotivemastermind.condo.svg?label=nuget
-[nuget-d-image]: https://img.shields.io/nuget/dt/automotivemastermind.condo.svg?label=nuget
-
 [yo-url]: //www.npmjs.com/package/generator-condo
 
 [docs-url]: //automotivemastermind.github.io/condo
@@ -111,4 +109,7 @@ For more information, please refer to the [official documentation][docs-url].
 [gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg
 
 [issues-url]: //waffle.io/automotivemastermind/condo
-[issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?label=backlog&title=Backlog
+[issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?columns=backlog,ready,in%20progress,needs%20review
+
+[circleci-url]: //circleci.com/gh/automotiveMastermind/condo
+[circleci-image]: https://img.shields.io/circleci/project/github/automotiveMastermind/condo.svg?label=circle-ci
