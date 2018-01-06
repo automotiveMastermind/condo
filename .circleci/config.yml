@@ -4,8 +4,20 @@ jobs:
     working_directory: /target
     docker:
       - image: automotivemastermind/condo:latest
+
     steps:
       - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/target.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/target.tar | true
       - run:
           name: Run condo
           command: 'cd /condo && ./docker.sh condo --local -- /t:ci'
@@ -15,4 +27,3 @@ workflows:
   build_and_test:
     jobs:
     - condo
-
