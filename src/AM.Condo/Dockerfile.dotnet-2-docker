@@ -1,8 +1,5 @@
 FROM microsoft/dotnet:2-sdk
 
-WORKDIR /condo
-COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
-
 # Install docker
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION="17.09.0-ce"
@@ -20,6 +17,9 @@ RUN set -x \
     && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose \
     && docker-compose -v
+
+WORKDIR /condo
+COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
 
 # Run condo
 ENTRYPOINT [ "./docker.sh" ]
