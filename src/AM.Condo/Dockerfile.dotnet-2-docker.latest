@@ -20,6 +20,7 @@ RUN set -x \
 
 WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.0/linux-x64} .
+RUN chmod +x docker.sh
 
 # Run condo
 ENTRYPOINT [ "./docker.sh" ]
