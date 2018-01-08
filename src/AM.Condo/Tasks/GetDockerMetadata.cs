@@ -10,7 +10,6 @@ namespace AM.Condo.Tasks
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Xml.Linq;
 
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
@@ -129,18 +128,28 @@ namespace AM.Condo.Tasks
             // calculate the label
             dockerName = dockerName.ToLower();
 
-            // get the extension (platform) of the dockerfile
-            var extension = Path.GetExtension(path);
-
-            // determine if the platform was specified
-            if (!string.IsNullOrEmpty(extension))
-            {
-                // strip the extension from the substring
-                dockerName = $"{dockerName}-{extension.Substring(1)}";
-            }
-
             // set the project name for docker
             dockerfile.SetMetadata("Label", dockerName);
+
+            // get the extension (platform) of the dockerfile
+            var extension = Path.GetExtension(path);
+            var tagSuffix = string.Empty;
+            var latest = false;
+
+            // determine if the extension is not null or empty and ends with latest
+            if (!string.IsNullOrEmpty(extension)
+                && (latest = extension.Equals(".latest", StringComparison.OrdinalIgnoreCase)))
+            {
+                // get the real extension
+                extension = Path.GetExtension(Path.GetFileNameWithoutExtension(path));
+            }
+
+            // determine if the extension is still not null or empty
+            if (!string.IsNullOrEmpty(extension))
+            {
+                // set the tag suffix
+                tagSuffix = $"-{extension.Substring(1)}";
+            }
 
             // parse the stupid version
             var version = SemanticVersion.Parse(this.Version);
@@ -150,8 +159,8 @@ namespace AM.Condo.Tasks
             var labels = new Dictionary<string, string>();
 
             // add the full version tag
-            tags.Add("VersionTag", $"{this.Version}");
-            labels.Add("VersionLabel", $"{dockerName}:{this.Version}");
+            tags.Add("VersionTag", $"{this.Version}{tagSuffix}");
+            labels.Add("VersionLabel", $"{dockerName}:{this.Version}{tagSuffix}");
 
             // determine if we should calculate extended tags
             if (this.EnableExtendedTags)
@@ -159,31 +168,63 @@ namespace AM.Condo.Tasks
                 // determine if the build quality is set
                 if (string.IsNullOrEmpty(this.BuildQuality))
                 {
-                    tags.Add("LatestTag", "latest");                            // :latest
-                    labels.Add("LatestLabel", $"{dockerName}:latest");
+                    tags.Add("LatestTagPlatform", $"latest{tagSuffix}");
+                    labels.Add("LatestLabelPlatform", $"{dockerName}:latest{tagSuffix}");
 
-                    tags.Add("StableTag", "stable");                            // :stable
-                    labels.Add("StableLabel", $"{dockerName}:stable");
+                    tags.Add("StableTagPlatform", $"stable{tagSuffix}");
+                    labels.Add("StableLabelPlatform", $"{dockerName}:stable{tagSuffix}");
 
-                    tags.Add("MajorTag", $"{version.Major}");                   // :1
-                    labels.Add("MajorLabel", $"{dockerName}:{version.Major}");
+                    tags.Add("MajorTagPlatform", $"{version.Major}{tagSuffix}");
+                    labels.Add("MajorLabelPlatform", $"{dockerName}:{version.Major}{tagSuffix}");
 
-                    tags.Add("MinorTag", $"{version.Major}-{version.Minor}");   // :1.1
-                    labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}");
+                    tags.Add("MinorTagPlatform", $"{version.Major}-{version.Minor}{tagSuffix}");
+                    labels.Add("MinorLabelPlatform", $"{dockerName}:{version.Major}-{version.Minor}{tagSuffix}");
+
+                    // determine if this is also the latest marker
+                    if (latest)
+                    {
+                        tags.Add("LatestTag", $"latest");
+                        labels.Add("LatestLabel", $"{dockerName}:latest");
+
+                        tags.Add("StableTag", $"stable");
+                        labels.Add("StableLabel", $"{dockerName}:stable");
+
+                        tags.Add("MajorTag", $"{version.Major}");
+                        labels.Add("MajorLabel", $"{dockerName}:{version.Major}");
+
+                        tags.Add("MinorTag", $"{version.Major}-{version.Minor}");
+                        labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}");
+                    }
                 }
                 else
                 {
-                    tags.Add("BuildQualityTag", this.BuildQuality);             // :beta
-                    labels.Add("BuildQualityLabel", $"{dockerName}:{this.BuildQuality}");
+                    tags.Add("BuildQualityTagPlatform", $"{this.BuildQuality}{tagSuffix}");
+                    labels.Add("BuildQualityLabelPlatform", $"{dockerName}:{this.BuildQuality}{tagSuffix}");
 
-                    tags.Add("PrereleaseTag", "prerelease");                    // :prerelease
-                    labels.Add("PrereleaseLabel", $"{dockerName}:prerelease");
+                    tags.Add("PrereleaseTagPlatform", $"prerelease{tagSuffix}");
+                    labels.Add("PrereleaseLabelPlatform", $"{dockerName}:prerelease{tagSuffix}");
 
-                    tags.Add("MajorTag", $"{version.Major}-{this.BuildQuality}");
-                    labels.Add("MajorLabel", $"{dockerName}:{version.Major}-{this.BuildQuality}");
+                    tags.Add("MajorTagPlatform", $"{version.Major}-{this.BuildQuality}{tagSuffix}");
+                    labels.Add("MajorLabelPlatform", $"{dockerName}:{version.Major}-{this.BuildQuality}{tagSuffix}");
 
-                    tags.Add("MinorTag", $"{version.Major}-{version.Minor}-{this.BuildQuality}");
-                    labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}-{this.BuildQuality}");
+                    tags.Add("MinorTagPlatform", $"{version.Major}-{version.Minor}-{this.BuildQuality}{tagSuffix}");
+                    labels.Add("MinorLabelPlatform", $"{dockerName}:{version.Major}-{version.Minor}-{this.BuildQuality}{tagSuffix}");
+
+                    // determine if this is also the latest marker
+                    if (latest)
+                    {
+                        tags.Add("BuildQualityTag", $"{this.BuildQuality}");
+                        labels.Add("BuildQualityLabel", $"{dockerName}:{this.BuildQuality}");
+
+                        tags.Add("PrereleaseTag", $"prerelease");
+                        labels.Add("PrereleaseLabel", $"{dockerName}:prerelease");
+
+                        tags.Add("MajorTag", $"{version.Major}-{this.BuildQuality}");
+                        labels.Add("MajorLabel", $"{dockerName}:{version.Major}-{this.BuildQuality}");
+
+                        tags.Add("MinorTag", $"{version.Major}-{version.Minor}-{this.BuildQuality}");
+                        labels.Add("MinorLabel", $"{dockerName}:{version.Major}-{version.Minor}-{this.BuildQuality}");
+                    }
                 }
             }
 

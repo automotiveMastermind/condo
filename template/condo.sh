@@ -38,6 +38,7 @@ condo_help() {
 }
 
 CONDO_OPTS=()
+MSBUILD_OPTS=("--")
 
 # continue testing for arguments
 while [[ $# > 0 ]]; do
@@ -51,6 +52,7 @@ while [[ $# > 0 ]]; do
             ;;
         -l|--local)
             CONDO_LOCAL=1
+            MSBUILD_OPTS+=("/p:NpmInstall=false" "/p:BowerInstall=false" "/p:PolymerInstall=false")
             ;;
         -u|--uri)
             CONDO_URI=$2
@@ -80,7 +82,6 @@ while [[ $# > 0 ]]; do
             shift
             ;;
         --)
-            CONDO_OPTS+=("$1")
             shift
             break
             ;;
@@ -93,7 +94,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-CONDO_OPTS+=("$@")
+MSBUILD_OPTS+=("$@")
 
 if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
     export DOTNET_INSTALL_DIR=~/.dotnet
@@ -159,7 +160,7 @@ fi
 chmod a+x $CONDO_SHELL
 
 # execute condo shell with the arguments
-$CONDO_SHELL "${CONDO_OPTS[@]}"
+$CONDO_SHELL "${CONDO_OPTS[@]}" "${MSBUILD_OPTS[@]}"
 
 # capture the current exit code
 EXIT_CODE=$?

@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- capture details from a continuous integration build hosted by AppVeyor -->
   <PropertyGroup Condition = " '$(APPVEYOR)' != '' ">
-    <BuildHost>AppVeyor</BuildHost>
+    <CI>true</CI>
     <Branch>$(APPVEYOR_REPO_BRANCH)</Branch>
     <SourceBranch>$(Branch)</SourceBranch>
     <CommitId>$(APPVEYOR_REPO_COMMIT)</CommitId>
@@ -14,6 +14,5 @@
     <TeamProject>$(APPVEYOR_PROJECT_SLUG)</TeamProject>
     <BuildUri>https://ci.appveyor.com/project/$(TeamProject)/build/$(APPVEYOR_BUILD_NUMBER)</BuildUri>
     <BuildName>$(TeamProject) - $(Branch) - #$(PullRequestId):$(JobId)</BuildName>
-    <CI>true</CI>
   </PropertyGroup>
 </Project>

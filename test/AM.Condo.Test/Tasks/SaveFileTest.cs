@@ -6,9 +6,10 @@
 
 namespace AM.Condo.Tasks
 {
-    using System.Collections.Generic;
     using System.IO;
+
     using AM.Condo.IO;
+
     using Microsoft.Build.Framework;
     using Moq;
     using Xunit;
