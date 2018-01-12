@@ -153,7 +153,7 @@ function Install-DotNet() {
     }
 
     if (!$dotnetVersions) {
-        $dotnetVersions = @("1.1.5","2.1.3")
+        $dotnetVersions = @("1.1.7","2.1.4")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
