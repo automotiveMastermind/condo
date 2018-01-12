@@ -117,8 +117,8 @@
     </AfterVersion>
 
     <AfterPublish>
-      $(AfterPublish);
       CreateRelease;
+      $(AfterPublish);
     </AfterPublish>
   </PropertyGroup>
 </Project>

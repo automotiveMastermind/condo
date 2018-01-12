@@ -47,7 +47,11 @@
       $(PublishDependsOn);
       DotNetPublish;
       CopyDotNetPublish;
-      PushPackages;
     </PublishDependsOn>
+
+    <AfterPublish>
+      $(AfterPublish);
+      PushPackages;
+    </AfterPublish>
   </PropertyGroup>
 </Project>

@@ -278,9 +278,6 @@ namespace AM.Condo.ChangeLog
                     { "header", currentCommit.Header }
                 };
 
-                // do not include the commit by default
-                var include = false;
-
                 // iterate over all notes on the current commit
                 foreach (var currentNote in currentCommit.Notes)
                 {
@@ -301,9 +298,6 @@ namespace AM.Condo.ChangeLog
                         // move on immediately
                         continue;
                     }
-
-                    // force include the commit
-                    include = true;
 
                     // attempt to get the group
                     if (!tempNotes.TryGetValue(display, out IDictionary<string, object> group))
@@ -340,7 +334,7 @@ namespace AM.Condo.ChangeLog
                     if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
                     {
                         // attempt to get the display name mapping
-                        if (!this.options.ChangeLogTypes.TryGetValue(value, out string display) && !include)
+                        if (!this.options.ChangeLogTypes.TryGetValue(value, out string display))
                         {
                             // discard the commit
                             continue;
