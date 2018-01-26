@@ -51,13 +51,13 @@ namespace AM.Condo.Tasks
                     writer.Flush();
                 }
 
-                var item = new TaskItem(path);
+                var items = new[] { new TaskItem(path) };
 
                 var engine = MSBuildMocks.CreateEngine();
 
                 var instance = new GetNodeMetadata
                 {
-                    Project = item,
+                    Projects = items,
                     BuildEngine = engine
                 };
 
