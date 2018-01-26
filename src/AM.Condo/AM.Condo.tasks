@@ -7,15 +7,17 @@
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.DecodeBase64" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.FindCommand" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetAssemblyInfo" />
+  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetBowerMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetBuildQuality" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetBuildTime" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetCommitInfo" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetContent" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetDockerMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetDocsMetadata" />
-  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetNodeScripts" />
+  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetNodeMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />
+  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetPolymerMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetProjectsForSolution" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetRelease" />

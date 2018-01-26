@@ -54,10 +54,6 @@ namespace AM.Condo
                     case "--no-color":
                         condoColor = "DisableConsoleColor";
                         break;
-                    case "-l":
-                    case "--local":
-                        condoSkipFrontend = "/p:NpmInstall=false \n/p:BowerInstall=false \n/p:PolymerInstall=false \n";
-                        break;
                     case "--":
                         i++;
                         options = args.Skip(i).ToArray();

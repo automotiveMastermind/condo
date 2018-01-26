@@ -14,29 +14,33 @@
     </GetProjectsForSolution>
 
     <PropertyGroup>
+      <DotNetEnabled Condition=" '$(SKIP_DOTNET)' != '' ">false</DotNetEnabled>
+      <DotNetEnabled Condition=" '$(DotNetEnabled)' != '' AND '$(DotNetEnabled.ToLower())' != 'true' ">false</DotNetEnabled>
+      <DotNetEnabled Condition=" '$(DotNetEnabled)' == '' ">true</DotNetEnabled>
+
       <DotNetRestore Condition=" '$(SKIP_DOTNET_RESTORE)' != '' ">false</DotNetRestore>
       <DotNetRestore Condition=" '$(DotNetRestore)' != '' AND '$(DotNetRestore.ToLower())' != 'true' ">false</DotNetRestore>
-      <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">true</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">$(DotNetEnabled)</DotNetRestore>
 
       <DotNetBuild Condition=" '$(SKIP_DOTNET_BUILD)' != '' ">false</DotNetBuild>
       <DotNetBuild Condition=" '$(DotNetBuild)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetBuild>
-      <DotNetBuild Condition=" '$(DotNetBuild)' == '' ">true</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' == '' ">$(DotNetEnabled)</DotNetBuild>
 
       <DotNetPack Condition=" '$(SKIP_DOTNET_PACK)' != '' ">false</DotNetPack>
       <DotNetPack Condition=" '$(DotNetPack)' != '' AND '$(DotNetPack.ToLower())' != 'true' ">false</DotNetPack>
-      <DotNetPack Condition=" '$(DotNetPack)' == '' ">true</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' == '' ">$(DotNetEnabled)</DotNetPack>
 
       <DotNetTest Condition=" '$(SKIP_DOTNET_TEST)' != '' ">false</DotNetTest>
       <DotNetTest Condition=" '$(DotNetTest)' != '' AND '$(DotNetTest.ToLower())' != 'true' ">false</DotNetTest>
-      <DotNetTest Condition=" '$(DotNetTest)' == '' ">true</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' == '' ">$(DotNetEnabled)</DotNetTest>
 
       <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
       <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
-      <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">true</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">$(DotNetEnabled)</DotNetPublish>
 
       <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetPush>
-      <DotNetPush Condition=" '$(DotNetPush)' == '' AND $(DotNetBuild) AND $(CI) AND !$(IsPullRequest) AND '$(PackageFeedUri)' != '' ">true</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' == '' AND $(DotNetBuild) AND $(CI) AND !$(IsPullRequest) AND '$(PackageFeedUri)' != '' ">$(DotNetEnabled)</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' == '' ">false</DotNetPush>
     </PropertyGroup>
 

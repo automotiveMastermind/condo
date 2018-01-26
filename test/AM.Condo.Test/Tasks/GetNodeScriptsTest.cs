@@ -14,7 +14,7 @@ namespace AM.Condo.Tasks
 
     using AM.Condo.IO;
 
-    [Class(nameof(GetNodeScripts))]
+    [Class(nameof(GetNodeMetadata))]
     public class GetNodeScriptsTest
     {
         [Fact]
@@ -55,7 +55,7 @@ namespace AM.Condo.Tasks
 
                 var engine = MSBuildMocks.CreateEngine();
 
-                var instance = new GetNodeScripts
+                var instance = new GetNodeMetadata
                 {
                     Project = item,
                     BuildEngine = engine
