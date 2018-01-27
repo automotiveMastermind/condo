@@ -14,7 +14,7 @@ namespace AM.Condo.Tasks
 
     using AM.Condo.IO;
 
-    [Class(nameof(GetNodeScripts))]
+    [Class(nameof(GetNodeMetadata))]
     public class GetNodeScriptsTest
     {
         [Fact]
@@ -51,13 +51,13 @@ namespace AM.Condo.Tasks
                     writer.Flush();
                 }
 
-                var item = new TaskItem(path);
+                var items = new[] { new TaskItem(path) };
 
                 var engine = MSBuildMocks.CreateEngine();
 
-                var instance = new GetNodeScripts
+                var instance = new GetNodeMetadata
                 {
-                    Project = item,
+                    Projects = items,
                     BuildEngine = engine
                 };
 

@@ -2,11 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- attempt to find docker info -->
   <Target Name="GetDockerInfo">
-    <FindCommand Command="docker">
-      <Output TaskParameter="ExecutablePath" PropertyName="DockerPath" />
-      <Output TaskParameter="Exists" PropertyName="HasDocker" />
-    </FindCommand>
-
     <ItemGroup>
       <DockerfilePaths     Include="$(RepositoryRoot)**$(slash)Dockerfile" Exclude="$(DockerRoot)Dockerfile" />
       <DockerfilePaths     Include="$(RepositoryRoot)**$(slash)Dockerfile.*"
@@ -18,11 +13,18 @@
     </ItemGroup>
 
     <PropertyGroup>
+      <DockerEnabled Condition=" '$(SKIP_DOCKER)' != '' ">false</DockerEnabled>
+      <DockerEnabled Condition=" '$(DockerEnabled)' != '' AND '$(DockerEnabled.ToLower())' != 'true' ">false</DockerEnabled>
+      <DockerEnabled Condition=" '$(DockerEnabled)' == '' ">true</DockerEnabled>
+
       <DockerBuildRequired>false</DockerBuildRequired>
-      <DockerBuildRequired Condition=" @(DockerfilePaths->Count()) > 0 ">true</DockerBuildRequired>
+      <DockerBuildRequired Condition=" @(DockerfilePaths->Count()) > 0 ">$(DockerEnabled)</DockerBuildRequired>
 
       <DockerComposeRequired>false</DockerComposeRequired>
-      <DockerComposeRequired Condition=" @(DockerComposePaths->Count()) > 0 ">true</DockerComposeRequired>
+      <DockerComposeRequired Condition=" @(DockerComposePaths->Count()) > 0 ">$(DockerEnabled)</DockerComposeRequired>
+
+      <DockerRequired>false</DockerRequired>
+      <DockerRequired Condition=" $(DockerBuildRequired) OR $(DockerComposeRequired) ">false</DockerRequired>
 
       <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">$(DOCKER_REGISTRY_URI)</DockerRegistry>
       <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">https://index.docker.io/v1/</DockerRegistry>
@@ -32,30 +34,9 @@
       <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerRegistry.StartsWith('http')) ">$(DockerRegistry)$(DockerOrganization)</DockerOrganization>
       <DockerOrganization Condition=" '$(DockerOrganization)' != '' AND !$(DockerOrganization.EndsWith('/')) ">$(DockerOrganization)/</DockerOrganization>
 
-      <DockerBuild Condition=" '$(SKIP_DOCKER_BUILD)' != '' ">false</DockerBuild>
-      <DockerBuild Condition=" '$(DockerBuild)' != '' AND '$(DockerBuild.ToLower())' != 'true' ">false</DockerBuild>
-      <DockerBuild Condition=" '$(DockerBuild)' == '' AND $(DockerBuildRequired) ">true</DockerBuild>
-      <DockerBuild Condition=" '$(DockerBuild)' == '' ">false</DockerBuild>
-
-      <DockerCompose Condition=" '$(SKIP_DOCKER_COMPOSE)' != '' ">false</DockerCompose>
-      <DockerCompose Condition=" '$(DockerCompose)' != '' AND '$(DockerCompose.ToLower())' != 'true' ">false</DockerCompose>
-      <DockerCompose Condition=" '$(DockerCompose)' == '' AND $(DockerComposeRequired) ">true</DockerCompose>
-      <DockerCompose Condition=" '$(DockerCompose)' == '' ">false</DockerCompose>
-
-      <DockerPush Condition=" '$(SKIP_DOCKER_PUSH)' != '' ">false</DockerPush>
-      <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
-      <DockerPush Condition=" '$(DockerPush)' == '' AND $(DockerBuild) AND !$(IsPullRequest) AND '$(DockerOrganization)' != '' ">true</DockerPush>
-      <DockerPush Condition=" '$(DockerPush)' == '' ">false</DockerPush>
-
       <DockerEnableExtendedTags Condition=" '$(DockerEnableExtendedTags)' == '' ">$(DOCKER_ENABLE_EXTENDED_TAGS)</DockerEnableExtendedTags>
       <DockerEnableExtendedTags Condition=" '$(DockerEnableExtendedTags)' == '' ">false</DockerEnableExtendedTags>
     </PropertyGroup>
-
-    <Warning Condition="!$(HasDocker) AND $(DockerBuildRequired) "
-             Text="A dockerfile was located at: %(DockerfilePaths.Identity), but the docker command or executable could not be found." />
-
-    <Warning Condition="!$(HasDocker) AND $(DockerComposeRequired) "
-             Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
 
     <GetDockerMetadata
         DockerFiles="@(DockerfilePaths)"
@@ -64,16 +45,48 @@
         Product="$(Product)"
         RepositoryRoot="$(RepositoryRoot)"
         EnableExtendedTags="$(DockerEnableExtendedTags)"
-        Condition=" $(DockerBuild) ">
+        Condition=" $(DockerBuildRequired) ">
       <Output TaskParameter="DockerFiles" ItemName="DockerMetadata" />
     </GetDockerMetadata>
   </Target>
 
-  <Target Name="PrintDockerProjects" Condition=" $(DockerBuild) ">
+  <Target Name="ConfigureDocker">
+    <FindCommand Command="docker">
+      <Output TaskParameter="ExecutablePath" PropertyName="DockerPath" />
+      <Output TaskParameter="Exists" PropertyName="HasDocker" />
+    </FindCommand>
+
+    <PropertyGroup>
+      <DockerEnabled Condition=" $(DockerEnabled) ">$(HasDocker)</DockerEnabled>
+
+      <DockerBuild Condition=" '$(SKIP_DOCKER_BUILD)' != '' ">false</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' != '' AND '$(DockerBuild.ToLower())' != 'true' ">false</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' == '' AND $(DockerBuildRequired) ">$(DockerEnabled)</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' == '' ">false</DockerBuild>
+
+      <DockerCompose Condition=" '$(SKIP_DOCKER_COMPOSE)' != '' ">false</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' != '' AND '$(DockerCompose.ToLower())' != 'true' ">false</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' == '' AND $(DockerComposeRequired) ">$(DockerEnabled)</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' == '' ">false</DockerCompose>
+
+      <DockerPush Condition=" '$(SKIP_DOCKER_PUSH)' != '' ">false</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' == '' AND $(DockerBuild) AND !$(IsPullRequest) AND '$(DockerOrganization)' != '' ">$(DockerEnabled)</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' == '' ">false</DockerPush>
+    </PropertyGroup>
+
+    <Warning Condition="!$(HasDocker) AND $(DockerBuildRequired) "
+             Text="A dockerfile was located at: %(DockerfilePaths.Identity), but the docker command or executable could not be found." />
+
+    <Warning Condition="!$(HasDocker) AND $(DockerComposeRequired) "
+             Text="A docker-compose file was located at: %(DockerComposePaths.Identity), but the docker command or executable could not be found." />
+  </Target>
+
+  <Target Name="PrintDockerProjects" Condition=" $(DockerRequired) ">
     <Message Importance="High" Text="Project: %(DockerMetadata.Label)" />
   </Target>
 
-  <Target Name="DockerLogin" DependsOnTargets="GetDockerInfo" Condition=" $(HasDocker) ">
+  <Target Name="DockerLogin" Condition=" $(HasDocker) ">
     <DecodeBase64 Encoded="$(DOCKER_REGISTRY_USERNAME_BASE64)" Condition=" '$(DOCKER_REGISTRY_USERNAME_BASE64)' != '' ">
       <Output TaskParameter="Decoded" PropertyName="DockerUsername" />
     </DecodeBase64>
@@ -88,7 +101,7 @@
 
       <DockerLogin Condition=" '$(SKIP_DOCKER_LOGIN)' != '' ">false</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' != '' AND '$(DockerLogin.ToLower())' != 'true' ">false</DockerLogin>
-      <DockerLogin Condition=" '$(DockerLogin)' == '' AND '$(DockerUsername)' != '' AND '$(DockerPassword)' != '' ">true</DockerLogin>
+      <DockerLogin Condition=" '$(DockerLogin)' == '' AND '$(DockerUsername)' != '' AND '$(DockerPassword)' != '' ">$(DockerEnabled)</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' == '' ">false</DockerLogin>
     </PropertyGroup>
 
@@ -103,6 +116,7 @@
   <PropertyGroup>
     <PrepareDependsOn>
       $(PrepareDependsOn);
+      ConfigureDocker;
       DockerLogin;
     </PrepareDependsOn>
 
@@ -113,4 +127,3 @@
     </BeforePrepare>
   </PropertyGroup>
 </Project>
-

@@ -52,7 +52,6 @@ while [[ $# > 0 ]]; do
             ;;
         -l|--local)
             CONDO_LOCAL=1
-            MSBUILD_OPTS+=("/p:NpmInstall=false" "/p:BowerInstall=false" "/p:PolymerInstall=false")
             ;;
         -u|--uri)
             CONDO_URI=$2

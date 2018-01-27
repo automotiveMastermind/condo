@@ -32,17 +32,17 @@
     <WaitForFile />
   </Target>
 
-  <!-- initialize dynamic properties -->
-  <Target Name="Initialize" />
-
   <!-- the default target for clean -->
   <Target Name="Clean" />
 
   <!-- developer bootstrapping -->
   <Target Name="Bootstrap" />
 
+  <!-- initialize dynamic properties -->
+  <Target Name="Initialize" DependsOnTargets="Clean" />
+
   <!-- semantic versioning -->
-  <Target Name="Version" DependsOnTargets="Initialize;Clean" />
+  <Target Name="Version" DependsOnTargets="Initialize" />
 
   <!-- prepare for compilation: usually for executing restore operations or executing task runners -->
   <Target Name="Prepare" DependsOnTargets="Version" />

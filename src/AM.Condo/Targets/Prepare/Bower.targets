@@ -1,39 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- attempt to find bower and bower paths -->
-  <Target Name="GetBowerInfo" Returns="@(BowerJsonProjects)">
-    <FindCommand Command="bower" SearchPaths="@(FindCommandSearchPaths)">
-      <Output TaskParameter="ExecutablePath" PropertyName="BowerPath" />
-      <Output TaskParameter="Exists" PropertyName="HasBower" />
-    </FindCommand>
-
+  <Target Name="GetBowerInfo" Returns="@(BowerProjects)">
     <ItemGroup>
-      <BowerJsonpaths Include="$(RepositoryRoot)bower.json" Condition=" Exists('$(RepositoryRoot)bower.json') " />
-      <BowerJsonPaths
+      <BowerProjectPaths Include="$(RepositoryRoot)bower.json" Condition=" Exists('$(RepositoryRoot)bower.json') " />
+      <BowerProjectPaths
         Include="$(RepositoryRoot)**$(slash)bower.json"
         Exclude="$(RepositoryRoot)**$(slash)node_modules$(slash)**$(slash)bower.json;$(RepositoryRoot)**$(slash)bower_components$(slash)**$(slash)bower.json;$(RepositoryRoot)**$(slash)build$(slash)**$(slash)bower.json" />
     </ItemGroup>
 
     <PropertyGroup>
+      <BowerEnabled Condition=" '$(SKIP_BOWER)' != '' ">false</BowerEnabled>
+      <BowerEnabled Condition=" '$(BowerEnabled)' != '' AND '$(BowerEnabled.ToLower())' != 'true' ">false</BowerEnabled>
+      <BowerEnabled Condition=" '$(BowerEnabled)' == '' ">true</BowerEnabled>
+
       <BowerRequired>false</BowerRequired>
-      <BowerRequired Condition=" @(BowerJsonPaths->Count()) > 0 ">true</BowerRequired>
+      <BowerRequired Condition=" @(BowerProjectPaths->Count()) > 0 ">$(BowerEnabled)</BowerRequired>
+    </PropertyGroup>
+
+    <GetBowerMetadata Projects="@(BowerProjectPaths)">
+      <Output TaskParameter="Projects" ItemName="BowerProjects" />
+    </GetBowerMetadata>
+  </Target>
+
+  <Target Name="ConfigureBower">
+    <FindCommand Command="bower" SearchPaths="@(FindCommandSearchPaths)">
+      <Output TaskParameter="ExecutablePath" PropertyName="BowerPath" />
+      <Output TaskParameter="Exists" PropertyName="HasBower" />
+    </FindCommand>
+
+    <PropertyGroup>
+      <BowerEnabled Condition=" $(BowerEnabled)" >$(HasBower)</BowerEnabled>
 
       <BowerInstall Condition=" '$(SKIP_BOWER_INSTALL)' != '' ">false</BowerInstall>
       <BowerInstall Condition=" '$(BowerInstall)' != '' AND '$(BowerInstall.ToLower())' != 'true' ">false</BowerInstall>
-      <BowerInstall Condition=" '$(BowerInstall)' == '' AND $(HasBower) AND $(BowerRequired) ">true</BowerInstall>
-      <BowerInstall Condition=" '$(BowerInstall)' == '' ">false</BowerInstall>
+      <BowerInstall Condition=" '$(BowerInstall)' == '' ">$(BowerEnabled)</BowerInstall>
     </PropertyGroup>
 
     <Warning Condition=" !$(HasBower) AND $(BowerRequired) AND $(NpmInstall)"
-             Text="A bower.json file was located at: %(BowerJsonPaths.Identity), but the bower command or executable could not be found." />
-
-    <GetProjectMetadata Projects="@(BowerJsonPaths)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Projects" ItemName="BowerJsonProjects" />
-    </GetProjectMetadata>
+             Text="A bower.json file was located at: %(BowerProjectPaths.Identity), but the bower command or executable could not be found." />
   </Target>
 
-  <Target Name="PrintBowerProjects" Condition=" $(BowerInstall) ">
-    <Message Importance="High" Text="Project: %(BowerJsonProjects.ProjectName)" />
+  <Target Name="PrintBowerProjects" Condition=" $(BowerRequired) ">
+    <Message Importance="High" Text="Project: %(BowerProjects.ProjectName)" />
   </Target>
 
   <Target Name="BowerInstall" Condition=" $(BowerInstall) ">
@@ -44,15 +53,20 @@
     </PropertyGroup>
 
     <Exec Command="&quot;$(BowerPath)&quot; install $(BowerInstallOptions.Trim())"
-          WorkingDirectory="%(BowerJsonProjects.ProjectDir)" />
+          WorkingDirectory="%(BowerProjects.ProjectDir)" />
   </Target>
 
   <PropertyGroup>
     <RestoreDependsOn>
       $(RestoreDependsOn);
-      GetBowerInfo;
-      PrintBowerProjects;
+      ConfigureBower;
       BowerInstall;
     </RestoreDependsOn>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetBowerInfo;
+      PrintBowerProjects;
+    </BeforePrepare>
   </PropertyGroup>
 </Project>

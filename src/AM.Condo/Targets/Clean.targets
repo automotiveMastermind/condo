@@ -6,8 +6,19 @@
   </Target>
 
   <Target Name="CleanIntermediateArtifacts">
+    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
+      <DotNetSolutions Include="$(RepositoryRoot)*.sln" />
+    </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(DotNetSolutions)">
+      <Output TaskParameter="Filtered" ItemName="FilteredDotNetSolutions" />
+    </RemoveDuplicates>
+
+    <GetProjectsForSolution Solutions="@(FilteredDotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
+      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
+    </GetProjectsForSolution>
+
     <ItemGroup>
-      <Projects Include="$(RepositoryRoot)**$(slash)*.*proj" />
       <Projects Include="$(RepositoryRoot)**$(slash)docfx.json" />
     </ItemGroup>
 

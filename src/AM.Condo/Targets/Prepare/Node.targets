@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- attempt to find npm paths -->
+  <Target Name="GetNodeInfo">
+    <ItemGroup>
+      <NodeProjectPaths Include="$(RepositoryRoot)package.json" Condition=" Exists('$(RepositoryRoot)package.json') " />
+      <NodeProjectPaths
+        Include="$(RepositoryRoot)**$(slash)package.json"
+        Exclude="$(RepositoryRoot)**$(slash)node_modules$(slash)**$(slash)package.json;$(RepositoryRoot)**$(slash)bower_components$(slash)**$(slash)package.json" />
+
+      <FindCommandSearchPaths Include="%(NodeProjectPaths.RootDir)%(NodeProjectPaths.Directory)$(slash)node_modules$(slash).bin$(slash)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <NpmEnabled Condition=" '$(SKIP_NPM)' != '' ">false</NpmEnabled>
+      <NpmEnabled Condition=" '$(NpmEnabled)' != '' AND '$(NpmEnabled.ToLower())' != 'true' ">false</NpmEnabled>
+      <NpmEnabled Condition=" '$(NpmEnabled)' == '' ">true</NpmEnabled>
+
+      <NpmRequired>false</NpmRequired>
+      <NpmRequired Condition=" @(NodeProjectPaths->Count()) > 0 ">true</NpmRequired>
+    </PropertyGroup>
+
+    <GetNodeMetadata Projects="@(NodeProjectPaths)">
+      <Output TaskParameter="Projects" ItemName="NodeProjects" />
+    </GetNodeMetadata>
+
+    <ItemGroup>
+      <NodeInstallProjects Include="@(NodeProjects)" />
+      <NodeCondoProjects   Include="@(NodeProjects)"                                Condition="%(NodeProjects.HasCondo)" />
+      <NodeBuildProjects   Include="@(NodeProjects)" Exclude="@(NodeCondoProjects)" Condition="%(NodeProjects.HasBuild)" />
+      <NodeTestProjects    Include="@(NodeProjects)" Exclude="@(NodeCondoProjects)" Condition="%(NodeProjects.HasTest)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ConfigureNode">
+    <FindCommand Command="npm">
+      <Output TaskParameter="ExecutablePath" PropertyName="NpmPath" />
+      <Output TaskParameter="Exists" PropertyName="HasNpm" />
+    </FindCommand>
+
+    <PropertyGroup>
+      <NpmEnabled Condition=" $(NpmEnabled) ">$(HasNpm)</NpmEnabled>
+
+      <NpmInstall Condition=" '$(SKIP_NPM_INSTALL)' != '' ">false</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' != '' AND '$(NpmInstall.ToLower())' != 'true' ">false</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' == '' ">$(NpmEnabled)</NpmInstall>
+
+      <NpmBuild Condition=" '$(SKIP_NPM_BUILD)' != '' ">false</NpmBuild>
+      <NpmBuild Condition=" '$(NpmBuild)' != '' AND '$(NpmBuild.ToLower())' != 'true' ">false</NpmBuild>
+      <NpmBuild Condition=" '$(NpmBuild)' == '' AND @(NodeBuildProjects->Count()) > 0 ">$(NpmEnabled)</NpmBuild>
+      <NpmBuild Condition=" '$(NpmBuild)' == '' ">false</NpmBuild>
+
+      <NpmCondo Condition=" '$(SKIP_NPM_CONDO)' != '' ">false</NpmCondo>
+      <NpmCondo Condition=" '$(NpmCondo)' != '' AND '$(NpmCondo.ToLower())' != 'true' ">false</NpmCondo>
+      <NpmCondo Condition=" '$(NpmCondo)' == '' AND @(NodeCondoProjects->Count()) > 0 ">$(NpmEnabled)</NpmCondo>
+      <NpmCondo Condition=" '$(NpmCondo)' == '' ">false</NpmCondo>
+
+      <NpmTest Condition=" '$(SKIP_NPM_TEST)' != '' ">false</NpmTest>
+      <NpmTest Condition=" '$(NpmTest)' != '' AND '$(NpmTest.ToLower())' != 'true' ">false</NpmTest>
+      <NpmTest Condition=" '$(NpmTest)' == '' AND @(NodeTestProjects->Count()) > 0 ">$(NpmEnabled)</NpmTest>
+      <NpmTest Condition=" '$(NpmTest)' == '' ">false</NpmTest>
+    </PropertyGroup>
+
+    <Warning Condition=" !$(HasNpm) AND $(NpmRequired) "
+             Text="A package.json file was located at: %(NodeProjectPaths.Identity), but the npm command or executable could not be found." />
+  </Target>
+
+  <Target Name="PrintNodeProjects" Condition=" $(NpmRequired) ">
+    <Message Importance="High" Text="Project: %(NodeProjects.ProjectName)" />
+  </Target>
+
+  <Target Name="NpmInstall" Condition=" $(NpmInstall) ">
+    <PropertyGroup>
+      <NpmInstallOptions Condition=" '$(NpmInstallOptions)' == '' ">$(NPM_INSTALL_OPTIONS)</NpmInstallOptions>
+    </PropertyGroup>
+
+    <Exec Command="&quot;$(NpmPath)&quot; set progress=false" />
+
+    <Exec Command="&quot;$(NpmPath)&quot; install $(NpmInstallOptions.Trim())"
+          WorkingDirectory="%(NodeInstallProjects.ProjectDir)"
+          IgnoreStandardErrorWarningFormat="true"
+          IgnoreExitCode="true" />
+  </Target>
+
+  <PropertyGroup>
+    <RestoreDependsOn>
+      $(RestoreDependsOn);
+      ConfigureNode;
+      NpmInstall;
+    </RestoreDependsOn>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetNodeInfo;
+      PrintNodeProjects;
+    </BeforePrepare>
+  </PropertyGroup>
+</Project>
