@@ -53,7 +53,7 @@
              Text="A polymer.json file was located at: %(PolymerProjectPaths.Identity), but the polymer command or executable could not be found." />
   </Target>
 
-  <Target Name="PrintPolymerProjects" Condition=" $(PolymerEnabled) ">
+  <Target Name="PrintPolymerProjects" Condition=" $(PolymerRequired) ">
     <Message Importance="High" Text="Project: %(PolymerProjects.ProjectName)" />
   </Target>
 

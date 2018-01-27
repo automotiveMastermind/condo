@@ -41,7 +41,7 @@
              Text="A bower.json file was located at: %(BowerProjectPaths.Identity), but the bower command or executable could not be found." />
   </Target>
 
-  <Target Name="PrintBowerProjects" Condition=" $(BowerEnabled) ">
+  <Target Name="PrintBowerProjects" Condition=" $(BowerRequired) ">
     <Message Importance="High" Text="Project: %(BowerProjects.ProjectName)" />
   </Target>
 

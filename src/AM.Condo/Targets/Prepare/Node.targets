@@ -65,7 +65,7 @@
              Text="A package.json file was located at: %(NodeProjectPaths.Identity), but the npm command or executable could not be found." />
   </Target>
 
-  <Target Name="PrintNodeProjects" Condition=" $(NpmEnabled) ">
+  <Target Name="PrintNodeProjects" Condition=" $(NpmRequired) ">
     <Message Importance="High" Text="Project: %(NodeProjects.ProjectName)" />
   </Target>
 
