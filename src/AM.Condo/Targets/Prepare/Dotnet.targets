@@ -20,11 +20,7 @@
 
       <DotNetRequired>false</DotNetRequired>
       <DotNetRequired Condition=" @(DotNetProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetRequired>
-    </PropertyGroup>
-  </Target>
 
-  <Target Name="ConfigureDotNet">
-    <PropertyGroup>
       <DotNetRestore Condition=" '$(SKIP_DOTNET_RESTORE)' != '' ">false</DotNetRestore>
       <DotNetRestore Condition=" '$(DotNetRestore)' != '' AND '$(DotNetRestore.ToLower())' != 'true' ">false</DotNetRestore>
       <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">$(DotNetRequired)</DotNetRestore>
@@ -93,7 +89,6 @@
   <PropertyGroup>
     <RestoreDependsOn>
       $(RestoreDependsOn);
-      ConfigureDotNet;
       DotNetRestore;
     </RestoreDependsOn>
 
