@@ -17,14 +17,14 @@
       <NpmEnabled Condition=" '$(NpmEnabled)' == '' ">true</NpmEnabled>
 
       <NpmRequired>false</NpmRequired>
-      <NpmRequired Condition=" @(NodeProjectPaths->Count()) > 0 ">true</NpmRequired>
+      <NpmRequired Condition=" @(NodeProjectPaths->Count()) > 0 ">$(NpmEnabled)</NpmRequired>
     </PropertyGroup>
 
     <GetNodeMetadata Projects="@(NodeProjectPaths)">
       <Output TaskParameter="Projects" ItemName="NodeProjects" />
     </GetNodeMetadata>
 
-    <ItemGroup>
+    <ItemGroup Condition=" $(NpmRequired) ">
       <NodeInstallProjects Include="@(NodeProjects)" />
       <NodeCondoProjects   Include="@(NodeProjects)"                                Condition="%(NodeProjects.HasCondo)" />
       <NodeBuildProjects   Include="@(NodeProjects)" Exclude="@(NodeCondoProjects)" Condition="%(NodeProjects.HasBuild)" />
