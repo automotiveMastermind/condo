@@ -72,7 +72,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="PrintDotNetProjects" Condition=" $(DotNetBuild) OR $(DotNetPack) OR $(DotNetTest) OR $(DotNetPublish) ">
+  <Target Name="PrintDotNetProjects" Condition=" $(DotNetRequired) ">
     <Message Importance="High" Text="Project: %(DotNetMetadata.Description)" />
   </Target>
 
