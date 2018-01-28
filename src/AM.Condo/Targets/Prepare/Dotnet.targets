@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="GetDotNetInfo">
-    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
+    <ItemGroup Condition=" @(DotNetSolutions->Count()) == 0 ">
       <DotNetSolutions Include="$(RepositoryRoot)*.sln" />
     </ItemGroup>
 
@@ -18,30 +18,8 @@
       <DotNetEnabled Condition=" '$(DotNetEnabled)' != '' AND '$(DotNetEnabled.ToLower())' != 'true' ">false</DotNetEnabled>
       <DotNetEnabled Condition=" '$(DotNetEnabled)' == '' ">true</DotNetEnabled>
 
-      <DotNetRestore Condition=" '$(SKIP_DOTNET_RESTORE)' != '' ">false</DotNetRestore>
-      <DotNetRestore Condition=" '$(DotNetRestore)' != '' AND '$(DotNetRestore.ToLower())' != 'true' ">false</DotNetRestore>
-      <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">$(DotNetEnabled)</DotNetRestore>
-
-      <DotNetBuild Condition=" '$(SKIP_DOTNET_BUILD)' != '' ">false</DotNetBuild>
-      <DotNetBuild Condition=" '$(DotNetBuild)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetBuild>
-      <DotNetBuild Condition=" '$(DotNetBuild)' == '' ">$(DotNetEnabled)</DotNetBuild>
-
-      <DotNetPack Condition=" '$(SKIP_DOTNET_PACK)' != '' ">false</DotNetPack>
-      <DotNetPack Condition=" '$(DotNetPack)' != '' AND '$(DotNetPack.ToLower())' != 'true' ">false</DotNetPack>
-      <DotNetPack Condition=" '$(DotNetPack)' == '' ">$(DotNetEnabled)</DotNetPack>
-
-      <DotNetTest Condition=" '$(SKIP_DOTNET_TEST)' != '' ">false</DotNetTest>
-      <DotNetTest Condition=" '$(DotNetTest)' != '' AND '$(DotNetTest.ToLower())' != 'true' ">false</DotNetTest>
-      <DotNetTest Condition=" '$(DotNetTest)' == '' ">$(DotNetEnabled)</DotNetTest>
-
-      <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
-      <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
-      <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">$(DotNetEnabled)</DotNetPublish>
-
-      <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
-      <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetPush>
-      <DotNetPush Condition=" '$(DotNetPush)' == '' AND $(DotNetBuild) AND $(CI) AND !$(IsPullRequest) AND '$(PackageFeedUri)' != '' ">$(DotNetEnabled)</DotNetPush>
-      <DotNetPush Condition=" '$(DotNetPush)' == '' ">false</DotNetPush>
+      <DotNetRequired>false</DotNetRequired>
+      <DotNetRequired Condition=" @(DotNetProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetRequired>
     </PropertyGroup>
 
     <GetProjectMetadata Projects="@(DotNetProjects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)"
@@ -49,7 +27,7 @@
       <Output TaskParameter="Projects" ItemName="DotNetMetadata" />
     </GetProjectMetadata>
 
-    <ItemGroup Condition=" @(DotNetMetadata->Count()) > 0 ">
+    <ItemGroup Condition=" $(DotNetRequired) ">
       <RestoreProjects    Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsRestorable) " />
       <BuildProjects      Include="@(DotNetMetadata)"       Condition=" %(DotNetMetadata.IsBuildable) " />
       <SourceProjects     Include="@(DotNetMetadata)"       Condition=" '%(DotNetMetadata.ProjectGroup)' == 'src' " />
@@ -58,14 +36,39 @@
       <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPublishable) " />
       <PackProjects       Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPackable) " />
     </ItemGroup>
+  </Target>
 
+  <Target Name="ConfigureDotNet">
     <PropertyGroup>
-      <DotNetRestore Condition=" @(RestoreProjects->Count()) == 0 ">false</DotNetRestore>
-      <DotNetBuild Condition=" @(SourceProjects->Count()) == 0 ">false</DotNetBuild>
-      <DotNetPack Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPack>
-      <DotNetTest Condition=" @(TestProjects->Count()) == 0 ">false</DotNetTest>
-      <DotNetPublish Condition=" @(PublishProjects->Count()) == 0 ">false</DotNetPublish>
-      <DotNetPush Condition=" @(PackProjects->Count()) == 0 ">false</DotNetPush>
+      <DotNetRestore Condition=" '$(SKIP_DOTNET_RESTORE)' != '' ">false</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' != '' AND '$(DotNetRestore.ToLower())' != 'true' ">false</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' == '' AND @(RestoreProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetRestore>
+      <DotNetRestore Condition=" '$(DotNetRestore)' == '' ">false</DotNetRestore>
+
+      <DotNetBuild Condition=" '$(SKIP_DOTNET_BUILD)' != '' ">false</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' == '' AND @(SourceProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetBuild>
+      <DotNetBuild Condition=" '$(DotNetBuild)' == '' ">false</DotNetBuild>
+
+      <DotNetPack Condition=" '$(SKIP_DOTNET_PACK)' != '' ">false</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' != '' AND '$(DotNetPack.ToLower())' != 'true' ">false</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' == '' AND @(PackProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetPack>
+      <DotNetPack Condition=" '$(DotNetPack)' == '' ">false</DotNetPack>
+
+      <DotNetTest Condition=" '$(SKIP_DOTNET_TEST)' != '' ">false</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' != '' AND '$(DotNetTest.ToLower())' != 'true' ">false</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' == '' AND @(TestProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetTest>
+      <DotNetTest Condition=" '$(DotNetTest)' == '' ">false</DotNetTest>
+
+      <DotNetPublish Condition=" '$(SKIP_DOTNET_PUBLISH)' != '' ">false</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' != '' AND '$(DotNetPublish.ToLower())' != 'true' ">false</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' == '' AND @(PublishProjects->Count()) > 0 ">$(DotNetEnabled)</DotNetPublish>
+      <DotNetPublish Condition=" '$(DotNetPublish)' == '' ">false</DotNetPublish>
+
+      <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetBuild.ToLower())' != 'true' ">false</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' == '' AND $(DotNetPack) AND $(CI) AND !$(IsPullRequest) AND '$(PackageFeedUri)' != '' ">$(DotNetEnabled)</DotNetPush>
+      <DotNetPush Condition=" '$(DotNetPush)' == '' ">false</DotNetPush>
     </PropertyGroup>
   </Target>
 
@@ -86,6 +89,7 @@
   <PropertyGroup>
     <RestoreDependsOn>
       $(RestoreDependsOn);
+      ConfigureDotNet;
       DotNetRestore;
     </RestoreDependsOn>
 
