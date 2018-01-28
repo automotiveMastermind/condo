@@ -31,14 +31,18 @@
 
     <PropertyGroup>
       <BowerEnabled Condition=" $(BowerEnabled)" >$(HasBower)</BowerEnabled>
-
-      <BowerInstall Condition=" '$(SKIP_BOWER_INSTALL)' != '' ">false</BowerInstall>
-      <BowerInstall Condition=" '$(BowerInstall)' != '' AND '$(BowerInstall.ToLower())' != 'true' ">false</BowerInstall>
-      <BowerInstall Condition=" '$(BowerInstall)' == '' ">$(BowerEnabled)</BowerInstall>
     </PropertyGroup>
 
     <Warning Condition=" !$(HasBower) AND $(BowerRequired) AND $(NpmInstall)"
              Text="A bower.json file was located at: %(BowerProjectPaths.Identity), but the bower command or executable could not be found." />
+
+    <PropertyGroup>
+      <BowerRequired Condition=" $(BowerRequired) ">$(HasBower)</BowerRequired>
+
+      <BowerInstall Condition=" '$(SKIP_BOWER_INSTALL)' != '' ">false</BowerInstall>
+      <BowerInstall Condition=" '$(BowerInstall)' != '' AND '$(BowerInstall.ToLower())' != 'true' ">false</BowerInstall>
+      <BowerInstall Condition=" '$(BowerInstall)' == '' ">$(BowerRequired)</BowerInstall>
+    </PropertyGroup>
   </Target>
 
   <Target Name="PrintBowerProjects" Condition=" $(BowerRequired) ">

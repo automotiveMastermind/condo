@@ -31,10 +31,17 @@
 
     <PropertyGroup>
       <PolymerEnabled Condition=" $(PolymerEnabled) ">$(HasPolymer)</PolymerEnabled>
+    </PropertyGroup>
+
+    <Warning Condition=" !$(HasPolymer) AND $(PolymerRequired) AND $(NpmInstall) "
+             Text="A polymer.json file was located at: %(PolymerProjectPaths.Identity), but the polymer command or executable could not be found." />
+
+    <PropertyGroup>
+      <PolymerRequired Condition=" $(PolymerRequired) ">$(HasPolymer)</PolymerRequired>
 
       <PolymerInstall Condition=" '$(SKIP_POLYMER_INSTALL)' != '' ">false</PolymerInstall>
       <PolymerInstall Condition=" '$(PolymerInstall)' != '' AND '$(PolymerInstall.ToLower())' != 'true' ">false</PolymerInstall>
-      <PolymerInstall Condition=" '$(PolymerInstall)' == '' ">$(PolymerEnabled)</PolymerInstall>
+      <PolymerInstall Condition=" '$(PolymerInstall)' == '' ">$(PolymerRequired)</PolymerInstall>
 
       <PolymerLint Condition=" '$(SKIP_POLYMER_LINT)' != '' ">false</PolymerLint>
       <PolymerLint Condition=" '$(PolymerLint)' != '' AND '$(PolymerLint.ToLower())' != 'true' ">false</PolymerLint>
@@ -48,9 +55,6 @@
       <PolymerTest Condition=" '$(PolymerTest)' != '' AND '$(PolymerTest.ToLower())' != 'true' ">false</PolymerTest>
       <PolymerTest Condition=" '$(PolymerTest)' == '' ">$(PolymerInstall)</PolymerTest>
     </PropertyGroup>
-
-    <Warning Condition=" !$(HasPolymer) AND $(PolymerRequired) AND $(NpmInstall) "
-             Text="A polymer.json file was located at: %(PolymerProjectPaths.Identity), but the polymer command or executable could not be found." />
   </Target>
 
   <Target Name="PrintPolymerProjects" Condition=" $(PolymerRequired) ">
