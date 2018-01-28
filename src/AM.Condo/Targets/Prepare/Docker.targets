@@ -24,7 +24,7 @@
       <DockerComposeRequired Condition=" @(DockerComposePaths->Count()) > 0 ">$(DockerEnabled)</DockerComposeRequired>
 
       <DockerRequired>false</DockerRequired>
-      <DockerRequired Condition=" $(DockerBuildRequired) OR $(DockerComposeRequired) ">false</DockerRequired>
+      <DockerRequired Condition=" $(DockerBuildRequired) OR $(DockerComposeRequired) ">true</DockerRequired>
 
       <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">$(DOCKER_REGISTRY_URI)</DockerRegistry>
       <DockerRegistry Condition=" '$(DockerRegistry)' == '' ">https://index.docker.io/v1/</DockerRegistry>
