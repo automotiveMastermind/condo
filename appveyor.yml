@@ -13,7 +13,9 @@ image: Visual Studio 2017
 environment:
   GH_TOKEN:
     secure: HXDr0rstXSt8dsyX7xzWLlzcKCNxQQGPGyEoWv9Cu5eZMwe4T8wJm2K2qaVgcsQr
-  CONDO_CREATE_RELEASE: true
+  SKIP_NPM: true
+  SKIP_POLYMER: true
+  SKIP_BOWER: true
 install:
 - ps: Install-Product node lts
 build_script:
