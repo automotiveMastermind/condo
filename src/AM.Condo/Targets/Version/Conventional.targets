@@ -20,7 +20,7 @@
   <Import Project="$(ConventionStrategyTargets)" />
 
   <!-- get information about the commits within the repository -->
-  <Target Name="GetCommitInfo" Condition="$(HasGit)">
+  <Target Name="GetCommitInfo" Condition=" $(HasGit) ">
     <GetCommitInfo
       RepositoryRoot="$(RepositoryRoot)"
       IncludeInvalidCommits="$(IncludeInvalidCommits)"
@@ -107,7 +107,6 @@
 
     <VersionDependsOn>
       GetAssemblyInfo;
-      SaveAssemblyInfo;
       $(VersionDependsOn);
     </VersionDependsOn>
 
@@ -115,6 +114,11 @@
       $(AfterVersion);
       CheckoutReleaseBranch;
     </AfterVersion>
+
+    <AfterPrepare>
+      $(AfterPrepare);
+      SaveAssemblyInfo;
+    </AfterPrepare>
 
     <AfterPublish>
       CreateRelease;
