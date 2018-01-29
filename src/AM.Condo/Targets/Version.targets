@@ -81,7 +81,7 @@
   </Target>
 
   <!-- save assembly info files -->
-  <Target Name="SaveAssemblyInfo" Condition=" '@(SourceProjects->Count())' != '0' ">
+  <Target Name="SaveAssemblyInfo" Condition=" $(DotNetBuild) ">
     <SaveAssemblyInfo
         AssemblyInfoPath="%(SourceProjects.CondoAssemblyInfo)"
         RecommendedRelease="$(RecommendedRelease)"
