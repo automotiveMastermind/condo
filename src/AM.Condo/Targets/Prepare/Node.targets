@@ -43,7 +43,8 @@
 
       <NpmInstall Condition=" '$(SKIP_NPM_INSTALL)' != '' ">false</NpmInstall>
       <NpmInstall Condition=" '$(NpmInstall)' != '' AND '$(NpmInstall.ToLower())' != 'true' ">false</NpmInstall>
-      <NpmInstall Condition=" '$(NpmInstall)' == '' ">$(NpmEnabled)</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' == '' AND @(NodeInstallProjects->Count()) > 0 ">$(NpmEnabled)</NpmInstall>
+      <NpmInstall Condition=" '$(NpmInstall)' == '' ">false</NpmInstall>
 
       <NpmBuild Condition=" '$(SKIP_NPM_BUILD)' != '' ">false</NpmBuild>
       <NpmBuild Condition=" '$(NpmBuild)' != '' AND '$(NpmBuild.ToLower())' != 'true' ">false</NpmBuild>
