@@ -83,7 +83,7 @@ namespace AM.Condo.Tasks
             var directory = Path.GetDirectoryName(path);
 
             // set the project directory path
-            project.SetMetadata("ProjectDir", directory);
+            project.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
 
             // create a path for the node package json
             var nodePath = Path.Combine(directory, "package.json");
