@@ -85,12 +85,11 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for
-details.
+&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][credits] for details.
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
-[credits]: CREDITS
+[credits]: CREDITS.md
 
 [release-url]: //github.com/automotivemastermind/condo/releases/latest
 [release-v-image]:https://img.shields.io/github/release/automotivemastermind/condo.svg?style=flat-square&label=github
