@@ -22,7 +22,7 @@ project function correctly. Some of the most-used features of the build system i
 
 * Automatic semantic versioning
 * Restoring package manager dependencies (NuGet, NPM, Bower)
-* Executing default task runner commands (Grunt, Gulp)
+* Executing default task runner commands
 * Compiling projects and test projects (package.json and msbuild)
 * Executing unit tests (xunit, mocha, jasmine, karma, protractor)
 * Packing NuGet packages
