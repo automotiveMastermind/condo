@@ -71,10 +71,12 @@ So let's do it the old fashioned way:
 
 If you are using any protected nuget feeds, run the following command to add your credentials:
 
+    Windows:
     ```condo -SecureFeed```
 
 You can also get the latest and greatest version of condo by running this command:
 
+    Windows:
     ```condo -Reset```
 
 ## Documentation
