@@ -102,7 +102,7 @@ followed by ```Verify```. All of the dependencies of ```Document``` have also be
 successfully completed. ```Publish``` is executed last to complete the publish lifecycle.
 
 
-## Copright and License
+## Copyright and License
 
 &copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] for details.
 
