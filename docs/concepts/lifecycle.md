@@ -100,11 +100,3 @@ The publish lifecycle stack unravels in kind. ```Clean``` is called, followed by
 ```Version```, followed by ```Prepare```, followed by ```Compile```, followed by ```Test```, followed by ```Package```,
 followed by ```Verify```. All of the dependencies of ```Document``` have also been resolved, so ```Document``` is also
 successfully completed. ```Publish``` is executed last to complete the publish lifecycle.
-
-
-## Copyright and License
-
-&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] for details.
-
-[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
-[license]: LICENSE
