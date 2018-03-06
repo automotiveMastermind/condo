@@ -1,7 +1,6 @@
 # Condo lifecycle
 Condo's lifecycle is comprised of a series of tasks that get executed sequentially, given success of previous tasks.
-When the first task target is called, the dependencies are checked. If the dependency has not been been resolved
-successfully, it is p
+When the first task target is called, the dependencies are checked.
 
 ## Default implementation
 The default implementation of the condo lifecycle is as follows:
