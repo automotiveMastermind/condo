@@ -71,10 +71,16 @@ So let's do it the old fashioned way:
 
 If you are using any protected nuget feeds, run the following command to add your credentials:
 
+    OS X / Linux:
+	```./condo.sh --username InsertUsername --password InsertPassword -- /t:Bootstrap```
+
     Windows:
     ```condo -SecureFeed```
 
 You can also get the latest and greatest version of condo by running this command:
+
+    OS X / Linux:
+	```./condo.sh --reset```
 
     Windows:
     ```condo -Reset```
