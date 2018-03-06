@@ -34,7 +34,7 @@ Publish      | Publish final build artifacts                                    
 
 
 ## Build lifecycle
-When you call ```./condo.sh``` on your condo project, you will run the configurable condo.build file. If you are running the default build, as specified in ```lifecycle.targets```, the first target that gets called is the ```Build``` target, which in turn depends on the ```Package``` task.
+When you call ```./condo.sh``` on your condo project, you will run the configurable ```condo.build``` file. If you are running the default build, as specified in ```lifecycle.targets```, the first target that gets called is the ```Build``` target, which in turn depends on the ```Package``` task.
 
 An execution stack is created, and can be represented as such:
 
@@ -73,23 +73,20 @@ Given LIFO, the stack unravels as each task is completed successfully. ```Clean`
 
 
 ## Publish lifecycle
-The ```Publish``` lifecycle closely follows the ```Build``` lifecycle. ```Publish``` first depends on ```Verify``` and ```Document```. ```Verify``` depends on ```Package```, and ```Document``` depends on ```Version```. 
+The ```Publish``` lifecycle closely follows the ```Build``` lifecycle. ```Publish``` first depends on ```Verify``` and ```Document```. ```Verify``` depends on ```Package```, and ```Document``` depends on ```Version```.
 
 The resulting stack can be represented as such:
 
 |Stack Position | Target            | Dependency Task |
 |:-------------:|-------------------|-----------------|
-|13             |Clean              | N/A             |
-|12             |Initialize         | Clean           |
-|11             |Version            | Initialize      |
-|10             |Prepare            | Version         |
-|9              |Compile            | Prepare         |
-|8              |Test               | Compile         |
-|7              |Package            | Test            |
-|6              |Verify             | Package         |
-|5              |Clean              | N/A             |
-|4              |Initialize         | Clean           |
-|3              |Version            | Initialize      |
+|10             |Clean              | N/A             |
+|9              |Initialize         | Clean           |
+|8              |Version            | Initialize      |
+|7              |Prepare            | Version         |
+|6              |Compile            | Prepare         |
+|5              |Test               | Compile         |
+|4              |Package            | Test            |
+|3              |Verify             | Package         |
 |2              |Document           | Version         |
 |1              |Publish            | Verify, Document|
 
@@ -100,6 +97,3 @@ The resulting stack can be represented as such:
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
-
-[gitter-url]: //gitter.im/automotivemastermind/prompt
-[gitter-image]:https://img.shields.io/badge/⊪%20gitter-join%20chat%20→-1dce73.svg
