@@ -33,16 +33,19 @@ Publish      | Publish final build artifacts                                    
 
 
 ## Build lifecycle
-When you call ```./condo.sh``` on your condo project, you will run the configurable ```condo.build``` file. If you are running the default build, as specified in ```lifecycle.targets```, the first target that gets called is the ```Build``` target, which in turn depends on the ```Package``` task.
+When you call ```./condo.sh``` on your condo project, you will run the configurable ```condo.build``` file. If you are
+running the default build, as specified in ```lifecycle.targets```, the first target that gets called is the ```Build```
+target, which in turn depends on the ```Package``` task.
 
-An execution stack is created, and can be represented as such:
+An execution stack of sorts is created, and can be represented as such:
 
 |Stack Position | Target            | Dependency Task |
 |:-------------:|-------------------|-----------------|
 |1              |Build              | Package         |
 
 
-The ```Package``` task's dependencies are checked next. ```Package``` depends on ```Test```, and that dependency is consequently pushed onto the stack.
+The ```Package``` task's dependencies are checked next. ```Package``` depends on ```Test```, and that dependency is
+consequently pushed onto the stack.
 
 The stack can be represented as such:
 
@@ -52,7 +55,8 @@ The stack can be represented as such:
 |1              |Build              | Package         |
 
 
-```Test``` in turn depends on ```Compile```, which depends on ```Prepare```, which depends on ```Version```, which depends on ```Initialize```, which depends on ```Clean```.
+```Test``` in turn depends on ```Compile```, which depends on ```Prepare```, which depends on ```Version```, which
+depends on ```Initialize```, which depends on ```Clean```.
 
 The resulting stack can be represented as such:
 
@@ -68,11 +72,14 @@ The resulting stack can be represented as such:
 |1              |Build              | Package         |
 
 
-Given LIFO, the stack unravels as each task is completed successfully. ```Clean``` is called, followed by ```Initialize```, followed by ```Version```, followed by ```Prepare```, followed by ```Compile```, followed by ```Test```, followed by ```Package```, followed by ```Build```.
+Given LIFO, the stack unravels as each task is completed successfully. ```Clean``` is called, followed by
+```Initialize```, followed by ```Version```, followed by ```Prepare```, followed by ```Compile```, followed by
+```Test```, followed by ```Package```, followed by ```Build```.
 
 
 ## Publish lifecycle
-The ```Publish``` lifecycle closely follows the ```Build``` lifecycle. ```Publish``` first depends on ```Verify``` and ```Document```. ```Verify``` depends on ```Package```, and ```Document``` depends on ```Version```.
+The ```Publish``` lifecycle closely follows the ```Build``` lifecycle. ```Publish``` first depends on ```Verify``` and
+```Document```. ```Verify``` depends on ```Package```, and ```Document``` depends on ```Version```.
 
 The resulting stack can be represented as such:
 
@@ -88,6 +95,11 @@ The resulting stack can be represented as such:
 |3              |Verify             | Package         |
 |2              |Document           | Version         |
 |1              |Publish            | Verify, Document|
+
+The publish lifecycle stack unravels in kind. ```Clean``` is called, followed by ```Initialize```, followed by
+```Version```, followed by ```Prepare```, followed by ```Compile```, followed by ```Test```, followed by ```Package```,
+followed by ```Verify```. All of the dependencies of ```Document``` have also been resolved, so ```Document``` is also
+successfully completed. ```Publish``` is executed last to complete the publish lifecycle.
 
 
 ## Copright and License
