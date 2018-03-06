@@ -12,7 +12,7 @@ skip_commits:
 image: Visual Studio 2017
 environment:
   GH_TOKEN:
-    secure: HXDr0rstXSt8dsyX7xzWLlzcKCNxQQGPGyEoWv9Cu5eZMwe4T8wJm2K2qaVgcsQr
+    secure: dQBV6ymcqDHOLzE1T5jWRs4863Uednt/Luj0pqghFo/G0c3hiGTVfNAbfFkt50up
   SKIP_NPM: true
   SKIP_POLYMER: true
   SKIP_BOWER: true
