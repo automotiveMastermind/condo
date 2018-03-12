@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <Target Name="CleanArtifacts">
     <RemoveDir Directories="@(ArtifactPaths)" Condition=" Exists('%(ArtifactPaths.FullPath)') " ContinueOnError="true" />
   </Target>
@@ -57,5 +56,5 @@
     </BeforeInitialize>
   </PropertyGroup>
 
-  <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" />
+  <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" Condition=" $(CleanEnabled) " />
 </Project>

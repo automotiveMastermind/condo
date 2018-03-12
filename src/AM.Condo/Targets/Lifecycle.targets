@@ -4,6 +4,10 @@
     <CONDO_DEBUG Condition=" '$(CONDO_DEBUG)' == '' ">false</CONDO_DEBUG>
     <CONDO_WAIT Condition=" '$(CONDO_WAIT)' == '' ">false</CONDO_WAIT>
 
+    <CleanEnabled Condition=" '$(SKIP_CLEAN)' != '' ">false</CleanEnabled>
+    <CleanEnabled Condition=" '$(CleanEnabled)' != '' AND '$(CleanEnabled.ToLower())' != 'true' ">false</CleanEnabled>
+    <CleanEnabled Condition=" '$(CleanEnabled)' == '' ">true</CleanEnabled>
+
     <BeforeInitialize Condition=" $(CONDO_DEBUG) ">
       Debugging;
       $(BeforeInitialize);
