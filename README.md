@@ -18,25 +18,23 @@ Issues        | [![Issues][issues-image]][issues-url]
 
 Condo is a cross-platform command line interface (CLI) build system for projects using NodeJS, CoreCLR, .NET Framework,
 or... well, anything. It is capable of automatically detecting and executing all of the steps necessary to make <any>
-project function correctly, including, but not limited to:
+project function correctly. Some of the most-used features of the build system include:
 
 * Automatic semantic versioning
 * Restoring package manager dependencies (NuGet, NPM, Bower)
-* Executing default task runner commands (Grunt, Gulp)
+* Executing default task runner commands
 * Compiling projects and test projects (package.json and msbuild)
 * Executing unit tests (xunit, mocha, jasmine, karma, protractor)
 * Packing NuGet packages
 * Pushing (Publishing) NuGet packages
 
-These are just some of the most-used features of the build system.
-
 ### Using Condo
 We are currently developing `condo-cli` to make bootstrapping your projects to use condo a snap.
 
-But its not ready yet!..
-So lets do it the old fashion way:
+But it's not ready yet...
+So let's do it the old fashioned way:
 
-1. Get the nessesary files:
+1. Get the necessary files:
 
     Copy the four files in the `templates` folder and add them to the root folder of your project.
     ```
@@ -71,13 +69,21 @@ So lets do it the old fashion way:
 
 ### Helpful hints
 
-If you are using any protected nuget feeds then run the following command to add your credentials
+If you are using any protected nuget feeds, run the following command to add your credentials:
 
-    condo -SecureFeed
+    OS X / Linux:
+	```./condo.sh --username USERNAME --password PASSWORD -- /t:Bootstrap```
 
-You can also get the latest and greatest version of condo by running this command
+    Windows:
+    ```condo -SecureFeed```
 
-    condo -Reset
+You can also get the latest and greatest version of condo by running this command:
+
+    OS X / Linux:
+	```./condo.sh --reset```
+
+    Windows:
+    ```condo -Reset```
 
 ## Documentation
 
@@ -85,12 +91,11 @@ For more information, please refer to the [official documentation][docs-url].
 
 ## Copright and License
 
-&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][] for
-details.
+&copy; automotiveMastermind and contributors. Distributed under the MIT license. See [LICENSE][] and [CREDITS][credits] for details.
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: LICENSE
-[credits]: CREDITS
+[credits]: CREDITS.md
 
 [release-url]: //github.com/automotivemastermind/condo/releases/latest
 [release-v-image]:https://img.shields.io/github/release/automotivemastermind/condo.svg?style=flat-square&label=github
