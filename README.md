@@ -36,7 +36,7 @@ So let's do it the old fashioned way:
 
 1. Get the necessary files:
 
-    Copy the four files in the `templates` folder and add them to the root folder of your project.
+    Copy the four files in the [`template`](template) folder and add them to the root folder of your project.
     ```
     condo.build
     condo.cmd
