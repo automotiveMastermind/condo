@@ -148,7 +148,9 @@ function Write-Info([string] $message) {
 
 function Get-File([string] $url, [string] $path, [int] $retries = 5) {
     try {
+        [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
         Invoke-WebRequest $url -OutFile $path > $null
+        return
     }
     catch [System.Exception] {
         Write-Failure "Unable to retrieve file: $url"
