@@ -89,6 +89,31 @@ safe-join() {
      echo "$*"
 }
 
+get_linux_platform_name() {
+
+    if [ -n "$runtime_id" ]; then
+        echo "${runtime_id%-*}"
+        return 0
+    else
+        if [ -e /etc/os-release ]; then
+            . /etc/os-release
+            echo "$ID.$VERSION_ID"
+            return 0
+        elif [ -e /etc/redhat-release ]; then
+            local redhatRelease=$(</etc/redhat-release)
+            if [[ $redhatRelease == "CentOS release 6."* || $redhatRelease == "Red Hat Enterprise Linux Server release 6."* ]]; then
+                echo "rhel.6"
+                return 0
+            fi
+        fi
+    fi
+
+    failure "Linux specific platform name and version could not be detected: $ID.$VERSION_ID"
+    return 1
+}
+
+platform=$(get_linux_platform_name)
+
 # download dotnet
 install_dotnet() {
     # force remove 2.0.0 SDK because SDK detection is borked for patch versions
@@ -119,6 +144,15 @@ install_dotnet() {
         chmod +x $DOTNET_INSTALL
 
         for DOTNET_VERSION in ${DOTNET_VERSIONS[@]}; do
+
+            # skip install of dotnet v1 for ubuntu versions greater than 16.04
+            if echo $platform | grep -q 'ubuntu.1[6-9].[1-9][0-9]' && \
+                echo $DOTNET_VERSION | grep -q '1\.[0-9]*\.[0-9]*'; then
+
+                info "Skipping install of dotnet $DOTNET_VERSION because $platform is not supported..."
+                continue
+            fi
+
             safe-exec $DOTNET_INSTALL --version $DOTNET_VERSION
         done
 
