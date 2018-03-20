@@ -149,7 +149,7 @@ install_dotnet() {
             if echo $platform | grep -q 'ubuntu.1[6-9].[1-9][0-9]' && \
                 echo $DOTNET_VERSION | grep -q '1\.[0-9]*\.[0-9]*'; then
 
-                info "Skipping install of dotnet $DOTNET_VERSION beacuse $platform is not supported..."
+                info "Skipping install of dotnet $DOTNET_VERSION because $platform is not supported..."
                 continue
             fi
 
