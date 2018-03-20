@@ -3,81 +3,56 @@
 <#
 .SYNOPSIS
 Builds the project using the condo build system.
-
 .DESCRIPTION
 Uses condo to build the project(s) contained within the current repository. If condo is not already present, it will
 be downloaded and restored using the provided URI or branch. If not URL or branch is provided, the latest release
 version will be downloaded.
-
 .PARAMETER Reset
 Deletes the pre-existing locally restored copy of condo and its dependencies before redownloading and restoring.
-
 .PARAMETER Local
 Uses the current repository to restore condo and its dependencies. This is useful for locally testing customizations
 to condo from its own repository.
-
 .PARAMETER Uri
 The URI from which to download and restore condo.
-
 .PARAMETER Branch
 The branch from which to download and restore condo from its default repository.
-
 .PARAMETER Source
 The file system path from which to restore condo and its dependencies from source. This is useful for locally testing
 customizations to condo from a different repository.
-
 .PARAMETER Verbosity
 The verbosity used for messaging to the standard output from both condo and the underlying MSBuild system.
-
 Acceptable values are: Quiet, Minimal, Normal, Detailed, and Diagnostic
-
 .PARAMETER NoColor
 Indicates that any messaging to the standard output should not be emitted using colors. This is useful for parsing
 output by third party tools.
-
 .PARAMETER SecureFeed
 Enables support for adding credentials for a secured NuGet feed.
-
 .PARAMETER MSBuildArgs
 Contains any additional parameters that are not bound to one of the parameters above. These values will be passed
 to the underlying MSBuild runtime. These values are automatically bound from all remaining arguments. Specifying
 the parameter as a collection is not necessary. See examples for more information.
-
 .EXAMPLE
 condo -Uri https://github.com/automotivemastermind/condo/releases/2.0.0.zip
-
 # use the specified uri to install condo (if it is not already installed)
-
 .EXAMPLE
 condo -Branch develop
-
 # use the develop branch to install condo
-
 .EXAMPLE
 condo -Reset -Verbosity Detailed
-
 # reset condo to latest release build and enable verbose logging
-
 .EXAMPLE
 condo /t:Publish /p:Configuration=Release
-
 # pass a target and property to the msbuild runtime
-
 .EXAMPLE
 condo -SecureFeed
-
 # bootstrap secured feeds using the specified username and password
-
 .INPUTS
 None. Condo does not accept any inputs through a pipe.
-
 .OUTPUTS
 None. Condo does not emit any outputs through a pipe.
-
 .NOTES
 The underlying build system in use is Microsoft Build for .NET Core. Any parameters beyond those supported by this
 cmdlet will be passed to the msbuild process for consideration.
-
 .LINK
 http://open.automotivemastermind.com/condo
 #>
@@ -147,23 +122,29 @@ function Write-Info([string] $message) {
 }
 
 function Get-File([string] $url, [string] $path, [int] $retries = 5) {
-    try {
-        [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-        Invoke-WebRequest $url -OutFile $path > $null
-        return
-    }
-    catch [System.Exception] {
-        Write-Failure "Unable to retrieve file: $url"
+    while ($retries -gt 0) {
+        try {
+            [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
+            Invoke-WebRequest $url -OutFile $path > $null
 
-        if ($retries -eq 0) {
-            $exception = $_.Exception
-            throw $exception
+            return
         }
+        catch [System.Exception] {
+            Write-Failure "Unable to retrieve file: $url"
 
-        Write-Failure "Retrying in 10 seconds... attempts left: $retries"
-        Start-Sleep -Seconds 10
-        $retries--
+            if ($retries -eq 0) {
+                $exception = $_.Exception
+                throw $exception
+            }
+
+            Write-Failure "Retrying in 10 seconds... attempts left: $retries"
+            Start-Sleep -Seconds 10
+            $retries--
+        }
     }
+
+    Write-Failure "Failed to retrieve condo; exiting..."
+    exit 1
 }
 
 # find the script path
@@ -174,12 +155,11 @@ $SrcRoot = "$CondoRoot\.src"
 $CondoScript = "$SrcRoot\src\AM.Condo\Scripts\condo.ps1"
 
 if ($PSCmdlet.ParameterSetName -eq 'ByBranch') {
-    $Uri = "https://github.com/automotivemastermind/condo/archive/$Branch.zip"
+    $Uri = "https://github.com/automotivemastermind/condo/zipball/$Branch"
 }
 
 if ($Reset.IsPresent -and (Test-Path $CondoRoot)) {
     Write-Info 'Resetting condo build system...'
-
     Remove-Item -Recurse -Force $CondoRoot > $null
 }
 
