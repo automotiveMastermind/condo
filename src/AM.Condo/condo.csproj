@@ -32,10 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="$(MSBuildVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MSBuildVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MSBuildVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MSBuildVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build" Version="$(BuildVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="$(BuildVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(BuildVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(BuildVersion)" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
