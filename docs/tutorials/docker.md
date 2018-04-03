@@ -23,12 +23,13 @@ Docker project specifications are found in the `Prepare`, `Compile`, and `Publis
 
 
 ## Prepare
-In the `Prepare` target, condo will look for a few files at the root of your repository or in a `Docker` folder:
+In the `Prepare` target, condo will look for a few files and respective executables at the root of your repository or
+in a `Docker` folder:
 1. `dockerfile`
 2. `dockerfile.debug`
 3. `docker-compose`
 
-Condo will apply your specifications and options to perpare:
+Condo will apply your specifications and options to prepare:
 
 ```bash
 docker build
@@ -42,26 +43,27 @@ docker compose
 docker push
 ```
 
+
 ## Compile
 In the `Compile` target, condo will take your specifications and execute:
 
 ```bash
-docker label
+docker build --label %(DockerMetadata.Label) --tag %(DockerMetadata.VersionLabel) -f %(DockerMetadata.Identity) %(DockerMetadata.ProjectDir)
 ```
 
 ```bash
-docker tag
+docker tag %(DockerTags.VersionLabel) %(DockerTags.Identity)
 ```
 
 ## Publish
 In the `Publish` target, condo will take your specifications and execute:
 
 ```bash
-docker tag
+docker tag %(DockerRegistryTags.VersionLabel) $(DockerOrganization)%(DockerRegistryTags.Identity)
 ```
 
 ```bash
-docker push
+docker push $(DockerOrganization)%(DockerRegistryTags.Identity)
 ```
 
 
