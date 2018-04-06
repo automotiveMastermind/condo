@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <MSBuildVersion>15.5.180</MSBuildVersion>
+    <MSBuildVersion>15.6.85</MSBuildVersion>
     <NuGetVersion>4.5.0</NuGetVersion>
     <XUnitVersion>2.3.1</XUnitVersion>
   </PropertyGroup>
