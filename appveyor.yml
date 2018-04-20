@@ -21,8 +21,6 @@ install:
 build_script:
 - cmd: condo.cmd /t:ci /t:document
 test: off
-artifacts:
-- path: '%USERPROFILE%\.am\condo\.build\condo.log'
 notifications:
 - provider: Webhook
   url: https://webhooks.gitter.im/e/c731d7b3fd486219480c
