@@ -129,7 +129,7 @@ function Invoke-Cmd([string] $cmd) {
     $cmdName = [System.IO.Path]::GetFileName($cmd)
 
     # execute the command
-    & $cmd @args 2>&1 >> $CondoLog
+    & $cmd @args 2>&1 | Tee-Object -path $CondoLog -append
 
     # capture the exit code
     $exitCode = $LASTEXITCODE
