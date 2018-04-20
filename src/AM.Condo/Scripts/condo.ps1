@@ -129,7 +129,7 @@ function Invoke-Cmd([string] $cmd) {
     $cmdName = [System.IO.Path]::GetFileName($cmd)
 
     # execute the command
-    & $cmd @args 2>&1 >> $CondoLog
+    & $cmd @args 2>&1 | Tee-Object -FilePath $CondoLog -Append
 
     # capture the exit code
     $exitCode = $LASTEXITCODE
@@ -153,7 +153,7 @@ function Install-DotNet() {
     }
 
     if (!$dotnetVersions) {
-        $dotnetVersions = @("1.1.7","2.1.4")
+        $dotnetVersions = @("1.1.8","2.1.105")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -194,17 +194,12 @@ function Install-Condo() {
     # create the condo publish path
     New-Item $CondoPublish -ItemType Directory -ErrorAction SilentlyContinue > $null
 
-    # get the runtime
-    $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches.Groups[1].Value
-
-    # restore msbuild
-    Write-Info "condo: restoring condo packages..."
-    Invoke-Cmd dotnet restore $SrcRoot --runtime $runtime --verbosity minimal --ignore-failed-sources
-    Write-Success "condo: restore complete"
+    # use the portable runtime
+    $runtime = "win-x64"
 
     # publish condo
-    Write-Info "condo: publishing condo tasks..."
-    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false
+    Write-Info "condo: publishing condo..."
+    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
     Write-Success "condo: publish complete"
 }
 

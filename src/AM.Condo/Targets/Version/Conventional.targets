@@ -79,6 +79,7 @@
       Name="CHANGELOG.md"
       Version="$(CurrentReleaseTag)"
       RepositoryRoot="$(RepositoryRoot)"
+      RepositoryUri="$(RepositoryUri)"
       GroupByHeader="$(GroupByHeader)"
       SortByHeader="$(SortByHeader)"
       ChangeLogInitialize="$(ChangeLogInitialize)"

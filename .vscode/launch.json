@@ -7,8 +7,20 @@
       "request": "attach",
       "processId": "${command:pickProcess}",
       "requireExactSource": false,
-      "sourceFileMap": {
-        "~/.am/condo/.src": "${workspaceRoot}"
+      "windows": {
+        "sourceFileMap": {
+          "${env:USERPROFILE}\\.am\\condo\\.src": "${workspaceRoot}"
+        }
+      },
+      "osx": {
+        "sourceFileMap": {
+          "${env:HOME}/.am/condo/.src": "${workspaceRoot}"
+        }
+      },
+      "linux": {
+        "sourceFileMap": {
+          "${env:HOME}/.am/condo/.src": "${workspaceRoot}"
+        }
       }
     }
   ]

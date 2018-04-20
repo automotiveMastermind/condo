@@ -3,5 +3,6 @@
     <BuildVersion>15.6.85</BuildVersion>
     <NuGetVersion>4.5.0</NuGetVersion>
     <XUnitVersion>2.3.1</XUnitVersion>
+    <SourceLinkVersion>2.8.1</SourceLinkVersion>
   </PropertyGroup>
 </Project>

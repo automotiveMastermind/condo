@@ -24,6 +24,8 @@ namespace AM.Condo.ChangeLog
         #region Private Fields
         private readonly ChangeLogOptions options;
 
+        private readonly CommitComparer comparer;
+
         private string changelog;
 
         private string path;
@@ -56,6 +58,16 @@ namespace AM.Condo.ChangeLog
 
             // no encoding
             Handlebars.Configuration.TextEncoder = null;
+
+            // create the commit comparer
+            this.comparer = new CommitComparer(options.SortBy);
+
+            // remove repository uri if not from github
+            if (!(options.RepositoryUri?.Contains("//github.com")).GetValueOrDefault())
+            {
+                // clear out the repository uri
+                options.RepositoryUri = null;
+            }
         }
         #endregion
 
@@ -269,7 +281,7 @@ namespace AM.Condo.ChangeLog
             foreach (var currentCommit in log)
             {
                 // create the commit
-                var commit = new Dictionary<string, object>
+                var commit = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {
                     // add the hash
                     { "hash", currentCommit.ShortHash },
@@ -282,7 +294,7 @@ namespace AM.Condo.ChangeLog
                 foreach (var currentNote in currentCommit.Notes)
                 {
                     // create the note
-                    var note = new Dictionary<string, object>
+                    var note = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                     {
                         // add the text and associated commit
                         { "text", currentNote.Body },
@@ -310,11 +322,11 @@ namespace AM.Condo.ChangeLog
                         group.Add("title", display);
 
                         // add the notes
-                        group.Add("notes", new List<IDictionary<string, object>>());
+                        group.Add("notes", new SortedSet<IDictionary<string, object>>(this.comparer));
                     }
 
                     // get the notes
-                    var notes = group["notes"] as List<IDictionary<string, object>>;
+                    var notes = group["notes"] as SortedSet<IDictionary<string, object>>;
 
                     // add the note
                     notes.Add(note);
@@ -323,43 +335,39 @@ namespace AM.Condo.ChangeLog
                 // iterate over header correspondence
                 foreach (var correspondence in currentCommit.HeaderCorrespondence)
                 {
-                    // capture the key
-                    var key = correspondence.Key;
-                    var value = correspondence.Value;
+                    // add the header info to the commit
+                    commit.Add(correspondence.Key.ToLowerInvariant(), correspondence.Value);
+                }
 
-                    // add the key
-                    commit.Add(key.ToLowerInvariant(), correspondence.Value);
-
-                    // determine if this is the group by key
-                    if (key.Equals(this.options.GroupBy, StringComparison.OrdinalIgnoreCase))
+                // attempt to get the group by header
+                if (currentCommit.HeaderCorrespondence.TryGetValue(this.options.GroupBy, out var groupBy))
+                {
+                    // attempt to get the display name mapping
+                    if (!this.options.ChangeLogTypes.TryGetValue(groupBy, out string display))
                     {
-                        // attempt to get the display name mapping
-                        if (!this.options.ChangeLogTypes.TryGetValue(value, out string display))
-                        {
-                            // discard the commit
-                            continue;
-                        }
-
-                        // attempt to get the group
-                        if (!tempCommits.TryGetValue(display, out IDictionary<string, object> group))
-                        {
-                            // create the group
-                            group = new Dictionary<string, object>();
-                            tempCommits.Add(display, group);
-
-                            // add the title
-                            group.Add("title", display);
-
-                            // add the commits
-                            group.Add("commits", new List<IDictionary<string, object>>());
-                        }
-
-                        // get the commits
-                        var commits = group["commits"] as List<IDictionary<string, object>>;
-
-                        // add the commit
-                        commits.Add(commit);
+                        // discard the commit
+                        continue;
                     }
+
+                    // attempt to get the group
+                    if (!tempCommits.TryGetValue(display, out IDictionary<string, object> group))
+                    {
+                        // create the group
+                        group = new Dictionary<string, object>();
+                        tempCommits.Add(display, group);
+
+                        // add the title
+                        group.Add("title", display);
+
+                        // add the commits
+                        group.Add("commits", new SortedSet<IDictionary<string, object>>(this.comparer));
+                    }
+
+                    // get the commits
+                    var commits = group["commits"] as SortedSet<IDictionary<string, object>>;
+
+                    // add the commit
+                    commits.Add(commit);
                 }
 
                 // create the references

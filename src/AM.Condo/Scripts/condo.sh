@@ -172,14 +172,18 @@ install_condo() {
         # get the current runtime
         RUNTIME=`dotnet --info | grep "RID" | awk '{ print $2 }'`
 
-        # restore condo
-        info "condo: restoring condo packages..."
-        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
-        success "condo: restore complete"
+        # use the portable runtime identifier as these are starting to change
+        if [[ $RUNTIME == "osx".* ]]; then
+            # set osx portable
+            RUNTIME="osx-x64"
+        else
+            # set linux portable
+            RUNTIME="linux-x64"
+        fi
 
         # publish condo
-        info "condo: publishing condo tasks..."
-        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+        info "condo: publishing condo..."
+        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
         cp -R $TEMPLATE_ROOT $CONDO_ROOT
 
         info "condo: removing temp path..."
@@ -238,7 +242,7 @@ fi
 
 # determine if the dotnet install channel is not already set
 if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
-    DOTNET_VERSIONS=('1.1.7' '2.1.4')
+    DOTNET_VERSIONS=('1.1.8' '2.1.105')
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
