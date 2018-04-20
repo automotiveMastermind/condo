@@ -181,14 +181,9 @@ install_condo() {
             RUNTIME="linux-x64"
         fi
 
-        # restore condo
-        info "condo: restoring condo packages..."
-        safe-exec dotnet restore $SRC_ROOT --runtime $RUNTIME --verbosity minimal --ignore-failed-sources
-        success "condo: restore complete"
-
         # publish condo
-        info "condo: publishing condo tasks..."
-        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false
+        info "condo: publishing condo..."
+        safe-exec dotnet publish $CONDO_PATH --runtime $RUNTIME --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
         cp -R $TEMPLATE_ROOT $CONDO_ROOT
 
         info "condo: removing temp path..."
