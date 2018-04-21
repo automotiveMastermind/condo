@@ -85,7 +85,9 @@ namespace AM.Condo.Tasks
             }
 
             // get the location where the file should be downloaded
-            var location = this.Extract ? Path.Combine(Path.GetTempPath(), Path.GetTempFileName()) : this.Destination;
+            var location = this.Extract
+                ? Path.Combine(Path.GetTempPath(), new Random().Next().ToString())
+                : this.Destination;
 
             // determine if the directory does not exist
             if (!Directory.Exists(location))
