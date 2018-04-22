@@ -33,6 +33,11 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the encoding to use when saving the file.
+        /// </summary>
+        public string EncodingName { get; set; }
+
+        /// <summary>
         /// Gets or sets the content of the file.
         /// </summary>
         public string Content { get; set; }
@@ -87,8 +92,11 @@ namespace AM.Condo.Tasks
                     }
                 }
 
+                // get the encoding specified
+                var encoding = Encoding.GetEncoding(this.EncodingName ?? "UTF-8");
+
                 // write the file content to the specified path
-                File.WriteAllText(this.FilePath, this.Content, Encoding.UTF8);
+                File.WriteAllText(this.FilePath, this.Content, encoding);
             }
             catch (ArgumentException argEx)
             {
