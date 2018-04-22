@@ -15,7 +15,7 @@
     <DockerEnableExtendedTags>true</DockerEnableExtendedTags>
   </PropertyGroup>
 
-  <Target Name="PublishGitHubPages" Condition=" $(CI) AND $(CreateRelease) AND !$(IsPullRequest) AND $(DotNetDocsGenerated) ">
+  <Target Name="PublishGitHubPages" Condition=" $(CreateRelease) AND $(DotNetDocsGenerated) ">
     <PublishGitHubPages
       Source="$(DocsArtifactsRoot)condo"
       RepositoryUri="$(RepositoryUri)"
