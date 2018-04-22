@@ -16,10 +16,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <SetVersionVariables Condition=" $(SetVersionVariables) == '' ">$(SET_VERSION_VARIABLES)</SetVersionVariables>
     <SetVersionVariables Condition=" $(SetVersionVariables) == '' ">false</SetVersionVariables>
     <SetVersionVariables Condition=" '$(SetVersionVariables.ToLower())' != 'true' ">false</SetVersionVariables>
@@ -28,6 +24,15 @@
   <!-- import the branch and version strategy -->
   <Import Project="$(BranchStrategyTargets)" Condition=" Exists('$(BranchStrategyTargets)') "/>
   <Import Project="$(VersionStrategyTargets)" Condition=" Exists('$(VersionStrategyTargets)') "/>
+
+  <PropertyGroup>
+    <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
+    <CreateRelease Condition=" $(IsPullRequest) OR !$(CI) ">false</CreateRelease>
+    <CreateRelease Condition=" '$(CreateRelease.ToLower())' != 'true' ">false</CreateRelease>
+
+    <BuildQuality  Condition=" '$(BuildQuality)' == '' ">$(CONDO_BUILD_QUALITY)</BuildQuality>
+    <BuildQuality  Condition=" !$(CreateRelease) ">$(DefaultBuildQuality)</BuildQuality>
+  </PropertyGroup>
 
   <!-- gets the build quality based on the current convention -->
   <Target Name="GetBuildQuality">
@@ -53,7 +58,7 @@
         HotfixBranchBuildQuality="$(HotfixBranchBuildQuality)"
         NextReleaseBranchBuildQuality="$(NextReleaseBranchBuildQuality)"
         ProductionReleaseBranchBuildQuality="$(ProductionReleaseBranchBuildQuality)">
-      <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" />
+      <Output TaskParameter="BuildQuality" PropertyName="BuildQuality" Condition=" '$(BuildQuality)' == '' " />
       <Output TaskParameter="CreateRelease" PropertyName="CreateRelease" Condition=" '$(CreateRelease)' == '' " />
     </GetBuildQuality>
   </Target>
