@@ -20,7 +20,7 @@
 
     <IncludeInvalidCommits  Condition=" '$(IncludeInvalidCommits)'  == '' ">false</IncludeInvalidCommits>
 
-    <ReleaseMessage         Condition=" '$(ReleaseMessage)'         == '' ">chore(release): </ReleaseMessage>
+    <ReleaseMessage         Condition=" '$(ReleaseMessage)'         == '' ">docs: release notes for</ReleaseMessage>
 
     <HeaderPartial          Condition=" '$(HeaderPartial)'          == '' ">$(MSBuildThisFileDirectory)header.hbs</HeaderPartial>
     <FooterPartial          Condition=" '$(FooterPartial)'          == '' ">$(MSBuildThisFileDirectory)footer.hbs</FooterPartial>

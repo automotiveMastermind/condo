@@ -36,7 +36,7 @@ namespace AM.Condo.Tasks
         /// Gets or sets the release message.
         /// </summary>
         [Required]
-        public string ReleaseMessage { get; set; } = "chore(release):";
+        public string ReleaseMessage { get; set; } = "docs: release notes for";
 
         /// <summary>
         /// Gets or sets the author name used for git commits.
@@ -52,6 +52,11 @@ namespace AM.Condo.Tasks
         /// Gets or sets a value indicating whether or not to push the release to the remote.
         /// </summary>
         public bool Push { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to tag the release on the remote.
+        /// </summary>
+        public bool Tag { get; set; } = false;
         #endregion
 
         #region Methods
@@ -89,10 +94,17 @@ namespace AM.Condo.Tasks
                 var message = $"{this.ReleaseMessage} {this.Version} ***NO_CI***";
 
                 // create the commit and tag the release
-                repository.Commit(message).Tag(this.Version, this.Version);
+                repository.Commit(message);
 
-                // log a message
-                this.Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
+                // determine if we should tag
+                if (this.Tag)
+                {
+                    // tag the release
+                    repository.Tag(this.Version, this.Version);
+
+                    // log a message
+                    this.Log.LogMessage(MessageImportance.High, $"Created and tagged the release for version: {this.Version}...");
+                }
 
                 // determine if we should push
                 if (this.Push)

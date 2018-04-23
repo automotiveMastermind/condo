@@ -26,10 +26,10 @@
   <Import Project="$(VersionStrategyTargets)" Condition=" Exists('$(VersionStrategyTargets)') "/>
 
   <PropertyGroup>
-    <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
-    <CreateRelease Condition=" $(IsPullRequest) OR !$(CI) ">false</CreateRelease>
-
     <BuildQuality  Condition=" '$(BuildQuality)' == '' ">$(CONDO_BUILD_QUALITY)</BuildQuality>
+
+    <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
+    <CreateRelease Condition=" '$(BuildQuality)' != '' ">false</CreateRelease>
   </PropertyGroup>
 
   <!-- gets the build quality based on the current convention -->

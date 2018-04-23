@@ -69,7 +69,7 @@
   </Target>
 
   <!-- create a release commit -->
-  <Target Name="CreateRelease" Condition=" $(CreateRelease) ">
+  <Target Name="CreateRelease">
     <PropertyGroup>
       <CurrentReleaseTag>$(VersionTagPrefix)$(NextRelease)</CurrentReleaseTag>
     </PropertyGroup>
@@ -95,7 +95,8 @@
       ReleaseMessage="$(ReleaseMessage)"
       AuthorName="$(AuthorName)"
       AuthorEmail="$(AuthorEmail)"
-      Push="$(AllowPushCommits)" />
+      Push="$(AllowPushCommits)"
+      Tag="$(CreateRelease)" />
   </Target>
 
   <PropertyGroup>
