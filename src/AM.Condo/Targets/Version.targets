@@ -28,10 +28,8 @@
   <PropertyGroup>
     <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
     <CreateRelease Condition=" $(IsPullRequest) OR !$(CI) ">false</CreateRelease>
-    <CreateRelease Condition=" '$(CreateRelease.ToLower())' != 'true' ">false</CreateRelease>
 
     <BuildQuality  Condition=" '$(BuildQuality)' == '' ">$(CONDO_BUILD_QUALITY)</BuildQuality>
-    <BuildQuality  Condition=" !$(CreateRelease) ">$(DefaultBuildQuality)</BuildQuality>
   </PropertyGroup>
 
   <!-- gets the build quality based on the current convention -->
