@@ -125,10 +125,10 @@ namespace AM.Condo.Tasks
                     {
                         new
                         {
-                            Raw = $"chore(kansas): somewhere over the rainbow{Environment.NewLine}where skies are blue.{Environment.NewLine}{Environment.NewLine}BREAKING CHANGE: something bad happened{Environment.NewLine}{Environment.NewLine}Closes: #34, #22",
-                            Header = "chore(kansas): somewhere over the rainbow",
+                            Raw = $"docs(kansas): somewhere over the rainbow{Environment.NewLine}where skies are blue.{Environment.NewLine}{Environment.NewLine}BREAKING CHANGE: something bad happened{Environment.NewLine}{Environment.NewLine}Closes: #34, #22",
+                            Header = "docs(kansas): somewhere over the rainbow",
                             Body = "where skies are blue.",
-                            Type = "chore",
+                            Type = "docs",
                             Scope = "kansas",
                             Subject = "somewhere over the rainbow",
                             Footer = $"BREAKING CHANGE: something bad happened{Environment.NewLine}{Environment.NewLine}Closes: #34, #22",

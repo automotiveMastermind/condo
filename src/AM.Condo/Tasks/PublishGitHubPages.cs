@@ -56,7 +56,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the commit message used to commit the documentation.
         /// </summary>
-        public string CommitMessage { get; set; } = "chore(docs): updating github pages";
+        public string CommitMessage { get; set; } = "docs: updating github pages";
         #endregion
 
         #region Methods

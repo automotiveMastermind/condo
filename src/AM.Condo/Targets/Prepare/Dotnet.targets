@@ -43,7 +43,7 @@
 
       <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetPush.ToLower())' != 'true' ">false</DotNetPush>
-      <DotNetPush Condition=" !$(CreateRelease) OR !$(DotNetPack) OR '$(PackageFeedUri)' == '' ">false</DotNetPush>
+      <DotNetPush Condition=" !$(AllowPublish) OR !$(DotNetPack) OR '$(PackageFeedUri)' == '' ">false</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' == '' ">$(DotNetRequired)</DotNetPush>
     </PropertyGroup>
 

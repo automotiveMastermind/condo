@@ -71,7 +71,7 @@
 
       <DockerPush Condition=" '$(SKIP_DOCKER_PUSH)' != '' ">false</DockerPush>
       <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
-      <DockerPush Condition=" !$(CreateRelease) OR '$(DockerOrganization)' == '' ">false</DockerPush>
+      <DockerPush Condition=" !$(AllowPublish) OR '$(DockerOrganization)' == '' ">false</DockerPush>
       <DockerPush Condition=" '$(DockerPush)' == '' ">$(DockerBuild)</DockerPush>
     </PropertyGroup>
 
