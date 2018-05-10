@@ -22,6 +22,7 @@ For reference, condo's default lifecycle is as follows:
 Bower project specifications are found in the `Prepare` target task.
 
 ## Prepare
+
 In the `Prepare` target, condo will look for a `bower.json` file and consequent executables.
 
 Condo will then prepare and execute `bower install` with any options you might have specified.

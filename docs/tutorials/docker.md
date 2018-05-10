@@ -21,10 +21,11 @@ For reference, condo's default lifecycle is as follows:
 
 Docker project specifications are found in the `Prepare`, `Compile`, and `Publish` target tasks.
 
-
 ## Prepare
+
 In the `Prepare` target, condo will look for a few files and respective executables at the root of your repository or
 in a `Docker` folder:
+
 1. `dockerfile`
 2. `dockerfile.debug`
 3. `docker-compose`
@@ -43,8 +44,8 @@ docker compose
 docker push
 ```
 
-
 ## Compile
+
 In the `Compile` target, condo will take your specifications and execute:
 
 ```bash
@@ -56,6 +57,7 @@ docker tag %(DockerTags.VersionLabel) %(DockerTags.Identity)
 ```
 
 ## Publish
+
 In the `Publish` target, condo will take your specifications and execute:
 
 ```bash

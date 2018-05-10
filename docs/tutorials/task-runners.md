@@ -22,12 +22,12 @@ For reference, condo's default lifecycle is as follows:
 Task runner project specifications are found in the `Prepare` target task.
 
 ## Prepare
+
 In order to run task runners, use npm scripts. Condo will not automatically call Grunt or Gulp, but developers can
 create an npm script called ```condo``` that calls their grunt or gulp pipelines and condo will run it accordingly.
 
 In order to run task runners, condo will look for a `gulpfile.*` and a `gruntfile.*`. It will then look for the
 executable that you have specified.
-
 
 [get-started]: get-started.md
 [lifecycle]: ../concepts/lifecycle.md

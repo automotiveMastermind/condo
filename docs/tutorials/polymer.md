@@ -22,6 +22,7 @@ For reference, condo's default lifecycle is as follows:
 Polymer project specifications are found in the `Prepare`, `Compile`, and `Test` target tasks.
 
 ## Prepare
+
 In the `Prepare` target task, condo will look for a `polymer.json` file and the specified executables. It will then
 prepare:
 
@@ -42,7 +43,9 @@ polymer test
 ```
 
 ## Compile
+
 In the `Compile` target task, condo will execute:
+
 ```bash
 polymer lint
 ```
@@ -51,9 +54,9 @@ polymer lint
 polymer build
 ```
 
-
 ## Test
-In the `Test` target task, condo will execute
+
+In the `Test` target task, condo will execute:
 
 ```bash
 polymer test

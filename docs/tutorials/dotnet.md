@@ -23,6 +23,7 @@ Dotnet project specifications are found in the `Prepare`, `Compile`, `Test`, `Pa
 target tasks.
 
 ## Prepare
+
 In the `Prepare` target task, condo will prepare:
 
 ```bash
@@ -48,27 +49,30 @@ dotnet publish
 ```bash
 dotnet push
 ```
+
 Condo will also prepare a lot of metadata.
 
 ## Compile
+
 In the `Compile` target task, condo will prepare dotnet build properties and add them to MSBuild.
 
 ## Test
+
 In the `Test` target task, condo will
 
-
 ## Package
-In the `Package` target task, condo will
 
+In the `Package` target task, condo will
 
 ## Other target tasks with Dotnet specifications
 
 ### Publish
+
 In the `Publish` target task, condo will
 
 ### Document
-In the `Document` target task, condo will
 
+In the `Document` target task, condo will
 
 To publish a project with the .NET CLI, developers will need to have code under a `/src` folder and tests under a
 `tests` folder.
@@ -82,8 +86,6 @@ Supported PurposeTypes include:
 * Performance
 
 For E2E tests, a `CollectionDefinition` with `E2ECollection` must be specified.
-
-
 
 [get-started]: get-started.md
 [lifecycle]: ../concepts/lifecycle.md

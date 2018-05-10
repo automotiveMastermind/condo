@@ -19,7 +19,5 @@ For reference, condo's default lifecycle is as follows:
 7. Package
 8. Build
 
-
-
 [get-started]: get-started.md
 [lifecycle]: ../concepts/lifecycle.md
