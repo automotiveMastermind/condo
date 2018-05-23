@@ -144,10 +144,10 @@ install_dotnet() {
         for DOTNET_VERSION in ${DOTNET_VERSIONS[@]}; do
 
             # skip install of dotnet v1 for ubuntu versions greater than 16.04
-            if echo $platform | grep -q 'ubuntu.1[6-9].[1-9][0-9]' && \
-                echo $DOTNET_VERSION | grep -q '1\.[0-9]*\.[0-9]*'; then
+            version=$(echo $platform | grep ubuntu | grep -oq '[0-9][0-9].[0-9][0-9]')
 
-                info "Skipping install of dotnet $DOTNET_VERSION because $platform is not supported..."
+            if echo "$version > 16.04" | bc 1>/dev/null 2>&1 && echo $DOTNET_VERSION | grep -q '1\.[0-9]*\.[0-9]*'; then
+                    info "Skipping install of dotnet $DOTNET_VERSION because $platform is not supported..."
                 continue
             fi
 
