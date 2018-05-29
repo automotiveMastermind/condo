@@ -68,6 +68,17 @@ docker tag %(DockerRegistryTags.VersionLabel) $(DockerOrganization)%(DockerRegis
 docker push $(DockerOrganization)%(DockerRegistryTags.Identity)
 ```
 
+The Publish step is where condo will push the image created from your application to the docker registry.
+
+## Notes
+
+Condo will only look for a `Dockerfile` and ignore files like `Dockerfile.debug` by default.
+
+### Tag Images
+
+### Semantic Versioning and Changelog Generation
+
+The `Changelog` is automatically generated from git commits, making it increasingly important to follow commit semantics (as outlined in [contributing][CONTRIBUTING.md]).
 
 [get-started]: get-started.md
 [lifecycle]: ../concepts/lifecycle.md
