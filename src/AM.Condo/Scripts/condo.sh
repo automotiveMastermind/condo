@@ -242,7 +242,7 @@ fi
 
 # determine if the dotnet install channel is not already set
 if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
-    DOTNET_VERSIONS=('1.1.8' '2.1.105')
+    DOTNET_VERSIONS=('1.1.8' '2.1.300')
 fi
 
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
