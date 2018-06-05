@@ -153,7 +153,7 @@ function Install-DotNet() {
     }
 
     if (!$dotnetVersions) {
-        $dotnetVersions = @("1.1.8","2.1.105","2.1.300")
+        $dotnetVersions = @("1.1.9","2.1.200","2.1.300")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -199,7 +199,11 @@ function Install-Condo() {
 
     # publish condo
     Write-Info "condo: publishing condo..."
+
+    Push-Location $CondoPath | Out-Null
     Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
+    Pop-Location | Out-Null
+
     Write-Success "condo: publish complete"
 }
 
@@ -221,6 +225,7 @@ try {
 
     $MSBuildRspData = @"
 /nologo
+/nodereuse:false
 "$CondoProj"
 /p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
@@ -236,6 +241,8 @@ try {
 
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj'"
+
+    $env:MSBUILDENSURESTDOUTFORTASKPROCESSES = "1"
 
     & "dotnet" "msbuild" `@"$MSBuildRsp"
 }

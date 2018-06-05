@@ -307,6 +307,9 @@ namespace AM.Condo.Tasks
             // order the runtime identifiers
             runtimeIdentifiers = runtimeIdentifiers.Distinct().OrderByDescending(name => name).ToList();
 
+            // set all of the runtime identifiers
+            item.SetMetadata("RuntimeIdentifiers", string.Join("%3B", runtimeIdentifiers));
+
             // iterate over each framework
             foreach (var framework in frameworks)
             {

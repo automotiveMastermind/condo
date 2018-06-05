@@ -144,10 +144,13 @@ namespace AM.Condo
             file.SetupGet(f => f.Path).Returns(name);
             file.Setup(f => f.GetStream()).Returns(new MemoryStream());
 
+            var date = DateTimeOffset.UtcNow;
+
             string effectivePath;
             var fx = FrameworkNameUtility.ParseFrameworkNameFromFilePath(name, out effectivePath);
             file.SetupGet(f => f.EffectivePath).Returns(effectivePath);
             file.SetupGet(f => f.TargetFramework).Returns(fx);
+            file.SetupGet(f => f.LastWriteTime).Returns(date);
 
             return file.Object;
         }
