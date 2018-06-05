@@ -225,6 +225,7 @@ try {
 
     $MSBuildRspData = @"
 /nologo
+/noderesuse:false
 "$CondoProj"
 /p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
@@ -240,6 +241,8 @@ try {
 
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj'"
+
+    $env:MSBUILDENSURESTDOUTFORTASKPROCESSES = "1"
 
     & "dotnet" "msbuild" `@"$MSBuildRsp"
 }
