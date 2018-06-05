@@ -3,12 +3,12 @@
   <PropertyGroup>
     <DotNetPublishProperties Condition=" '$(DotNetPublishProperties)' == '' ">$(DOTNET_PUBLISH_PROPS)</DotNetPublishProperties>
     <DotNetPublishProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetPublishProperties);Version=$(InformationalVersion)</DotNetPublishProperties>
+    <DotNetPublishProperties>$(DotNetPublishProperties);TargetLatestRuntimePatch=true</DotNetPublishProperties>
   </PropertyGroup>
 
   <Target Name="DotNetPublish" Condition=" $(DotNetPublish) ">
     <ItemGroup>
       <_DotNetPublish Include="@(PublishProjects)">
-        <AdditionalProperties>%(PublishProjects.AdditionalProperties);$(DotNetPublishProperties)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(RuntimeIdentifier)' != '' ">%(_DotNetPublish.AdditionalProperties);RuntimeIdentifier=%(RuntimeIdentifier)</AdditionalProperties>
         <AdditionalProperties Condition=" '%(TargetFramework)' != '' ">%(_DotNetPublish.AdditionalProperties);TargetFramework=%(TargetFramework)</AdditionalProperties>
         <AdditionalProperties>%(_DotNetPublish.AdditionalProperties);PublishDir=%(OutputPath)</AdditionalProperties>
@@ -16,7 +16,7 @@
       </_DotNetPublish>
     </ItemGroup>
 
-    <MSBuild Projects="@(_DotNetPublish)" Targets="Publish" />
+    <MSBuild Projects="@(_DotNetPublish)" Properties="$(DotNetPublishProperties)" Targets="Publish" />
   </Target>
 
   <Target Name="CopyDotNetPublish" Condition=" $(DotNetPublish) ">

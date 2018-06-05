@@ -22,7 +22,6 @@
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetRelease" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetRepositoryInfo" />
-  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.InstallNuGetPackage" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.LogItemMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.PublishGitHubPages" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.PushNuGetPackage" />
