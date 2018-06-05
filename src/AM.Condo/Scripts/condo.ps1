@@ -225,7 +225,7 @@ try {
 
     $MSBuildRspData = @"
 /nologo
-/noderesuse:false
+/nodereuse:false
 "$CondoProj"
 /p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
