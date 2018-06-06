@@ -112,6 +112,26 @@ get_linux_platform_name() {
     return 1
 }
 
+check_compatibility()
+{
+    # get the platform name
+    platform=$(get_linux_platform_name)
+
+    # skip install of dotnet v1 for ubuntu versions greater than 16.04
+    if [ "$platform" != "0" ]; then
+        if echo $platform | grep -q ubuntu; then
+            version=$(echo $platform | grep -q ubuntu | grep -oq '[0-9][0-9].[0-9][0-9]')
+
+            if echo "$version > 16.04" | bc 1>/dev/null 2>&1; then
+                info "Skipping install of dotnet 1.x because $platform is not supported..."
+                return 1
+            fi
+        fi
+    fi
+
+    return 0
+}
+
 # download dotnet
 install_dotnet() {
     # force remove 2.0.0 SDK because SDK detection is borked for patch versions
@@ -142,15 +162,6 @@ install_dotnet() {
         chmod +x $DOTNET_INSTALL
 
         for DOTNET_VERSION in ${DOTNET_VERSIONS[@]}; do
-
-            # skip install of dotnet v1 for ubuntu versions greater than 16.04
-            if echo $platform | grep -q 'ubuntu.1[6-9].[1-9][0-9]' && \
-                echo $DOTNET_VERSION | grep -q '1\.[0-9]*\.[0-9]*'; then
-
-                info "Skipping install of dotnet $DOTNET_VERSION because $platform is not supported..."
-                continue
-            fi
-
             safe-exec $DOTNET_INSTALL --version $DOTNET_VERSION
         done
 
@@ -242,15 +253,16 @@ if [ -z "$DOTNET_INSTALL_URL" ]; then
     DOTNET_INSTALL_URL="https://dot.net/v1/dotnet-install.sh"
 fi
 
-# determine if the dotnet install channel is not already set
-if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
-    DOTNET_VERSIONS=('1.1.9' '2.1.200' '2.1.300')
-fi
-
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
 
-# get the platform name
-platform=$(get_linux_platform_name)
+# determine if the dotnet install channel is not already set
+if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
+    DOTNET_VERSIONS=('2.1.200' '2.1.300')
+
+    if check_compatibility; then
+        DOTNET_VERSIONS+=('1.1.9')
+    fi
+fi
 
 install_dotnet
 install_condo
