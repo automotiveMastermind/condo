@@ -124,12 +124,12 @@ check_compatibility()
 
             if echo "$version > 16.04" | bc 1>/dev/null 2>&1; then
                 info "Skipping install of dotnet 1.x because $platform is not supported..."
-                return 0
+                return 1
             fi
         fi
     fi
 
-    return 1
+    return 0
 }
 
 # download dotnet
@@ -253,16 +253,16 @@ if [ -z "$DOTNET_INSTALL_URL" ]; then
     DOTNET_INSTALL_URL="https://dot.net/v1/dotnet-install.sh"
 fi
 
+[ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
+
 # determine if the dotnet install channel is not already set
 if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
     DOTNET_VERSIONS=('2.1.200' '2.1.300')
 
-    if $(check_compatibility); then
+    if check_compatibility; then
         DOTNET_VERSIONS+=('1.1.9')
     fi
 fi
-
-[ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
 
 install_dotnet
 install_condo
