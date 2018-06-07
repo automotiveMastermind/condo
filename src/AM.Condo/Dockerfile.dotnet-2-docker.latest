@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2-sdk
+FROM microsoft/dotnet:2.1-sdk
 
 # Install docker
 ARG DOCKER_CHANNEL=stable

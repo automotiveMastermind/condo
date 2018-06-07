@@ -106,19 +106,18 @@ namespace AM.Condo.Tasks
                 StringComparison.OrdinalIgnoreCase
             );
 
-            // set the docker name to the product name by default
-            var name = this.Product;
+            // try to figure out what the docker name should be (default to the product name if no alternative is available)
+            var name = this.SetDockerName(directory);
 
-            // determine if we are rooted
-            if (rooted)
+            // determine if we are not rooted and the folder name is not a well-known folder
+            if (!rooted && !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
             {
-                // set the docker name using related projects
-                name = this.SetRootedDockerName(directory);
-            }
-            else if (!GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
-            {
-                // set the project name to the group
-                name = group;
+                // determine if the name is equal to the product name
+                if (name.Equals(this.Product))
+                {
+                    // set the project name to the current group (current directory name) to avoid collisions
+                    name = group;
+                }
 
                 // use the parent of the group folder, which means multiple projects are contained within the folder
                 group = Path.GetFileName(parent);
@@ -242,7 +241,7 @@ namespace AM.Condo.Tasks
             }
         }
 
-        private string SetRootedDockerName(string directory)
+        private string SetDockerName(string directory)
         {
             // get the docker file path
             var projectFile = Directory.EnumerateFiles(directory, "*.*proj").FirstOrDefault();

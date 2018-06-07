@@ -1,7 +1,7 @@
 # CHANGE LOG
 
 > All notable changes to this project will be documented in this file.
-# [2.0.0](https://github.com/automotiveMastermind/condo.git/compare/1.0.0...2.0.0) (2018-06-04)
+# [2.0.0](https://github.com/automotiveMastermind/condo.git/compare/1.0.0...2.0.0) (2018-06-06)
 
 
 ### Bug Fixes
@@ -35,6 +35,7 @@
 * **targets:** detect pull requests correctly (#193) ([95a6cac](https://github.com/automotiveMastermind/condo.git/commits/95a6cac)), closes [#193](https://github.com/automotiveMastermind/condo.git/issues/193)
 * **tasks:** properly generate random folder on all .net OS's (#187) ([c159965](https://github.com/automotiveMastermind/condo.git/commits/c159965)), closes [#187](https://github.com/automotiveMastermind/condo.git/issues/187)
 * **test:** add configuration to dotnet-test (#62) ([9c46c5f](https://github.com/automotiveMastermind/condo.git/commits/9c46c5f)), closes [#62](https://github.com/automotiveMastermind/condo.git/issues/62)
+* **ubuntu:** support ubuntu 18.04 and greater ([6dbd4bf](https://github.com/automotiveMastermind/condo.git/commits/6dbd4bf))
 * **version:** issue with missing branch properties (#33) ([bdf2a74](https://github.com/automotiveMastermind/condo.git/commits/bdf2a74)), closes [#33](https://github.com/automotiveMastermind/condo.git/issues/33)
 * **version:** fix recommended version for initial builds (#34) ([7820374](https://github.com/automotiveMastermind/condo.git/commits/7820374)), closes [#34](https://github.com/automotiveMastermind/condo.git/issues/34)
 * **version:** include changelog in gitignore (#147) ([b10ec2c](https://github.com/automotiveMastermind/condo.git/commits/b10ec2c)), closes [#147](https://github.com/automotiveMastermind/condo.git/issues/147)
@@ -54,6 +55,8 @@
 * msbuildversion should be buildversion in csproj (#181) ([d5cecb3](https://github.com/automotiveMastermind/condo.git/commits/d5cecb3)), closes [#181](https://github.com/automotiveMastermind/condo.git/issues/181)
 * release vs publish semantics (#191) ([872cc9c](https://github.com/automotiveMastermind/condo.git/commits/872cc9c)), closes [#191](https://github.com/automotiveMastermind/condo.git/issues/191)
 * continue to include 2.1.105 sdk for now (#200) ([47c643d](https://github.com/automotiveMastermind/condo.git/commits/47c643d)), closes [#200](https://github.com/automotiveMastermind/condo.git/issues/200)
+* resolve behavior changes in the .net 2.1.300 sdk (#202) ([1df9254](https://github.com/automotiveMastermind/condo.git/commits/1df9254)), closes [#202](https://github.com/automotiveMastermind/condo.git/issues/202)
+* skip dotnet 1 install for all ubuntu distro greater than 16.04 ([9ab2b0b](https://github.com/automotiveMastermind/condo.git/commits/9ab2b0b))
 
 
 ### Features
@@ -111,6 +114,6 @@ Condo no longer uses the ```<SemanticVersion>``` tag found in `condo.build`. The
 Any existing bootstrap scripts *MUST* be updated due to some changes in how condo itself is retrieved and built. Replace the bootstrap scripts you rely on (`condo.ps1`, `condo.cmd`, and `condo.ps1`) from [here](https://github.com/pulsebridge/condo/tree/develop/template).
 
 
-# 1.0.0 (2016-07-08)
+# 1.0.0 (2016-07-09)
 
 
