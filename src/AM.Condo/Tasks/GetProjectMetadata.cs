@@ -328,8 +328,8 @@ namespace AM.Condo.Tasks
                 // set the target framework
                 any.SetMetadata("TargetFramework", framework);
                 any.SetMetadata("RuntimeIdentifier", string.Empty);
-                any.SetMetadata("OutputPath", Path.Combine(root, framework, "dotnet") + Path.DirectorySeparatorChar);
-                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, "dotnet"));
+                any.SetMetadata("OutputPath", Path.Combine(root, framework, nameof(any)) + Path.DirectorySeparatorChar);
+                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, nameof(any)));
 
                 // iterate over each runtime identifier
                 foreach (var runtimeIdentifier in runtimeIdentifiers)
@@ -347,7 +347,7 @@ namespace AM.Condo.Tasks
                     any.CopyMetadataTo(contained);
 
                     // update the description
-                    any.SetMetadata("Description", Path.Combine(group, projectName, framework, runtimeIdentifier));
+                    contained.SetMetadata("Description", Path.Combine(group, projectName, framework, runtimeIdentifier));
 
                     // add the project to the project collection
                     this.projects.Add(contained);

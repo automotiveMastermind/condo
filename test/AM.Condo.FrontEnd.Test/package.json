@@ -1,16 +1,10 @@
 {
-  "name": "polymer-starter-kit",
+  "name": "am-condo-frontend-test",
   "version": "1.0.0",
   "license": "BSD-3-Clause",
-  "devDependencies": {
-    "bower": "^1.8.2",
-    "eslint": "^4.16.0",
-    "eslint-config-google": "^0.9.1",
-    "eslint-plugin-html": "^4.0.2",
-    "polymer-cli": "^1.5.7"
-  },
+  "devDependencies": {},
   "scripts": {
-    "build": "echo build called",
-    "test": "echo test called"
+    "build": "echo $NODE_ENV",
+    "test": "echo $NODE_ENV"
   }
 }

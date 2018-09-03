@@ -2,7 +2,7 @@
 set -e
 
 if [ "$1" = 'condo' ]; then
-    shift && ./condo "$@"
+    shift && condo "$@"
     exit $?
 fi
 

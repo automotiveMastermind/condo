@@ -1,8 +1,56 @@
-FROM microsoft/dotnet:2.1-sdk
+FROM microsoft/dotnet:2.1-sdk-bionic
 
-# Install docker
-ARG DOCKER_CHANNEL=stable
-ARG DOCKER_VERSION="17.09.0-ce"
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        dnsutils \
+        file \
+        ftp \
+        iproute2 \
+        iputils-ping \
+        locales \
+        openssh-client \
+        rsync\
+        shellcheck \
+        sudo \
+        telnet \
+        time \
+        unzip \
+        wget \
+        zip \
+        tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
+    && locale-gen
+
+ENV LANGUAGE=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+RUN update-locale
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        software-properties-common \
+    && apt-add-repository ppa:git-core/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        jq \
+        libcurl4 \
+        libicu60 \
+        libunwind8 \
+        netcat \
+    && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
+    && apt-get install -y --no-install-recommends git-lfs \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION 17.12.0-ce
 
 RUN set -ex \
     && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
@@ -10,8 +58,7 @@ RUN set -ex \
     && rm docker.tgz \
     && docker -v
 
-# Install docker-compose
-ARG DOCKER_COMPOSE_VERSION="1.17.1"
+ENV DOCKER_COMPOSE_VERSION 1.18.0
 
 RUN set -x \
     && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
@@ -22,6 +69,11 @@ WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/linux-x64} .
 RUN chmod +x docker.sh
 
-# Run condo
+RUN ln -s /condo/condo /usr/bin/condo
+
+ENV dotnet=/usr/bin/dotnet \
+    dotnet_2=/usr/bin/dotnet \
+    condo=/condo/condo
+
 ENTRYPOINT [ "./docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]
