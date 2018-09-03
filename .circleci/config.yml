@@ -6,14 +6,12 @@ jobs:
       - image: automotivemastermind/condo:latest
         environment:
           SKIP_NPM: 'true'
-          SKIP_BOWER: 'true'
-          SKIP_POLYMER: 'true'
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Run condo
-          command: 'cd /condo && ./docker.sh condo -- /t:publish'
+          command: 'condo -- /t:publish'
 
 workflows:
   version: 2
