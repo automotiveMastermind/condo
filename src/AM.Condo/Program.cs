@@ -9,7 +9,7 @@ namespace AM.Condo
     using System;
     using System.IO;
     using System.Linq;
-
+    using System.Reflection;
     using AM.Condo.Diagnostics;
 
     /// <summary>
@@ -35,8 +35,40 @@ namespace AM.Condo
 
             // Build paths
             var path = Directory.GetCurrentDirectory();
-            var response = Path.Combine(string.Empty, "/condo/condo.msbuild.rsp");
-            var log = Path.Combine(string.Empty, "/target/artifacts/log/condo.msbuild.log");
+            var artifacts = Path.Combine(string.Empty, "/target/artifacts");
+
+            // determine if the artifacts path does not exist
+            if (!Directory.Exists(artifacts))
+            {
+                // create the artifacts path
+                Directory.CreateDirectory(artifacts);
+            }
+
+            var response = Path.Combine(artifacts, "condo.msbuild.rsp");
+            var log = Path.Combine(artifacts, "condo.msbuild.log");
+
+            // determine if the response file already exits
+            if (File.Exists(response))
+            {
+                // delete the response file
+                File.Delete(response);
+            }
+
+            // determine if the log file already exists
+            if (File.Exists(log))
+            {
+                // delete the log file
+                File.Delete(log);
+            }
+
+            // get the location of the condo executable
+            var location = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Program)).Location);
+
+            // get the location of the response file template
+            var template = Path.Combine(location, "condo.msbuild.rsp");
+
+            // copy the template to the target location
+            File.Copy(template, response);
 
             // Test for arguments
             for (var i = 0; i < args.Length; i++)
