@@ -14,8 +14,8 @@ jobs:
           command: 'condo -- /t:publish'
       - store_artifacts:
           path: artifacts/condo.msbuild.rsp
-          destination: logs
+          destination: logs/condo.msbuild.rsp
       - store_artifacts:
           path: artifacts/condo.msbuild.log
-          destination: logs
+          destination: logs/condo.msbuild.log
 

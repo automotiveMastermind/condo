@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-bionic
+FROM microsoft/dotnet:2.1.401-sdk-bionic
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
@@ -49,8 +49,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends git-lfs \
     && rm -rf /var/lib/apt/lists/*
 
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 17.12.0-ce
+ENV DOCKER_CHANNEL=stable \
+    DOCKER_VERSION=17.12.0-ce
 
 RUN set -ex \
     && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
@@ -66,14 +66,15 @@ RUN set -x \
     && docker-compose -v
 
 WORKDIR /condo
-COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/linux-x64} .
-RUN chmod +x docker.sh
-
-RUN ln -s /condo/condo /usr/bin/condo
+COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/any} .
+RUN chmod +x docker.sh \
+    && ln -s /condo/condo /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
     dotnet_2=/usr/bin/dotnet \
-    condo=/condo/condo
+    condo=/usr/bin/condo \
+    docker=/usr/local/bin/docker \
+    docker_compose=/usr/local/bin/docker-compose
 
 ENTRYPOINT [ "./docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]
