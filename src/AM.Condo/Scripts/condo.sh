@@ -89,54 +89,8 @@ safe-join() {
      echo "$*"
 }
 
-get_linux_platform_name() {
-
-    if [ -n "$runtime_id" ]; then
-        echo "${runtime_id%-*}"
-        return 0
-    else
-        if [ -e /etc/os-release ]; then
-            . /etc/os-release
-            echo "$ID.$VERSION_ID"
-            return 0
-        elif [ -e /etc/redhat-release ]; then
-            local redhatRelease=$(</etc/redhat-release)
-            if [[ $redhatRelease == "CentOS release 6."* || $redhatRelease == "Red Hat Enterprise Linux Server release 6."* ]]; then
-                echo "rhel.6"
-                return 0
-            fi
-        fi
-    fi
-
-    failure "Linux specific platform name and version could not be detected: $ID.$VERSION_ID"
-    return 1
-}
-
-check_compatibility()
-{
-    # get the platform name
-    platform=$(get_linux_platform_name)
-
-    # skip install of dotnet v1 for ubuntu versions greater than 16.04
-    if [ "$platform" != "0" ]; then
-        if echo $platform | grep -q ubuntu; then
-            version=$(echo $platform | grep -q ubuntu | grep -oq '[0-9][0-9].[0-9][0-9]')
-
-            if echo "$version > 16.04" | bc 1>/dev/null 2>&1; then
-                info "Skipping install of dotnet 1.x because $platform is not supported..."
-                return 1
-            fi
-        fi
-    fi
-
-    return 0
-}
-
 # download dotnet
 install_dotnet() {
-    # force remove 2.0.0 SDK because SDK detection is borked for patch versions
-    rm -rf "$DOTNET_INSTALL_DIR/sdk/2.0.0" 1>/dev/null 2>&1
-
     if [ ! -z "$SKIP_DOTNET_INSTALL" ]; then
         info "Skipping installation of dotnet-cli by request (SKIP_DOTNET_INSTALL is set)..."
     else
@@ -161,8 +115,8 @@ install_dotnet() {
 
         chmod +x $DOTNET_INSTALL
 
-        for DOTNET_VERSION in ${DOTNET_VERSIONS[@]}; do
-            safe-exec $DOTNET_INSTALL --version $DOTNET_VERSION
+        for DOTNET_CHANNEL in ${DOTNET_CHANNELS[@]}; do
+            safe-exec $DOTNET_INSTALL --channel $DOTNET_CHANNEL
         done
 
         safe-exec rm -rf $DOTNET_TEMP
@@ -256,12 +210,8 @@ fi
 [ ! -d "$BUILD_ROOT" ] && mkdir -p $BUILD_ROOT
 
 # determine if the dotnet install channel is not already set
-if [ ${#DOTNET_VERSIONS[@]} -eq 0 ]; then
-    DOTNET_VERSIONS=('2.1.200' '2.1.300')
-
-    if check_compatibility; then
-        DOTNET_VERSIONS+=('1.1.9')
-    fi
+if [ ${#DOTNET_CHANNELS[@]} -eq 0 ]; then
+    DOTNET_CHANNELS=('LTS' 'Current')
 fi
 
 install_dotnet
