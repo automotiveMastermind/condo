@@ -10,12 +10,12 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: Run condo
-        command: 'condo -- /t:publish'
+          name: Run condo
+          command: 'condo -- /t:publish'
       - store_artifacts:
-        path: artifacts/condo.msbuild.rsp
-        destination: logs
+          path: artifacts/condo.msbuild.rsp
+          destination: logs
       - store_artifacts:
-        path: artifacts/condo.msbuild.log
-        destination: logs
+          path: artifacts/condo.msbuild.log
+          destination: logs
 
