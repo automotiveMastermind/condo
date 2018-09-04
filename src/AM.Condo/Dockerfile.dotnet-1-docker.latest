@@ -1,7 +1,17 @@
-FROM microsoft/dotnet:1-sdk
+FROM microsoft/dotnet:2.1-sdk-bionic
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+ENV DOTNET_LTS_VERSION=1.1.9 \
+    DOTNET_CURRENT_VERSION=$DOTNET_VERSION
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_LTS_VERSION/dotnet-ubuntu.18.04-x64.$DOTNET_LTS_VERSION.tar.gz \
+    && dotnet_sha512='fb3ee217813b099f651ef8ded1adc5bbece731ed61add842cc488c5a70dbee50877f4defec71c0089c1c90f3e580e0ea3c3f4d4006c03ecdd568787542d16728' \
+    && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -35,11 +45,14 @@ RUN update-locale
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         software-properties-common \
+    && apt-add-repository ppa:git-core/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
         curl \
         git \
         jq \
-        libcurl3 \
-        libicu52 \
+        libcurl4 \
+        libicu60 \
         libunwind8 \
         netcat \
     && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
@@ -69,7 +82,7 @@ RUN chmod +x docker.sh
 RUN ln -s /condo/condo /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
-    dotnet_1=/usr/bin/dotnet \
+    dotnet_2=/usr/bin/dotnet \
     condo=/condo/condo
 
 ENTRYPOINT [ "./docker.sh" ]
