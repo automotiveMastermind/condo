@@ -10,11 +10,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Run condo
-          command: 'condo -- /t:publish'
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-    - condo
+        name: Run condo
+        command: 'condo -- /t:publish'
+      - store_artifacts:
+        path: artifacts/condo.*
+        destination: logs
