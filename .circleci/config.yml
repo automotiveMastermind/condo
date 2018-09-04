@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  condo:
+  build:
     working_directory: /target
     docker:
       - image: automotivemastermind/condo:latest
