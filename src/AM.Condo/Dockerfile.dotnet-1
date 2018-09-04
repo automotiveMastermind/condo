@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-bionic
+FROM microsoft/dotnet:2.1.401-sdk-bionic
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
