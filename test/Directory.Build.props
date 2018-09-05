@@ -5,6 +5,7 @@
   <PropertyGroup>
     <DebugType>portable</DebugType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
   <ItemGroup>

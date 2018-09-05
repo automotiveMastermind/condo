@@ -1,8 +1,9 @@
 #!/bin/bash
+
 set -e
 
 if [ "$1" = 'condo' ]; then
-    shift && ./condo "$@"
+    shift && dotnet /condo/condo.dll "$@"
     exit $?
 fi
 

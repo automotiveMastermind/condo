@@ -112,11 +112,6 @@ if (Test-Path $MSBuildRsp) {
 }
 
 $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
-$OldSdkPath = Join-Path $DotNetPath "sdk\2.0.0"
-
-if (Test-Path $OldSdkPath) {
-    Remove-Item $OldSdkPath -Recurse -Force > $null
-}
 
 $MSBuildDisableColor = ""
 
@@ -146,14 +141,14 @@ function Invoke-Cmd([string] $cmd) {
 
 function Install-DotNet() {
     $dotnetUrl = $env:DOTNET_INSTALL_URL
-    $dotnetVersions = @($env:DOTNET_VERSION)
+    $dotnetChannels = @($env:DOTNET_CHANNEL)
 
     if (!$dotnetUrl) {
         $dotnetUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
     }
 
-    if (!$dotnetVersions) {
-        $dotnetVersions = @("1.1.9","2.1.200","2.1.300")
+    if (!$dotnetChannels) {
+        $dotnetChannels = @("LTS","Current")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -170,8 +165,8 @@ function Install-DotNet() {
     try {
         New-Item $dotnetTemp -ItemType Directory > $null
         Get-File -url $dotnetUrl -Path $dotnetInstall
-        foreach ($dotnetVersion in $dotnetVersions) {
-            Invoke-Cmd "$dotnetInstall" -Version $dotnetVersion | Out-Null
+        foreach ($dotnetChannel in $dotnetChannels) {
+            Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel | Out-Null
         }
     }
     finally {

@@ -206,7 +206,19 @@
     <Message Importance="High" Text="Artifacts (Docs)   : $(DocsArtifactsRoot)" />
   </Target>
 
+  <Target Name="PrintDotNetInfo">
+    <Exec Command="dotnet --info"
+          EchoOff="true"
+          IgnoreStandardErrorWarningFormat="true"
+          IgnoreExitCode="true" />
+  </Target>
+
   <PropertyGroup>
+    <BeforeInitialize>
+      $(BeforeInitialize);
+      PrintDotNetInfo;
+    </BeforeInitialize>
+
     <InitializeDependsOn>
       $(BeforeInitialize);
       GetBuildTime;

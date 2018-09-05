@@ -1,13 +1,13 @@
 <Project>
   <PropertyGroup>
-    <BuildVersion>15.7.179</BuildVersion>
-    <MoqVersion>4.8.2</MoqVersion>
+    <BuildVersion>15.8.166</BuildVersion>
+    <MoqVersion>4.9.0</MoqVersion>
     <NuGetVersion>4.7.0</NuGetVersion>
-    <SourceLinkVersion>2.8.1</SourceLinkVersion>
-    <XUnitVersion>2.3.1</XUnitVersion>
+    <SourceLinkVersion>2.8.3</SourceLinkVersion>
+    <XUnitVersion>2.4.0</XUnitVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <MSBuildTestSDKVersion>15.7.2</MSBuildTestSDKVersion>
+    <MSBuildTestSDKVersion>15.8.0</MSBuildTestSDKVersion>
   </PropertyGroup>
 </Project>

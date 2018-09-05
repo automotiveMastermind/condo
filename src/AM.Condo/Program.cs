@@ -9,7 +9,7 @@ namespace AM.Condo
     using System;
     using System.IO;
     using System.Linq;
-
+    using System.Reflection;
     using AM.Condo.Diagnostics;
 
     /// <summary>
@@ -29,30 +29,62 @@ namespace AM.Condo
         public static int Main(string[] args)
         {
             // Defaults
-            var condoVerbosity = "normal";
-            var condoColor = string.Empty;
-            var condoSkipFrontend = string.Empty;
+            var verbosity = "normal";
+            var color = string.Empty;
             string[] options = { };
 
             // Build paths
             var path = Directory.GetCurrentDirectory();
-            var buildSettingsPath = Path.Combine(path, "condo.msbuild.rsp");
-            var msbuildLog = Path.Combine(string.Empty, "/target/artifacts/log/condo.msbuild.log");
+            var artifacts = Path.Combine(string.Empty, "/target/artifacts");
+
+            // determine if the artifacts path does not exist
+            if (!Directory.Exists(artifacts))
+            {
+                // create the artifacts path
+                Directory.CreateDirectory(artifacts);
+            }
+
+            var response = Path.Combine(artifacts, "condo.msbuild.rsp");
+            var log = Path.Combine(artifacts, "condo.msbuild.log");
+
+            // determine if the response file already exits
+            if (File.Exists(response))
+            {
+                // delete the response file
+                File.Delete(response);
+            }
+
+            // determine if the log file already exists
+            if (File.Exists(log))
+            {
+                // delete the log file
+                File.Delete(log);
+            }
+
+            // get the location of the condo executable
+            var location = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Program)).Location);
+
+            // get the location of the response file template
+            var template = Path.Combine(location, "condo.msbuild.rsp");
+
+            // copy the template to the target location
+            File.Copy(template, response);
 
             // Test for arguments
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
+
                 switch (arg)
                 {
                     case "-v":
                     case "--verbosity":
                         i++;
-                        condoVerbosity = args[i];
+                        verbosity = args[i];
                         break;
                     case "-nc":
                     case "--no-color":
-                        condoColor = "DisableConsoleColor";
+                        color = "DisableConsoleColor";
                         break;
                     case "--":
                         i++;
@@ -64,12 +96,11 @@ namespace AM.Condo
             }
 
             // Get default build arguments from file
-            using (var build = new StreamWriter(buildSettingsPath, append: true))
+            using (var build = new StreamWriter(response, append: true))
             {
                 // Append args and options to build arguments
-                build.WriteLine($"-flp:LogFile=\"{msbuildLog}\";Encoding=UTF-8;Verbosity={condoVerbosity} \n");
-                build.WriteLine($"-clp:{condoColor};Verbosity={condoVerbosity} \n");
-                build.WriteLine(condoSkipFrontend);
+                build.WriteLine($"-flp:LogFile=\"{log}\";Encoding=UTF-8;Verbosity={verbosity} \n");
+                build.WriteLine($"-clp:{color};Verbosity={verbosity} \n");
 
                 foreach (var option in options)
                 {
@@ -78,8 +109,8 @@ namespace AM.Condo
             }
 
             // Execute dotnet msbuild
-            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger(), isRealtime: true);
-            var output = invoker.Execute($"@{buildSettingsPath}", throwOnError: true);
+            var invoker = new ProcessInvoker(path, "dotnet", "msbuild", new ConsoleLogger(), isRealtime: true);
+            var output = invoker.Execute($"@{response}", throwOnError: true);
 
             return output.ExitCode;
         }
