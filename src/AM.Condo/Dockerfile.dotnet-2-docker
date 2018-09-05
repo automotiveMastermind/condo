@@ -68,7 +68,8 @@ RUN set -x \
 WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/any} .
 RUN chmod +x docker.sh \
-    && ln -s /condo/condo /usr/bin/condo
+    && chmod +x condo.sh \
+    && ln -s /condo/condo.sh /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
     dotnet_2=/usr/bin/dotnet \

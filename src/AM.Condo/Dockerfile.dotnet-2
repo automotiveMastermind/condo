@@ -51,9 +51,9 @@ RUN apt-get update \
 
 WORKDIR /condo
 COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/any} .
-RUN chmod +x docker.sh
-
-RUN ln -s /condo/docker.sh /usr/bin/condo
+RUN chmod +x docker.sh \
+    && chmod +x condo.sh \
+    && ln -s /condo/condo.sh /usr/bin/condo
 
 ENV DOTNET_VERSION=2.1.3 \
     DOTNET_CURRENT_VERSION=2.1.3 \
