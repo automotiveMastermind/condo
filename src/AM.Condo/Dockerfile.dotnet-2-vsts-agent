@@ -64,3 +64,5 @@ RUN chmod +x docker.sh \
 ENV dotnet=/usr/bin/dotnet \
     dotnet_2=/usr/bin/dotnet \
     condo=/usr/bin/condo
+
+WORKDIR /vsts
