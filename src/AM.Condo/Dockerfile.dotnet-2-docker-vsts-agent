@@ -67,4 +67,4 @@ ENV dotnet=/usr/bin/dotnet \
     docker=/usr/local/bin/docker \
     docker_compose=/usr/local/bin/docker-compose
 
-CMD ["/vsts/start.sh"]
+WORKDIR /vsts
