@@ -73,3 +73,5 @@ ENV dotnet=/usr/bin/dotnet \
     dotnet_1=/usr/bin/dotnet \
     dotnet_2=/usr/bin/dotnet \
     condo=/usr/bin/condo
+
+CMD ["/vsts/start.sh"]
