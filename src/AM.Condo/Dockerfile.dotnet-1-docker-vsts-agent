@@ -69,8 +69,8 @@ ARG CONDO_TARGET=/root/.am/condo
 
 COPY $CONDO_SOURCE $CONDO_TARGET
 RUN chmod +x $CONDO_TARGET/docker.sh \
-    && chmod +x $CONDO_TARGET/condo.sh \
-    && ln -s $CONDO_TARGET/condo.sh /usr/bin/condo
+    && chmod +x $CONDO_TARGET/cli.sh \
+    && ln -s $CONDO_TARGET/cli.sh /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
     dotnet_1=/usr/bin/dotnet \

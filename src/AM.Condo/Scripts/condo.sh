@@ -13,13 +13,12 @@ AM_ROOT="$HOME/.am"
 CONDO_ROOT="$AM_ROOT/condo"
 SRC_ROOT="$CONDO_ROOT/.src"
 BUILD_ROOT="$CONDO_ROOT/.build"
-TEMPLATE_ROOT="$SRC_ROOT/template"
 
 MSBUILD_LOG="$BUILD_ROOT/condo.msbuild.log"
 MSBUILD_RSP="$BUILD_ROOT/condo.msbuild.rsp"
 
 CONDO_PATH="$SRC_ROOT/src/AM.Condo"
-CONDO_PUBLISH="$CONDO_ROOT/cli"
+CONDO_PUBLISH="$CONDO_ROOT"
 CONDO_LOG="$BUILD_ROOT/condo.log"
 CONDO_TARGETS="$CONDO_PUBLISH/Targets"
 CONDO_PROJ="$WORKING_PATH/condo.build"
@@ -128,7 +127,7 @@ install_dotnet() {
 
 # restore and publish msbuild
 install_condo() {
-    if [ ! -d "$CONDO_PUBLISH" ]; then
+    if [ ! -e "$CONDO_PUBLISH/condo.dll" ]; then
         # make the publish directory
         mkdir -p $CONDO_PUBLISH
 
@@ -139,16 +138,14 @@ install_condo() {
         safe-exec dotnet publish $CONDO_PATH --output $CONDO_PUBLISH --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
         popd 1>/dev/null 2>&1
 
-        cp -R $TEMPLATE_ROOT $CONDO_ROOT
-
         info "condo: removing temp path..."
         rm -rf $SRC_ROOT
 
         info "condo: symlink condo executable..."
         mkdir -p /usr/local/bin 1>/dev/null 2>&1
         rm -f /usr/local/bin/condo 1>/dev/null 2>&1
-        chmod +x "$CONDO_PUBLISH/condo.sh" 1>/dev/null 2>&1
-        ln -s "$CONDO_PUBLISH/condo.sh" /usr/local/bin/condo 1>/dev/null 2>&1
+        chmod +x "$CONDO_PUBLISH/cli.sh" 1>/dev/null 2>&1
+        ln -s "$CONDO_PUBLISH/cli.sh" /usr/local/bin/condo 1>/dev/null 2>&1
 
         success "condo: publish complete"
     else
