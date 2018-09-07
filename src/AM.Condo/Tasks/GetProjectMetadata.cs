@@ -213,7 +213,7 @@ namespace AM.Condo.Tasks
             }
 
             // capture all of the project properties
-            var properties = project.AllEvaluatedProperties;
+            var properties = project.Properties;
 
             // set publish and pack to false
             item.SetMetadata("IsPublishable", false.ToString());

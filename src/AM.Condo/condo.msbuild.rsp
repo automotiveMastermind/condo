@@ -1,8 +1,10 @@
 -nologo
-"/target/condo.build"
--p:CondoPath="/condo/"
--p:AmRoot="/condo/.build"
--p:CondoTasksPath="/condo/"
--p:CondoTargetsPath="/condo/Targets/"
--p:RepositoryRoot="/target/"
+-nodereuse:false
+"$TARGET_PATH/condo.build"
+-p:CondoPath="$CONDO_PATH/"
+-p:CondoTasksPath="$CONDO_PATH/"
+-p:CondoTargetsPath="$CONDO_PATH/Targets/"
+-p:RepositoryRoot="$TARGET_PATH/"
+-flp:LogFile="$LOG_PATH";Encoding=UTF-8;Verbosity=$VERBOSITY
+-clp:$COLOR;Verbosity=$VERBOSITY
 -fl

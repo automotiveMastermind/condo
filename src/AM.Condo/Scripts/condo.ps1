@@ -189,14 +189,11 @@ function Install-Condo() {
     # create the condo publish path
     New-Item $CondoPublish -ItemType Directory -ErrorAction SilentlyContinue > $null
 
-    # use the portable runtime
-    $runtime = "win-x64"
-
     # publish condo
     Write-Info "condo: publishing condo..."
 
     Push-Location $CondoPath | Out-Null
-    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
+    Invoke-Cmd dotnet publish $CondoPath --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
     Pop-Location | Out-Null
 
     Write-Success "condo: publish complete"
@@ -222,13 +219,12 @@ try {
 /nologo
 /nodereuse:false
 "$CondoProj"
-/p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"
-/fl
 /flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
 /clp:$MSBuildDisableColor;Verbosity=$Verbosity
+/fl
 "@
 
     $MSBuildRspData | Out-File -Encoding ASCII -FilePath $MSBuildRsp

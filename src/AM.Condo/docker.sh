@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = 'condo' ]; then
-    shift && dotnet /condo/condo.dll "$@"
+    shift && dotnet ~/.am/condo/condo.dll "$@"
     exit $?
 fi
 

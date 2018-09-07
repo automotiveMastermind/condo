@@ -22,7 +22,7 @@ namespace AM.Condo.Diagnostics
                 throw new ArgumentNullException(nameof(exception));
             }
 
-            Console.WriteLine(exception);
+            Console.Error.WriteLine(exception);
         }
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace AM.Condo.Diagnostics
                 throw new ArgumentException($"The {nameof(error)} argument must not be empty.", nameof(error));
             }
 
-            Console.WriteLine(error);
+            Console.Error.WriteLine(error);
         }
 
         /// <inheritdoc />

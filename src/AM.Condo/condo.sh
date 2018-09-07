@@ -2,5 +2,5 @@
 
 set -e
 
-dotnet /condo/condo.dll "$@"
+dotnet ~/.am/condo/condo.dll "$@"
 exit $?
