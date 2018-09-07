@@ -147,6 +147,7 @@ install_condo() {
         info "condo: symlink condo executable..."
         mkdir -p /usr/local/bin 1>/dev/null 2>&1
         rm -f /usr/local/bin/condo 1>/dev/null 2>&1
+        chmod +x "$CONDO_PUBLISH/condo.sh" 1>/dev/null 2>&1
         ln -s "$CONDO_PUBLISH/condo.sh" /usr/local/bin/condo 1>/dev/null 2>&1
 
         success "condo: publish complete"
