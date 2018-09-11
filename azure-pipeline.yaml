@@ -7,6 +7,6 @@ trigger:
 - develop
 
 jobs:
-- template: .azure/job-condo.yaml
+- template: .azure/cli.yaml
   parameters:
     pool: kubernetes-agents
