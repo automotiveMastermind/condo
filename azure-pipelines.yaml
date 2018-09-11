@@ -53,9 +53,3 @@ steps:
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: artifacts/test/coverage.xml
-
-      jobs:
-- template: .azure/cli.yaml
-  parameters:
-    secrets:
-      DOCKER_REGISTRY_PASSWORD: $(docker.registry.password)
