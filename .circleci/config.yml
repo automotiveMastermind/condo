@@ -11,7 +11,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run condo
-          command: 'condo -- /t:publish'
+          command: 'condo -- /t:ci'
       - store_artifacts:
           path: artifacts/condo.msbuild.rsp
           destination: logs/condo.msbuild.rsp
