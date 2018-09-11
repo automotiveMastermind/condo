@@ -9,4 +9,8 @@ trigger:
 jobs:
 - template: .azure/cli.yaml
   parameters:
-    pool: kubernetes-agents
+    pool:
+      name: kubernetes-agent
+      demands:
+      - condo
+      - dotnet
