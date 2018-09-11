@@ -8,3 +8,5 @@ trigger:
 
 jobs:
 - template: .azure/cli.yaml
+  parameters:
+    token: $(system.accesstoken)
