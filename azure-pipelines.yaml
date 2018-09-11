@@ -2,16 +2,10 @@ resources:
 - repo: self
   clean: true
 
-variables:
-  verbosity: diag
-
 trigger:
 - master
 - develop
 
 jobs:
 - template: .azure/cli.yaml
-  parameters:
-    token: $(system.accesstoken)
-    verbosity: $(verbosity)
 
