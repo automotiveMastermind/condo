@@ -10,7 +10,7 @@ jobs:
 - template: .azure/cli.yaml
   parameters:
     pool:
-      name: kubernetes-agent
+      name: kubernetes-agents
       demands:
       - condo
       - dotnet
