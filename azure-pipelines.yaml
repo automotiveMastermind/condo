@@ -8,4 +8,6 @@ trigger:
 
 jobs:
 - template: .azure/cli.yaml
-
+  parameters:
+    secrets:
+      DOCKER_REGISTRY_PASSWORD: $(docker.registry.password)
