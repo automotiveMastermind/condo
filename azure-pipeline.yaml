@@ -1,0 +1,12 @@
+resources:
+- repo: self
+  clean: true
+
+trigger:
+- master
+- develop
+
+jobs:
+- template: .azure/job-condo.yaml
+  parameters:
+    pool: kubernetes-agents
