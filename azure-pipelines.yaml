@@ -6,50 +6,8 @@ trigger:
 - master
 - develop
 
-steps:
-- script: /usr/bin/condo --no-color --verbosity $CONDO_VERBOSITY -- /t:$CONDO_TARGET
-  name: condo_execute
-  displayName: execute condo
-  env:
-    CONDO_VERBOSITY: ${{ coalesce(variables['condo.verbosity'], 'normal') }}
-    CONDO_TARGET: ${{ coalesce(variables['condo.target'], 'ci') }}
-    ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-      SYSTEM_ACCESSTOKEN: $(system.accesstoken)
-    ${{ insert }}: ${{ parameters.env }}
-
-- task: CopyFiles@2
-  name: condo_copy_logs
-  displayName: copy logs
-  condition: and(always(), ne(variables['Build.Reason'], 'PullRequest'))
-  inputs:
-    SourceFolder: artifacts
-    Contents: |
-      *.log
-      *.rsp
-    TargetFolder: '$(build.artifactstagingdirectory)/logs'
-    CleanTargetFolder: true
-    OverWrite: true
-
-- task: PublishBuildArtifacts@1
-  name: condo_push_logs
-  displayName: publish logs
-  condition: and(always(), ne(variables['Build.Reason'], 'PullRequest'))
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)/logs'
-    ArtifactName: Logs
-
-- task: PublishTestResults@2
-  name: condo_push_tests
-  displayName: publish test results
-  condition: always()
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: 'artifacts/test/*.trx'
-    mergeTestResults: true
-
-- task: PublishCodeCoverageResults@1
-  name: condo_push_coverage
-  displayName: publish code coverage results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: artifacts/test/coverage.xml
+jobs:
+- template: .azure/cli.yaml
+  parameters:
+    secrets:
+      DOCKER_REGISTRY_PASSWORD: $(docker.registry.password)
