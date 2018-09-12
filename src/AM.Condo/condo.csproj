@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <OutputType>exe</OutputType>
   </PropertyGroup>
 
@@ -16,7 +15,7 @@
     <Content Include="condo.msbuild.rsp">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="condo.sh">
+    <Content Include="cli.sh">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="docker.sh">

@@ -58,16 +58,19 @@ RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotn
 ENV ASPNETCORE_URLS=http://+:80 \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_USE_POLLING_FILE_WATCHER=true \
-    NUGET_XMLDOC_MODE=skip
+    NUGET_XMLDOC_MODE=skip \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 RUN dotnet help
 RUN dotnet --info
 
-WORKDIR /condo
-COPY ${CONDO:-obj/docker/publish/netcoreapp2.1/any} .
-RUN chmod +x docker.sh \
-    && chmod +x condo.sh \
-    && ln -s /condo/condo.sh /usr/bin/condo
+ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
+ARG CONDO_TARGET=/root/.am/condo
+
+COPY $CONDO_SOURCE $CONDO_TARGET
+RUN chmod +x $CONDO_TARGET/docker.sh \
+    && chmod +x $CONDO_TARGET/cli.sh \
+    && ln -s $CONDO_TARGET/cli.sh /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
     dotnet_1=/usr/bin/dotnet \
