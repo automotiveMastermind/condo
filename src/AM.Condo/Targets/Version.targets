@@ -128,7 +128,7 @@
 
     <Message Importance="High"
              Text="##vso[build.updatebuildnumber]$(InformationalVersion)"
-             Condition=" '$(BuildHost)' == 'VSTS' " />
+             Condition=" '$(BuildHost)' == 'VSTS' AND '$(AccessToken)' != '' " />
   </Target>
 
   <Target Name="SetVersionVariables" Condition=" $(SetVersionVariables) ">

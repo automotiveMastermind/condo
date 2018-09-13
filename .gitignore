@@ -65,3 +65,6 @@ _TeamCity*
 
 #azure pipelines
 !.azure/*
+
+# build deps
+!.build/*
