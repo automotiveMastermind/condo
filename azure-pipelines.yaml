@@ -8,5 +8,3 @@ trigger:
 
 jobs:
 - template: .azure/cli.yaml
-  parameters:
-    pool: kubernetes-agents

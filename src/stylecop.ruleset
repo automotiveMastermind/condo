@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="automotiveMastermind" Description="Default rule set for coding style enforcement." ToolsVersion="14.0">
+<RuleSet Name="automotiveMastermind" Description="Default rule set for coding style enforcement." ToolsVersion="15.0">
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1000" Action="Warning" />
     <Rule Id="CA1001" Action="Warning" />
@@ -239,6 +239,7 @@
     <Rule Id="SA1112" Action="None" />
     <Rule Id="SA1118" Action="None" />
     <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1413" Action="None" />
     <Rule Id="SA1513" Action="None" />
     <Rule Id="SA1514" Action="None" />
     <Rule Id="SA1600" Action="None" />
