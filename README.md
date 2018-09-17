@@ -11,7 +11,7 @@ License       | [![License][license-image]][license]
 Build Status  | [![Circle CI Build Status][circleci-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 Issues        | [![Issues][issues-image]][issues-url]
-Maintenance   | [![issue resolution][resolution-image]]([[is-it-maintained]]) [![open issues][open-image]]([is-it-maintained]])
+Maintenance   | [![issue resolution][resolution-image]][is-it-maintained] [![open issues][open-image]][is-it-maintained]
 
 ## Getting Started
 
