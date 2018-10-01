@@ -53,7 +53,7 @@ ENV DOTNET_VERSION=2.1.4 \
     DOTNET_CURRENT_VERSION=2.1.4 \
     DOTNET_LTS_VERSION=1.1.9
 
-ARG DOTNET_LTS_SHA=95e050b3faf98e1391605a69353d708231641d69a4f8cac6b0f11bf1736f09a69dfb4b2f8e446a39a22e8141c35a609130870c485af85e7089c109c313f0248c
+ARG DOTNET_LTS_SHA=fb3ee217813b099f651ef8ded1adc5bbece731ed61add842cc488c5a70dbee50877f4defec71c0089c1c90f3e580e0ea3c3f4d4006c03ecdd568787542d16728
 
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_LTS_VERSION/dotnet-ubuntu.18.04-x64.$DOTNET_LTS_VERSION.tar.gz \
     && echo "$DOTNET_LTS_SHA dotnet.tar.gz" | sha512sum -c - \
@@ -87,18 +87,17 @@ RUN set -x \
     && docker-compose -v
 
 ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
-ARG CONDO_TARGET=/root/.am/condo
 
-COPY $CONDO_SOURCE $CONDO_TARGET
-RUN chmod +x $CONDO_TARGET/docker.sh \
-    && chmod +x $CONDO_TARGET/cli.sh \
-    && chmod -R ugo=r,+x $CONDO_TARGET \
-    && ln -s $CONDO_TARGET/cli.sh /usr/bin/condo
+COPY $CONDO_SOURCE /root/.am/condo
+RUN chmod +x /root/.am/condo/docker.sh \
+    && chmod +x /root/.am/condo/cli.sh \
+    && chmod -R ugo=r,+x /root/.am/condo \
+    && ln -s /root/.am/condo/cli.sh /usr/bin/condo
 
 ENV dotnet=/usr/bin/dotnet \
-    dotnet_1=/usr/bin/dotnet \
-    dotnet_2=/usr/bin/dotnet \
+    dotnet1=/usr/bin/dotnet \
+    dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
 
-ENTRYPOINT [ "$CONDO_TARGET/docker.sh" ]
+ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]

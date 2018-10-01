@@ -15,7 +15,7 @@ namespace AM.Condo.IO
     {
         #region Methods
         /// <summary>
-        /// Parses the specified lines using the specified <paramref name="options"/>
+        /// Parses the specified lines using the specified <paramref name="options"/>.
         /// </summary>
         /// <param name="commits">
         /// The raw commit lines emitted from a git log operation.
