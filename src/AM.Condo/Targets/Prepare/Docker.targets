@@ -103,6 +103,9 @@
       <DockerLogin Condition=" '$(DockerLogin)' != '' AND '$(DockerLogin.ToLower())' != 'true' ">false</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' == '' AND '$(DockerUsername)' != '' AND '$(DockerPassword)' != '' ">$(DockerEnabled)</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' == '' ">false</DockerLogin>
+
+      <!-- disable docker push if login credentials are not available -->
+      <DockerPush Condition=" $(DockerPush) ">$(DockerLogin)</DockerPush>
     </PropertyGroup>
 
     <SetDockerConfig Username="$(DockerUsername)" Password="$(DockerPassword)" RegistryUri="$(DockerRegistry)"
