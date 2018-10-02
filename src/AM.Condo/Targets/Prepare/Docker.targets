@@ -86,7 +86,7 @@
     <Message Importance="High" Text="Project: %(DockerMetadata.Label)" />
   </Target>
 
-  <Target Name="DockerLogin" Condition=" $(HasDocker) ">
+  <Target Name="DockerLogin" Condition=" $(DockerEnabled) ">
     <DecodeBase64 Encoded="$(DOCKER_REGISTRY_USERNAME_BASE64)" Condition=" '$(DOCKER_REGISTRY_USERNAME_BASE64)' != '' ">
       <Output TaskParameter="Decoded" PropertyName="DockerUsername" />
     </DecodeBase64>
