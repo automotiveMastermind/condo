@@ -233,7 +233,7 @@ namespace AM.Condo.IO
         IGitRepositoryInitialized AddRemote(string name, string uri);
 
         /// <summary>
-        /// Gets the git log using the specified <paramref name="options"/>
+        /// Gets the git log using the specified <paramref name="options"/>.
         /// </summary>
         /// <param name="from">
         /// The item specification from which the git log should start.

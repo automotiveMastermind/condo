@@ -19,7 +19,7 @@ namespace AM.Condo.IO
 
         /// <summary>
         /// Gets or sets the body of the note.
-        /// /// </summary>
+        /// </summary>
         public string Body { get; set; }
         #endregion
 
