@@ -43,7 +43,7 @@
 
       <DotNetPush Condition=" '$(SKIP_DOTNET_PUSH)' != '' ">false</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' != '' AND '$(DotNetPush.ToLower())' != 'true' ">false</DotNetPush>
-      <DotNetPush Condition=" !$(CI) OR $(IsPullRequest) OR '$(PackageFeedUri)' == '' ">false</DotNetPush>
+      <DotNetPush Condition=" !$(AllowPublish) OR !$(DotNetPack) OR '$(PackageFeedUri)' == '' ">false</DotNetPush>
       <DotNetPush Condition=" '$(DotNetPush)' == '' ">$(DotNetRequired)</DotNetPush>
     </PropertyGroup>
 
@@ -61,6 +61,10 @@
       <PublishProjects    Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPublishable) " />
       <PackProjects       Include="@(SourceProjects)"       Condition=" %(SourceProjects.IsPackable) " />
     </ItemGroup>
+
+    <RemoveDuplicates Inputs="@(RestoreProjects)">
+      <Output TaskParameter="Filtered" ItemName="FilteredRestoreProjects" />
+    </RemoveDuplicates>
 
     <PropertyGroup>
       <DotNetRestore  Condition=" @(RestoreProjects->Count()) > 0 ">$(DotNetRestore)</DotNetRestore>
@@ -81,9 +85,16 @@
       <DotNetRestoreProperties Condition=" '$(DotNetRestoreProperties)' == '' ">$(DOTNET_RESTORE_PROPS)</DotNetRestoreProperties>
       <DotNetRestoreProperties Condition=" '$(NuGetConfigPath)' != '' ">$(DotNetRestoreProperties);RestoreConfigFile=$(NuGetConfigPath)</DotNetRestoreProperties>
       <DotNetRestoreProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetRestoreProperties);Version=$(InformationalVersion)</DotNetRestoreProperties>
+      <DotNetRestoreProperties>$(DotNetRestoreProperties);TargetLatestRuntimePatch=true</DotNetRestoreProperties>
     </PropertyGroup>
 
-    <MSBuild Projects="@(RestoreProjects)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
+    <ItemGroup>
+      <_DotNetRestore Include="@(FilteredRestoreProjects)">
+        <AdditionalProperties>%(RestoreProjects.AdditionalProperties);RuntimeIdentifiers=%(RuntimeIdentifiers)</AdditionalProperties>
+      </_DotNetRestore>
+    </ItemGroup>
+
+    <MSBuild Projects="@(FilteredRestoreProjects)" Properties="$(DotNetRestoreProperties)" Targets="Restore" />
   </Target>
 
   <PropertyGroup>

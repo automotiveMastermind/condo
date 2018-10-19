@@ -4,9 +4,13 @@
 
   <PropertyGroup>
     <DebugType>portable</DebugType>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputType>Exe</OutputType>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/test/</CoverletOutput>
+    <MergeWith Condition=" Exists('$(CoverletOutput)coverage.json') ">$(CoverletOutput)coverage.json</MergeWith>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,11 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MSBuildTestSDKVersion)" />
 
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
-    <PackageReference Include="Moq" Version="4.7.145" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="Coverlet.MSBuild" Version="$(CoverletVersion)" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

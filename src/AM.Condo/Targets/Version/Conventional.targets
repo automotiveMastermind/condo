@@ -4,7 +4,8 @@
   <PropertyGroup>
     <ChangeLogInitialize Condition=" '$(ChangeLogInitialize)' == '' ">$(MSBuildThisFileDirectory)changelog.md</ChangeLogInitialize>
     <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CONDO_PUSH_COMMITS)</AllowPushCommits>
-    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">true</AllowPushCommits>
+    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">$(CI)</AllowPushCommits>
+    <AllowPushCommits Condition=" '$(AllowPushCommits)' == '' ">false</AllowPushCommits>
     <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">$(CONDO_PRINT_COMMITS)</PrintIncludedCommits>
     <PrintIncludedCommits Condition=" '$(PrintIncludedCommits)' == '' ">false</PrintIncludedCommits>
   </PropertyGroup>
@@ -61,7 +62,7 @@
   </Target>
 
   <!-- checkout the release branch -->
-  <Target Name="CheckoutReleaseBranch" Condition=" $(CreateRelease) AND !$(IsPullRequest) AND $(CI) ">
+  <Target Name="CheckoutReleaseBranch" Condition=" $(CreateRelease) ">
     <CheckoutBranch
       RepositoryRoot="$(RepositoryRoot)"
       Branch="$(Branch)"
@@ -69,7 +70,7 @@
   </Target>
 
   <!-- create a release commit -->
-  <Target Name="CreateRelease" Condition=" $(CreateRelease) AND !$(IsPullRequest) AND $(CI) ">
+  <Target Name="CreateRelease">
     <PropertyGroup>
       <CurrentReleaseTag>$(VersionTagPrefix)$(NextRelease)</CurrentReleaseTag>
     </PropertyGroup>
@@ -79,6 +80,7 @@
       Name="CHANGELOG.md"
       Version="$(CurrentReleaseTag)"
       RepositoryRoot="$(RepositoryRoot)"
+      RepositoryUri="$(RepositoryUri)"
       GroupByHeader="$(GroupByHeader)"
       SortByHeader="$(SortByHeader)"
       ChangeLogInitialize="$(ChangeLogInitialize)"
@@ -89,12 +91,14 @@
 
     <!-- create the release -->
     <CreateRelease
+      Condition="$(CreateRelease)"
       RepositoryRoot="$(RepositoryRoot)"
       Version="$(CurrentReleaseTag)"
       ReleaseMessage="$(ReleaseMessage)"
       AuthorName="$(AuthorName)"
       AuthorEmail="$(AuthorEmail)"
-      Push="$(AllowPushCommits)" />
+      Push="$(AllowPushCommits)"
+      Tag="$(CreateRelease)" />
   </Target>
 
   <PropertyGroup>

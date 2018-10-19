@@ -120,7 +120,6 @@ namespace AM.Condo.IO
             "refactor",
             "perf",
             "test",
-            "chore",
             "revert",
             string.Empty,
             string.Empty,

@@ -20,7 +20,7 @@ namespace AM.Condo.Tasks
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Represents a Microsoft Build task used to locate and aquire the latest release of a GitHub project.
+    /// Represents a Microsoft Build task used to locate and acquire the latest release of a GitHub project.
     /// </summary>
     public class GetRelease : Task
     {

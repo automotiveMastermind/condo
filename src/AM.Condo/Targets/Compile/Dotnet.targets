@@ -7,6 +7,7 @@
       <DotNetBuildProperties Condition=" '$(InformationalVersion)' != '' ">$(DotNetBuildProperties);Version=$(InformationalVersion)</DotNetBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties);GenerateAssemblyInfo=false</DotNetBuildProperties>
       <DotNetBuildProperties>$(DotNetBuildProperties);Configuration=$(Configuration)</DotNetBuildProperties>
+      <DotNetBuildProperties>$(DotNetBuildProperties);TargetLatestRuntimePatch=true</DotNetBuildProperties>
     </PropertyGroup>
 
     <MSBuild Projects="@(BuildProjects)" Properties="$(DotNetBuildProperties)" Targets="Build" />

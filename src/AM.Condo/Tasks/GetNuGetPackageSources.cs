@@ -58,7 +58,7 @@ namespace AM.Condo.Tasks
         public string RepositoryRoot { get; set; }
 
         /// <summary>
-        /// Gets or sets the sources
+        /// Gets or sets the sources associated with the NuGet feed.
         /// </summary>
         [Output]
         public ITaskItem[] Sources { get; set; }

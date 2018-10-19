@@ -213,7 +213,7 @@ namespace AM.Condo.Tasks
             }
 
             // capture all of the project properties
-            var properties = project.AllEvaluatedProperties;
+            var properties = project.Properties;
 
             // set publish and pack to false
             item.SetMetadata("IsPublishable", false.ToString());
@@ -307,6 +307,9 @@ namespace AM.Condo.Tasks
             // order the runtime identifiers
             runtimeIdentifiers = runtimeIdentifiers.Distinct().OrderByDescending(name => name).ToList();
 
+            // set all of the runtime identifiers
+            item.SetMetadata("RuntimeIdentifiers", string.Join("%3B", runtimeIdentifiers));
+
             // iterate over each framework
             foreach (var framework in frameworks)
             {
@@ -325,8 +328,8 @@ namespace AM.Condo.Tasks
                 // set the target framework
                 any.SetMetadata("TargetFramework", framework);
                 any.SetMetadata("RuntimeIdentifier", string.Empty);
-                any.SetMetadata("OutputPath", Path.Combine(root, framework, "dotnet") + Path.DirectorySeparatorChar);
-                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, "dotnet"));
+                any.SetMetadata("OutputPath", Path.Combine(root, framework, nameof(any)) + Path.DirectorySeparatorChar);
+                any.SetMetadata("TestLogFileName", string.Join('.', file, framework, nameof(any)));
 
                 // iterate over each runtime identifier
                 foreach (var runtimeIdentifier in runtimeIdentifiers)
@@ -344,7 +347,7 @@ namespace AM.Condo.Tasks
                     any.CopyMetadataTo(contained);
 
                     // update the description
-                    any.SetMetadata("Description", Path.Combine(group, projectName, framework, runtimeIdentifier));
+                    contained.SetMetadata("Description", Path.Combine(group, projectName, framework, runtimeIdentifier));
 
                     // add the project to the project collection
                     this.projects.Add(contained);

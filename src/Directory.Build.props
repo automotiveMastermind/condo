@@ -7,6 +7,8 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IsPackable Condition=" '$(IsPackable)' == '' ">false</IsPackable>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,12 +16,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StylecopVersion)" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageReference Include="SourceLink.Create.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="all" />
+    <PackageReference Include="SourceLink.Test" Version="$(SourceLinkVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-sourcelink" Version="$(SourceLinkVersion)" />
+    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="$(SourceLinkVersion)" />
+  </ItemGroup>
 
 </Project>

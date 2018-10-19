@@ -112,11 +112,6 @@ if (Test-Path $MSBuildRsp) {
 }
 
 $DotNetPath = Join-Path $env:LOCALAPPDATA "Microsoft\dotnet"
-$OldSdkPath = Join-Path $DotNetPath "sdk\2.0.0"
-
-if (Test-Path $OldSdkPath) {
-    Remove-Item $OldSdkPath -Recurse -Force > $null
-}
 
 $MSBuildDisableColor = ""
 
@@ -129,7 +124,7 @@ function Invoke-Cmd([string] $cmd) {
     $cmdName = [System.IO.Path]::GetFileName($cmd)
 
     # execute the command
-    & $cmd @args 2>&1 >> $CondoLog
+    & $cmd @args 2>&1 | Tee-Object -FilePath $CondoLog -Append
 
     # capture the exit code
     $exitCode = $LASTEXITCODE
@@ -146,14 +141,14 @@ function Invoke-Cmd([string] $cmd) {
 
 function Install-DotNet() {
     $dotnetUrl = $env:DOTNET_INSTALL_URL
-    $dotnetVersions = @($env:DOTNET_VERSION)
+    $dotnetChannels = @($env:DOTNET_CHANNEL)
 
     if (!$dotnetUrl) {
         $dotnetUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
     }
 
-    if (!$dotnetVersions) {
-        $dotnetVersions = @("1.1.7","2.1.4")
+    if (!$dotnetChannels) {
+        $dotnetChannels = @("LTS","Current")
     }
 
     if ($env:SKIP_DOTNET_INSTALL) {
@@ -170,8 +165,8 @@ function Install-DotNet() {
     try {
         New-Item $dotnetTemp -ItemType Directory > $null
         Get-File -url $dotnetUrl -Path $dotnetInstall
-        foreach ($dotnetVersion in $dotnetVersions) {
-            Invoke-Cmd "$dotnetInstall" -Version $dotnetVersion | Out-Null
+        foreach ($dotnetChannel in $dotnetChannels) {
+            Invoke-Cmd "$dotnetInstall" -Channel $dotnetChannel | Out-Null
         }
     }
     finally {
@@ -194,17 +189,13 @@ function Install-Condo() {
     # create the condo publish path
     New-Item $CondoPublish -ItemType Directory -ErrorAction SilentlyContinue > $null
 
-    # get the runtime
-    $runtime = ((& dotnet --info) | Select-String -pattern "RID:[\s]+(.*)$").Matches.Groups[1].Value
-
-    # restore msbuild
-    Write-Info "condo: restoring condo packages..."
-    Invoke-Cmd dotnet restore $SrcRoot --runtime $runtime --verbosity minimal --ignore-failed-sources
-    Write-Success "condo: restore complete"
-
     # publish condo
-    Write-Info "condo: publishing condo tasks..."
-    Invoke-Cmd dotnet publish $CondoPath --runtime $runtime --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false
+    Write-Info "condo: publishing condo..."
+
+    Push-Location $CondoPath | Out-Null
+    Invoke-Cmd dotnet publish $CondoPath --output $CondoPublish --verbosity minimal /p:GenerateAssemblyInfo=false /p:SourceLinkCreate=false /p:SourceLinkTest=false
+    Pop-Location | Out-Null
+
     Write-Success "condo: publish complete"
 }
 
@@ -226,14 +217,14 @@ try {
 
     $MSBuildRspData = @"
 /nologo
+/nodereuse:false
 "$CondoProj"
-/p:AmRoot="$AmRoot\\"
 /p:CondoPath="$CondoRoot\\"
 /p:CondoTargetsPath="$CondoTargets\\"
 /p:CondoTasksPath="$CondoPublish\\"
-/fl
 /flp:LogFile="$MSBuildLog";Encoding=UTF-8;Verbosity=$Verbosity
 /clp:$MSBuildDisableColor;Verbosity=$Verbosity
+/fl
 "@
 
     $MSBuildRspData | Out-File -Encoding ASCII -FilePath $MSBuildRsp
@@ -241,6 +232,8 @@ try {
 
     Write-Info "Starting build..."
     Write-Info "msbuild '$CondoProj'"
+
+    $env:MSBUILDENSURESTDOUTFORTASKPROCESSES = "1"
 
     & "dotnet" "msbuild" `@"$MSBuildRsp"
 }

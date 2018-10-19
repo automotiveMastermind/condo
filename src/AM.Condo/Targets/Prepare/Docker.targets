@@ -61,18 +61,18 @@
 
       <DockerBuild Condition=" '$(SKIP_DOCKER_BUILD)' != '' ">false</DockerBuild>
       <DockerBuild Condition=" '$(DockerBuild)' != '' AND '$(DockerBuild.ToLower())' != 'true' ">false</DockerBuild>
-      <DockerBuild Condition=" '$(DockerBuild)' == '' AND $(DockerBuildRequired) ">$(DockerEnabled)</DockerBuild>
-      <DockerBuild Condition=" '$(DockerBuild)' == '' ">false</DockerBuild>
+      <DockerBuild Condition=" !$(DockerEnabled) ">false</DockerBuild>
+      <DockerBuild Condition=" '$(DockerBuild)' == '' ">$(DockerBuildRequired)</DockerBuild>
 
       <DockerCompose Condition=" '$(SKIP_DOCKER_COMPOSE)' != '' ">false</DockerCompose>
       <DockerCompose Condition=" '$(DockerCompose)' != '' AND '$(DockerCompose.ToLower())' != 'true' ">false</DockerCompose>
-      <DockerCompose Condition=" '$(DockerCompose)' == '' AND $(DockerComposeRequired) ">$(DockerEnabled)</DockerCompose>
-      <DockerCompose Condition=" '$(DockerCompose)' == '' ">false</DockerCompose>
+      <DockerCompose Condition=" !$(DockerEnabled) ">false</DockerCompose>
+      <DockerCompose Condition=" '$(DockerCompose)' == '' ">$(DockerComposeRequired)</DockerCompose>
 
       <DockerPush Condition=" '$(SKIP_DOCKER_PUSH)' != '' ">false</DockerPush>
       <DockerPush Condition=" '$(DockerPush)' != '' AND '$(DockerPush.ToLower())' != 'true' ">false</DockerPush>
-      <DockerPush Condition=" '$(DockerPush)' == '' AND $(DockerBuild) AND !$(IsPullRequest) AND '$(DockerOrganization)' != '' ">$(DockerEnabled)</DockerPush>
-      <DockerPush Condition=" '$(DockerPush)' == '' ">false</DockerPush>
+      <DockerPush Condition=" !$(AllowPublish) OR '$(DockerOrganization)' == '' ">false</DockerPush>
+      <DockerPush Condition=" '$(DockerPush)' == '' ">$(DockerBuild)</DockerPush>
     </PropertyGroup>
 
     <Warning Condition="!$(HasDocker) AND $(DockerBuildRequired) "
@@ -86,7 +86,7 @@
     <Message Importance="High" Text="Project: %(DockerMetadata.Label)" />
   </Target>
 
-  <Target Name="DockerLogin" Condition=" $(HasDocker) ">
+  <Target Name="DockerLogin" Condition=" $(DockerEnabled) ">
     <DecodeBase64 Encoded="$(DOCKER_REGISTRY_USERNAME_BASE64)" Condition=" '$(DOCKER_REGISTRY_USERNAME_BASE64)' != '' ">
       <Output TaskParameter="Decoded" PropertyName="DockerUsername" />
     </DecodeBase64>
@@ -103,6 +103,9 @@
       <DockerLogin Condition=" '$(DockerLogin)' != '' AND '$(DockerLogin.ToLower())' != 'true' ">false</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' == '' AND '$(DockerUsername)' != '' AND '$(DockerPassword)' != '' ">$(DockerEnabled)</DockerLogin>
       <DockerLogin Condition=" '$(DockerLogin)' == '' ">false</DockerLogin>
+
+      <!-- disable docker push if login credentials are not available -->
+      <DockerPush Condition=" $(DockerPush) ">$(DockerLogin)</DockerPush>
     </PropertyGroup>
 
     <SetDockerConfig Username="$(DockerUsername)" Password="$(DockerPassword)" RegistryUri="$(DockerRegistry)"

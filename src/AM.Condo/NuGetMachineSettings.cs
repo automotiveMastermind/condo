@@ -24,7 +24,7 @@ namespace AM.Condo
         private static Lazy<IEnumerable<Settings>> settings = new Lazy<IEnumerable<Settings>>
             (() =>
                 {
-                    // get the machine wide confguration directory
+                    // get the machine wide configuration directory
                     var machinePath = NuGetEnvironment.GetFolderPath(NuGetFolderPath.MachineWideConfigDirectory);
 
                     // load the machine wide settings

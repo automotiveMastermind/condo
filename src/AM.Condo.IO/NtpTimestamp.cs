@@ -18,8 +18,6 @@ namespace AM.Condo
     /// RFC 5905 indicates that the seconds portion of the 64-bit timestamp format should be represented as an unsigned
     /// 32-bit field; however, unsigned value types are not common language specification (CLS) compliant, so a 64-bit
     /// signed integer is used in its place.
-    ///
-    /// TODO: make convertible
     /// </remarks>
     public struct NtpTimestamp : IComparable, IComparable<NtpTimestamp>, IEquatable<NtpTimestamp>
     {

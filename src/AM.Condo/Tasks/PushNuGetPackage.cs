@@ -234,19 +234,20 @@ namespace AM.Condo.Tasks
 
                     // attempt to push the packages
                     await PushRunner.Run
-                        (
-                            this.settings,
-                            this.provider,
-                            path,
-                            this.Uri,
-                            this.ApiKey,
-                            this.SymbolUri,
-                            this.SymbolApiKey,
-                            this.Timeout / 1000,
-                            disableBuffering: false,
-                            noSymbols: this.NoSymbols,
-                            logger: logger
-                        );
+                    (
+                        this.settings,
+                        this.provider,
+                        path,
+                        this.Uri,
+                        this.ApiKey,
+                        this.SymbolUri,
+                        this.SymbolApiKey,
+                        this.Timeout / 1000,
+                        disableBuffering: false,
+                        noSymbols: this.NoSymbols,
+                        noServiceEndpoint: false,
+                        logger: logger
+                    );
 
                     // log a success message
                     this.Log.LogMessage(MessageImportance.High, $"Successfully pushed package {name} after {attempts} attempts.");

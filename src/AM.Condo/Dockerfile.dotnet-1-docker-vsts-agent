@@ -1,0 +1,88 @@
+FROM microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    curl \
+    dnsutils \
+    file \
+    ftp \
+    iproute2 \
+    iputils-ping \
+    locales \
+    openssh-client \
+    rsync\
+    shellcheck \
+    sudo \
+    telnet \
+    time \
+    unzip \
+    wget \
+    zip \
+    tzdata \
+    cron \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
+    && locale-gen
+
+ENV LANGUAGE=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+RUN update-locale
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV DOTNET_SDK_VERSION=2.1.402 \
+    DOTNET_VERSION=2.1.4 \
+    DOTNET_CURRENT_VERSION=2.1.4 \
+    DOTNET_LTS_VERSION=1.1.9
+
+ARG DOTNET_LTS_SHA=95e050b3faf98e1391605a69353d708231641d69a4f8cac6b0f11bf1736f09a69dfb4b2f8e446a39a22e8141c35a609130870c485af85e7089c109c313f0248c
+ARG DOTNET_SDK_SHA=dd7f15a8202ffa2a435b7289865af4483bb0f642ffcf98a1eb10464cb9c51dd1d771efbb6120f129fe9666f62707ba0b7c476cf1fd3536d3a29329f07456de48
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_LTS_VERSION/dotnet-ubuntu.16.04-x64.$DOTNET_LTS_VERSION.tar.gz \
+    && echo "$DOTNET_LTS_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
+    && echo "$DOTNET_SDK_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz \
+    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+
+ENV ASPNETCORE_URLS=http://+:80 \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    NUGET_XMLDOC_MODE=skip \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+RUN dotnet help
+RUN dotnet --info
+
+ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
+
+COPY $CONDO_SOURCE /root/.am/condo
+RUN chmod +x /root/.am/condo/docker.sh \
+    && chmod +x /root/.am/condo/cli.sh \
+    && chmod -R ugo=r,+x /root/.am/condo \
+    && ln -s /root/.am/condo/cli.sh /usr/bin/condo
+
+ENV dotnet=/usr/bin/dotnet \
+    dotnet1=/usr/bin/dotnet \
+    dotnet2=/usr/bin/dotnet \
+    condo=/usr/bin/condo \
+    docker=/usr/local/bin/docker \
+    docker_compose=/usr/local/bin/docker-compose
+
+COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly
+RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc.sh
+
+ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
+CMD [ "agent" ]

@@ -1,0 +1,98 @@
+FROM microsoft/dotnet:2.1.402-sdk-bionic
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        dnsutils \
+        file \
+        ftp \
+        iproute2 \
+        iputils-ping \
+        locales \
+        openssh-client \
+        rsync\
+        shellcheck \
+        sudo \
+        telnet \
+        time \
+        unzip \
+        wget \
+        zip \
+        tzdata \
+        cron \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
+    && locale-gen
+
+ENV LANGUAGE=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+RUN update-locale
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        software-properties-common \
+    && apt-add-repository ppa:git-core/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        jq \
+        libcurl4 \
+        libicu60 \
+        libunwind8 \
+        netcat \
+    && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
+    && apt-get install -y --no-install-recommends git-lfs \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV ASPNETCORE_URLS=http://+:80 \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    NUGET_XMLDOC_MODE=skip \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+RUN dotnet --info
+
+ENV DOCKER_CHANNEL=stable \
+    DOCKER_VERSION=17.12.0-ce
+
+RUN set -ex \
+    && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
+    && tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin \
+    && rm docker.tgz \
+    && docker -v
+
+ENV DOCKER_COMPOSE_VERSION 1.18.0
+
+RUN set -x \
+    && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose \
+    && docker-compose -v
+
+ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
+
+COPY $CONDO_SOURCE /root/.am/condo
+RUN chmod +x /root/.am/condo/docker.sh \
+    && chmod +x /root/.am/condo/cli.sh \
+    && chmod -R ugo=r,+x /root/.am/condo \
+    && ln -s /root/.am/condo/cli.sh /usr/bin/condo
+
+ENV DOTNET_SDK_VERSION=2.1.402 \
+    DOTNET_VERSION=2.1.4 \
+    DOTNET_CURRENT_VERSION=2.1.4 \
+    dotnet=/usr/bin/dotnet \
+    dotnet2=/usr/bin/dotnet \
+    condo=/usr/bin/condo \
+    docker=/usr/local/bin/docker \
+    docker_compose=/usr/local/bin/docker-compose
+
+COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly
+RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc.sh
+
+ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
+CMD [ "condo", "--", "/t:ci" ]

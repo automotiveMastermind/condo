@@ -63,7 +63,7 @@ namespace AM.Condo.Tasks
                 var json = $"{{ \"auths\": {{ \"{this.RegistryUri}\" : {{ \"auth\": \"{base64}\" }} }} }}";
 
                 // create a temporary file
-                var temporary = Path.GetTempPath();
+                var temporary = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
                 // create the temporary directory
                 Directory.CreateDirectory(temporary);

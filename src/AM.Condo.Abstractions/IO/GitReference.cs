@@ -6,10 +6,12 @@
 
 namespace AM.Condo.IO
 {
+    using System;
+
     /// <summary>
     /// Represents a reference to a work item, issue, pull request, or other artifact within a git commit.
     /// </summary>
-    public class GitReference
+    public class GitReference : IComparable<GitReference>, IEquatable<GitReference>
     {
         #region Properties and Indexers
         /// <summary>
@@ -43,10 +45,81 @@ namespace AM.Condo.IO
         public string Prefix { get; set; }
         #endregion
 
-        /// <inheritdoc />
-        public override string ToString()
+        #region Methods
+        /// <summary>
+        /// Determines if the specified <paramref name="left"/> and <paramref name="right"/> git references are equal.
+        /// </summary>
+        /// <param name="left">
+        /// The left git reference to evaluate.
+        /// </param>
+        /// <param name="right">
+        /// The right git reference to evaluate.
+        /// </param>
+        /// <returns>
+        /// A value indicating whether or not the specified <paramref name="left"/> and <paramref name="right"/> git
+        /// references are equal.
+        /// </returns>
+        public static bool operator ==(GitReference left, GitReference right) => Equals(left, right);
+
+        /// <summary>
+        /// Determines if the specified <paramref name="left"/> and <paramref name="right"/> git references are not
+        /// equal.
+        /// </summary>
+        /// <param name="left">
+        /// The left git reference to evaluate.
+        /// </param>
+        /// <param name="right">
+        /// The right git reference to evaluate.
+        /// </param>
+        /// <returns>
+        /// A value indicating whether or not the specified <paramref name="left"/> and <paramref name="right"/> git
+        /// references are not equal.
+        /// </returns>
+        public static bool operator !=(GitReference left, GitReference right) => !Equals(left, right);
+
+        /// <summary>
+        /// Determines if the specified <paramref name="left"/> and <paramref name="right"/> git references are equal.
+        /// </summary>
+        /// <param name="left">
+        /// The left git reference to evaluate.
+        /// </param>
+        /// <param name="right">
+        /// The right git reference to evaluate.
+        /// </param>
+        /// <returns>
+        /// A value indicating whether or not the specified <paramref name="left"/> and <paramref name="right"/> git
+        /// references are equal.
+        /// </returns>
+        public static bool Equals(GitReference left, GitReference right)
         {
-            return this.Raw ?? "<unknown>";
+            if (object.ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (object.ReferenceEquals(left, null))
+            {
+                return false;
+            }
+
+            return object.ReferenceEquals(left, null) ? false : left.Equals(right);
         }
+
+        /// <inheritdoc />
+        public int CompareTo(GitReference other) => string.Compare(this.Id, other?.Id, ignoreCase: true);
+
+        /// <inheritdoc />
+        public bool Equals(GitReference other)
+            => string.Equals(this.Id, other?.Id, StringComparison.InvariantCultureIgnoreCase);
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => this.Equals(obj as GitReference);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => this.Id?.GetHashCode() ?? base.GetHashCode();
+
+        /// <inheritdoc />
+        public override string ToString() => this.Raw ?? "<unknown>";
+        #endregion
     }
 }

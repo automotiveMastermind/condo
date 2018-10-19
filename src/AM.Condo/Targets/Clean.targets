@@ -1,37 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <Target Name="CleanArtifacts">
     <RemoveDir Directories="@(ArtifactPaths)" Condition=" Exists('%(ArtifactPaths.FullPath)') " ContinueOnError="true" />
   </Target>
 
-  <Target Name="CleanIntermediateArtifacts">
-    <ItemGroup Condition=" '@(DotNetSolutions->Count())' == '0' ">
-      <DotNetSolutions Include="$(RepositoryRoot)*.sln" />
-    </ItemGroup>
-
-    <RemoveDuplicates Inputs="@(DotNetSolutions)">
-      <Output TaskParameter="Filtered" ItemName="FilteredDotNetSolutions" />
-    </RemoveDuplicates>
-
-    <GetProjectsForSolution Solutions="@(FilteredDotNetSolutions)" RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Projects" ItemName="DotNetProjects" />
-    </GetProjectsForSolution>
-
+  <Target Name="CleanIntermediateArtifacts" Condition=" $(DotNetRequired) ">
     <ItemGroup>
-      <Projects Include="$(RepositoryRoot)**$(slash)docfx.json" />
-    </ItemGroup>
+      <IntermediateArtifacts Include="%(DotNetProjects.OutputPath)"    Condition=" Exists('%(DotNetProjects.OutputPath)') " />
+      <IntermediateArtifacts Include="%(DotNetProjects.ProjectDir)bin" Condition=" Exists('%(DotNetProjects.ProjectDir)bin') " />
+      <IntermediateArtifacts Include="%(DotNetProjects.ProjectDir)obj" Condition=" Exists('%(DotNetProjects.ProjectDir)obj') " />
 
-    <GetProjectMetadata Projects="@(Projects)" Product="$(Product)" RepositoryRoot="$(RepositoryRoot)">
-      <Output TaskParameter="Projects" ItemName="CleanProjects" />
-    </GetProjectMetadata>
-
-    <ItemGroup>
-      <IntermediateArtifacts Include="%(CleanProjects.OutputPath)"    Condition=" Exists('%(CleanProjects.OutputPath)') " />
-      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)bin" Condition=" Exists('%(CleanProjects.ProjectDir)bin') " />
-      <IntermediateArtifacts Include="%(CleanProjects.ProjectDir)obj" Condition=" Exists('%(CleanProjects.ProjectDir)obj') " />
-
-      <IntermediateFiles Include="%(CleanProjects.CondoAssemblyInfo)" Condition=" Exists('%(CleanProjects.CondoAssemblyInfo)') " />
+      <IntermediateFiles Include="%(DotNetProjects.CondoAssemblyInfo)" Condition=" Exists('%(DotNetProjects.CondoAssemblyInfo)') " />
     </ItemGroup>
 
     <RemoveDir Directories="@(IntermediateArtifacts)" ContinueOnError="true" />
@@ -43,6 +22,11 @@
   </Target>
 
   <PropertyGroup>
+    <BeforeClean>
+      $(BeforeClean);
+      GetDotNetInfo;
+    </BeforeClean>
+
     <CleanDependsOn>
       $(BeforeClean);
       CleanArtifacts;
@@ -57,5 +41,5 @@
     </BeforeInitialize>
   </PropertyGroup>
 
-  <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" />
+  <Target Name="Cleaning" DependsOnTargets="$(CleanDependsOn)" BeforeTargets="Clean" Condition=" $(CleanEnabled) " />
 </Project>

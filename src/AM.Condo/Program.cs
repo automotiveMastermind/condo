@@ -9,6 +9,8 @@ namespace AM.Condo
     using System;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
+    using System.Text;
 
     using AM.Condo.Diagnostics;
 
@@ -28,31 +30,26 @@ namespace AM.Condo
         /// </returns>
         public static int Main(string[] args)
         {
-            // Defaults
-            var condoVerbosity = "normal";
-            var condoColor = string.Empty;
-            var condoSkipFrontend = string.Empty;
+            // defaults
+            var verbosity = "normal";
+            var color = string.Empty;
             string[] options = { };
 
-            // Build paths
-            var path = Directory.GetCurrentDirectory();
-            var buildSettingsPath = Path.Combine(path, "condo.msbuild.rsp");
-            var msbuildLog = Path.Combine(string.Empty, "/target/artifacts/log/condo.msbuild.log");
-
-            // Test for arguments
-            for (int i = 0; i < args.Length; i++)
+            // parse options
+            for (var i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
+
                 switch (arg)
                 {
                     case "-v":
                     case "--verbosity":
                         i++;
-                        condoVerbosity = args[i];
+                        verbosity = args[i];
                         break;
                     case "-nc":
                     case "--no-color":
-                        condoColor = "DisableConsoleColor";
+                        color = "DisableConsoleColor";
                         break;
                     case "--":
                         i++;
@@ -63,24 +60,59 @@ namespace AM.Condo
                 }
             }
 
-            // Get default build arguments from file
-            using (var build = new StreamWriter(buildSettingsPath, append: true))
-            {
-                // Append args and options to build arguments
-                build.WriteLine($"-flp:LogFile=\"{msbuildLog}\";Encoding=UTF-8;Verbosity={condoVerbosity} \n");
-                build.WriteLine($"-clp:{condoColor};Verbosity={condoVerbosity} \n");
-                build.WriteLine(condoSkipFrontend);
+            // get the build paths
+            var path = Directory.GetCurrentDirectory();
 
-                foreach (var option in options)
-                {
-                    build.WriteLine(option);
-                }
+            // get the location of the condo executable
+            var condo = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Program)).Location);
+
+            // get the response and log paths
+            var artifacts = Path.Combine(path, "artifacts");
+            var response = Path.Combine(artifacts, "condo.msbuild.rsp");
+            var log = Path.Combine(artifacts, "condo.msbuild.log");
+
+            // determine if the artifacts path does not exist
+            if (!Directory.Exists(artifacts))
+            {
+                // create the artifacts path
+                Directory.CreateDirectory(artifacts);
             }
 
-            // Execute dotnet msbuild
-            IProcessInvoker invoker = new ProcessInvoker(path, "dotnet", subCommand: "msbuild", logger: new ConsoleLogger(), isRealtime: true);
-            var output = invoker.Execute($"@{buildSettingsPath}", throwOnError: true);
+            // determine if the response file already exits
+            if (File.Exists(response))
+            {
+                // delete the response file
+                File.Delete(response);
+            }
 
+            // determine if the log file already exists
+            if (File.Exists(log))
+            {
+                // delete the log file
+                File.Delete(log);
+            }
+
+            // get the template
+            var template = File.ReadAllText(Path.Combine(condo, "condo.msbuild.rsp"));
+
+            var builder = new StringBuilder(template)
+                .Replace("$TARGET_PATH", path)
+                .Replace("$CONDO_PATH", condo)
+                .Replace("$LOG_PATH", log)
+                .Replace("$COLOR", color)
+                .Replace("$VERBOSITY", verbosity);
+
+            // append the options
+            Array.ForEach(options, option => builder.AppendLine(option));
+
+            // save the response file
+            File.WriteAllText(response, builder.ToString());
+
+            // Execute dotnet msbuild against the response file
+            var invoker = new ProcessInvoker(path, "dotnet", "msbuild", new ConsoleLogger(), isRealtime: true);
+            var output = invoker.Execute($"@{response}", throwOnError: true);
+
+            // return the exit code
             return output.ExitCode;
         }
     }

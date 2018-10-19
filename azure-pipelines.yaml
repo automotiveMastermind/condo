@@ -1,0 +1,10 @@
+resources:
+- repo: self
+  clean: true
+
+trigger:
+- master
+- develop
+
+steps:
+- template: .azure/cli.yaml

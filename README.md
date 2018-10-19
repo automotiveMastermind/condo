@@ -11,10 +11,11 @@ License       | [![License][license-image]][license]
 Build Status  | [![Circle CI Build Status][circleci-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 Issues        | [![Issues][issues-image]][issues-url]
+Maintenance   | [![issue resolution][resolution-image]][is-it-maintained] [![open issues][open-image]][is-it-maintained]
 
 ## Getting Started
 
-### What is Condo?
+### What is Condo
 
 Condo is a cross-platform command line interface (CLI) build system for projects using NodeJS, CoreCLR, .NET Framework,
 or... well, anything. It is capable of automatically detecting and executing all of the steps necessary to make <any>
@@ -29,6 +30,7 @@ project function correctly. Some of the most-used features of the build system i
 * Pushing (Publishing) NuGet packages
 
 ### Using Condo
+
 We are currently developing `condo-cli` to make bootstrapping your projects to use condo a snap.
 
 But it's not ready yet...
@@ -128,6 +130,10 @@ For more information, please refer to the [official documentation][docs-url].
 
 [issues-url]: //waffle.io/automotivemastermind/condo
 [issues-image]: https://badge.waffle.io/automotivemastermind/condo.svg?columns=backlog,ready,in%20progress,needs%20review
+
+[is-it-maintained]: https://isitmaintained.com/project/automotivemastermind/condo
+[resolution-image]: https://isitmaintained.com/badge/resolution/automotivemastermind/condo.svg
+[open-image]: https://isitmaintained.com/badge/open/automotivemastermind/condo.svg
 
 [circleci-url]: //circleci.com/gh/automotiveMastermind/condo
 [circleci-image]: https://img.shields.io/circleci/project/github/automotiveMastermind/condo.svg?label=circle-ci

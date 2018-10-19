@@ -62,3 +62,9 @@ _TeamCity*
 
 #circleci
 !.circleci/*
+
+#azure pipelines
+!.azure/*
+
+# build deps
+!.build/*
