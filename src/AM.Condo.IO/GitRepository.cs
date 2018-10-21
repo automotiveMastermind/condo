@@ -160,7 +160,7 @@ namespace AM.Condo.IO
                 cmd += $" --set-upstream {remote}";
             }
 
-            this.Execute(cmd);
+            this.Execute(cmd, throwOnError: true);
 
             return this;
         }
@@ -175,7 +175,7 @@ namespace AM.Condo.IO
                 cmd += " --all --tags";
             }
 
-            this.Execute(cmd);
+            this.Execute(cmd, throwOnError: true);
 
             return this;
         }
