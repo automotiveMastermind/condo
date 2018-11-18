@@ -7,7 +7,6 @@
 namespace AM.Condo
 {
     using System;
-    using System.Collections.Generic;
 
     using NuGet.Common;
     using NuGet.Configuration;
@@ -21,7 +20,7 @@ namespace AM.Condo
         /// <summary>
         /// The lazy initialization field containing the machine wide settings.
         /// </summary>
-        private static Lazy<IEnumerable<Settings>> settings = new Lazy<IEnumerable<Settings>>
+        private static Lazy<ISettings> settings = new Lazy<ISettings>
             (() =>
                 {
                     // get the machine wide configuration directory
@@ -35,7 +34,7 @@ namespace AM.Condo
         /// <summary>
         /// Gets the machine-wide NuGet settings for the current system.
         /// </summary>
-        public IEnumerable<Settings> Settings => settings.Value;
+        public ISettings Settings => settings.Value;
         #endregion
     }
 }

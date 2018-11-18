@@ -133,7 +133,7 @@ namespace AM.Condo.Tasks
                 // initialize the settings
                 this.settings = string.IsNullOrEmpty(this.ArtifactsRoot)
                     ? currentSettings
-                    : new Settings(this.ArtifactsRoot, this.FileName, isMachineWideSettings: false);
+                    : new Settings(this.ArtifactsRoot, this.FileName, isMachineWide: false);
             }
 
             // determine if the provider is null
@@ -143,11 +143,8 @@ namespace AM.Condo.Tasks
                 this.provider = new PackageSourceProvider(this.settings);
             }
 
-            // get the primary configuration file
-            var priority = this.settings.Priority.First();
-
             // set the nuget config path
-            this.NuGetConfigPath = Path.Combine(priority.Root, priority.FileName);
+            this.NuGetConfigPath = Path.Combine(settings.GetConfigRoots()[0], settings.GetConfigFilePaths()[0]);
 
             // collect the prefixes
             var prefixes = this.Prefixes.Select(prefix => prefix.ItemSpec);
