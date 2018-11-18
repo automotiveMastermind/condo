@@ -36,7 +36,7 @@ RUN apt-get update \
         build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-ENV DOTNET_SDK_VERSION=2.1.402 \
+ENV DOTNET_SDK_VERSION=2.1.500 \
     DOTNET_VERSION=2.1.4 \
     DOTNET_CURRENT_VERSION=2.1.4 \
     DOTNET_LTS_VERSION=1.1.9
