@@ -132,7 +132,7 @@ namespace AM.Condo.Tasks
                 var filename = Path.GetFileName(this.NuGetConfigPath);
 
                 // initialize the settings
-                this.settings = new Settings(root, filename, isMachineWideSettings: false);
+                this.settings = new Settings(root, filename, isMachineWide: false);
             }
 
             // determine if the provider is null
