@@ -144,7 +144,7 @@ namespace AM.Condo.Tasks
             }
 
             // set the nuget config path
-            this.NuGetConfigPath = Path.Combine(settings.GetConfigRoots()[0], settings.GetConfigFilePaths()[0]);
+            this.NuGetConfigPath = Path.Combine(this.settings.GetConfigRoots()[0], this.settings.GetConfigFilePaths()[0]);
 
             // collect the prefixes
             var prefixes = this.Prefixes.Select(prefix => prefix.ItemSpec);
