@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- unity projects must have a unity.condo file in the root of the repository -->
+  <Target Name="GetUnityInfo" Returns="@(UnityProjectPath)">
+    <ItemGroup>
+      <UnityProjectPath Include="$(RepositoryRoot)" Condition=" Exists('$(RepositoryRoot)unity.condo') " />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <UnityEnabled Condition=" '$(SKIP_UNITY)' != '' ">false</UnityEnabled>
+      <UnityEnabled Condition=" '$(UnityEnabled)' != '' AND '$(UnityEnabled.ToLower())' != 'true' ">false</UnityEnabled>
+      <UnityEnabled Condition=" '$(UnityEnabled)' == '' ">true</UnityEnabled>
+
+      <UnityRequired>false</UnityRequired>
+      <UnityRequired Condition=" @(UnityProjectPath->Count()) > 0 ">$(UnityEnabled)</UnityRequired>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PrintUnityProjects" Condition=" $(UnityRequired) ">
+    <Message Importance="High" Text="Project: @(UnityProjectPath)" />
+  </Target>
+
+  <Target Name="ConfigureUnity">
+    <!-- UNITY_PATH env var must be set to find unity. unity must be run from reletive path -->
+    <PropertyGroup>
+      <UnityPath Condition=" '$(UNITY_PATH)' != '' ">$(UNITY_PATH)</UnityPath>
+      <HasUnity>false</HasUnity>
+      <HasUnity Condition=" '$(UNITY_PATH)' != ''">true</HasUnity>
+      <UnityEnabled Condition=" $(UnityEnabled) ">$(HasUnity)</UnityEnabled>
+    </PropertyGroup>
+
+    <Warning Condition=" !$(HasUnity) AND $(UnityRequired) "
+            Text="A unity.condo file was located at: @(UnityProjectPath), but the unity command or executable could not be found.
+            Please set UNITY_PATH env variable." />
+
+    <PropertyGroup>
+      <UnityRequired Condition=" $(UnityRequired) ">$(HasUnity)</UnityRequired>
+
+      <UnityPublish Condition=" '$(SKIP_UNITY_PUBLISH)' != '' ">false</UnityPublish>
+      <UnityPublish Condition=" '$(UnityPublish)' != '' AND '$(UnityPublish.ToLower())' != 'true' ">false</UnityPublish>
+      <UnityPublish Condition=" '$(UnityPublish)' == '' ">$(HasUnity)</UnityPublish>
+
+      <UnityTest Condition=" '$(SKIP_UNITY_TEST)' != '' ">false</UnityTest>
+      <UnityTest Condition=" '$(UnityTest)' != '' AND '$(UnityTest.ToLower())' != 'true' ">false</UnityTest>
+      <UnityTest Condition=" '$(UnityTest)' == '' ">$(HasUnity)</UnityTest>
+
+      <!-- Unity creates its own dotnet projects, skip dotnet -->
+      <SKIP_DOTNET Condition=" $(UnityRequired) ">true</SKIP_DOTNET>
+      <!-- Unity creates a package.json, skip npm -->
+      <SKIP_NPM Condition=" $(UnityRequired) ">true</SKIP_NPM>
+      <!-- Default build target to WebGL -->
+      <BUILD_TARGET Condition=" '$(BUILD_TARGET)' == '' ">WebGL</BUILD_TARGET>
+    </PropertyGroup>
+  </Target>
+
+  <PropertyGroup>
+
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetUnityInfo;
+      ConfigureUnity;
+      PrintUnityProjects;
+    </BeforePrepare>
+  </PropertyGroup>
+
+</Project>

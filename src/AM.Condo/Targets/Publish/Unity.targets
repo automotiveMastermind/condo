@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="UnityPublish" Condition=" $(UnityPublish) ">
+    <Exec Command="&quot;$(UnityPath)&quot; -quit -batchmode -nographics -projectPath &quot;@(UnityProjectPath)&quot; -buildTarget $(BUILD_TARGET) -customBuildTarget $(BUILD_TARGET) -customBuildPath &quot;$(PublishArtifactsRoot)$(BUILD_TARGET.ToLower())&quot; -customBuildOptions AcceptExternalModificationsToPlayer -executeMethod Build.PerformBuild -logFile -noUpm"
+        WorkingDirectory="@(UnityProjectPath)" />
+  </Target>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      $(PublishDependsOn);
+      UnityPublish;
+    </PublishDependsOn>
+  </PropertyGroup>
+</Project>
