@@ -129,10 +129,6 @@
       <Output TaskParameter="CommitId" PropertyName="CommitId" />
       <Output TaskParameter="HasGit" PropertyName="HasGit" />
     </GetRepositoryInfo>
-
-    <Warning Condition=" !$(HasGit) "
-          Text="Git is not installed" />
-
   </Target>
 
   <!-- set nuget credentials -->
