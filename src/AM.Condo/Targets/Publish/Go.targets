@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="GoBuild" Condition="$(GoBuild)">
+      <PropertyGroup>
+        <GoBuildOptions Condition=" '$(GoBuildOptions)' == '' ">$(GO_BUILD_OPTIONS)</GoBuildOptions>
+        <GoBuildOptions Condition=" '$(GoBuildOptions)' == '' ">-buildmode=$(GoBuildMode)</GoBuildOptions>
+      </PropertyGroup>
+
+      <ItemGroup>
+        <GoBuildTargets Include="$(GO_BUILD_TARGETS)" />
+
+        <GoBuild Include="@(GoBuildTargets)">
+          <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
+          <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
+          <Ext Condition=" '%(GoBuild.OS)' == 'windows' ">.exe</Ext>
+        </GoBuild>
+      </ItemGroup>
+
+
+      <Exec Command="env GOOS=%(GoBuild.OS) GOARCH=%(GoBuild.Arch) &quot;$(GoPath)&quot; build -o $(PublishArtifactsRoot)%(GoBuild.OS)$(slash)%(GoBuild.Arch)$(slash)$(Product)%(GoBuild.Ext) $(GoBuildOptions)"
+        WorkingDirectory="$(GoProjectPath)" />
+    </Target>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      $(PublishDependsOn)
+      GoBuild;
+    </PublishDependsOn>
+  </PropertyGroup>
+</Project>
