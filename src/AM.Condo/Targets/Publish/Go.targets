@@ -3,7 +3,6 @@
     <Target Name="GoBuild" Condition="$(GoBuild)">
       <PropertyGroup>
         <GoBuildOptions Condition=" '$(GoBuildOptions)' == '' ">$(GO_BUILD_OPTIONS)</GoBuildOptions>
-        <GoBuildOptions Condition=" '$(GoBuildOptions)' == '' ">-buildmode=$(GoBuildMode)</GoBuildOptions>
       </PropertyGroup>
 
       <ItemGroup>
