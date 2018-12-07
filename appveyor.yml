@@ -19,7 +19,7 @@ environment:
 install:
 - ps: Install-Product node lts
 build_script:
-- cmd: condo.cmd /t:ci /t:document
+- cmd: condo.cmd --verbosity=diag /t:ci /t:document
 test: off
 notifications:
 - provider: Webhook
