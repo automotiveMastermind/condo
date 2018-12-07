@@ -3,6 +3,7 @@
 
     <Target Name="GetGoInfo" Returns="@(GoProjectPath)">
       <ItemGroup>
+        <GoProjectPath Include="$(RepositoryRoot)" Condition=" Exists('$(RepositoryRoot)go.mod') " />
         <GoProjectPath Include="$(RepositoryRoot)" Condition=" Exists('$(RepositoryRoot)go.condo') " />
         <GoTests Include=" Exists('$(RepositoryRoot)*_test.go') " />
         <GoTests Include=" Exists('$(RepositoryRoot)**$(slash)*_test.go') " />

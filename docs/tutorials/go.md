@@ -67,7 +67,7 @@ condo will execute (pseudo code):
 
 ```bash
 foreach GO_BUILD_TARGETS:
-    env GOOS=OS GOARCH=ARCH go build
+    env GOOS=OS GOARCH=ARCH go build -o "artifacts/publish/OS/ARCH"
 ```
 
 publish target environmental variables:
