@@ -2,7 +2,7 @@
 
 First refer to docs for [getting started with condo][get-started].
 
-This tuturial will cover the default implementation of condo (default implementation lifecycle docs found
+This tutorial will cover the default implementation of condo (default implementation lifecycle docs found
 [here][lifecycle]).
 
 For reference, condo's default lifecycle is as follows:
@@ -30,7 +30,7 @@ Condo will execute:
 go install
 ```
 
-prepare target enviornmental variables:
+prepare target environmental variables:
 
 | variable            | description              |
 |---------------------|--------------------------|
@@ -48,7 +48,7 @@ condo will execute:
 go test
 ```
 
-test target enviornmental variables:
+test target environmental variables:
 
 | variable            | description              |
 |---------------------|--------------------------|
@@ -70,12 +70,12 @@ foreach GO_BUILD_TARGETS:
     env GOOS=OS GOARCH=ARCH go build
 ```
 
-publish target enviornmental variables:
+publish target environmental variables:
 
 | variable            | description              |
 |---------------------|--------------------------|
 | SKIP_GO_BUILD       | If set `true` then publish will be skipped |
-| GO_BUILD_TARGETS    | Set the target `os/arch` to build for. `;` delimited for multipul
+| GO_BUILD_TARGETS    | Set the target `os/arch` to build for. `;` delimited for multiple
 | GO_BUILD_OPTIONS    | Set additional build options. `go build $GO_BUILD_OPTIONS` |
 
 [get-started]: get-started.md
