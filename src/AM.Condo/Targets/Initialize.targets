@@ -117,6 +117,9 @@
   <!-- get repository information -->
   <!-- NOTE: this will not replace values set by environment variables from the build server -->
   <Target Name="GetRepositoryInfo">
+    <Error Condition=" !Exists('$(RepositoryRoot)$(slash).git') "
+      Text="The current path: $(RepositoryRoot) is not a repository. Condo must be run in the root of an initialized repository." />
+
     <GetRepositoryInfo
         RepositoryRoot="$(RepositoryRoot)"
         RepositoryUri="$(RepositoryUri)"
