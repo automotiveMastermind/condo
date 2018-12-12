@@ -36,22 +36,22 @@
 
         <GoInstall Condition=" '$(SKIP_GO_INSTALL)' != '' ">false</GoInstall>
         <GoInstall Condition=" '$(GoInstall)' != '' AND '$(GoInstall.ToLower())' != 'true' ">false</GoInstall>
-        <GoInstall Condition=" '$(GoInstall)' == '' AND @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoInstall>
+        <GoInstall Condition=" '$(GoInstall)' == '' AND $(GoRequired) ">$(GoEnabled)</GoInstall>
         <GoInstall Condition=" '$(GoInstall)' == '' ">false</GoInstall>
 
         <GoBuild Condition=" '$(SKIP_GO_BUILD)' != '' ">false</GoBuild>
         <GoBuild Condition=" '$(GoBuild)' != '' AND '$(GoBuild.ToLower())' != 'true' ">false</GoBuild>
-        <GoBuild Condition=" '$(GoBuild)' == '' AND @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoBuild>
+        <GoBuild Condition=" '$(GoBuild)' == '' AND $(GoRequired) ">$(GoEnabled)</GoBuild>
         <GoBuild Condition=" '$(GoBuild)' == '' ">false</GoBuild>
 
         <GoPublish Condition=" '$(SKIP_GO_PUBLISH)' != '' ">false</GoPublish>
         <GoPublish Condition=" '$(GoPublish)' != '' AND '$(GoPublish.ToLower())' != 'true' ">false</GoPublish>
-        <GoPublish Condition=" '$(GoPublish)' == '' AND @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' == '' AND $(GoRequired) ">$(GoEnabled)</GoPublish>
         <GoPublish Condition=" '$(GoPublish)' == '' ">false</GoPublish>
 
         <GoTest Condition=" '$(SKIP_GO_TEST)' != '' ">false</GoTest>
         <GoTest Condition=" '$(GoTest)' != '' AND '$(GoTest.ToLower())' != 'true' ">false</GoTest>
-        <GoTest Condition=" '$(GoTest)' == '' AND $(GoHasTests) ">$(GoEnabled)</GoTest>
+        <GoTest Condition=" '$(GoTest)' == '' AND $(GoRequired) AND $(GoHasTests) ">$(GoEnabled)</GoTest>
         <GoTest Condition=" '$(GoTest)' == '' ">false</GoTest>
       </PropertyGroup>
 
