@@ -3,6 +3,7 @@
   <Import Project="$(CondoTargetsPath)Test$(slash)Node.targets" />
   <Import Project="$(CondoTargetsPath)Test$(slash)Polymer.targets" />
   <Import Project="$(CondoTargetsPath)Test$(slash)Dotnet.targets" />
+  <Import Project="$(CondoTargetsPath)Test$(slash)Go.targets" />
 
   <PropertyGroup>
     <TestDepeondsOn>

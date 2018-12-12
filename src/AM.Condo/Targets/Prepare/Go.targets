@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Target Name="GetGoInfo" Returns="@(GoProjectPath)">
+      <ItemGroup>
+        <GoProjectPath Include="$(RepositoryRoot)" Condition=" Exists('$(RepositoryRoot)go.mod') " />
+        <GoProjectPath Include="$(RepositoryRoot)" Condition=" Exists('$(RepositoryRoot)go.condo') " />
+        <GoTests Include=" Exists('$(RepositoryRoot)*_test.go') " />
+        <GoTests Include=" Exists('$(RepositoryRoot)**$(slash)*_test.go') " />
+      </ItemGroup>
+
+      <PropertyGroup>
+        <GoEnabled Condition=" '$(SKIP_GO)' != '' ">false</GoEnabled>
+        <GoEnabled Condition=" '$(GoEnabled)' != '' AND '$(GoEnabled.ToLower())' != 'true' ">false</GoEnabled>
+        <GoEnabled Condition=" '$(GoEnabled)' == '' ">true</GoEnabled>
+
+        <GoHasTests Condition=" @(GoTests->Count()) > 0 ">true</GoHasTests>
+        <GoHasTests Condition=" '$(GoHasTests)' == '' ">false</GoHasTests>
+
+        <GoRequired>false</GoRequired>
+        <GoRequired Condition=" @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoRequired>
+      </PropertyGroup>
+    </Target>
+
+    <Target Name="ConfigureGo">
+      <FindCommand Command="go">
+        <Output TaskParameter="ExecutablePath" PropertyName="GoPath" />
+        <Output TaskParameter="Exists" PropertyName="HasGo" />
+      </FindCommand>
+
+      <Warning Condition=" $(GoRequired) AND !$(HasGo) "
+        Text="A go.condo and/or go.mod file was located at: $(GoProjectPath), but the go command or executable could not be found. " />
+
+      <PropertyGroup>
+        <GoEnabled Condition=" $(GoEnabled) ">$(HasGo)</GoEnabled>
+
+        <GoFileExtension Condition= " $(IsWindows) ">.exe</GoFileExtension>
+
+        <GoInstall Condition=" '$(SKIP_GO_INSTALL)' != '' ">false</GoInstall>
+        <GoInstall Condition=" '$(GoInstall)' != '' AND '$(GoInstall.ToLower())' != 'true' ">false</GoInstall>
+        <GoInstall Condition=" '$(GoInstall)' == '' AND $(GoRequired) ">$(GoEnabled)</GoInstall>
+        <GoInstall Condition=" '$(GoInstall)' == '' ">false</GoInstall>
+
+        <GoBuild Condition=" '$(SKIP_GO_BUILD)' != '' ">false</GoBuild>
+        <GoBuild Condition=" '$(GoBuild)' != '' AND '$(GoBuild.ToLower())' != 'true' ">false</GoBuild>
+        <GoBuild Condition=" '$(GoBuild)' == '' AND $(GoRequired) ">$(GoEnabled)</GoBuild>
+        <GoBuild Condition=" '$(GoBuild)' == '' ">false</GoBuild>
+
+        <GoPublish Condition=" '$(SKIP_GO_PUBLISH)' != '' ">false</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' != '' AND '$(GoPublish.ToLower())' != 'true' ">false</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' == '' AND $(GoRequired) ">$(GoEnabled)</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' == '' ">false</GoPublish>
+
+        <GoTest Condition=" '$(SKIP_GO_TEST)' != '' ">false</GoTest>
+        <GoTest Condition=" '$(GoTest)' != '' AND '$(GoTest.ToLower())' != 'true' ">false</GoTest>
+        <GoTest Condition=" '$(GoTest)' == '' AND $(GoRequired) AND $(GoHasTests) ">$(GoEnabled)</GoTest>
+        <GoTest Condition=" '$(GoTest)' == '' ">false</GoTest>
+      </PropertyGroup>
+
+    </Target>
+
+    <Target Name="PrintGoProjects" Condition=" $(GoRequired) ">
+      <Message Importance="High" Text="Project: @(GoProjectPath)" />
+    </Target>
+
+    <Target Name="GoInstall" Condition=" $(GoInstall) ">
+      <PropertyGroup>
+        <GoInstallOptions Condition=" '$(GoInstallOptions)' == '' ">$(GO_INSTALL_OPTIONS)</GoInstallOptions>
+      </PropertyGroup>
+
+      <Exec Command="&quot;$(GoPath)&quot; install $(GoInstallOptions)"
+        WorkingDirectory="@(GoProjectPath)" />
+    </Target>
+
+  <PropertyGroup>
+    <BeforePrepare>
+      $(BeforePrepare);
+      GetGoInfo;
+      ConfigureGo;
+      PrintGoProjects;
+      GoInstall;
+    </BeforePrepare>
+  </PropertyGroup>
+</Project>

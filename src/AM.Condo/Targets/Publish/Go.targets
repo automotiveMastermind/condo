@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="GoPublish" Condition=" $(GoPublish) ">
+      <PropertyGroup>
+        <GoPublishOptions Condition=" '$(GoPublishOptions)' == '' ">$(GO_PUBLISH_OPTIONS)</GoPublishOptions>
+      </PropertyGroup>
+
+      <ItemGroup>
+        <GoPublishTargets Include="$(GO_PUBLISH_TARGETS)" />
+
+        <GoPublishArgs Include="@(GoPublishTargets)">
+          <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
+          <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
+          <Ext Condition=" '%(GoPublishArgs.OS)' == 'windows' ">$(GoFileExtension)</Ext>
+        </GoPublishArgs>
+      </ItemGroup>
+
+      <!-- Build each OS/Arch pair -->
+      <Exec Command="env GOOS=%(GoPublishArgs.OS) GOARCH=%(GoPublishArgs.Arch) &quot;$(GoPath)&quot; build -o $(PublishArtifactsRoot)%(GoPublishArgs.OS)$(slash)%(GoPublishArgs.Arch)$(slash)$(Product)%(GoPublishArgs.Ext) $(GoPublishOptions)"
+        WorkingDirectory="$(GoProjectPath)" />
+    </Target>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      $(PublishDependsOn)
+      GoPublish;
+    </PublishDependsOn>
+  </PropertyGroup>
+</Project>
