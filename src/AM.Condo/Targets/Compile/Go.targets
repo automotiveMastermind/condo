@@ -5,7 +5,6 @@
 
     <PropertyGroup>
       <GoBuildOptions Condition=" '$(GoBuildOptions)' == '' ">$(GO_BUILD_OPTIONS)</GoBuildOptions>
-      <GoFileExtension Condition= " '$(IsWinodws)' == 'true' ">.exe</GoFileExtension>
     </PropertyGroup>
 
     <!-- Build for local OS/Arch -->

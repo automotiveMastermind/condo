@@ -34,6 +34,8 @@
       <PropertyGroup>
         <GoEnabled Condition=" $(GoEnabled) ">$(HasGo)</GoEnabled>
 
+        <GoFileExtension Condition= " $(IsWindows) ">.exe</GoFileExtension>
+
         <GoInstall Condition=" '$(SKIP_GO_INSTALL)' != '' ">false</GoInstall>
         <GoInstall Condition=" '$(GoInstall)' != '' AND '$(GoInstall.ToLower())' != 'true' ">false</GoInstall>
         <GoInstall Condition=" '$(GoInstall)' == '' AND $(GoRequired) ">$(GoEnabled)</GoInstall>

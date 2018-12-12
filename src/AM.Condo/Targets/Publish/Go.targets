@@ -11,7 +11,7 @@
         <GoPublishArgs Include="@(GoPublishTargets)">
           <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
           <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
-          <Ext Condition=" '%(GoPublishArgs.OS)' == 'windows' ">.exe</Ext>
+          <Ext Condition=" '%(GoPublishArgs.OS)' == 'windows' ">$(GoFileExtension)</Ext>
         </GoPublishArgs>
       </ItemGroup>
 
