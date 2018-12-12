@@ -16,7 +16,7 @@ For reference, condo's default lifecycle is as follows:
 7. Package
 8. Build
 
-Go project specifications are found in the `Prepare`, `Test`, `Publish` target tasks.
+Go project specifications are found in the `Prepare`, `Compile`, `Test`, `Publish` target tasks.
 
 ## Prepare
 
@@ -37,6 +37,24 @@ prepare target environmental variables:
 | SKIP_GO             | If set to `true` condo will skip the execution of all go targets |
 | SKIP_GO_INSTALL     | If set to `true` then `go install` will be skipped |
 | GO_INSTALL_OPTIONS  | Set additional install options. Will be executed as `go install $GO_INSTALL_OPTIONS` |
+
+## Compile
+
+In the `Compile` target task, condo will build the project so that it can be executed on the local machine.
+> This target will only execute when the `CI` flag is set
+
+condo will execute:
+
+```bash
+    go build -o "artifacts/build/"
+```
+
+compile target environmental variables:
+
+| variable            | description              |
+|---------------------|--------------------------|
+| SKIP_GO_BUILD       | If set `true` then build will be skipped |
+| GO_BUILD_OPTIONS    | Set additional build options. `go build $GO_BUILD_OPTIONS` |
 
 ## Test
 
@@ -61,7 +79,7 @@ In the `Publish` target task, condo will build the project. Condo will use `GO_B
 
 For example if you wanted to build for OSX amd64 and Windows Arm you would set the variable as `darwin/amd64;windows/arm`. Condo will loop over each `os/arch` and build them.
 
-Condo will output the `os/arch` combinations into the `artifacts/publish/os/arch` folder.
+>Condo will output the `os/arch` combinations into the `artifacts/publish/os/arch` folder.
 
 condo will execute (pseudo code):
 
@@ -75,7 +93,7 @@ publish target environmental variables:
 | variable            | description              |
 |---------------------|--------------------------|
 | SKIP_GO_BUILD       | If set `true` then publish will be skipped |
-| GO_BUILD_TARGETS    | Set the target `os/arch` to build for. `;` delimited for multiple
+| GO_BUILD_TARGETS    | Set the target `os/arch` to build for. Delimite with `;` for multiple
 | GO_BUILD_OPTIONS    | Set additional build options. `go build $GO_BUILD_OPTIONS` |
 
 [get-started]: get-started.md

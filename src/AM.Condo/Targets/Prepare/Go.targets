@@ -28,6 +28,9 @@
         <Output TaskParameter="Exists" PropertyName="HasGo" />
       </FindCommand>
 
+      <Warning Condition=" $(GoRequired) AND !$(HasGo) "
+        Text="A go.condo and/or go.mod file was located at: $(GoProjectPath), but the go command or executable could not be found. " />
+
       <PropertyGroup>
         <GoEnabled Condition=" $(GoEnabled) ">$(HasGo)</GoEnabled>
 
@@ -41,6 +44,11 @@
         <GoBuild Condition=" '$(GoBuild)' == '' AND @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoBuild>
         <GoBuild Condition=" '$(GoBuild)' == '' ">false</GoBuild>
 
+        <GoPublish Condition=" '$(SKIP_GO_PUBLISH)' != '' ">false</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' != '' AND '$(GoPublish.ToLower())' != 'true' ">false</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' == '' AND @(GoProjectPath->Count()) > 0 ">$(GoEnabled)</GoPublish>
+        <GoPublish Condition=" '$(GoPublish)' == '' ">false</GoPublish>
+
         <GoTest Condition=" '$(SKIP_GO_TEST)' != '' ">false</GoTest>
         <GoTest Condition=" '$(GoTest)' != '' AND '$(GoTest.ToLower())' != 'true' ">false</GoTest>
         <GoTest Condition=" '$(GoTest)' == '' AND $(GoHasTests) ">$(GoEnabled)</GoTest>
@@ -53,12 +61,12 @@
       <Message Importance="High" Text="Project: @(GoProjectPath)" />
     </Target>
 
-    <Target Name="GoInstall" Condition="$(GoInstall)">
+    <Target Name="GoInstall" Condition=" $(GoInstall) ">
       <PropertyGroup>
         <GoInstallOptions Condition=" '$(GoInstallOptions)' == '' ">$(GO_INSTALL_OPTIONS)</GoInstallOptions>
       </PropertyGroup>
 
-          <Exec Command="&quot;$(GoPath)&quot; install $(GoInstallOptions)"
+      <Exec Command="&quot;$(GoPath)&quot; install $(GoInstallOptions)"
         WorkingDirectory="@(GoProjectPath)" />
     </Target>
 
