@@ -68,7 +68,7 @@
         <GoInstallOptions Condition=" '$(GoInstallOptions)' == '' ">$(GO_INSTALL_OPTIONS)</GoInstallOptions>
       </PropertyGroup>
 
-      <Exec Command="&quot;$(GoPath)&quot; install $(GoInstallOptions)"
+      <Exec Command="&quot;$(GoPath)&quot; get $(GoInstallOptions)"
         WorkingDirectory="@(GoProjectPath)" />
     </Target>
 
