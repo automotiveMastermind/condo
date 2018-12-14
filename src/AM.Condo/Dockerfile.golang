@@ -72,7 +72,7 @@ ENV DOTNET_SDK_VERSION=2.1.500 \
     dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
 
-    ENV GOLANG_VERSION 1.11.2
+ENV GOLANG_VERSION 1.11.2
 
 RUN set -exu; \
     \
