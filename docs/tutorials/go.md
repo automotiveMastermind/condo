@@ -27,7 +27,7 @@ Condo will then find the go cli executable and finally install any missing depen
 Condo will execute:
 
 ```bash
-go install
+go get
 ```
 
 prepare target environmental variables:
@@ -35,8 +35,8 @@ prepare target environmental variables:
 | variable            | description              |
 |---------------------|--------------------------|
 | SKIP_GO             | If set to `true` condo will skip the execution of all go targets |
-| SKIP_GO_INSTALL     | If set to `true` then `go install` will be skipped |
-| GO_INSTALL_OPTIONS  | Set additional install options. Will be executed as `go install $GO_INSTALL_OPTIONS` |
+| SKIP_GO_INSTALL     | If set to `true` then `go get` will be skipped |
+| GO_INSTALL_OPTIONS  | Set additional install options. Will be executed as `go get $GO_INSTALL_OPTIONS` |
 
 ## Compile
 
