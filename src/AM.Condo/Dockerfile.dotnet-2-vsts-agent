@@ -70,8 +70,8 @@ ENV dotnet=/usr/bin/dotnet \
     dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
 
-COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly
-RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc.sh
+COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly/docker-gc
+RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc
 
 ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
 CMD [ "agent" ]
