@@ -91,8 +91,8 @@ ENV DOTNET_SDK_VERSION=2.1.500 \
     docker=/usr/local/bin/docker \
     docker_compose=/usr/local/bin/docker-compose
 
-COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly
-RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc.sh
+COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly/docker-gc
+RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc
 
 ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]
