@@ -37,6 +37,7 @@ prepare target environmental variables:
 | SKIP_GO             | If set to `true` condo will skip the execution of all go targets |
 | SKIP_GO_INSTALL     | If set to `true` then `go get` will be skipped |
 | GO_INSTALL_OPTIONS  | Set additional install options. Will be executed as `go get $GO_INSTALL_OPTIONS` |
+| GO_TARGETS          | Set the target `os/arch` to pull packages and build for. Delimite with `;` for multiple |
 
 ## Compile
 
@@ -75,7 +76,7 @@ test target environmental variables:
 
 ## Publish
 
-In the `Publish` target task, condo will build the project. Condo will use `GO_BUILD_TARGETS` variable for selecting the OS and architecture the build will produce. The variable should be set `os/arch` and be semi-colon delimited.
+In the `Publish` target task, condo will build the project. Condo will use `GO_TARGETS` variable for selecting the OS and architecture the build will produce. The variable should be set `os/arch` and be semi-colon delimited.
 
 For example if you wanted to build for OSX amd64 and Windows Arm you would set the variable as `darwin/amd64;windows/arm`. Condo will loop over each `os/arch` and build them.
 
@@ -84,7 +85,7 @@ For example if you wanted to build for OSX amd64 and Windows Arm you would set t
 condo will execute (pseudo code):
 
 ```bash
-foreach GO_BUILD_TARGETS:
+foreach GO_TARGETS:
     env GOOS=OS GOARCH=ARCH go build -o "artifacts/publish/OS/ARCH"
 ```
 
@@ -93,7 +94,6 @@ publish target environmental variables:
 | variable            | description              |
 |---------------------|--------------------------|
 | SKIP_GO_BUILD       | If set `true` then publish will be skipped |
-| GO_BUILD_TARGETS    | Set the target `os/arch` to build for. Delimite with `;` for multiple
 | GO_BUILD_OPTIONS    | Set additional build options. `go build $GO_BUILD_OPTIONS` |
 
 [get-started]: get-started.md

@@ -5,19 +5,13 @@
         <GoPublishOptions Condition=" '$(GoPublishOptions)' == '' ">$(GO_PUBLISH_OPTIONS)</GoPublishOptions>
       </PropertyGroup>
 
-      <ItemGroup>
-        <GoPublishTargets Include="$(GO_PUBLISH_TARGETS)" />
-
-        <GoPublishArgs Include="@(GoPublishTargets)">
-          <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
-          <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
-          <Ext Condition=" '%(GoPublishArgs.OS)' == 'windows' ">$(GoFileExtension)</Ext>
-        </GoPublishArgs>
-      </ItemGroup>
+      <Warning Text="The GO_TARGETS flag has not been set, nothing to publish"
+        Condition=" '$(GoTargets)' == '' " />
 
       <!-- Build each OS/Arch pair -->
-      <Exec Command="env GOOS=%(GoPublishArgs.OS) GOARCH=%(GoPublishArgs.Arch) &quot;$(GoPath)&quot; build -o $(PublishArtifactsRoot)%(GoPublishArgs.OS)$(slash)%(GoPublishArgs.Arch)$(slash)$(Product)%(GoPublishArgs.Ext) $(GoPublishOptions)"
-        WorkingDirectory="$(GoProjectPath)" />
+      <Exec Command="env GOOS=%(GoTargets.OS) GOARCH=%(GoTargets.Arch) &quot;$(GoPath)&quot; build -v -o $(PublishArtifactsRoot)%(GoTargets.OS)$(slash)%(GoTargets.Arch)$(slash)$(Product)%(GoTargets.Ext) $(GoPublishOptions)"
+        WorkingDirectory="$(GoProjectPath)"
+        Condition="'$(GoTargets)' != '' "/>
     </Target>
 
   <PropertyGroup>
