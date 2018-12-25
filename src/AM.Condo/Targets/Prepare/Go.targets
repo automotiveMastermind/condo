@@ -57,6 +57,15 @@
         <GoTest Condition=" '$(GoTest)' == '' ">false</GoTest>
       </PropertyGroup>
 
+      <ItemGroup>
+        <GoTargetArgs Include="$(GO_TARGETS)" />
+
+        <GoTargets Include="@(GoTargetArgs)" Condition=" '$(GoTargetArgs)' != '' ">
+          <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
+          <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
+          <Ext Condition=" '%(GoTargets.OS)' == 'windows' ">$(GoFileExtension)</Ext>
+        </GoTargets>
+      </ItemGroup>
     </Target>
 
     <Target Name="PrintGoProjects" Condition=" $(GoRequired) ">
@@ -68,7 +77,13 @@
         <GoInstallOptions Condition=" '$(GoInstallOptions)' == '' ">$(GO_INSTALL_OPTIONS)</GoInstallOptions>
       </PropertyGroup>
 
-      <Exec Command="&quot;$(GoPath)&quot; get $(GoInstallOptions)"
+      <!-- Loop though targets if set-->
+      <Exec Command="env GOOS=%(GoTargets.OS) &quot;$(GoPath)&quot; get -v $(GoInstallOptions)"
+        WorkingDirectory="@(GoProjectPath)"
+        Condition=" '$(GO_TARGETS)' != '' "/>
+
+      <!-- install for local if targets not set-->
+      <Exec Command="&quot;$(GoPath)&quot; get -v $(GoInstallOptions)"
         WorkingDirectory="@(GoProjectPath)" />
     </Target>
 
