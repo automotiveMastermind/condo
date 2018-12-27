@@ -3,6 +3,7 @@
   <Import Project="$(CondoTargetsPath)Publish$(slash)Unity.targets" />
   <Import Project="$(CondoTargetsPath)Publish$(slash)Dotnet.targets" />
   <Import Project="$(CondoTargetsPath)Publish$(slash)Docker.targets" />
+  <Import Project="$(CondoTargetsPath)Publish$(slash)Go.targets" />
 
   <PropertyGroup>
     <PublishDependsOn>

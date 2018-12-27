@@ -21,7 +21,6 @@ RUN apt-get update \
         wget \
         zip \
         tzdata \
-        cron \
     && rm -rf /var/lib/apt/lists/*
 
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
@@ -50,42 +49,13 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends git-lfs \
     && rm -rf /var/lib/apt/lists/*
 
-ENV DOTNET_VERSION=2.1.4 \
-    DOTNET_CURRENT_VERSION=2.1.4 \
-    DOTNET_LTS_VERSION=1.1.9
-
-ARG DOTNET_LTS_SHA=fb3ee217813b099f651ef8ded1adc5bbece731ed61add842cc488c5a70dbee50877f4defec71c0089c1c90f3e580e0ea3c3f4d4006c03ecdd568787542d16728
-
-RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_LTS_VERSION/dotnet-ubuntu.18.04-x64.$DOTNET_LTS_VERSION.tar.gz \
-    && echo "$DOTNET_LTS_SHA dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-    && rm dotnet.tar.gz
-
 ENV ASPNETCORE_URLS=http://+:80 \
     DOTNET_RUNNING_IN_CONTAINER=true \
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-RUN dotnet help
 RUN dotnet --info
-
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 17.12.0-ce
-
-RUN set -ex \
-    && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/`uname -m`/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
-    && tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin \
-    && rm docker.tgz \
-    && docker -v
-
-ENV DOCKER_COMPOSE_VERSION 1.18.0
-
-RUN set -x \
-    && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
-    && chmod +x /usr/local/bin/docker-compose \
-    && docker-compose -v
 
 ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
 
@@ -95,15 +65,32 @@ RUN chmod +x /root/.am/condo/docker.sh \
     && chmod -R ugo=r,+x /root/.am/condo \
     && ln -s /root/.am/condo/cli.sh /usr/bin/condo
 
-ENV dotnet=/usr/bin/dotnet \
-    dotnet1=/usr/bin/dotnet \
+ENV DOTNET_SDK_VERSION=2.1.500 \
+    DOTNET_VERSION=2.1.4 \
+    DOTNET_CURRENT_VERSION=2.1.4 \
+    dotnet=/usr/bin/dotnet \
     dotnet2=/usr/bin/dotnet \
-    condo=/usr/bin/condo \
-    docker=/usr/local/bin/docker \
-    docker_compose=/usr/local/bin/docker-compose
+    condo=/usr/bin/condo
 
-COPY $CONDO_SOURCE/docker-gc.sh /etc/cron.hourly/docker-gc
-RUN chmod u=rwx,g=rw,o=rw /etc/cron.hourly/docker-gc
+ENV GOLANG_VERSION 1.11.2
+
+RUN set -exu; \
+    \
+    goRelArch='linux-amd64'; \
+    goRelSha256='1dfe664fa3d8ad714bbd15a36627992effd150ddabd7523931f077b3926d736d'; \
+    url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz"; \
+    wget -O go.tgz "$url"; \
+    echo "${goRelSha256} *go.tgz" | sha256sum -c -; \
+    tar -C /usr/local -xzf go.tgz; \
+    rm go.tgz; \
+	export PATH="/usr/local/go/bin:$PATH"; \
+	go version
+
+ENV GOPATH /go
+ENV GOBIN $GOPATH/bin
+ENV PATH $GOBIN:/usr/local/go/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOBIN" && chmod -R 777 "$GOPATH"
 
 ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]

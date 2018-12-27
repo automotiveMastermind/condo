@@ -7,6 +7,8 @@
   <Import Project="$(CondoTargetsPath)Prepare$(slash)TaskRunners.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Dotnet.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Docker.targets" />
+  <Import Project="$(CondoTargetsPath)Prepare$(slash)Go.targets" />
+
 
   <Target Name="SubmoduleRestore" Condition=" '$(SubmoduleRestore)' != 'skip' AND '@(SubmodulePaths->Count())' != '0' AND $(HasGit) ">
     <RestoreSubmodules RepositoryRoot="$(RepositoryRoot)" />

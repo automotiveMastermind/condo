@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="GoPublish" Condition=" $(GoPublish) ">
+      <PropertyGroup>
+        <GoPublishOptions Condition=" '$(GoPublishOptions)' == '' ">$(GO_PUBLISH_OPTIONS)</GoPublishOptions>
+      </PropertyGroup>
+
+      <Warning Text="The GO_TARGETS flag has not been set, nothing to publish"
+        Condition=" '$(GoTargets)' == '' " />
+
+      <!-- Build each OS/Arch pair -->
+      <Exec Command="env GOOS=%(GoTargets.OS) GOARCH=%(GoTargets.Arch) &quot;$(GoPath)&quot; build -v -o $(PublishArtifactsRoot)%(GoTargets.OS)$(slash)%(GoTargets.Arch)$(slash)$(Product)%(GoTargets.Ext) $(GoPublishOptions)"
+        WorkingDirectory="$(GoProjectPath)"
+        Condition="'$(GoTargets)' != '' "/>
+    </Target>
+
+  <PropertyGroup>
+    <PublishDependsOn>
+      $(PublishDependsOn)
+      GoPublish;
+    </PublishDependsOn>
+  </PropertyGroup>
+</Project>
