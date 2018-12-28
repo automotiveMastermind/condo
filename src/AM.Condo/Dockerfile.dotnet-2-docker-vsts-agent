@@ -1,26 +1,26 @@
 FROM microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    curl \
-    dnsutils \
-    file \
-    ftp \
-    iproute2 \
-    iputils-ping \
-    locales \
-    openssh-client \
-    rsync\
-    shellcheck \
-    sudo \
-    telnet \
-    time \
-    unzip \
-    wget \
-    zip \
-    tzdata \
-    cron \
- && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+        curl \
+        dnsutils \
+        file \
+        ftp \
+        iproute2 \
+        iputils-ping \
+        locales \
+        openssh-client \
+        rsync\
+        shellcheck \
+        sudo \
+        telnet \
+        time \
+        unzip \
+        wget \
+        zip \
+        tzdata \
+        cron \
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
 
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
     && locale-gen
@@ -34,7 +34,16 @@ RUN update-locale
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
+
+ENV DOTNET_2_1_VERSION=2.1.6
+ARG DOTNET_2_1_SHA=74D99AEFCBE953B30743330689E750156E68C3410BC26C40A11B60BBBF1D01887262BD6D7C0EEACCA4D6B696C1A04980D9BE2DC2A222226FA910B885D2FB5956
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_2_1_VERSION/dotnet-runtime-$DOTNET_2_1_VERSION-linux-x64.tar.gz \
+    && echo "$DOTNET_2_1_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz 1>/dev/null
 
 ENV DOTNET_SDK_VERSION=2.2.101 \
     DOTNET_VERSION=2.2.0 \
@@ -46,7 +55,7 @@ RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotn
     && echo "$DOTNET_SDK_SHA dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-    && rm dotnet.tar.gz \
+    && rm dotnet.tar.gz 1>/dev/null \
     && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
 
 ENV ASPNETCORE_URLS=http://+:80 \

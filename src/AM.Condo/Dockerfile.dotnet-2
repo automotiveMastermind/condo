@@ -21,7 +21,7 @@ RUN apt-get update \
         wget \
         zip \
         tzdata \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
 
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
     && locale-gen
@@ -47,7 +47,20 @@ RUN apt-get update \
         netcat \
     && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
     && apt-get install -y --no-install-recommends git-lfs \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
+
+ENV DOTNET_2_1_VERSION=2.1.6
+ARG DOTNET_2_1_SHA=74D99AEFCBE953B30743330689E750156E68C3410BC26C40A11B60BBBF1D01887262BD6D7C0EEACCA4D6B696C1A04980D9BE2DC2A222226FA910B885D2FB5956
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_2_1_VERSION/dotnet-runtime-$DOTNET_2_1_VERSION-linux-x64.tar.gz \
+    && echo "$DOTNET_2_1_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz 1>/dev/null
+
+ENV DOTNET_SDK_VERSION=2.2.100 \
+    DOTNET_VERSION=2.2.0 \
+    DOTNET_CURRENT_VERSION=2.2.0
 
 ENV ASPNETCORE_URLS=http://+:80 \
     DOTNET_RUNNING_IN_CONTAINER=true \
@@ -55,6 +68,7 @@ ENV ASPNETCORE_URLS=http://+:80 \
     NUGET_XMLDOC_MODE=skip \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+RUN dotnet help
 RUN dotnet --info
 
 ARG CONDO_SOURCE=obj/docker/publish/netcoreapp2.1/any
@@ -65,10 +79,7 @@ RUN chmod +x /root/.am/condo/docker.sh \
     && chmod -R ugo=r,+x /root/.am/condo \
     && ln -s /root/.am/condo/cli.sh /usr/bin/condo
 
-ENV DOTNET_SDK_VERSION=2.2.100 \
-    DOTNET_VERSION=2.2.0 \
-    DOTNET_CURRENT_VERSION=2.2.0 \
-    dotnet=/usr/bin/dotnet \
+ENV dotnet=/usr/bin/dotnet \
     dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
 
