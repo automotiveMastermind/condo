@@ -133,19 +133,6 @@ namespace AM.Condo.Tasks
                     // deserialize the object
                     var value = JsonConvert.DeserializeObject<GitHubRelease>(json);
 
-                    // create the version tag
-                    var version = $".version-{value.Id}";
-
-                    // create the version path
-                    var versionPath = Path.Combine(this.Destination, version);
-
-                    // determine if the file exists
-                    if (File.Exists(versionPath))
-                    {
-                        // move on immediately
-                        return true;
-                    }
-
                     // find the asset
                     var asset = string.IsNullOrEmpty(this.Asset)
                         ? value.Assets.SingleOrDefault()
@@ -159,6 +146,19 @@ namespace AM.Condo.Tasks
 
                         // return false
                         return false;
+                    }
+
+                    // create the version tag
+                    var version = $".version-{value.Id}-{asset.Id}";
+
+                    // create the version path
+                    var versionPath = Path.Combine(this.Destination, version);
+
+                    // determine if the file exists
+                    if (File.Exists(versionPath))
+                    {
+                        // move on immediately
+                        return true;
                     }
 
                     // set the asset name
@@ -205,6 +205,15 @@ namespace AM.Condo.Tasks
             {
                 // extract the files
                 this.ExtractTarGzip(stream);
+
+                // move on immediately
+                return;
+            }
+
+            if (this.Asset.EndsWith(".gz", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // extract the file
+                this.ExtractGzip(stream);
 
                 // move on immediately
                 return;
