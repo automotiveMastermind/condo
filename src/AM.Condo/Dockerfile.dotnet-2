@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.500-sdk-bionic
+FROM microsoft/dotnet:2.2.100-sdk-bionic
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
@@ -65,9 +65,9 @@ RUN chmod +x /root/.am/condo/docker.sh \
     && chmod -R ugo=r,+x /root/.am/condo \
     && ln -s /root/.am/condo/cli.sh /usr/bin/condo
 
-ENV DOTNET_SDK_VERSION=2.1.500 \
-    DOTNET_VERSION=2.1.4 \
-    DOTNET_CURRENT_VERSION=2.1.4 \
+ENV DOTNET_SDK_VERSION=2.2.100 \
+    DOTNET_VERSION=2.2.0 \
+    DOTNET_CURRENT_VERSION=2.2.0 \
     dotnet=/usr/bin/dotnet \
     dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
