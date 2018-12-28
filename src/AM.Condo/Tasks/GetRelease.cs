@@ -8,13 +8,15 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.IO;
-    using System.IO.Compression;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
 
     using AM.Condo.Resources;
 
+    using ICSharpCode.SharpZipLib.GZip;
+    using ICSharpCode.SharpZipLib.Tar;
+    using ICSharpCode.SharpZipLib.Zip;
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
     using Newtonsoft.Json;
@@ -63,6 +65,11 @@ namespace AM.Condo.Tasks
         /// Gets or sets the authorization token used to authenticate to the GitHub API.
         /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to extract the retrieved asset.
+        /// </summary>
+        public bool Extract { get; set; } = true;
         #endregion
 
         #region Methods
@@ -106,10 +113,6 @@ namespace AM.Condo.Tasks
                     // add the user agent header
                     client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Request", string.Empty));
 
-                    // add the accept header
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/zip"));
-
                     // issue the request
                     var response = client.GetAsync(uri).GetAwaiter().GetResult();
 
@@ -143,13 +146,6 @@ namespace AM.Condo.Tasks
                         return true;
                     }
 
-                    // determine if the destination exists
-                    if (Directory.Exists(this.Destination))
-                    {
-                        // delete the destination path
-                        Directory.Delete(this.Destination, recursive: true);
-                    }
-
                     // find the asset
                     var asset = string.IsNullOrEmpty(this.Asset)
                         ? value.Assets.SingleOrDefault()
@@ -165,6 +161,9 @@ namespace AM.Condo.Tasks
                         return false;
                     }
 
+                    // set the asset name
+                    this.Asset = asset.Name;
+
                     // get the file
                     var download = client.GetAsync(asset.BrowserDownloadUrl).GetAwaiter().GetResult();
 
@@ -174,11 +173,11 @@ namespace AM.Condo.Tasks
                     // read the file content as a stream
                     using (var stream = download.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
                     {
-                        // read the stream as a zip archive
-                        using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen: true))
+                        // determine if we need to extract the assets
+                        if (this.Extract)
                         {
-                            // extract the archive to the directory
-                            archive.ExtractToDirectory(this.Destination);
+                            // extract the asset archive
+                            this.ExtractArchive(stream);
                         }
                     }
 
@@ -197,6 +196,93 @@ namespace AM.Condo.Tasks
 
             // assume success
             return true;
+        }
+
+        private void ExtractArchive(Stream stream)
+        {
+            // determine if the asset is a tar + gzip file
+            if (this.Asset.EndsWith(".tar.gz", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // extract the files
+                this.ExtractTarGzip(stream);
+
+                // move on immediately
+                return;
+            }
+
+            // determine if the asset is a tar file
+            if (this.Asset.EndsWith(".tar", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // extract the tarball
+                this.ExtractTar(stream);
+
+                // move on immediately
+                return;
+            }
+
+            // determine if the asset is a zip file
+            if (this.Asset.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // extract the zip
+                this.ExtractZip(stream);
+
+                // move on immediately
+                return;
+            }
+        }
+
+        private void ExtractZip(Stream stream)
+        {
+            // extract the zip to the target directory
+            new FastZip().ExtractZip
+            (
+                stream,
+                this.Destination,
+                FastZip.Overwrite.Always,
+                confirmDelegate: null,
+                fileFilter: null,
+                directoryFilter: null,
+                restoreDateTime: true,
+                isStreamOwner: false,
+                allowParentTraversal: false
+            );
+        }
+
+        private void ExtractTarGzip(Stream stream)
+        {
+            // get the stream as a gzip stream
+            using (var gzip = new GZipInputStream(stream))
+            {
+                // extract this tarball from the gzip stream
+                this.ExtractTar(gzip);
+            }
+        }
+
+        private void ExtractTar(Stream stream)
+        {
+            // get the tar archive
+            using (var archive = TarArchive.CreateInputTarArchive(stream))
+            {
+                // extract the archive
+                archive.ExtractContents(this.Destination);
+            }
+        }
+
+        private void ExtractGzip(Stream stream)
+        {
+            // get the stream as a gzip stream
+            using (var gzip = new GZipInputStream(stream))
+            {
+                // get the path for the output file
+                var path = Path.Combine(this.Destination, Path.GetFileNameWithoutExtension(this.Asset));
+
+                // create a stream for the file
+                using (var file = File.Create(path))
+                {
+                    // copy the gzip stream to the file stream
+                    gzip.CopyTo(file);
+                }
+            }
         }
         #endregion
     }
