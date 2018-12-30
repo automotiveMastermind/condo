@@ -60,6 +60,7 @@
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(CIRCLECI)' != '' ">CircleCI</BuildHost>
+    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(GITLAB_CI)' != '' ">Gitlab</BuildHost>
 
     <AgentTargetsPath Condition=" '$(AgentTargetsPath)' == '' ">$(AgentTargetsRoot)$(BuildHost).targets</AgentTargetsPath>
   </PropertyGroup>

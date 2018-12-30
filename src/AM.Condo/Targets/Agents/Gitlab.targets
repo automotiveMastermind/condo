@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- capture details from a continuous integration build hosted by Gitlab -->
+  <PropertyGroup>
+    <CI>true</CI>
+    <RepositoryProvider>Git</RepositoryProvider>
+    <Branch>$(CI_COMMIT_REF_NAME)</Branch>
+    <SourceBranch>$(CI_MERGE_REQUEST_SOURCE_BRANCH_NAME)</SourceBranch>
+    <TargetBranch>$(CI_MERGE_REQUEST_TARGET_BRANCH_NAME)</TargetBranch>
+    <CommitId>$(CI_COMMIT_SHA)</CommitId>
+    <BuildId>$(CI_JOB_ID)</BuildId>
+    <JobId>$(CI_JOB_ID)</JobId>
+    <PullRequestId Condition=" '$(CI_MERGE_REQUEST_ID)' != '' ">$(CI_MERGE_REQUEST_ID)</PullRequestId>
+    <BuildFor>$(GITLAB_USER_NAME)</BuildFor>
+    <BuildOn>$(BuildHost): $(CI_RUNNER_DESCRIPTION) - $(CI_RUNNER_ID)</BuildOn>
+    <TeamProject>$(CI_PROJECT_PATH)</TeamProject>
+    <TeamUri>$(CI_PROJECT_URL)</TeamUri>
+    <RepositoryUri>$(CI_PROJECT_URL)</RepositoryUri>
+    <BuildUri>$(CI_JOB_URL)</BuildUri>
+    <BuildName>$(TeamProject) - $(Branch) - $(BuildId)</BuildName>
+  </PropertyGroup>
+</Project>
