@@ -1,26 +1,26 @@
 FROM microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    curl \
-    dnsutils \
-    file \
-    ftp \
-    iproute2 \
-    iputils-ping \
-    locales \
-    openssh-client \
-    rsync\
-    shellcheck \
-    sudo \
-    telnet \
-    time \
-    unzip \
-    wget \
-    zip \
-    tzdata \
-    cron \
- && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+        curl \
+        dnsutils \
+        file \
+        ftp \
+        iproute2 \
+        iputils-ping \
+        locales \
+        openssh-client \
+        rsync\
+        shellcheck \
+        sudo \
+        telnet \
+        time \
+        unzip \
+        wget \
+        zip \
+        tzdata \
+        cron \
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
 
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
     && locale-gen
@@ -34,27 +34,36 @@ RUN update-locale
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* 1>/dev/null
 
-ENV DOTNET_SDK_VERSION=2.1.500 \
-    DOTNET_VERSION=2.1.4 \
-    DOTNET_CURRENT_VERSION=2.1.4 \
-    DOTNET_LTS_VERSION=1.1.9
-
-ARG DOTNET_LTS_SHA=95e050b3faf98e1391605a69353d708231641d69a4f8cac6b0f11bf1736f09a69dfb4b2f8e446a39a22e8141c35a609130870c485af85e7089c109c313f0248c
-ARG DOTNET_SDK_SHA=85055728E2433DFDE41D15C85475F2DC6CFDD30242B4B23065B63CB12CC846ACB93C09C000B02B722890CEAC8AC382B40871C78660716CA2339C71052FE52F4E
+ENV DOTNET_LTS_VERSION=1.1.10
+ARG DOTNET_LTS_SHA=e39f0fe332d26d42a1f7517ceb2624e17cb825aa6c85ddb8b19d5ec79f885b1a343ce28a139a9e863cb6fdd103434e857914003e5716f5aeb3b7d05002daa3ee
 
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_LTS_VERSION/dotnet-ubuntu.16.04-x64.$DOTNET_LTS_VERSION.tar.gz \
     && echo "$DOTNET_LTS_SHA dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-    && rm dotnet.tar.gz
+    && rm dotnet.tar.gz 1>/dev/null
+
+ENV DOTNET_2_1_VERSION=2.1.6
+ARG DOTNET_2_1_SHA=74D99AEFCBE953B30743330689E750156E68C3410BC26C40A11B60BBBF1D01887262BD6D7C0EEACCA4D6B696C1A04980D9BE2DC2A222226FA910B885D2FB5956
+
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Runtime/$DOTNET_2_1_VERSION/dotnet-runtime-$DOTNET_2_1_VERSION-linux-x64.tar.gz \
+    && echo "$DOTNET_2_1_SHA dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz 1>/dev/null
+
+ENV DOTNET_SDK_VERSION=2.2.101 \
+    DOTNET_VERSION=2.2.0 \
+    DOTNET_CURRENT_VERSION=2.2.0
+ARG DOTNET_SDK_SHA=7D0235469287D55B87AA68FDD8CCE51D2F35FDCCE485701EBF14B53E3AE0A341CDAB8D04AAE066F5E4EBD1BCA7A55C18016DEC4643DE72FD2321FE81C9CB69CD
 
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
     && echo "$DOTNET_SDK_SHA dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-    && rm dotnet.tar.gz \
+    && rm dotnet.tar.gz 1>/dev/null \
     && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
 
 ENV ASPNETCORE_URLS=http://+:80 \
