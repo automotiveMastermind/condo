@@ -49,7 +49,8 @@
       <!-- Unity creates a package.json, skip npm -->
       <SKIP_NPM Condition=" $(UnityRequired) ">true</SKIP_NPM>
       <!-- Default build target to WebGL -->
-      <BUILD_TARGET Condition=" '$(BUILD_TARGET)' == '' ">WebGL</BUILD_TARGET>
+      <UnityTargets Condition=" '$(UNITY_TARGETS)' == '' ">WebGL</UnityTargets>
+      <UnityTargets Condition=" '$(UNITY_TARGETS)' != '' ">$(UNITY_TARGETS)</UnityTargets>
     </PropertyGroup>
   </Target>
 

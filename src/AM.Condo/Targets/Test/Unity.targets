@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <Target Name="UnityTest" Condition=" $(UnityTest) ">
-    <Exec Command="&quot;$(UnityPath)&quot; -projectPath &quot;@(UnityProjectPath)&quot; -quit -batchmode -nographics -runEditorTests -editorTestsResultFile &quot;$(TestArtifactsRoot)results.xml&quot; -logFile $(UnityTestOptions)"
+    <Exec Command="xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' &quot;$(UnityPath)&quot; -projectPath &quot;@(UnityProjectPath)&quot; -batchmode -testPlatform @(UnityTargets) -runTests -testResults &quot;$(TestArtifactsRoot)@(UnityTargets)$(slash)results.xml&quot; -logFile $(UnityTestOptions)"
         WorkingDirectory="@(UnityProjectPath)"
         IgnoreExitCode="true" />
   </Target>

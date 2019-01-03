@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <Target Name="UnityPublish" Condition=" $(UnityPublish) ">
-    <Exec Command="&quot;$(UnityPath)&quot; -projectPath &quot;@(UnityProjectPath)&quot; -quit -batchmode -nographics -buildTarget $(BUILD_TARGET) -customBuildTarget $(BUILD_TARGET) -customBuildPath &quot;$(PublishArtifactsRoot)$(BUILD_TARGET.ToLower())&quot; -customBuildOptions AcceptExternalModificationsToPlayer -executeMethod Build.PerformBuild -logFile $(UnityPublishOptions)"
+    <Exec Command="xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' &quot;$(UnityPath)&quot; -projectPath &quot;@(UnityProjectPath)&quot; -quit -batchmode -buildTarget %(UnityTargets) -customBuildTarget %(UnityTargets) -customBuildPath &quot;$(PublishArtifactsRoot)%(UnityTargets.ToLower())&quot; -customBuildOptions AcceptExternalModificationsToPlayer -executeMethod Build.PerformBuild -logFile $(UnityPublishOptions)"
         WorkingDirectory="@(UnityProjectPath)"
         IgnoreExitCode="true" />
   </Target>
