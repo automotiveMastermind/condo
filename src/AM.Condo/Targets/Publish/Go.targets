@@ -5,13 +5,9 @@
         <GoPublishOptions Condition=" '$(GoPublishOptions)' == '' ">$(GO_PUBLISH_OPTIONS)</GoPublishOptions>
       </PropertyGroup>
 
-      <Warning Text="The GO_TARGETS flag has not been set, nothing to publish"
-        Condition=" '$(GoTargets)' == '' " />
-
       <!-- Build each OS/Arch pair -->
       <Exec Command="env GOOS=%(GoTargets.OS) GOARCH=%(GoTargets.Arch) &quot;$(GoPath)&quot; build -v -o $(PublishArtifactsRoot)%(GoTargets.OS)$(slash)%(GoTargets.Arch)$(slash)$(Product)%(GoTargets.Ext) $(GoPublishOptions)"
-        WorkingDirectory="$(GoProjectPath)"
-        Condition="'$(GoTargets)' != '' "/>
+        WorkingDirectory="$(GoProjectPath)" />
     </Target>
 
   <PropertyGroup>

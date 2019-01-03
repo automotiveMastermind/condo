@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <!-- Build for local OS/Arch -->
-    <Exec Command="&quot;$(GoPath)&quot; build -v -x -o $(BuildArtifactsRoot)$(Product)$(GoFileExtension) $(GoBuildOptions)"
+    <Exec Command="env GOOS=$(GOOS) GOARCH=$(GOARCH) &quot;$(GoPath)&quot; build -v -o $(BuildArtifactsRoot)$(Product)$(GoFileExtension) $(GoBuildOptions)"
       WorkingDirectory="$(GoProjectPath)"/>
 
   </Target>

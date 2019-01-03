@@ -73,12 +73,12 @@ ENV dotnet=/usr/bin/dotnet \
     dotnet2=/usr/bin/dotnet \
     condo=/usr/bin/condo
 
-ENV GOLANG_VERSION 1.11.2
+ENV GOLANG_VERSION 1.11.4
 
 RUN set -exu; \
     \
     goRelArch='linux-amd64'; \
-    goRelSha256='1dfe664fa3d8ad714bbd15a36627992effd150ddabd7523931f077b3926d736d'; \
+    goRelSha256='fb26c30e6a04ad937bbc657a1b5bba92f80096af1e8ee6da6430c045a8db3a5b'; \
     url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz"; \
     wget -O go.tgz "$url"; \
     echo "${goRelSha256} *go.tgz" | sha256sum -c -; \
@@ -88,10 +88,9 @@ RUN set -exu; \
 	go version
 
 ENV GOPATH /go
-ENV GOBIN $GOPATH/bin
-ENV PATH $GOBIN:/usr/local/go/bin:$PATH
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-RUN mkdir -p "$GOPATH/src" "$GOBIN" && chmod -R 777 "$GOPATH"
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 ENTRYPOINT [ "/root/.am/condo/docker.sh" ]
 CMD [ "condo", "--", "/t:ci" ]
