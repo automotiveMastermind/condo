@@ -55,12 +55,14 @@
         <GoTest Condition=" '$(GoTest)' != '' AND '$(GoTest.ToLower())' != 'true' ">false</GoTest>
         <GoTest Condition=" '$(GoTest)' == '' AND $(GoRequired) AND $(GoHasTests) ">$(GoEnabled)</GoTest>
         <GoTest Condition=" '$(GoTest)' == '' ">false</GoTest>
+
+        <GO_TARGETS Condition=" '$(GO_TARGETS)' == '' ">$(GOOS)/$(GOARCH)</GO_TARGETS>
       </PropertyGroup>
 
       <ItemGroup>
         <GoTargetArgs Include="$(GO_TARGETS)" />
 
-        <GoTargets Include="@(GoTargetArgs)" Condition=" '$(GoTargetArgs)' != '' ">
+        <GoTargets Include="@(GoTargetArgs)">
           <OS>$([System.String]::new('%(Identity)').Split('/')[0].ToLower())</OS>
           <Arch>$([System.String]::new('%(Identity)').Split('/')[1].ToLower())</Arch>
           <Ext Condition=" '%(GoTargets.OS)' == 'windows' ">$(GoFileExtension)</Ext>
@@ -72,19 +74,19 @@
       <Message Importance="High" Text="Project: @(GoProjectPath)" />
     </Target>
 
+    <Target Name="PrintGoTargets" Condition=" $(GoRequired) ">
+      <Message Importance="High" Text="Target: @(GoTargetArgs)" />
+    </Target>
+
     <Target Name="GoInstall" Condition=" $(GoInstall) ">
       <PropertyGroup>
         <GoInstallOptions Condition=" '$(GoInstallOptions)' == '' ">$(GO_INSTALL_OPTIONS)</GoInstallOptions>
       </PropertyGroup>
 
-      <!-- Loop though targets if set-->
-      <Exec Command="env GOOS=%(GoTargets.OS) &quot;$(GoPath)&quot; get -v $(GoInstallOptions)"
+      <!-- get packages based on target -->
+      <Exec Command="env GOOS=%(GoTargets.OS) GOARCH=%(GoTargets.ARCH) &quot;$(GoPath)&quot; get -v $(GoInstallOptions)"
         WorkingDirectory="@(GoProjectPath)"
-        Condition=" '$(GO_TARGETS)' != '' "/>
-
-      <!-- install for local if targets not set-->
-      <Exec Command="&quot;$(GoPath)&quot; get -v $(GoInstallOptions)"
-        WorkingDirectory="@(GoProjectPath)" />
+        IgnoreExitCode="true" />
     </Target>
 
   <PropertyGroup>
@@ -93,6 +95,7 @@
       GetGoInfo;
       ConfigureGo;
       PrintGoProjects;
+      PrintGoTargets;
       GoInstall;
     </BeforePrepare>
   </PropertyGroup>
