@@ -27,9 +27,6 @@ CONDO_VERBOSITY="normal"
 # disable dotnet cli telemetry to speed up the build
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-# disable xml creation on nuget restore to speed up the build
-export NUGET_XMLDOC_MODE="skip"
-
 # prevent the CLI from pre-populating the packages cache to speed up the build
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
