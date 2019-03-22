@@ -4,6 +4,7 @@
   <Import Project="$(CondoTargetsPath)Test$(slash)Polymer.targets" />
   <Import Project="$(CondoTargetsPath)Test$(slash)Dotnet.targets" />
   <Import Project="$(CondoTargetsPath)Test$(slash)Go.targets" />
+  <Import Project="$(CondoTargetsPath)Test$(slash)DockerCompose.targets" />
 
   <PropertyGroup>
     <TestDepeondsOn>
