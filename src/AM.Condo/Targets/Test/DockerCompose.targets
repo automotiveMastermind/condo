@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xlmns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Target Name="DockerComposeTest" Condition=" $(DockerRequired) AND $(DOCKER_COMPOSE_PATHS) != '' ">
-        <!-- .sh file needs to be created to be run directly by bash with #!/bin/bash instead of dash used by agent -->
-        <!-- Init bash script in debug mode -->
-		<Exec Command="echo &apos;#!/bin/bash -x&apos; > compose.sh" />
-        <!-- Iterate DOCKER_COMPOSE_PATHS split by ; delimeter -->
-		<Exec Command="echo &apos;for path in ${DOCKER_COMPOSE_PATHS//%3B/ } %3B do&apos; >> compose.sh" />
-        <!-- docker-compose each $path -->
-		<Exec Command="echo &apos;docker-compose -f $1/$path up --remove-orphans --force-recreate --abort-on-container-exit --build --always-recreate-deps -V&apos; >> compose.sh" />
-        <!-- end of loop -->
-		<Exec Command="echo &apos;done&apos; >> compose.sh" />
-        <!-- make script executable -->
-		<Exec Command="chmod +x compose.sh" />
-        <!-- run script in current directory, default is ~ directory -->
-		<Exec Command="./compose.sh $PWD" />
-        <!-- clean -->
-		<Exec Command="rm compose.sh" />
+	<Target Name="DockerComposeTest" Condition=" $(DockerRequired)">
+		<!--
+		Filter files from DockerRoot directory
+		Match only docker-compose.$SOME_STRING.ci.y(a)ml
+		Iterate and docker-compose up, docker-compose down all files
+		-->
+		<Exec Command="ls $(DockerRoot) | grep -i -E -o &quot;docker-compose\.[a-z0-9]*\.ci\.y(ml|aml)&quot; | while read -r path ; do
+                        docker-compose -f &quot;$(DockerRoot)/$path&quot; up --remove-orphans --force-recreate --abort-on-container-exit --build --always-recreate-deps -V
+                        docker-compose -f &quot;$(DockerRoot)/$path&quot; down
+                        done" />
 	</Target>
 	<PropertyGroup>
 		<AfterPublish>
