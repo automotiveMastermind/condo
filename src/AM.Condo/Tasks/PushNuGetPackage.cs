@@ -255,11 +255,24 @@ namespace AM.Condo.Tasks
                     // move on immediately
                     return true;
                 }
-                catch when (attempts <= this.Retries)
+                catch (Exception netEx) when (attempts <= this.Retries)
                 {
                     // log a warning
                     this.Log.LogWarning
                         ($"NuGet push failed for package: {name} after {attempts} attempts with {this.Retries - attempts} retries remaining.");
+
+                    // capture the exception
+                    var exception = netEx;
+
+                    // continue logging until exception is null
+                    while (exception != null)
+                    {
+                        // log the exception as a warning
+                        this.Log.LogWarningFromException(exception);
+
+                        // get the inner exception
+                        exception = exception.InnerException;
+                    }
                 }
                 catch (Exception netEx)
                 {
