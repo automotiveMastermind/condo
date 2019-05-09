@@ -1,3 +1,4 @@
+[![Board Status](https://automotivemastermind.visualstudio.com/0f4108e7-36dc-4a9d-a16f-d637b5caa775/877eb47c-d477-4fed-9d8c-7a541a7ae758/_apis/work/boardbadge/18ca0588-13ef-4d6c-8234-c0467a026e0d)](https://automotivemastermind.visualstudio.com/0f4108e7-36dc-4a9d-a16f-d637b5caa775/_boards/board/t/877eb47c-d477-4fed-9d8c-7a541a7ae758/Microsoft.RequirementCategory)
 # condo
 
 > A build system for \<any\> project.
