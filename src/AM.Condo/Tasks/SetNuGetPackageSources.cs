@@ -176,7 +176,13 @@ namespace AM.Condo.Tasks
                 {
                     // set the credentials on the source
                     source.Credentials = new PackageSourceCredential
-                        (source.Name, this.Username, this.Password, this.IsPasswordClearText, validAuthenticationTypesText: null);
+                    (
+                            source.Name,
+                            this.Username,
+                            this.Password,
+                            this.IsPasswordClearText,
+                            validAuthenticationTypesText: null
+                    );
                 }
 
                 // log a verbose message
