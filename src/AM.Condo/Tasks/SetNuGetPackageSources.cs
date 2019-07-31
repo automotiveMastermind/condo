@@ -180,8 +180,7 @@ namespace AM.Condo.Tasks
                             source.Name,
                             this.Username,
                             this.Password,
-                            this.IsPasswordClearText,
-                            validAuthenticationTypesText: null
+                            this.IsPasswordClearText
                     );
                 }
 
