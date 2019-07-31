@@ -25,6 +25,8 @@
       <DotNetTestProperties>$(DotNetTestProperties);VSTestNoBuild=true</DotNetTestProperties>
       <DotNetTestProperties>$(DotNetTestProperties);VSTestResultsDirectory=$(TestArtifactsRoot)$(slash)</DotNetTestProperties>
       <DotNetTestProperties Condition=" '$(DotNetTestFilterProperties)' != '' ">$(DotNetTestProperties);$(DotNetTestFilterProperties)</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties);Configuration=$(Configuration)</DotNetTestProperties>
+      <DotNetTestProperties>$(DotNetTestProperties);TargetLatestRuntimePatch=true</DotNetTestProperties>
     </PropertyGroup>
 
     <ItemGroup>
