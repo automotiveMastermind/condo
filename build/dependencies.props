@@ -4,7 +4,7 @@
     <CoverletVersion>2.6.1</CoverletVersion>
     <JetBrainsVersion>2019.1.1</JetBrainsVersion>
     <MoqVersion>4.10.0</MoqVersion>
-    <NuGetVersion>5.0.2</NuGetVersion>
+    <NuGetVersion>5.0.0</NuGetVersion>
     <SourceLinkVersion>2.8.3</SourceLinkVersion>
     <StyleCopVersion>1.1.0-beta009</StyleCopVersion>
     <XUnitVersion>2.4.1</XUnitVersion>
