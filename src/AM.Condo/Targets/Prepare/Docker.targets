@@ -117,7 +117,7 @@
     <Message Importance="High" Text="Docker Configuration Path: $(DockerConfigPath)" Condition=" $(DockerLogin) " />
     <Message Importance="High"
       Text="##vso[task.setvariable variable=docker.config]$(DockerConfigDirectory)"
-      Condition=" '$(BuildHost)' == 'VSTS' AND $(DockerAuthLogin)" />
+      Condition=" '$(BuildHost)' == 'VSTS' AND $(DockerLogin)" />
   </Target>
 
   <PropertyGroup>
