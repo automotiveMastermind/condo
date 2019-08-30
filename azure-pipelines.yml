@@ -7,4 +7,4 @@ trigger:
 - develop
 
 steps:
-- template: .azure/cli.yml
+- template: .azure/cli.yaml
