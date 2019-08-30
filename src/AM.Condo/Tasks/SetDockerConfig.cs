@@ -42,6 +42,12 @@ namespace AM.Condo.Tasks
         /// </summary>
         [Output]
         public string ConfigPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output directory of the config file that was generated.
+        /// </summary>
+        [Output]
+        public string ConfigDirectory { get; set; }
         #endregion
 
         #region Methods
@@ -70,6 +76,7 @@ namespace AM.Condo.Tasks
 
                 // create the config path
                 this.ConfigPath = Path.Combine(temporary, "config.json");
+                this.ConfigDirectory = temporary;
 
                 // create the temporary file
                 File.WriteAllText(this.ConfigPath, json);

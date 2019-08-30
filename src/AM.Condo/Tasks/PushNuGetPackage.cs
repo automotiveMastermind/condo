@@ -246,6 +246,7 @@ namespace AM.Condo.Tasks
                         disableBuffering: false,
                         noSymbols: this.NoSymbols,
                         noServiceEndpoint: false,
+                        skipDuplicate: false,
                         logger: logger
                     );
 
