@@ -88,6 +88,9 @@
 
     <AllowPublish Condition=" $(CI) AND !$(IsPullRequest) ">true</AllowPublish>
     <AllowPublish Condition=" '$(AllowPublish)' == '' ">false</AllowPublish>
+
+    <Configuration Condition=" '$(Configuration)' == '' AND $(AllowPublish) AND '$(BuildQuality)' == '' ">Release</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
   </PropertyGroup>
 
   <ItemGroup>

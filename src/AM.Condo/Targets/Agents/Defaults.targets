@@ -3,7 +3,6 @@
 
   <!-- provide reasonable defaults for required attributes -->
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">$(DOTNET_BUILD_VERSION)</CurrentRelease>
     <CurrentRelease Condition=" '$(CurrentRelease)' == '' ">0.0.0</CurrentRelease>
     <Authors Condition=" '$(Authors)' == '' ">$(DOTNET_AUTHOR)</Authors>
