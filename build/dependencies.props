@@ -1,16 +1,16 @@
 <Project>
   <PropertyGroup>
-    <BuildVersion>16.0.461</BuildVersion>
-    <CoverletVersion>2.6.1</CoverletVersion>
-    <JetBrainsVersion>2019.1.1</JetBrainsVersion>
-    <MoqVersion>4.10.0</MoqVersion>
-    <NuGetVersion>5.1.0</NuGetVersion>
+    <BuildVersion>16.5.0</BuildVersion>
+    <CoverletVersion>2.8.1</CoverletVersion>
+    <JetBrainsVersion>2020.1.0</JetBrainsVersion>
+    <MoqVersion>4.14.1</MoqVersion>
+    <NuGetVersion>5.5.1</NuGetVersion>
     <SourceLinkVersion>2.8.3</SourceLinkVersion>
-    <StyleCopVersion>1.1.0-beta009</StyleCopVersion>
+    <StyleCopVersion>1.1.118</StyleCopVersion>
     <XUnitVersion>2.4.1</XUnitVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <MSBuildTestSDKVersion>16.1.0</MSBuildTestSDKVersion>
+    <MSBuildTestSDKVersion>16.6.1</MSBuildTestSDKVersion>
   </PropertyGroup>
 </Project>
