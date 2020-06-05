@@ -123,8 +123,6 @@ namespace AM.Condo.Tasks
                 return false;
             }
 
-            // define a variable to retain the date
-
             // attempt to parse the date
             if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime now))
             {
@@ -138,8 +136,6 @@ namespace AM.Condo.Tasks
 
             // ensure that the date is always universal time
             now = now.ToUniversalTime();
-
-            // define a variable to retain the start date
 
             // attempt to parse the start date
             if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
