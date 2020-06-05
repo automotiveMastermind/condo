@@ -27,7 +27,7 @@
 
   <PropertyGroup>
     <BuildQuality  Condition=" '$(BuildQuality)' == '' ">$(CONDO_BUILD_QUALITY)</BuildQuality>
-
+    <SuffixTag     Condition=" '$(SuffixTag)' == '' ">$(CONDO_SUFFIX_TAG)</SuffixTag>
     <CreateRelease Condition=" '$(CreateRelease)' == '' ">$(CONDO_CREATE_RELEASE)</CreateRelease>
     <CreateRelease Condition=" '$(BuildQuality)' != '' ">false</CreateRelease>
   </PropertyGroup>
@@ -70,6 +70,7 @@
         BuildId="$(BuildId)"
         CommitId="$(CommitId)"
         BuildQuality="$(BuildQuality)"
+        SuffixTag="$(SuffixTag)"
         StartDateUtc="$(StartDateUtc)"
         BuildDateUtc="$(BuildDateUtc)">
       <Output TaskParameter="AssemblyVersion" PropertyName="AssemblyVersion" />
@@ -123,6 +124,7 @@
     <Message Importance="High" Text="File Version       : $(FileVersion)" />
     <Message Importance="High" Text="Build Quality      : $(BuildQuality)" />
     <Message Importance="High" Text="Pre-Release Tag    : $(PreReleaseTag)" />
+    <Message Importance="High" Text="Suffix Tag         : $(SuffixTag)" />
     <Message Importance="High" Text="Major Version      : $(MajorVersion)" />
     <Message Importance="High" Text="Create Release     : $(CreateRelease)" />
 

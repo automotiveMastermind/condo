@@ -361,7 +361,7 @@ namespace AM.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
-        public void Execute_WhenProductionReleaseBranch_Succeeds()
+        public void Execute_WhenProductionReleaseBranch_WithSuffix_Succeeds()
         {
             // arrange
             var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
@@ -371,13 +371,14 @@ namespace AM.Condo.Tasks
             var commitId = default(string);
             var branch = "master";
             var ci = true;
+            var suffixTag = "LTS";
 
             var expected = new
             {
                 SemanticVersion = "1.0.0",
                 AssemblyVersion = "1.0.0",
                 FileVersion = "1.0.01002.2359",
-                InformationalVersion = "1.0.0",
+                InformationalVersion = $"1.0.0-{suffixTag}",
                 PreReleaseTag = default(string),
                 BuildQuality = default(string),
                 BuildDateUtc = now,
@@ -392,6 +393,7 @@ namespace AM.Condo.Tasks
             {
                 RecommendedRelease = "1.0.0",
                 BuildQuality = expected.BuildQuality,
+                SuffixTag = suffixTag,
                 StartDateUtc = start,
                 BuildDateUtc = now,
                 BuildId = buildId,

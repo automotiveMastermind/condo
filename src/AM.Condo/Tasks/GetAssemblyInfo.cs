@@ -39,6 +39,11 @@ namespace AM.Condo.Tasks
         public string BuildQuality { get; set; }
 
         /// <summary>
+        /// Gets or sets the suffix tag.
+        /// </summary>
+        public string SuffixTag { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether or not the build is a CI build.
         /// </summary>
         public bool CI { get; set; } = false;
@@ -119,10 +124,9 @@ namespace AM.Condo.Tasks
             }
 
             // define a variable to retain the date
-            DateTime now;
 
             // attempt to parse the date
-            if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out now))
+            if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime now))
             {
                 // log an error
                 this.Log.LogError
@@ -136,10 +140,9 @@ namespace AM.Condo.Tasks
             now = now.ToUniversalTime();
 
             // define a variable to retain the start date
-            DateTime start;
 
             // attempt to parse the start date
-            if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out start))
+            if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
             {
                 // log an error
                 this.Log.LogError
@@ -215,6 +218,13 @@ namespace AM.Condo.Tasks
 
                 // append the prerelease tag to the informational version
                 this.InformationalVersion += Invariant($"-{this.PreReleaseTag}");
+            }
+
+            // determine if the suffix tag is now set
+            if (!string.IsNullOrEmpty(this.SuffixTag))
+            {
+                // apppend the suffix tag to the informational version
+                this.InformationalVersion += Invariant($"-{this.SuffixTag}");
             }
 
             // set the major version

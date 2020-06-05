@@ -11,6 +11,14 @@ SKIP_DOTNET         | `bool`   | Skips all dotnet build steps
 SKIP_GO             | `bool`   | Skips all go build steps
 ---
 
+## Versioning
+
+Variable            | Type     | What does it do
+--------------------|----------|----------------
+CONDO_BUILD_QUALITY | `string` | Override the build quality (alpha, beta)
+CONDO_SUFFIX_TAG    | `string` | Append a suffix to all versions
+CONDO_CREATE_RELEASE| `bool`   | Override for determining if this is a release build
+
 ## Dotnet
 
 Variable            | Type     | What does it do
