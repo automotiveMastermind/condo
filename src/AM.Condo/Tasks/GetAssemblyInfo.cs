@@ -197,6 +197,12 @@ namespace AM.Condo.Tasks
                 this.BuildId = build;
             }
 
+            // make sure build id is smaller than unsigned integer (16-bit)
+            if (int.TryParse(this.BuildId, out var id))
+            {
+                this.BuildId = (id % UInt16.MaxValue).ToString();
+            }
+
             // set the file version
             this.FileVersion = version.ToString($"x.y.{this.BuildId}.{commit}", VersionFormatter.Instance);
 
