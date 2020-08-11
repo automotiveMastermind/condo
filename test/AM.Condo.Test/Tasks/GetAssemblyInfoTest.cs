@@ -305,6 +305,62 @@ namespace AM.Condo.Tasks
         [Fact]
         [Priority(1)]
         [Purpose(PurposeType.Unit)]
+        public void Execute_WhenBuildSet_AndOverUint16_Succeeds()
+        {
+            // arrange
+            var start = new DateTime(2015, 1, 1).ToString("o", CultureInfo.InvariantCulture);
+            var now = new DateTime(2016, 1, 2, 23, 59, 59).ToString("o", CultureInfo.InvariantCulture);
+
+            var buildId = "65536";
+            var commitId = default(string);
+            var ci = true;
+
+            var expected = new
+            {
+                SemanticVersion = "1.0.0",
+                AssemblyVersion = "1.0.0",
+                FileVersion = "1.0.1.2359",
+                InformationalVersion = "1.0.0-alpha-00001",
+                PreReleaseTag = "alpha-00001",
+                BuildQuality = "alpha",
+                BuildDateUtc = now,
+                CI = ci,
+
+                BuildId = "1",
+                CommitId = "2359"
+            };
+
+            var actual = new GetAssemblyInfo
+            {
+                RecommendedRelease = "1.0.0",
+                BuildQuality = expected.BuildQuality,
+                StartDateUtc = start,
+                BuildDateUtc = now,
+                BuildId = buildId,
+                CommitId = commitId,
+                CI = ci
+            };
+
+            // act
+            var result = actual.Execute();
+
+            // assert
+            Assert.True(result);
+            Assert.Equal(expected.SemanticVersion, actual.RecommendedRelease);
+            Assert.Equal(expected.AssemblyVersion, actual.AssemblyVersion);
+            Assert.Equal(expected.FileVersion, actual.FileVersion);
+            Assert.Equal(expected.InformationalVersion, actual.InformationalVersion);
+            Assert.Equal(expected.PreReleaseTag, actual.PreReleaseTag);
+            Assert.Equal(expected.BuildQuality, actual.BuildQuality);
+            Assert.Equal(expected.BuildDateUtc, actual.BuildDateUtc);
+            Assert.Equal(expected.BuildId, actual.BuildId);
+            Assert.Equal(expected.CommitId, actual.CommitId);
+            Assert.Equal(expected.CI, actual.CI);
+        }
+
+        [Fact]
+        [Priority(1)]
+        [Purpose(PurposeType.Unit)]
         public void Execute_WhenFeatureBranch_Succeeds()
         {
             // arrange

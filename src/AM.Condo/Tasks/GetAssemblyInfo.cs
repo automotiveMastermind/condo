@@ -200,7 +200,10 @@ namespace AM.Condo.Tasks
             // make sure build id is smaller than unsigned integer (16-bit)
             if (int.TryParse(this.BuildId, out var id))
             {
-                this.BuildId = (id % UInt16.MaxValue).ToString();
+                if (id > UInt16.MaxValue)
+                {
+                    this.BuildId = (id % UInt16.MaxValue).ToString();
+                }
             }
 
             // set the file version
