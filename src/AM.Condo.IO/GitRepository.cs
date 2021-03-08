@@ -432,7 +432,7 @@ namespace AM.Condo.IO
             }
 
             // set the gitflow options
-            this.Config("gitflow.branch.master", options.ProductionReleaseBranch);
+            this.Config("gitflow.branch.main", options.ProductionReleaseBranch);
             this.Config("gitflow.branch.develop", options.NextReleaseBranch);
             this.Config("gitflow.prefix.feature", $"{options.FeatureBranchPrefix}/");
             this.Config("gitflow.prefix.bugfix", $"{options.BugfixBranchPrefix}/");

@@ -20,7 +20,7 @@ namespace AM.Condo.IO
         /// <summary>
         /// Gets or sets the name of the branch used for production releases.
         /// </summary>
-        public string ProductionReleaseBranch { get; set; } = "master";
+        public string ProductionReleaseBranch { get; set; } = "main";
 
         /// <summary>
         /// Gets or sets the prefix of the branches used for feature development.
