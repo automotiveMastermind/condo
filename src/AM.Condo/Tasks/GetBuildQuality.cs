@@ -7,8 +7,8 @@
 namespace AM.Condo.Tasks
 {
     using System;
+    using System.Linq;
     using System.Security;
-
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
@@ -61,7 +61,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets or sets the name used to identify the integration branch for production.
         /// </summary>
-        public string ProductionReleaseBranch { get; set; } = "master";
+        public string[] ProductionReleaseBranch { get; set; } = new string[] { "main", "master" };
 
         /// <summary>
         /// Gets or sets the default build quality, which is used whenever a branch specific build quality is not set
@@ -135,8 +135,8 @@ namespace AM.Condo.Tasks
                 return true;
             }
 
-            // determine if the branch is the master branch
-            if (this.Branch.Equals(this.ProductionReleaseBranch, StringComparison.OrdinalIgnoreCase))
+            // determine if the branch is the main or master branch
+            if (this.ProductionReleaseBranch.Any(b => this.Branch.Equals(b, StringComparison.OrdinalIgnoreCase)))
             {
                 // set the build quality to the master branch build quality
                 this.SetBuildQuality(this.ProductionReleaseBranchBuildQuality);
