@@ -11,7 +11,7 @@ namespace AM.Condo.Tasks
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
-
+    using System.Text;
     using AM.Condo.Resources;
 
     using ICSharpCode.SharpZipLib.GZip;
@@ -270,7 +270,7 @@ namespace AM.Condo.Tasks
         private void ExtractTar(Stream stream)
         {
             // get the tar archive
-            using (var archive = TarArchive.CreateInputTarArchive(stream))
+            using (var archive = TarArchive.CreateInputTarArchive(stream, Encoding.UTF8))
             {
                 // extract the archive
                 archive.ExtractContents(this.Destination);

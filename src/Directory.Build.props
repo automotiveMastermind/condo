@@ -1,37 +1,8 @@
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)../build/dependencies.props" />
+  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" />
 
   <PropertyGroup>
-    <DebugType>portable</DebugType>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <IsPackable Condition=" '$(IsPackable)' == '' ">false</IsPackable>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <PackageTags>condo;$(PackageTags)</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StylecopVersion)" PrivateAssets="All" />
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="All" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PackageReference Include="SourceLink.Create.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="all" />
-    <PackageReference Include="SourceLink.Test" Version="$(SourceLinkVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-sourcelink" Version="$(SourceLinkVersion)" />
-    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="$(SourceLinkVersion)" />
-  </ItemGroup>
-
 </Project>

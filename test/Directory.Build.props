@@ -1,17 +1,6 @@
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)../build/dependencies.props" />
-
-  <PropertyGroup>
-    <DebugType>portable</DebugType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-
-    <CollectCoverage>true</CollectCoverage>
-    <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/test/</CoverletOutput>
-    <MergeWith Condition=" Exists('$(CoverletOutput)coverage.json') ">$(CoverletOutput)coverage.json</MergeWith>
-  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)../.build/test.props" />
 
   <ItemGroup>
     <ProjectReference Include="../../src/AM.Condo.Xunit/AM.Condo.Xunit.csproj" />
@@ -19,15 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MSBuildTestSDKVersion)" />
-
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XUnitVersion)" />
     <PackageReference Include="xunit" Version="$(XUnitVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Coverlet.MSBuild" Version="$(CoverletVersion)" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,14 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)../.build/dependencies.props" />
+
+  <PropertyGroup>
+    <DebugType>portable</DebugType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/test/</CoverletOutput>
+    <MergeWith Condition=" Exists('$(CoverletOutput)coverage.json') ">$(CoverletOutput)coverage.json</MergeWith>
+  </PropertyGroup>
+</Project>

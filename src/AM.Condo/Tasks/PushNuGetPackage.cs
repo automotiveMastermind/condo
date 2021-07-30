@@ -8,6 +8,7 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -218,7 +219,7 @@ namespace AM.Condo.Tasks
         private async Task<bool> Push(ITaskItem package, NuGet.Common.ILogger logger)
         {
             // get the full path to the package
-            var path = package.GetMetadata("FullPath");
+            var paths = new List<string>() { package.GetMetadata("FullPath") };
             var name = package.GetMetadata("Identity");
 
             // count the number of attempts
@@ -237,7 +238,7 @@ namespace AM.Condo.Tasks
                     (
                         this.settings,
                         this.provider,
-                        path,
+                        paths,
                         this.Uri,
                         this.ApiKey,
                         this.SymbolUri,
