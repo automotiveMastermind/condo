@@ -37,7 +37,7 @@ namespace AM.Condo.Tasks
         /// <summary>
         /// Gets the search paths to use when locating the command.
         /// </summary>
-        public ITaskItem[] SearchPaths { get; }
+        public ITaskItem[] SearchPaths { get; set; }
 
         /// <summary>
         /// Gets the path of the command.

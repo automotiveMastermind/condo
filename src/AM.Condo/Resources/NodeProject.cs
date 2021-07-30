@@ -32,7 +32,7 @@ namespace AM.Condo.Resources
         /// <summary>
         /// Gets the scripts for the project.
         /// </summary>
-        public Dictionary<string, string> Scripts { get; }
+        public Dictionary<string, string> Scripts { get; set; }
         #endregion
     }
 }
