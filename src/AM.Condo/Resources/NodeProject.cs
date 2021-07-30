@@ -30,9 +30,9 @@ namespace AM.Condo.Resources
         public string License { get; set; }
 
         /// <summary>
-        /// Gets or sets the scripts for the project.
+        /// Gets the scripts for the project.
         /// </summary>
-        public Dictionary<string, string> Scripts { get; set; }
+        public Dictionary<string, string> Scripts { get; }
         #endregion
     }
 }

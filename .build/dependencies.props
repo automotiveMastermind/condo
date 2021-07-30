@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <BuildVersion>16.9.0</BuildVersion>
-    <MSBuildTestSDKVersion>16.8.0</MSBuildTestSDKVersion>
+    <BuildVersion>16.10.0</BuildVersion>
+    <MSBuildTestSDKVersion>16.10.0</MSBuildTestSDKVersion>
   </PropertyGroup>
 
   <PropertyGroup>

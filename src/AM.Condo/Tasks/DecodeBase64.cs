@@ -49,8 +49,8 @@ namespace AM.Condo.Tasks
 
                 // set the text accordingly
                 this.Decoded = encoding.GetString(data)
-                    .Replace("\n", string.Empty)
-                    .Replace("\r", string.Empty);
+                    .Replace("\n", string.Empty, StringComparison.InvariantCulture)
+                    .Replace("\r", string.Empty, StringComparison.InvariantCulture);
             }
             catch (Exception netEx)
             {
