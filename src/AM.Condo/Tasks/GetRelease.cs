@@ -164,8 +164,17 @@ namespace AM.Condo.Tasks
                     // set the asset name
                     this.Asset = asset.Name;
 
+                    // ensure the uri is valid
+                    if (!Uri.TryCreate(asset.BrowserDownloadUrl, UriKind.Absolute, out var assetUri))
+                    {
+                        this.Log.LogError($@"Failed to get release:
+                            the asset download uri is not valid ({asset.BrowserDownloadUrl})");
+
+                        return false;
+                    }
+
                     // get the file
-                    var download = client.GetAsync(asset.BrowserDownloadUrl).GetAwaiter().GetResult();
+                    var download = client.GetAsync(assetUri).GetAwaiter().GetResult();
 
                     // ensure that the status code is successful
                     download.EnsureSuccessStatusCode();

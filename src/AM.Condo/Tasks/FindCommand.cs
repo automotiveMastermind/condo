@@ -35,7 +35,7 @@ namespace AM.Condo.Tasks
         public string WorkingDirectory { get; set; }
 
         /// <summary>
-        /// Gets the search paths to use when locating the command.
+        /// Gets or sets the search paths to use when locating the command.
         /// </summary>
         public ITaskItem[] SearchPaths { get; set; }
 
