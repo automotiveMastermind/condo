@@ -7,6 +7,7 @@
 namespace AM.Condo.Tasks
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     using Microsoft.Build.Framework;
@@ -101,7 +102,7 @@ namespace AM.Condo.Tasks
                 // create a new task item
                 var item = new TaskItem(source.Name);
                 item.SetMetadata(nameof(source.Source), source.Source);
-                item.SetMetadata(nameof(source.ProtocolVersion), source.ProtocolVersion.ToString());
+                item.SetMetadata(nameof(source.ProtocolVersion), source.ProtocolVersion.ToString(CultureInfo.InvariantCulture));
                 item.SetMetadata(nameof(source.IsEnabled), source.IsEnabled.ToString());
 
                 // add the item to the source collection

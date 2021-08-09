@@ -150,14 +150,14 @@ namespace AM.Condo.Tasks
                 // strip the '.git' from the uri
                 // tricky: this is done to support browsing to the repository from
                 // a browser rather than just cloning directly for github
-                this.RepositoryUri.Substring(0, this.RepositoryUri.Length - 4);
+                this.RepositoryUri = this.RepositoryUri[0..^4];
             }
 
             // determine if the branch is set and starts with /refs/heads
-            if (this.Branch != null && this.Branch.ToLower().StartsWith("refs/heads/"))
+            if (this.Branch != null && this.Branch.ToLowerInvariant().StartsWith("refs/heads/"))
             {
                 // remove the /refs/heads reference from the branch name
-                this.Branch = this.Branch.Substring(11);
+                this.Branch = this.Branch[11..];
             }
 
             // return the result

@@ -8,6 +8,7 @@ namespace AM.Condo.Tasks
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     using AM.Condo.IO;
@@ -327,7 +328,7 @@ namespace AM.Condo.Tasks
                     .Count(note => note.Header.StartsWith(keyword, StringComparison.OrdinalIgnoreCase)));
 
                 // set the metadata
-                item.SetMetadata(nameof(commit.Notes), count.ToString());
+                item.SetMetadata(nameof(commit.Notes), count.ToString(CultureInfo.InvariantCulture));
 
                 // add header correspondence
                 foreach (var correspondence in commit.HeaderCorrespondence)

@@ -30,29 +30,30 @@ namespace AM.Condo.Net
         private readonly Semaphore accepted;
 
         /// <summary>
-        /// A value indicating whether or not the server has been disposed.
-        /// </summary>
-        private bool disposed;
-
-        /// <summary>
         /// The socket used to listen for connections.
         /// </summary>
-        private Socket socket;
+        private readonly Socket socket;
 
         /// <summary>
         /// The provider used to get the current date and time from a trusted authority.
         /// </summary>
-        private IClockProvider clock;
+        private readonly IClockProvider clock;
 
         /// <summary>
         /// The pool for managing <see cref="SocketAsyncEventArgs"/>.
         /// </summary>
-        private ISocketPool pool;
+        private readonly ISocketPool pool;
 
         /// <summary>
         /// A value used to track active connections.
         /// </summary>
         private int connected;
+
+        /// <summary>
+        /// A value indicating whether or not the server has been disposed.
+        /// </summary>
+        private bool disposed;
+
         #endregion
 
         #region Constructors and Finalizers

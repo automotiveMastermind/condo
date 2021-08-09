@@ -7,6 +7,7 @@
 namespace AM.Condo
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     using Xunit.Abstractions;
@@ -34,7 +35,8 @@ namespace AM.Condo
             var priority = (int)traitAttribute.GetConstructorArguments().First();
 
             // return a new trait for the priority
-            yield return new KeyValuePair<string, string>(Constants.Priority, priority.ToString());
+            yield return new KeyValuePair<string, string>(
+                Constants.Priority, priority.ToString(CultureInfo.InvariantCulture));
         }
         #endregion
     }

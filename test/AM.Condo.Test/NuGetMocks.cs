@@ -147,9 +147,9 @@ namespace AM.Condo
             var date = DateTimeOffset.UtcNow;
 
             string effectivePath;
-            var fx = FrameworkNameUtility.ParseFrameworkNameFromFilePath(name, out effectivePath);
+            var fx = FrameworkNameUtility.ParseNuGetFrameworkFromFilePath(name, out effectivePath);
             file.SetupGet(f => f.EffectivePath).Returns(effectivePath);
-            file.SetupGet(f => f.TargetFramework).Returns(fx);
+            file.SetupGet(f => f.NuGetFramework).Returns(fx);
             file.SetupGet(f => f.LastWriteTime).Returns(date);
 
             return file.Object;

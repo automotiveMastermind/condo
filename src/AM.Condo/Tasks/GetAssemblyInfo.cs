@@ -118,11 +118,8 @@ namespace AM.Condo.Tasks
                 return false;
             }
 
-            // define a variable to retain the date
-            DateTime now;
-
             // attempt to parse the date
-            if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out now))
+            if (!DateTime.TryParse(this.BuildDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime now))
             {
                 // log an error
                 this.Log.LogError
@@ -135,11 +132,8 @@ namespace AM.Condo.Tasks
             // ensure that the date is always universal time
             now = now.ToUniversalTime();
 
-            // define a variable to retain the start date
-            DateTime start;
-
             // attempt to parse the start date
-            if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out start))
+            if (!DateTime.TryParse(this.StartDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTime start))
             {
                 // log an error
                 this.Log.LogError
@@ -202,7 +196,7 @@ namespace AM.Condo.Tasks
             {
                 if (id > ushort.MaxValue)
                 {
-                    this.BuildId = (id % ushort.MaxValue).ToString();
+                    this.BuildId = (id % ushort.MaxValue).ToString(CultureInfo.InvariantCulture);
                 }
             }
 
@@ -227,7 +221,7 @@ namespace AM.Condo.Tasks
             }
 
             // set the major version
-            this.MajorVersion = version.Major.ToString();
+            this.MajorVersion = version.Major.ToString(CultureInfo.InvariantCulture);
 
             // we are successful
             return true;

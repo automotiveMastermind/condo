@@ -15,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     [TraitDiscoverer("AM.Condo.PlatformDiscoverer", "AM.Condo.Xunit")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class PlatformAttribute : Attribute, ITraitAttribute
+    public sealed class PlatformAttribute : Attribute, ITraitAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlatformAttribute"/> class.

@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <BuildVersion>16.10.0</BuildVersion>
+    <MSBuildTestSDKVersion>16.10.0</MSBuildTestSDKVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NetCoreVersion>net5.0</NetCoreVersion>
+    <NetStandardVersion>netstandard2.1</NetStandardVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CoverletVersion>3.1.0</CoverletVersion>
+    <JetBrainsVersion>2021.2.0</JetBrainsVersion>
+    <MoqVersion>4.16.1</MoqVersion>
+    <NuGetVersion>5.10.0</NuGetVersion>
+    <SourceLinkVersion>2.8.3</SourceLinkVersion>
+    <StyleCopVersion>1.1.118</StyleCopVersion>
+    <XUnitVersion>2.4.1</XUnitVersion>
+  </PropertyGroup>
+</Project>

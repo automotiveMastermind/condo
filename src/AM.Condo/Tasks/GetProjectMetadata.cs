@@ -28,7 +28,7 @@ namespace AM.Condo.Tasks
         /// </summary>
         public static readonly string[] WellKnownFolders = { "src", "test", "docs", "samples" };
 
-        private readonly List<ITaskItem> projects = new List<ITaskItem>();
+        private readonly List<ITaskItem> projects = new ();
         #endregion
 
         #region Properties and Indexers
@@ -152,7 +152,7 @@ namespace AM.Condo.Tasks
             }
 
             // set the group to lower
-            projectName = projectName.ToLower();
+            projectName = projectName.ToLowerInvariant();
 
             // set the project directory path
             item.SetMetadata("ProjectDir", directory + Path.DirectorySeparatorChar);
@@ -193,7 +193,7 @@ namespace AM.Condo.Tasks
             item.SetMetadata("IsBuildable", this.Build.ToString());
 
             // create a project collection
-            var collection = new ProjectCollection();
+            using var collection = new ProjectCollection();
 
             // define a variable to retain the project
             var project = default(Project);

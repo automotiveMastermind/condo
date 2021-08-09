@@ -15,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     [TraitDiscoverer("AM.Condo.AgentDiscoverer", "AM.Condo.Xunit")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class AgentAttribute : Attribute, ITraitAttribute
+    public sealed class AgentAttribute : Attribute, ITraitAttribute
     {
         #region Constructors and Finalizers
         /// <summary>
