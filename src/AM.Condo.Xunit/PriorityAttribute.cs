@@ -15,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     [TraitDiscoverer("AM.Condo.PriorityDiscoverer", "AM.Condo.Xunit")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class PriorityAttribute : Attribute, ITraitAttribute
+    public sealed class PriorityAttribute : Attribute, ITraitAttribute
     {
         #region Constructors and Finalizers
         /// <summary>

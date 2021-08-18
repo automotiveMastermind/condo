@@ -15,6 +15,7 @@ CONDO_ROOT="$HOME/.am/condo"
 SRC_ROOT="$CONDO_ROOT/.src"
 SCRIPT_ROOT="$SRC_ROOT/src/AM.Condo/Scripts"
 CONDO_SHELL="$CONDO_ROOT/condo.sh"
+BUILD_DIR=".build"
 
 # change to the root path
 cd $ROOT_PATH
@@ -123,6 +124,7 @@ if [ ! -d "$SRC_ROOT" ]; then
     if [ ! -z $CONDO_SOURCE ]; then
         info "Using condo build system from $CONDO_SOURCE..."
         cp -r $CONDO_SOURCE/* $SRC_ROOT/
+        cp -r "$CONDO_SOURCE/$BUILD_DIR" "$SRC_ROOT/$BUILD_DIR/"
         cp -r $SCRIPT_ROOT/* $CONDO_ROOT
     else
         info "Using condo build system from $CONDO_URI..."
@@ -150,6 +152,7 @@ if [ ! -d "$SRC_ROOT" ]; then
         mkdir -p $CONDO_EXTRACT
         tar xf $CONDO_TAR --strip-components 1 --directory $CONDO_EXTRACT
         cp -r $CONDO_SOURCE/* $SRC_ROOT/
+        cp -r "$CONDO_SOURCE/$BUILD_DIR" "$SRC_ROOT/$BUILD_DIR/"
         cp -r $SCRIPT_ROOT/* $CONDO_ROOT
         rm -Rf $CONDO_TEMP
     fi

@@ -88,7 +88,7 @@ namespace AM.Condo.Tasks
             }
 
             // lower the project name
-            projectName = projectName.ToLower();
+            projectName = projectName.ToLowerInvariant();
 
             // set the project name
             project.SetMetadata("ProjectName", projectName);

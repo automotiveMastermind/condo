@@ -40,5 +40,7 @@
     "**/condo.cmd": true,
     "artifacts/**": true,
     "**/docs/api": true
-  }
+  },
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableEditorConfigSupport": true
 }

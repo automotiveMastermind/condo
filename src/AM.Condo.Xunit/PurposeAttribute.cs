@@ -15,7 +15,7 @@ namespace AM.Condo
     /// </summary>
     [TraitDiscoverer("AM.Condo.PurposeDiscoverer", "AM.Condo.Xunit")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class PurposeAttribute : Attribute, ITraitAttribute
+    public sealed class PurposeAttribute : Attribute, ITraitAttribute
     {
         #region Constructors and Finalizers
         /// <summary>

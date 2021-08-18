@@ -11,7 +11,7 @@ namespace AM.Condo.Tasks
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Headers;
-
+    using System.Text;
     using AM.Condo.Resources;
 
     using ICSharpCode.SharpZipLib.GZip;
@@ -164,8 +164,17 @@ namespace AM.Condo.Tasks
                     // set the asset name
                     this.Asset = asset.Name;
 
+                    // ensure the uri is valid
+                    if (!Uri.TryCreate(asset.BrowserDownloadUrl, UriKind.Absolute, out var assetUri))
+                    {
+                        this.Log.LogError($@"Failed to get release:
+                            the asset download uri is not valid ({asset.BrowserDownloadUrl})");
+
+                        return false;
+                    }
+
                     // get the file
-                    var download = client.GetAsync(asset.BrowserDownloadUrl).GetAwaiter().GetResult();
+                    var download = client.GetAsync(assetUri).GetAwaiter().GetResult();
 
                     // ensure that the status code is successful
                     download.EnsureSuccessStatusCode();
@@ -270,7 +279,7 @@ namespace AM.Condo.Tasks
         private void ExtractTar(Stream stream)
         {
             // get the tar archive
-            using (var archive = TarArchive.CreateInputTarArchive(stream))
+            using (var archive = TarArchive.CreateInputTarArchive(stream, Encoding.UTF8))
             {
                 // extract the archive
                 archive.ExtractContents(this.Destination);

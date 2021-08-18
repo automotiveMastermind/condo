@@ -113,7 +113,7 @@ namespace AM.Condo.Tasks
             if (!rooted && !GetProjectMetadata.WellKnownFolders.Contains(group, StringComparer.OrdinalIgnoreCase))
             {
                 // determine if the name is equal to the product name
-                if (name.Equals(this.Product))
+                if (name.Equals(this.Product, StringComparison.Ordinal))
                 {
                     // set the project name to the current group (current directory name) to avoid collisions
                     name = group;
@@ -124,7 +124,7 @@ namespace AM.Condo.Tasks
             }
 
             // set the label to lowercase
-            name = name.ToLower();
+            name = name.ToLowerInvariant();
 
             // set the project name for docker
             dockerfile.SetMetadata("Label", name);
