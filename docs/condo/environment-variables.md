@@ -36,6 +36,6 @@ SKIP_GO_PUBLISH     | `bool`   | Skips publishing project
 
 Variable            | Type       | What does it do
 --------------------|------------|----------------
-AllowPublish        | `bool`     | Will publish docker images to specified docker registry regardless of other variable states
+AllowPublish        | `bool`     | Will publish docker images and Nuget packages to specified docker registry regardless of other variable states
 DockerOrganization  | `string`   | the string that will be prefixed to your docker tags `$DockerOrganization/your-project-name`
 ---
