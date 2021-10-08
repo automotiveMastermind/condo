@@ -6,7 +6,6 @@ Variable            | Type     | What does it do
 --------------------|----------|----------------
 SKIP_NPM            | `bool`   | Skips all npm build steps
 SKIP_BOWER          | `bool`   | Skips all bower build steps
-SKIP_POLYMER        | `bool`   | Skips all polymer build steps
 SKIP_DOTNET         | `bool`   | Skips all dotnet build steps
 SKIP_GO             | `bool`   | Skips all go build steps
 ---

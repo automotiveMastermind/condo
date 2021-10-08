@@ -2,7 +2,6 @@
 
 ## List of supported frameworks
 * .NET Core / DocFX
-* Polymer CLI
 * NPM
 * Bower
 * Docker
