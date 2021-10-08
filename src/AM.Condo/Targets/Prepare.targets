@@ -3,7 +3,6 @@
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Go.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Node.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Bower.targets" />
-  <Import Project="$(CondoTargetsPath)Prepare$(slash)Polymer.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)TaskRunners.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Dotnet.targets" />
   <Import Project="$(CondoTargetsPath)Prepare$(slash)Docker.targets" />

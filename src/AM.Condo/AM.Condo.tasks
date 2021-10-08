@@ -17,7 +17,6 @@
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetNodeMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetNuGetPackageSources" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetPlatformInfo" />
-  <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetPolymerMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetProjectsForSolution" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetProjectMetadata" />
   <UsingTask AssemblyFile="condo.dll" TaskName="AM.Condo.Tasks.GetRelease" />
