@@ -57,9 +57,6 @@
     <DockerRoot Condition=" !HasTrailingSlash('$(DockerRoot)') ">$(DockerRoot)$(slash)</DockerRoot>
 
     <BuildHost Condition=" '$(BuildHost)' == '' AND ('$(TF_BUILD)' != '' OR '$(SYSTEM_DEFINITIONID)' != '') ">VSTS</BuildHost>
-    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(TRAVIS)' != '' ">Travis</BuildHost>
-    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(APPVEYOR)' != '' ">AppVeyor</BuildHost>
-    <BuildHost Condition=" '$(BuildHost)' == '' AND '$(CIRCLECI)' != '' ">CircleCI</BuildHost>
     <BuildHost Condition=" '$(BuildHost)' == '' AND '$(GITLAB_CI)' != '' ">Gitlab</BuildHost>
 
     <AgentTargetsPath Condition=" '$(AgentTargetsPath)' == '' ">$(AgentTargetsRoot)$(BuildHost).targets</AgentTargetsPath>

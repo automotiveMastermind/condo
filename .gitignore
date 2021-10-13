@@ -60,9 +60,6 @@ _TeamCity*
 #vscode
 !.vscode/*
 
-#circleci
-!.circleci/*
-
 #azure pipelines
 !.azure/*
 

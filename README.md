@@ -8,7 +8,6 @@ Info          | Badges
 --------------|--------------
 Version       | [![Version][release-v-image]][release-url]
 License       | [![License][license-image]][license]
-Build Status  | [![Circle CI Build Status][circleci-image]][circleci-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url]
 Chat          | [![Join Chat][gitter-image]][gitter-url]
 Issues        | [![Issues][issues-image]][issues-url]
 Maintenance   | [![issue resolution][resolution-image]][is-it-maintained] [![open issues][open-image]][is-it-maintained]
@@ -115,12 +114,6 @@ For more information, please refer to the [official documentation][docs-url].
 [release-url]: //github.com/automotivemastermind/condo/releases/latest
 [release-v-image]:https://img.shields.io/github/release/automotivemastermind/condo.svg?style=flat-square&label=github
 
-[travis-url]: //travis-ci.org/automotivemastermind/condo
-[travis-image]: https://img.shields.io/travis/automotivemastermind/condo.svg?label=travis
-
-[appveyor-url]: //ci.appveyor.com/project/automotivemastermind/condo
-[appveyor-image]: https://img.shields.io/appveyor/ci/automotivemastermind/condo.svg?label=appveyor
-
 [yo-url]: //www.npmjs.com/package/generator-condo
 
 [docs-url]: //automotivemastermind.github.io/condo
@@ -134,6 +127,3 @@ For more information, please refer to the [official documentation][docs-url].
 [is-it-maintained]: https://isitmaintained.com/project/automotivemastermind/condo
 [resolution-image]: https://isitmaintained.com/badge/resolution/automotivemastermind/condo.svg
 [open-image]: https://isitmaintained.com/badge/open/automotivemastermind/condo.svg
-
-[circleci-url]: //circleci.com/gh/automotiveMastermind/condo
-[circleci-image]: https://img.shields.io/circleci/project/github/automotiveMastermind/condo.svg?label=circle-ci
