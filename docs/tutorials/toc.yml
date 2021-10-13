@@ -6,8 +6,6 @@
   href: docker.md
 - name: Angular Projects
   href: angular.md
-- name: Polymer Projects
-  href: polymer.md
 - name: NodeJS and NPM
   href: npm.md
 - name: Bower Projects
