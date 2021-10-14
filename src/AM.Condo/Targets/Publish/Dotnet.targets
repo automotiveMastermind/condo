@@ -6,6 +6,19 @@
     <DotNetPublishProperties>$(DotNetPublishProperties);TargetLatestRuntimePatch=true</DotNetPublishProperties>
   </PropertyGroup>
 
+  <Target Name="DotNetPublish" Condition=" $(DotNetPublish) ">
+    <ItemGroup>
+      <_DotNetPublish Include="@(PublishProjects)">
+        <AdditionalProperties Condition=" '%(RuntimeIdentifier)' != '' ">%(_DotNetPublish.AdditionalProperties);RuntimeIdentifier=%(RuntimeIdentifier)</AdditionalProperties>
+        <AdditionalProperties Condition=" '%(TargetFramework)' != '' ">%(_DotNetPublish.AdditionalProperties);TargetFramework=%(TargetFramework)</AdditionalProperties>
+        <AdditionalProperties>%(_DotNetPublish.AdditionalProperties);PublishDir=%(OutputPath)</AdditionalProperties>
+        <AdditionalProperties>%(_DotNetPublish.AdditionalProperties);SelfContained=%(SelfContained)</AdditionalProperties>
+      </_DotNetPublish>
+    </ItemGroup>
+
+    <MSBuild Projects="@(_DotNetPublish)" Properties="$(DotNetPublishProperties)" Targets="Publish" />
+  </Target>
+
   <Target Name="PushPackages" Condition=" $(DotNetPush) ">
     <PushNuGetPackage
       NuGetConfigPath="$(NuGetConfigPath)"
