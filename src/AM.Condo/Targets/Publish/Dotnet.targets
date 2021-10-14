@@ -33,6 +33,7 @@
   <PropertyGroup>
     <PublishDependsOn>
       $(PublishDependsOn);
+      DotNetPublish;
     </PublishDependsOn>
 
     <AfterPublish>
