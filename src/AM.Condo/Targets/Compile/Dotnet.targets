@@ -13,22 +13,9 @@
     <MSBuild Projects="@(BuildProjects)" Properties="$(DotNetBuildProperties)" Targets="Build" />
   </Target>
 
-  <Target Name="CopyDotNetBuild" Condition=" $(DotNetBuild) ">
-    <ItemGroup>
-      <_CopyDotNetBuild Include="%(BuildProjects.ProjectDir)bin$(slash)**" Exclude="%(BuildProjects.ProjectDir)bin$(slash)publish$(slash)**">
-        <ProjectName>%(BuildProjects.ProjectName)</ProjectName>
-      </_CopyDotNetBuild>
-    </ItemGroup>
-
-    <Copy
-      SourceFiles="@(_CopyDotNetBuild)"
-      DestinationFiles="@(_CopyDotNetBuild->'$(BuildArtifactsRoot)%(ProjectName)$(slash)%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
-
   <PropertyGroup>
     <AfterCompile>
       $(AfterCompile);
-      CopyDotNetBuild;
     </AfterCompile>
 
     <CompileDependsOn>
