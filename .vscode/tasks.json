@@ -1,33 +1,6 @@
 {
-  "version": "0.1.0",
-  "isShellCommand": true,
+"version": "2.0.0",
   "args": [],
   "taskSelector": "/t:",
-  "tasks": [
-    {
-      "taskName": "compile",
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "taskName": "build",
-      "isBuildCommand": true,
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "taskName": "test",
-      "isTestCommand": true,
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "taskName": "publish",
-      "problemMatcher": "$msCompile"
-    },
-    {
-      "taskName": "debug",
-      "args": [
-        "/p:CONDO_DEBUG=true"
-      ],
-      "problemMatcher": "$msCompile"
-    }
-  ]
+  "tasks": []
 }
