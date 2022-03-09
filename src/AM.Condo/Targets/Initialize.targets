@@ -83,7 +83,7 @@
     <IsPullRequest Condition=" '$(PullRequestId)' != '' ">true</IsPullRequest>
     <IsPullRequest Condition=" '$(IsPullRequest)' == '' ">false</IsPullRequest>
 
-    <AllowPublish Condition=" $(CI) AND !$(IsPullRequest) ">true</AllowPublish>
+    <AllowPublish Condition=" '$(AllowPublish)' == '' AND $(CI) AND !$(IsPullRequest) ">true</AllowPublish>
     <AllowPublish Condition=" '$(AllowPublish)' == '' ">false</AllowPublish>
   </PropertyGroup>
 
